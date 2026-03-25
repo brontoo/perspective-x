@@ -1,37 +1,31 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@/*": [
-                "./src/*"
-            ]
-        },
-        "jsx": "react-jsx",
-        "module": "esnext",
-        "moduleResolution": "bundler",
-        "lib": [
-            "esnext",
-            "dom"
-        ],
-        "target": "esnext",
-        "checkJs": true,
-        "skipLibCheck": true,
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-        "types": []
-    },
-    "include": [
-        "src/components/**/*.js",
-        "src/pages/**/*.jsx",
-        "src/Layout.jsx"
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
     ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "src/vite-plugins",
-        "src/components/ui",
-        "src/api",
-        "src/lib"
-    ]
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
 }

@@ -1,15 +1,14 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import SignIn from '@/pages/SignIn';
 import TeacherDashboard from '@/pages/TeacherDashboard';
 import Dashboard from '@/pages/Dashboard';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -19,30 +18,35 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
     <Layout currentPageName={currentPageName}>{children}</Layout>
     : <>{children}</>;
 
-const AuthenticatedApp = () => {
-    const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+// مكوّن الحماية — يتحقق من تسجيل الدخول
+const ProtectedRoute = ({ children }) => {
+    const [loading, setLoading] = useState(true);
+    const [session, setSession] = useState(null);
 
-    // Show loading spinner while checking app public settings or auth
-    if (isLoadingPublicSettings || isLoadingAuth) {
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+            setLoading(false);
+        });
+    }, []);
+
+    if (loading) {
         return (
-            <div className="fixed inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+            <div className="fixed inset-0 flex items-center justify-center bg-slate-950">
+                <div className="w-8 h-8 border-4 border-teal-500/30 border-t-teal-500 rounded-full animate-spin"></div>
             </div>
         );
     }
 
-    // Handle authentication errors
-    if (authError) {
-        if (authError.type === 'user_not_registered') {
-            return <UserNotRegisteredError />;
-        } else if (authError.type === 'auth_required') {
-            // Redirect to login automatically
-            navigateToLogin();
-            return null;
-        }
+    if (!session) {
+        return <Navigate to="/SignIn" replace />;
     }
 
-    // Render the main app
+    return children;
+};
+
+// الصفحات العامة (لا تحتاج تسجيل دخول)
+const PublicPages = () => {
     return (
         <Routes>
             <Route path="/" element={
@@ -50,6 +54,21 @@ const AuthenticatedApp = () => {
                     <MainPage />
                 </LayoutWrapper>
             } />
+            <Route path="/SignIn" element={<SignIn />} />
+            {/* أي مسار غير معروف يذهب للصفحة الرئيسية */}
+            <Route path="*" element={
+                <ProtectedRoute>
+                    <ProtectedPages />
+                </ProtectedRoute>
+            } />
+        </Routes>
+    );
+};
+
+// الصفحات المحمية (تحتاج تسجيل دخول)
+const ProtectedPages = () => {
+    return (
+        <Routes>
             {Object.entries(Pages).map(([path, Page]) => (
                 <Route
                     key={path}
@@ -61,28 +80,77 @@ const AuthenticatedApp = () => {
                     }
                 />
             ))}
-            <Route path="/SignIn" element={<LayoutWrapper currentPageName="SignIn"><SignIn /></LayoutWrapper>} />
-            <Route path="/TeacherDashboard" element={<LayoutWrapper currentPageName="TeacherDashboard"><TeacherDashboard /></LayoutWrapper>} />
-            <Route path="/Dashboard" element={<LayoutWrapper currentPageName="Dashboard"><Dashboard /></LayoutWrapper>} />
+            <Route path="/Dashboard" element={
+                <LayoutWrapper currentPageName="Dashboard">
+                    <Dashboard />
+                </LayoutWrapper>
+            } />
+            <Route path="/TeacherDashboard" element={
+                <LayoutWrapper currentPageName="TeacherDashboard">
+                    <TeacherDashboard />
+                </LayoutWrapper>
+            } />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     );
 };
 
+function AppRoutes() {
+    const location = useLocation();
+    const isPublicPath = location.pathname === '/' || location.pathname === '/SignIn';
 
-function App() {
+    if (isPublicPath) {
+        return (
+            <Routes>
+                <Route path="/" element={
+                    <LayoutWrapper currentPageName={mainPageKey}>
+                        <MainPage />
+                    </LayoutWrapper>
+                } />
+                <Route path="/SignIn" element={<SignIn />} />
+            </Routes>
+        );
+    }
 
     return (
-        <AuthProvider>
-            <QueryClientProvider client={queryClientInstance}>
-                <Router>
-                    <NavigationTracker />
-                    <AuthenticatedApp />
-                </Router>
-                <Toaster />
-            </QueryClientProvider>
-        </AuthProvider>
-    )
+        <ProtectedRoute>
+            <Routes>
+                {Object.entries(Pages).map(([path, Page]) => (
+                    <Route
+                        key={path}
+                        path={`/${path}`}
+                        element={
+                            <LayoutWrapper currentPageName={path}>
+                                <Page />
+                            </LayoutWrapper>
+                        }
+                    />
+                ))}
+                <Route path="/Dashboard" element={
+                    <LayoutWrapper currentPageName="Dashboard">
+                        <Dashboard />
+                    </LayoutWrapper>
+                } />
+                <Route path="/TeacherDashboard" element={
+                    <LayoutWrapper currentPageName="TeacherDashboard">
+                        <TeacherDashboard />
+                    </LayoutWrapper>
+                } />
+                <Route path="*" element={<PageNotFound />} />
+            </Routes>
+        </ProtectedRoute>
+    );
 }
 
-export default App
+function App() {
+    return (
+        <QueryClientProvider client={queryClientInstance}>
+            <Router>
+                <AppRoutes />
+            </Router>
+            <Toaster />
+        </QueryClientProvider>
+    );
+}
+
+export default App;
