@@ -1,0 +1,78 @@
+{
+    "name": "StudentProgress",
+    "type": "object",
+    "properties": {
+        "current_role": {
+            "type": "string",
+            "description": "Currently selected role"
+        },
+        "completed_scenarios": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of completed scenario IDs"
+        },
+        "unlocked_scenarios": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of unlocked scenario IDs"
+        },
+        "badges": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Earned badge IDs"
+        },
+        "skills": {
+            "type": "object",
+            "properties": {
+                "data_analysis": {
+                    "type": "number"
+                },
+                "problem_solving": {
+                    "type": "number"
+                },
+                "scientific_communication": {
+                    "type": "number"
+                },
+                "ethical_reasoning": {
+                    "type": "number"
+                },
+                "critical_thinking": {
+                    "type": "number"
+                }
+            },
+            "description": "Skill levels 0-100"
+        },
+        "decision_history": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "scenario_id": {
+                        "type": "string"
+                    },
+                    "scene": {
+                        "type": "number"
+                    },
+                    "decision": {
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "type": "string"
+                    }
+                }
+            },
+            "description": "History of decisions made"
+        },
+        "total_time_spent": {
+            "type": "number",
+            "description": "Total time in minutes"
+        }
+    },
+    "required": []
+}

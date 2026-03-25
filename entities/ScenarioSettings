@@ -1,0 +1,47 @@
+{
+    "name": "ScenarioSettings",
+    "type": "object",
+    "properties": {
+        "scenario_id": {
+            "type": "string",
+            "description": "ID of the scenario"
+        },
+        "is_mandatory": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this scenario is required"
+        },
+        "is_locked": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this scenario is locked by teacher"
+        },
+        "difficulty_override": {
+            "type": "string",
+            "enum": [
+                "beginner",
+                "on-level",
+                "high-achievers"
+            ],
+            "description": "Teacher-set difficulty level"
+        },
+        "assigned_to": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of student emails this is assigned to"
+        },
+        "due_date": {
+            "type": "string",
+            "format": "date"
+        },
+        "notes": {
+            "type": "string",
+            "description": "Teacher notes for this scenario"
+        }
+    },
+    "required": [
+        "scenario_id"
+    ]
+}
