@@ -1,6 +1,7 @@
+
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Share2, Award, CheckCircle2 } from 'lucide-react';
+import { Download, Award, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
@@ -15,51 +16,52 @@ export default function CompletionCertificate({
 }) {
     const certificateRef = useRef(null);
 
-    const downloadCertificate = async () => {
-        if (!certificateRef.current) return;
+    const captureCanvas = async () => {
+        return await html2canvas(certificateRef.current, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#0f172a',
+            onclone: (clonedDoc) => {
+                // استبدال كل bg-clip-text بلون ثابت في النسخة المحولة
+                clonedDoc.querySelectorAll('[data-export-color]').forEach(el => {
+                    el.style.backgroundImage = 'none';
+                    el.style.webkitBackgroundClip = 'unset';
+                    el.style.webkitTextFillColor = el.getAttribute('data-export-color');
+                    el.style.color = el.getAttribute('data-export-color');
+                });
+            }
+        });
+    };
 
+    const downloadPNG = async () => {
         try {
-            const canvas = await html2canvas(certificateRef.current, {
-                scale: 2,
-                backgroundColor: null,
-                useCORS: true
-            });
-
+            const canvas = await captureCanvas();
             const link = document.createElement('a');
             link.download = `Certificate-${scenarioTitle.replace(/\s+/g, '-')}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
         } catch (e) {
-            console.error('Error generating certificate:', e);
+            console.error('Error:', e);
         }
     };
 
     const downloadPDF = async () => {
-        if (!certificateRef.current) return;
-
         try {
-            const canvas = await html2canvas(certificateRef.current, {
-                scale: 2,
-                backgroundColor: null,
-                useCORS: true
-            });
-
+            const canvas = await captureCanvas();
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('landscape', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-
             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
             pdf.save(`Certificate-${scenarioTitle.replace(/\s+/g, '-')}.pdf`);
         } catch (e) {
-            console.error('Error generating PDF:', e);
+            console.error('Error:', e);
         }
     };
 
     const formattedDate = new Date(completionDate).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+        year: 'numeric', month: 'long', day: 'numeric'
     });
 
     return (
@@ -72,16 +74,23 @@ export default function CompletionCertificate({
                 {/* Certificate */}
                 <div
                     ref={certificateRef}
-                    className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden"
-                    style={{ aspectRatio: '1.414/1' }}
+                    style={{
+                        aspectRatio: '1.414/1',
+                        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+                        borderRadius: '24px',
+                        overflow: 'hidden',
+                        position: 'relative',
+                        fontFamily: 'Arial, sans-serif'
+                    }}
                 >
                     {/* Background pattern */}
-                    <div className="absolute inset-0 opacity-10">
+                    <div style={{ position: 'absolute', inset: 0, opacity: 0.08 }}>
                         <svg width="100%" height="100%">
                             <defs>
                                 <pattern id="circuit" width="100" height="100" patternUnits="userSpaceOnUse">
                                     <circle cx="50" cy="50" r="1" fill="#14b8a6" />
-                                    <path d="M50 0 L50 45 M50 55 L50 100 M0 50 L45 50 M55 50 L100 50" stroke="#14b8a6" strokeWidth="0.5" fill="none" />
+                                    <path d="M50 0 L50 45 M50 55 L50 100 M0 50 L45 50 M55 50 L100 50"
+                                        stroke="#14b8a6" strokeWidth="0.5" fill="none" />
                                     <circle cx="50" cy="50" r="8" stroke="#14b8a6" strokeWidth="0.5" fill="none" />
                                 </pattern>
                             </defs>
@@ -89,111 +98,108 @@ export default function CompletionCertificate({
                         </svg>
                     </div>
 
-                    {/* Holographic borders */}
-                    <div className="absolute inset-4 border-2 border-teal-500/30 rounded-2xl" />
-                    <div className="absolute inset-6 border border-purple-500/20 rounded-xl" />
+                    {/* Borders */}
+                    <div style={{ position: 'absolute', inset: '16px', border: '2px solid rgba(20,184,166,0.3)', borderRadius: '16px' }} />
+                    <div style={{ position: 'absolute', inset: '24px', border: '1px solid rgba(168,85,247,0.2)', borderRadius: '12px' }} />
 
-                    {/* Corner decorations */}
-                    {[['top-4 left-4', 'rotate-0'], ['top-4 right-4', 'rotate-90'], ['bottom-4 left-4', '-rotate-90'], ['bottom-4 right-4', 'rotate-180']].map(([pos, rot], i) => (
-                        <div key={i} className={`absolute ${pos} ${rot}`}>
-                            <svg width="60" height="60" viewBox="0 0 60 60">
-                                <path d="M0 20 L0 0 L20 0" fill="none" stroke="#14b8a6" strokeWidth="2" />
-                                <circle cx="5" cy="5" r="3" fill="#14b8a6" />
-                            </svg>
-                        </div>
-                    ))}
-
-                    {/* Glowing orbs */}
-                    <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-teal-500/10 blur-3xl" />
-                    <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-purple-500/10 blur-3xl" />
+                    {/* Glow orbs */}
+                    <div style={{ position: 'absolute', top: '25%', left: '25%', width: '256px', height: '256px', borderRadius: '50%', background: 'rgba(20,184,166,0.08)', filter: 'blur(60px)' }} />
+                    <div style={{ position: 'absolute', bottom: '25%', right: '25%', width: '192px', height: '192px', borderRadius: '50%', background: 'rgba(168,85,247,0.08)', filter: 'blur(60px)' }} />
 
                     {/* Content */}
-                    <div className="relative h-full flex flex-col items-center justify-center p-12 text-center">
-                        {/* Header badge */}
-                        <div className="mb-6">
-                            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-teal-500/20 to-purple-500/20 border border-teal-500/30">
-                                <Award className="w-5 h-5 text-teal-400" />
-                                <span className="text-teal-300 text-sm font-semibold tracking-wider">CERTIFICATE OF COMPLETION</span>
-                            </div>
+                    <div style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px', textAlign: 'center' }}>
+
+                        {/* Header */}
+                        <div style={{ marginBottom: '20px', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 20px', borderRadius: '999px', background: 'rgba(20,184,166,0.15)', border: '1px solid rgba(20,184,166,0.3)' }}>
+                            <span style={{ color: '#2dd4bf', fontSize: '14px', fontWeight: '700', letterSpacing: '2px' }}>
+                                🏅 CERTIFICATE OF COMPLETION
+                            </span>
                         </div>
 
                         {/* Logo */}
-                        <div className="text-4xl mb-4 font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">
+                        <div
+                            data-export-color="#2dd4bf"
+                            style={{ fontSize: '32px', fontWeight: '900', marginBottom: '16px', color: '#2dd4bf' }}
+                        >
                             Perspective X
                         </div>
 
-                        {/* Main text */}
-                        <p className="text-slate-400 text-lg mb-4">This certifies that</p>
+                        {/* Sub text */}
+                        <p style={{ color: '#94a3b8', fontSize: '16px', marginBottom: '12px' }}>
+                            This certifies that
+                        </p>
 
-                        <h2 className="text-4xl font-bold text-white mb-4 tracking-wide">
+                        {/* Student Name */}
+                        <h2
+                            data-export-color="#ffffff"
+                            style={{ fontSize: '38px', fontWeight: '800', color: '#ffffff', marginBottom: '12px', letterSpacing: '1px' }}
+                        >
                             {studentName || 'Student Name'}
                         </h2>
 
-                        <p className="text-slate-400 text-lg mb-6">has successfully completed the scientific scenario</p>
+                        <p style={{ color: '#94a3b8', fontSize: '16px', marginBottom: '20px' }}>
+                            has successfully completed the scientific scenario
+                        </p>
 
                         {/* Scenario badge */}
-                        <div className="flex items-center gap-4 mb-6 px-8 py-4 rounded-2xl bg-gradient-to-r from-slate-800/80 to-slate-700/80 border border-slate-600/50">
-                            <span className="text-4xl">{badgeIcon || '🏆'}</span>
-                            <div className="text-left">
-                                <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">
-                                    {scenarioTitle}
-                                </h3>
-                            </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', padding: '16px 32px', borderRadius: '16px', background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
+                            <span style={{ fontSize: '40px' }}>{badgeIcon || '🏆'}</span>
+                            <h3
+                                data-export-color="#2dd4bf"
+                                style={{ fontSize: '24px', fontWeight: '700', color: '#2dd4bf' }}
+                            >
+                                {scenarioTitle}
+                            </h3>
                         </div>
 
-                        {/* Score */}
-                        <div className="flex items-center gap-8 mb-8">
-                            <div className="text-center">
-                                <p className="text-slate-500 text-sm mb-1">Achievement Score</p>
-                                <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">
+                        {/* Score & Date */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '48px', marginBottom: '32px' }}>
+                            <div style={{ textAlign: 'center' }}>
+                                <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '4px' }}>Achievement Score</p>
+                                <div
+                                    data-export-color="#2dd4bf"
+                                    style={{ fontSize: '48px', fontWeight: '900', color: '#2dd4bf' }}
+                                >
                                     {percentage}%
                                 </div>
                             </div>
-                            <div className="w-px h-16 bg-slate-700" />
-                            <div className="text-center">
-                                <p className="text-slate-500 text-sm mb-1">Completion Date</p>
-                                <p className="text-xl text-white font-semibold">{formattedDate}</p>
+                            <div style={{ width: '1px', height: '64px', background: '#334155' }} />
+                            <div style={{ textAlign: 'center' }}>
+                                <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '4px' }}>Completion Date</p>
+                                <p style={{ fontSize: '20px', color: '#ffffff', fontWeight: '600' }}>{formattedDate}</p>
                             </div>
                         </div>
 
                         {/* Signature */}
-                        <div className="mt-auto pt-6 border-t border-slate-700/50 w-full max-w-md">
-                            <p className="text-slate-400 text-sm mb-2">Portal Developer</p>
-                            <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400 italic">
+                        <div style={{ borderTop: '1px solid rgba(51,65,85,0.5)', paddingTop: '16px', width: '100%', maxWidth: '320px', textAlign: 'center' }}>
+                            <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '4px' }}>Portal Developer</p>
+                            <p
+                                data-export-color="#2dd4bf"
+                                style={{ fontSize: '20px', fontWeight: '600', color: '#2dd4bf', fontStyle: 'italic' }}
+                            >
                                 Riham Saleh
                             </p>
                         </div>
 
-                        {/* Verification badge */}
-                        <div className="absolute bottom-4 right-8 flex items-center gap-2 text-slate-600 text-xs">
-                            <CheckCircle2 className="w-4 h-4" />
+                        {/* Verified */}
+                        <div style={{ position: 'absolute', bottom: '16px', right: '32px', display: 'flex', alignItems: 'center', gap: '6px', color: '#475569', fontSize: '12px' }}>
+                            <span>✓</span>
                             <span>Verified Achievement</span>
                         </div>
                     </div>
                 </div>
 
-                {/* Actions */}
+                {/* Buttons */}
                 <div className="flex items-center justify-center gap-4 mt-6">
-                    <Button
-                        onClick={downloadCertificate}
-                        className="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600"
-                    >
+                    <Button onClick={downloadPNG} className="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600">
                         <Download className="w-4 h-4 mr-2" />
                         Download PNG
                     </Button>
-                    <Button
-                        onClick={downloadPDF}
-                        variant="outline"
-                        className="border-teal-500/50 text-teal-400 hover:bg-teal-500/10"
-                    >
+                    <Button onClick={downloadPDF} variant="outline" className="border-teal-500/50 text-teal-400 hover:bg-teal-500/10">
                         <Download className="w-4 h-4 mr-2" />
                         Download PDF
                     </Button>
-                    <Button
-                        onClick={onClose}
-                        variant="ghost"
-                        className="text-slate-400 hover:text-white"
-                    >
+                    <Button onClick={onClose} variant="ghost" className="text-slate-400 hover:text-white">
                         Close
                     </Button>
                 </div>

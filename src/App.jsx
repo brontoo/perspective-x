@@ -7,6 +7,7 @@ import PageNotFound from './lib/PageNotFound';
 import SignIn from '@/pages/SignIn';
 import TeacherDashboard from '@/pages/TeacherDashboard';
 import Dashboard from '@/pages/Dashboard';
+import ProfileSettings from '@/pages/ProfileSettings';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -18,7 +19,6 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
     <Layout currentPageName={currentPageName}>{children}</Layout>
     : <>{children}</>;
 
-// مكوّن الحماية — يتحقق من تسجيل الدخول
 const ProtectedRoute = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [session, setSession] = useState(null);
@@ -43,56 +43,6 @@ const ProtectedRoute = ({ children }) => {
     }
 
     return children;
-};
-
-// الصفحات العامة (لا تحتاج تسجيل دخول)
-const PublicPages = () => {
-    return (
-        <Routes>
-            <Route path="/" element={
-                <LayoutWrapper currentPageName={mainPageKey}>
-                    <MainPage />
-                </LayoutWrapper>
-            } />
-            <Route path="/SignIn" element={<SignIn />} />
-            {/* أي مسار غير معروف يذهب للصفحة الرئيسية */}
-            <Route path="*" element={
-                <ProtectedRoute>
-                    <ProtectedPages />
-                </ProtectedRoute>
-            } />
-        </Routes>
-    );
-};
-
-// الصفحات المحمية (تحتاج تسجيل دخول)
-const ProtectedPages = () => {
-    return (
-        <Routes>
-            {Object.entries(Pages).map(([path, Page]) => (
-                <Route
-                    key={path}
-                    path={`/${path}`}
-                    element={
-                        <LayoutWrapper currentPageName={path}>
-                            <Page />
-                        </LayoutWrapper>
-                    }
-                />
-            ))}
-            <Route path="/Dashboard" element={
-                <LayoutWrapper currentPageName="Dashboard">
-                    <Dashboard />
-                </LayoutWrapper>
-            } />
-            <Route path="/TeacherDashboard" element={
-                <LayoutWrapper currentPageName="TeacherDashboard">
-                    <TeacherDashboard />
-                </LayoutWrapper>
-            } />
-            <Route path="*" element={<PageNotFound />} />
-        </Routes>
-    );
 };
 
 function AppRoutes() {
@@ -134,6 +84,12 @@ function AppRoutes() {
                 <Route path="/TeacherDashboard" element={
                     <LayoutWrapper currentPageName="TeacherDashboard">
                         <TeacherDashboard />
+                    </LayoutWrapper>
+                } />
+                {/* ✅ Route جديد لصفحة الإعدادات */}
+                <Route path="/ProfileSettings" element={
+                    <LayoutWrapper currentPageName="ProfileSettings">
+                        <ProfileSettings />
                     </LayoutWrapper>
                 } />
                 <Route path="*" element={<PageNotFound />} />

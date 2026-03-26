@@ -14,6 +14,7 @@ export default function Home() {
     const [progress, setProgress] = useState(null);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
+    const [userRole, setUserRole] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -31,27 +32,31 @@ export default function Home() {
             setUser(currentUser);
 
             // تحقق من الـ role
+            // ✅ الجديد
             const { data: profile } = await supabase
                 .from('profiles')
-                .select('role')
+                .select('role, full_name')
                 .eq('id', currentUser.id)
                 .single();
 
-            if (profile?.role === 'teacher') {
-                navigate('/TeacherDashboard');
-                return;
+            const role = profile?.role || 'student';
+            setUserRole(role);
+            setUser({ ...currentUser, full_name: profile?.full_name }); // ← أضف الاسم للـ user
+
+
+            // جلب تقدم الطالب فقط — لا توجيه تلقائي للمدرس
+            if (role !== 'teacher') {
+                const { data: progressList } = await supabase
+                    .from('student_progress')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (progressList && progressList.length > 0) {
+                    setProgress(progressList[0]);
+                }
             }
 
-            // جلب تقدم الطالب
-            const { data: progressList } = await supabase
-                .from('student_progress')
-                .select('*')
-                .eq('user_id', currentUser.id)
-                .order('created_at', { ascending: false });
-
-            if (progressList && progressList.length > 0) {
-                setProgress(progressList[0]);
-            }
         } catch (e) {
             console.log('Error loading home data:', e);
         } finally {
@@ -63,6 +68,7 @@ export default function Home() {
         await supabase.auth.signOut();
         setUser(null);
         setProgress(null);
+        setUserRole(null);
     };
 
     const handleStart = () => {
@@ -84,22 +90,30 @@ export default function Home() {
     return (
         <div className="min-h-screen bg-slate-950">
 
-            {/* ── Header — يظهر فقط بعد انتهاء التحميل ── */}
+            {/* ── Header ── */}
             {!loading && (
                 <div className="fixed top-4 right-4 z-50 flex items-center gap-3">
                     {user ? (
-                        // المستخدم مسجّل دخوله
                         <>
-                            <span className="text-slate-400 text-sm hidden sm:block">
-                                {user.email}
-                            </span>
+                            {/* Welcome Badge */}
+                            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20">
+                                <div className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                                <span className="text-slate-400 text-xs">Welcome,</span>
+                                <span className="text-teal-300 text-xs font-bold tracking-wide">
+                                    {user.full_name || user.email?.split('@')[0]}
+                                </span>
+                            </div>
+
+                            {/* Dashboard Button */}
                             <button
-                                onClick={() => navigate('/Dashboard')}
+                                onClick={() => navigate(userRole === 'teacher' ? '/TeacherDashboard' : '/Dashboard')}
                                 className="flex items-center gap-1.5 text-teal-400 hover:text-white border border-teal-500/30 hover:border-teal-400/60 bg-teal-500/5 rounded-lg px-3 py-1.5 text-xs transition"
                             >
                                 <LayoutDashboard className="w-4 h-4" />
-                                Dashboard
+                                {userRole === 'teacher' ? 'Teacher Dashboard' : 'Dashboard'}
                             </button>
+
+                            {/* Sign Out Button */}
                             <button
                                 onClick={handleLogout}
                                 title="Sign Out"
@@ -109,7 +123,6 @@ export default function Home() {
                             </button>
                         </>
                     ) : (
-                        // زائر غير مسجّل
                         <button
                             onClick={() => navigate('/SignIn')}
                             className="flex items-center gap-2 bg-teal-500/10 border border-teal-500/30 hover:bg-teal-500/20 text-teal-400 rounded-lg px-4 py-2 text-sm transition"
@@ -119,9 +132,10 @@ export default function Home() {
                         </button>
                     )}
                 </div>
+
             )}
 
-            {/* ── Hero — نمرر isLoggedIn لإخفاء زر Sign In الداخلي ── */}
+            {/* ── Hero ── */}
             <HeroSection onStart={handleStart} isLoggedIn={!!user} isLoading={loading} />
 
             <LearningFocusSection />
@@ -167,7 +181,7 @@ export default function Home() {
             <footer className="py-12 border-t border-slate-800">
                 <div className="max-w-6xl mx-auto px-6 text-center">
                     <p className="text-slate-500 text-sm">
-                        Science Role-Play Learning Ecosystem • Designed for Interactive Learning
+                        © 2026 Um Al Emarat School • Perspective X | Developed by Teacher Riham Saleh
                     </p>
                 </div>
             </footer>
