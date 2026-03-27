@@ -1,3 +1,7 @@
+import {
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+    ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, Legend
+} from 'recharts';
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -8,11 +12,15 @@ import {
     Users, BookOpen, Settings, Lock, Unlock,
     Loader2, LogOut, GraduationCap, CheckCircle2,
     Target, Home, Eye, MessageSquare, Send, Trash2,
-    Trophy, Brain, ChevronDown, ChevronUp,
-    UserCircle  // ✅ أيقونة Settings الشخصية
+    Trophy, Brain, BarChart3, ChevronDown, ChevronUp,
+    UserCircle, Download  // ← أضف Download
 } from 'lucide-react';
 
+
 export default function TeacherDashboard() {
+    const [feedbackFilter, setFeedbackFilter] = useState('all');
+    const [feedbackSearch, setFeedbackSearch] = useState('');
+
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
@@ -138,6 +146,60 @@ export default function TeacherDashboard() {
         await supabase.from('teacher_feedback').delete().eq('id', id);
         setFeedbacks(feedbacks.filter(f => f.id !== id));
     };
+    const exportCSV = () => {
+        const rows = [];
+
+        // Header
+        rows.push([
+            'Student Name',
+            'Email',
+            'Scenario Title',
+            'Score',
+            'Passed',
+            'Completed At'
+        ].join(','));
+
+        // Data rows
+        students.forEach(student => {
+            const studentName = student.full_name || student.email?.split('@')[0] || 'Unknown';
+            const progressRows = studentProgress.filter(p =>
+                p.student_id === student.id && p.scenario_id
+            );
+
+            if (progressRows.length === 0) {
+                rows.push([
+                    `"${studentName}"`,
+                    `"${student.email}"`,
+                    '"No scenarios completed"',
+                    '0',
+                    'No',
+                    ''
+                ].join(','));
+            } else {
+                progressRows.forEach(row => {
+                    const scenarioTitle = SCENARIOS[row.scenario_id]?.title || row.scenario_id;
+                    rows.push([
+                        `"${studentName}"`,
+                        `"${student.email}"`,
+                        `"${scenarioTitle}"`,
+                        row.score || 0,
+                        (row.score || 0) >= 70 ? 'Yes' : 'No',
+                        row.completed_at ? new Date(row.completed_at).toLocaleDateString() : ''
+                    ].join(','));
+                });
+            }
+        });
+
+        // Download
+        const csv = rows.join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `student-progress-${new Date().toISOString().split('T')[0]}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+    };
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -179,7 +241,41 @@ export default function TeacherDashboard() {
         { key: 'scenarios', label: 'Manage Scenarios', Icon: Settings },
         { key: 'students', label: 'Student Progress', Icon: Users },
         { key: 'feedback', label: 'Feedback', Icon: MessageSquare },
+        { key: 'analytics', label: 'Analytics', Icon: BarChart3 },  // ← جديد
     ];
+    // ── Analytics Data ──
+    const scenarioCompletionData = Object.entries(SCENARIOS).map(([id, scenario]) => {
+        const completions = studentProgress.filter(p => p.scenario_id === id);
+        const avgScore = completions.length > 0
+            ? Math.round(completions.reduce((a, b) => a + (b.score || 0), 0) / completions.length)
+            : 0;
+        return {
+            name: scenario.title?.split(' ').slice(0, 3).join(' ') || id,
+            completions: completions.length,
+            avgScore
+        };
+    });
+
+    const studentPerformanceData = students.map(student => {
+        const rows = studentProgress.filter(p => p.student_id === student.id && p.scenario_id);
+        const avgScore = rows.length > 0
+            ? Math.round(rows.reduce((a, b) => a + (b.score || 0), 0) / rows.length)
+            : 0;
+        return {
+            name: student.full_name || student.email?.split('@')[0] || 'Unknown',
+            scenarios: rows.length,
+            avgScore,
+            passed: rows.filter(r => (r.score || 0) >= 70).length
+        };
+    });
+
+    const passFailData = [
+        { name: 'Passed ✅', value: studentProgress.filter(p => (p.score || 0) >= 70 && p.scenario_id).length },
+        { name: 'Failed ❌', value: studentProgress.filter(p => (p.score || 0) < 70 && p.scenario_id).length }
+    ];
+
+    const PIE_COLORS = ['#14b8a6', '#f43f5e'];
+
 
     return (
         <div className="min-h-screen bg-slate-950">
@@ -242,6 +338,16 @@ export default function TeacherDashboard() {
 
                 {/* Tabs */}
                 <div className="space-y-6">
+                    <div className="flex justify-between items-center mb-2">
+                        <div /> {/* spacer */}
+                        <button
+                            onClick={exportCSV}
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-teal-500/30 text-teal-400 hover:bg-teal-500/10 transition text-sm font-medium"
+                        >
+                            📤 Export CSV
+                        </button>
+                    </div>
+
                     <div className="flex gap-1 bg-slate-900 border border-slate-800 rounded-xl p-1 w-fit">
                         {tabs.map(tab => (
                             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
@@ -486,9 +592,7 @@ export default function TeacherDashboard() {
                                 </div>
                             )}
                         </div>
-                    )}
-
-                    {/* ── Feedback Tab ── */}
+                    )}{/* ── Feedback Tab ── */}
                     {activeTab === 'feedback' && (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
@@ -520,6 +624,26 @@ export default function TeacherDashboard() {
                                             <option value="assignment">📋 Assignment Note</option>
                                         </select>
                                     </div>
+
+                                    {/* Quick Reply Templates */}
+                                    <div>
+                                        <label className="text-slate-400 text-sm mb-2 block">Quick Templates</label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {[
+                                                { label: '🌟 Great job!', text: 'Great job on completing this scenario! Your answers showed excellent understanding.' },
+                                                { label: '💡 Try again', text: 'Good effort! Please review the scenario concepts and try again to improve your score.' },
+                                                { label: '📋 Assignment', text: 'Please complete the assigned scenario before the deadline. Let me know if you need help.' },
+                                                { label: '🎯 Almost there', text: "You're almost there! Focus on the exit ticket questions to boost your score above 70%." },
+                                            ].map((t, i) => (
+                                                <button key={i}
+                                                    onClick={() => setFeedbackForm(f => ({ ...f, message: t.text }))}
+                                                    className="text-xs px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:text-white hover:border-teal-500/50 transition">
+                                                    {t.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
                                     <div>
                                         <label className="text-slate-400 text-sm mb-1 block">Scenario (optional)</label>
                                         <select value={feedbackForm.scenario_id}
@@ -548,45 +672,199 @@ export default function TeacherDashboard() {
                             </div>
 
                             <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                    <MessageSquare className="w-5 h-5 text-purple-400" />
-                                    Sent Feedback ({feedbacks.length})
-                                </h2>
-                                <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
-                                    {feedbacks.length === 0 ? (
+                                <div className="flex items-center justify-between mb-6">
+                                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                        <MessageSquare className="w-5 h-5 text-purple-400" />
+                                        Sent Feedback ({feedbacks.length})
+                                    </h2>
+                                    {/* Filter */}
+                                    <select
+                                        value={feedbackFilter}
+                                        onChange={e => setFeedbackFilter(e.target.value)}
+                                        className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-400 text-xs focus:outline-none focus:border-teal-500">
+                                        <option value="all">All Types</option>
+                                        <option value="praise">🌟 Praise</option>
+                                        <option value="improvement">💡 Improvement</option>
+                                        <option value="assignment">📋 Assignment</option>
+                                        <option value="general">💬 General</option>
+                                    </select>
+                                </div>
+
+                                {/* Search */}
+                                <input
+                                    type="text"
+                                    placeholder="Search feedback..."
+                                    value={feedbackSearch}
+                                    onChange={e => setFeedbackSearch(e.target.value)}
+                                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-teal-500 mb-4 transition"
+                                />
+
+                                <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
+                                    {feedbacks
+                                        .filter(fb =>
+                                            (feedbackFilter === 'all' || fb.type === feedbackFilter) &&
+                                            (fb.message?.toLowerCase().includes(feedbackSearch.toLowerCase()) ||
+                                                fb.student_email?.toLowerCase().includes(feedbackSearch.toLowerCase()))
+                                        )
+                                        .length === 0 ? (
                                         <div className="text-center py-12 text-slate-500">
                                             <MessageSquare className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                                            <p className="text-sm">No feedback sent yet</p>
+                                            <p className="text-sm">No feedback found</p>
                                         </div>
                                     ) : (
-                                        feedbacks.map(fb => {
-                                            const typeColor = {
-                                                praise: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-                                                improvement: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
-                                                assignment: 'text-blue-400 bg-blue-500/10 border-blue-500/30',
-                                                general: 'text-slate-400 bg-slate-700/30 border-slate-600/30',
-                                            }[fb.type] || 'text-slate-400 bg-slate-700/30 border-slate-600/30';
-                                            return (
-                                                <div key={fb.id} className="p-4 rounded-xl bg-slate-800/50 border border-slate-700 group">
-                                                    <div className="flex items-start justify-between gap-2 mb-2">
-                                                        <div>
-                                                            <p className="text-white text-sm font-medium">{fb.student_email}</p>
-                                                            <span className={`text-xs px-2 py-0.5 rounded-full border ${typeColor} capitalize`}>{fb.type}</span>
+                                        feedbacks
+                                            .filter(fb =>
+                                                (feedbackFilter === 'all' || fb.type === feedbackFilter) &&
+                                                (fb.message?.toLowerCase().includes(feedbackSearch.toLowerCase()) ||
+                                                    fb.student_email?.toLowerCase().includes(feedbackSearch.toLowerCase()))
+                                            )
+                                            .map(fb => {
+                                                const typeColor = {
+                                                    praise: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
+                                                    improvement: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
+                                                    assignment: 'text-blue-400 bg-blue-500/10 border-blue-500/30',
+                                                    general: 'text-slate-400 bg-slate-700/30 border-slate-600/30',
+                                                }[fb.type] || 'text-slate-400 bg-slate-700/30 border-slate-600/30';
+                                                return (
+                                                    <div key={fb.id} className="p-4 rounded-xl bg-slate-800/50 border border-slate-700 group">
+                                                        <div className="flex items-start justify-between gap-2 mb-2">
+                                                            <div>
+                                                                <p className="text-white text-sm font-medium">{fb.student_email}</p>
+                                                                <span className={`text-xs px-2 py-0.5 rounded-full border ${typeColor} capitalize`}>{fb.type}</span>
+                                                            </div>
+                                                            <button onClick={() => deleteFeedback(fb.id)}
+                                                                className="opacity-0 group-hover:opacity-100 text-slate-600 hover:text-red-400 transition-all">
+                                                                <Trash2 className="w-4 h-4" />
+                                                            </button>
                                                         </div>
-                                                        <button onClick={() => deleteFeedback(fb.id)}
-                                                            className="opacity-0 group-hover:opacity-100 text-slate-600 hover:text-red-400 transition-all">
-                                                            <Trash2 className="w-4 h-4" />
-                                                        </button>
+                                                        <p className="text-slate-400 text-sm mt-2 leading-relaxed">{fb.message}</p>
+                                                        {fb.scenario_id && (
+                                                            <p className="text-slate-600 text-xs mt-2">Re: {SCENARIOS[fb.scenario_id]?.title || fb.scenario_id}</p>
+                                                        )}
+                                                        <p className="text-slate-700 text-xs mt-1">
+                                                            {fb.created_at ? new Date(fb.created_at).toLocaleDateString() : ''}
+                                                        </p>
                                                     </div>
-                                                    <p className="text-slate-400 text-sm mt-2 leading-relaxed">{fb.message}</p>
-                                                    {fb.scenario_id && (
-                                                        <p className="text-slate-600 text-xs mt-2">Re: {SCENARIOS[fb.scenario_id]?.title || fb.scenario_id}</p>
-                                                    )}
-                                                </div>
-                                            );
-                                        })
+                                                );
+                                            })
                                     )}
                                 </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ── Analytics Tab ── */}
+                    {activeTab === 'analytics' && (
+                        <div className="space-y-6">
+
+                            {/* Summary Cards */}
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                {[
+                                    { label: 'Total Attempts', value: studentProgress.filter(p => p.scenario_id).length, color: 'teal' },
+                                    {
+                                        label: 'Pass Rate',
+                                        value: `${studentProgress.filter(p => p.scenario_id).length > 0
+                                            ? Math.round(studentProgress.filter(p => (p.score || 0) >= 70 && p.scenario_id).length
+                                                / studentProgress.filter(p => p.scenario_id).length * 100)
+                                            : 0}%`,
+                                        color: 'emerald'
+                                    },
+                                    {
+                                        label: 'Avg Score',
+                                        value: `${studentProgress.filter(p => p.scenario_id).length > 0
+                                            ? Math.round(studentProgress.filter(p => p.scenario_id)
+                                                .reduce((a, b) => a + (b.score || 0), 0)
+                                                / studentProgress.filter(p => p.scenario_id).length)
+                                            : 0}%`,
+                                        color: 'purple'
+                                    },
+                                    {
+                                        label: 'Active Students',
+                                        value: [...new Set(studentProgress.filter(p => p.scenario_id).map(p => p.student_id))].length,
+                                        color: 'amber'
+                                    },
+                                ].map((card, i) => (
+                                    <div key={i} className={`bg-${card.color}-500/10 border border-${card.color}-500/30 rounded-xl p-4 text-center`}>
+                                        <p className={`text-${card.color}-400 text-2xl font-bold`}>{card.value}</p>
+                                        <p className="text-slate-500 text-xs mt-1">{card.label}</p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Bar Chart — Completions per Scenario */}
+                            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                                <h3 className="text-white font-bold mb-6 flex items-center gap-2">
+                                    <BarChart3 className="w-5 h-5 text-teal-400" />
+                                    Completions & Avg Score per Scenario
+                                </h3>
+                                <ResponsiveContainer width="100%" height={280}>
+                                    <BarChart data={scenarioCompletionData} margin={{ top: 5, right: 20, left: 0, bottom: 60 }}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                                        <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11 }}
+                                            angle={-35} textAnchor="end" interval={0} />
+                                        <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
+                                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
+                                            labelStyle={{ color: '#fff' }} itemStyle={{ color: '#94a3b8' }} />
+                                        <Legend wrapperStyle={{ color: '#94a3b8', paddingTop: '20px' }} />
+                                        <Bar dataKey="completions" fill="#14b8a6" name="Completions" radius={[4, 4, 0, 0]} />
+                                        <Bar dataKey="avgScore" fill="#8b5cf6" name="Avg Score %" radius={[4, 4, 0, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                                {/* Bar Chart — Student Performance */}
+                                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                                    <h3 className="text-white font-bold mb-6 flex items-center gap-2">
+                                        <Users className="w-5 h-5 text-purple-400" />
+                                        Student Performance
+                                    </h3>
+                                    {studentPerformanceData.length === 0 ? (
+                                        <div className="flex items-center justify-center h-48 text-slate-500 text-sm">No student data yet</div>
+                                    ) : (
+                                        <ResponsiveContainer width="100%" height={220}>
+                                            <BarChart data={studentPerformanceData}>
+                                                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                                                <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11 }} />
+                                                <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
+                                                <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
+                                                    labelStyle={{ color: '#fff' }} itemStyle={{ color: '#94a3b8' }} />
+                                                <Legend wrapperStyle={{ color: '#94a3b8' }} />
+                                                <Bar dataKey="scenarios" fill="#14b8a6" name="Scenarios Done" radius={[4, 4, 0, 0]} />
+                                                <Bar dataKey="passed" fill="#10b981" name="Passed" radius={[4, 4, 0, 0]} />
+                                                <Bar dataKey="avgScore" fill="#8b5cf6" name="Avg Score %" radius={[4, 4, 0, 0]} />
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    )}
+                                </div>
+
+                                {/* Pie Chart — Pass vs Fail */}
+                                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                                    <h3 className="text-white font-bold mb-6 flex items-center gap-2">
+                                        <Target className="w-5 h-5 text-emerald-400" />
+                                        Pass vs Fail Rate
+                                    </h3>
+                                    {passFailData[0].value + passFailData[1].value === 0 ? (
+                                        <div className="flex items-center justify-center h-48 text-slate-500 text-sm">No attempts yet</div>
+                                    ) : (
+                                        <ResponsiveContainer width="100%" height={220}>
+                                            <PieChart>
+                                                <Pie data={passFailData} cx="50%" cy="50%"
+                                                    innerRadius={60} outerRadius={90}
+                                                    paddingAngle={4} dataKey="value">
+                                                    {passFailData.map((_, i) => (
+                                                        <Cell key={i} fill={PIE_COLORS[i]} />
+                                                    ))}
+                                                </Pie>
+                                                <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
+                                                    itemStyle={{ color: '#94a3b8' }} />
+                                                <Legend wrapperStyle={{ color: '#94a3b8' }} />
+                                            </PieChart>
+                                        </ResponsiveContainer>
+                                    )}
+                                </div>
+
                             </div>
                         </div>
                     )}
