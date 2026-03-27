@@ -1,3 +1,4 @@
+import LeaderboardPage from './pages/LeaderboardPage';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -11,13 +12,16 @@ import ProfileSettings from '@/pages/ProfileSettings';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
+
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
     <Layout currentPageName={currentPageName}>{children}</Layout>
     : <>{children}</>;
+
 
 const ProtectedRoute = ({ children }) => {
     const [loading, setLoading] = useState(true);
@@ -44,6 +48,7 @@ const ProtectedRoute = ({ children }) => {
 
     return children;
 };
+
 
 function AppRoutes() {
     const location = useLocation();
@@ -86,10 +91,15 @@ function AppRoutes() {
                         <TeacherDashboard />
                     </LayoutWrapper>
                 } />
-                {/* ✅ Route جديد لصفحة الإعدادات */}
                 <Route path="/ProfileSettings" element={
                     <LayoutWrapper currentPageName="ProfileSettings">
                         <ProfileSettings />
+                    </LayoutWrapper>
+                } />
+                {/* ✅ Route جديد لصفحة Leaderboard */}
+                <Route path="/leaderboard" element={
+                    <LayoutWrapper currentPageName="Leaderboard">
+                        <LeaderboardPage />
                     </LayoutWrapper>
                 } />
                 <Route path="*" element={<PageNotFound />} />
@@ -97,6 +107,7 @@ function AppRoutes() {
         </ProtectedRoute>
     );
 }
+
 
 function App() {
     return (
@@ -108,5 +119,6 @@ function App() {
         </QueryClientProvider>
     );
 }
+
 
 export default App;

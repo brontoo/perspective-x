@@ -386,6 +386,35 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
     }, [currentScene, isMuted, selectedVoice, stopAllPlayback, checkCompletion]);
 
     // ============ NAVIGATION ============
+    const handleScenarioComplete = async (sid) => {
+        if (isTeacher) return;
+
+        const pointsMap = {
+            water_contamination: 40,
+            reaction_gone_wrong: 50,
+            acid_rain: 35,
+            mutation_dilemma: 45,
+            reaction_time: 30,
+            unstable_slope: 40,
+            invasive_species: 35,
+            power_grid: 50,
+            heat_loss: 35,
+            aspirin_production: 45,
+            haber_process: 50,
+            oxygen_failure: 60,
+        };
+
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+            await supabase.rpc('update_student_points', {
+                p_student_id: user.id,
+                p_points: pointsMap[sid] ?? 30,
+            });
+        } catch (e) {
+            console.warn('Points update failed:', e);
+        }
+    };
     const goToNextScene = useCallback(() => {
         if (!isMountedRef.current) return;
         stopAllPlayback();

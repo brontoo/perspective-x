@@ -816,3 +816,4 @@ export default function ScenarioVisual({ scenarioId, sceneIndex, showData, avata
         </motion.div>
     );
 }
+

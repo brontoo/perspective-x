@@ -10,6 +10,7 @@ import {
     MessageSquare, Bell, CheckCheck, LogOut, Settings
 } from 'lucide-react';
 
+
 export default function Dashboard() {
     const navigate = useNavigate();
     const [progress, setProgress] = useState(null);
@@ -20,7 +21,9 @@ export default function Dashboard() {
     const [profile, setProfile] = useState(null);
     const [activeTab, setActiveTab] = useState('overview');
 
+
     useEffect(() => { loadProgress(); }, []);
+
 
     const loadProgress = async () => {
         try {
@@ -93,15 +96,18 @@ export default function Dashboard() {
         }
     };
 
+
     const handleLogout = async () => {
         await supabase.auth.signOut();
         navigate('/');
     };
 
+
     const totalScenarios = Object.keys(SCENARIOS).length;
     const completedScenarios = progress?.completed_scenarios?.length || 0;
     const earnedBadges = progress?.badges?.length || 0;
     const overallPercentage = Math.round((completedScenarios / totalScenarios) * 100);
+
 
     if (loading) {
         return (
@@ -111,12 +117,14 @@ export default function Dashboard() {
         );
     }
 
+
     const stats = [
         { label: 'Scenarios', value: `${completedScenarios}/${totalScenarios}`, Icon: BookOpen, from: 'from-teal-500/10', to: 'to-emerald-500/10', border: 'border-teal-500/30', bg: 'bg-teal-500/20', text: 'text-teal-400' },
         { label: 'Badges', value: earnedBadges, Icon: Trophy, from: 'from-amber-500/10', to: 'to-yellow-500/10', border: 'border-amber-500/30', bg: 'bg-amber-500/20', text: 'text-amber-400' },
         { label: 'Decisions Made', value: progress?.decision_history?.length || 0, Icon: Target, from: 'from-purple-500/10', to: 'to-pink-500/10', border: 'border-purple-500/30', bg: 'bg-purple-500/20', text: 'text-purple-400' },
         { label: 'Time Spent', value: `${progress?.total_time_spent || 0}m`, Icon: Clock, from: 'from-blue-500/10', to: 'to-cyan-500/10', border: 'border-blue-500/30', bg: 'bg-blue-500/20', text: 'text-blue-400' },
     ];
+
 
     const tabs = [
         { key: 'overview', label: 'Overview', icon: BarChart3 },
@@ -126,6 +134,7 @@ export default function Dashboard() {
         { key: 'roles', label: 'Roles', icon: BookOpen },
     ];
 
+
     const getLevel = () => {
         if (overallPercentage >= 80) return { label: 'Expert', color: 'text-emerald-400', bg: 'bg-emerald-500/20 border-emerald-500/30' };
         if (overallPercentage >= 50) return { label: 'Advanced', color: 'text-teal-400', bg: 'bg-teal-500/20 border-teal-500/30' };
@@ -134,7 +143,9 @@ export default function Dashboard() {
     };
     const level = getLevel();
 
+
     const displayName = profile?.full_name || user?.email?.split('@')[0];
+
 
     return (
         <div className="min-h-screen bg-slate-950">
@@ -168,7 +179,15 @@ export default function Dashboard() {
                             )}
                         </button>
 
-                        {/* ⚙️ Settings — الجديد */}
+                        {/* 🏆 Leaderboard — جديد */}
+                        <button
+                            onClick={() => navigate('/leaderboard')}
+                            className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 transition text-sm px-3 py-2 rounded-lg hover:bg-amber-500/10">
+                            <Trophy className="w-4 h-4" />
+                            <span className="hidden sm:block">Leaderboard</span>
+                        </button>
+
+                        {/* ⚙️ Settings */}
                         <button
                             onClick={() => navigate('/ProfileSettings')}
                             className="flex items-center gap-1.5 text-slate-400 hover:text-white transition text-sm px-3 py-2 rounded-lg hover:bg-slate-800">

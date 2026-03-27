@@ -293,7 +293,15 @@ export default function TeacherDashboard() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        {/* ⚙️ Account Settings — الجديد */}
+                        {/* 🏆 Leaderboard — جديد */}
+                        <button
+                            onClick={() => navigate('/leaderboard')}
+                            className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 transition text-sm px-3 py-2 rounded-lg hover:bg-amber-500/10">
+                            <Trophy className="w-4 h-4" />
+                            <span className="hidden sm:block">Leaderboard</span>
+                        </button>
+
+                        {/* ⚙️ Account Settings */}
                         <button
                             onClick={() => navigate('/ProfileSettings')}
                             className="flex items-center gap-1.5 text-slate-400 hover:text-white transition text-sm px-3 py-2 rounded-lg hover:bg-slate-800">
