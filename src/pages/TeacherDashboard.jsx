@@ -97,16 +97,29 @@ export default function TeacherDashboard() {
     };
 
     const updateScenarioSetting = async (scenarioId, field, value) => {
+        console.log('Updating:', scenarioId, field, value);
         const existing = scenarioSettings[scenarioId];
-        if (existing) {
-            await supabase.from('scenario_settings').update({ [field]: value }).eq('id', existing.id);
-            setScenarioSettings({ ...scenarioSettings, [scenarioId]: { ...existing, [field]: value } });
-        } else {
-            const { data: newSetting } = await supabase.from('scenario_settings')
-                .insert({ scenario_id: scenarioId, [field]: value }).select().single();
-            setScenarioSettings({ ...scenarioSettings, [scenarioId]: newSetting });
+        try {
+            if (existing?.id) {
+                const { error } = await supabase
+                    .from('scenario_settings')
+                    .update({ [field]: value })
+                    .eq('id', existing.id);
+                if (error) console.error('Update error:', error);
+                else setScenarioSettings({ ...scenarioSettings, [scenarioId]: { ...existing, [field]: value } });
+            } else {
+                const { data: newSetting, error } = await supabase
+                    .from('scenario_settings')
+                    .insert({ scenario_id: scenarioId, [field]: value })
+                    .select().single();
+                if (error) console.error('Insert error:', error);
+                else if (newSetting) setScenarioSettings({ ...scenarioSettings, [scenarioId]: newSetting });
+            }
+        } catch (e) {
+            console.error('Error:', e);
         }
     };
+
 
     const sendFeedback = async () => {
         if (!feedbackForm.student_email || !feedbackForm.message) return;

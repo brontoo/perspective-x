@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
+import { supabase } from '@/lib/supabaseClient';
 import { ROLES, SCENARIOS } from '@/components/scenarios/scenarioData';
-import { ArrowLeft, Clock, Lock, CheckCircle2, Play, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import ScenarioCard from '@/components/scenario/ScenarioCard';
 
@@ -21,44 +19,43 @@ export default function RoleHub() {
     const role = ROLES[roleId];
 
     useEffect(() => {
-        if (!role) {
-            navigate(createPageUrl('Home'));
-            return;
-        }
+        if (!role) { navigate('/'); return; }
         loadProgress();
     }, [roleId]);
 
     const loadProgress = async () => {
         try {
-            const progressList = await base44.entities.StudentProgress.list();
-            if (progressList.length > 0) {
-                setProgress(progressList[0]);
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) { navigate('/login'); return; }
+
+            // جلب سجل التقدم العام (scenario_id = null)
+            const { data: progressData } = await supabase
+                .from('student_progress')
+                .select('*')
+                .eq('student_id', user.id)
+                .is('scenario_id', null)
+                .maybeSingle();
+
+            if (progressData) {
+                setProgress(progressData);
             } else {
-                // Create initial progress
-                const newProgress = await base44.entities.StudentProgress.create({
-                    completed_scenarios: [],
-                    unlocked_scenarios: [role.scenarios[0]], // First scenario is always unlocked
-                    badges: [],
-                    skills: {
-                        data_analysis: 0,
-                        problem_solving: 0,
-                        scientific_communication: 0,
-                        ethical_reasoning: 0,
-                        critical_thinking: 0
-                    },
-                    decision_history: [],
-                    total_time_spent: 0
-                });
+                const { data: newProgress } = await supabase
+                    .from('student_progress')
+                    .insert({
+                        student_id: user.id,
+                        scenario_id: null,
+                        completed_scenarios: [],
+                        unlocked_scenarios: [role.scenarios[0]]
+                    })
+                    .select().single();
                 setProgress(newProgress);
             }
 
-            // Load scenario settings from teacher
-            const settings = await base44.entities.ScenarioSettings.list();
+            const { data: settings } = await supabase.from('scenario_settings').select('*');
             const settingsMap = {};
-            settings.forEach(s => {
-                settingsMap[s.scenario_id] = s;
-            });
+            settings?.forEach(s => { settingsMap[s.scenario_id] = s; });
             setScenarioSettings(settingsMap);
+
         } catch (e) {
             console.error('Error loading progress:', e);
         } finally {
@@ -66,10 +63,9 @@ export default function RoleHub() {
         }
     };
 
-    const isUnlocked = (scenarioId) => {
-        // Check if teacher locked this scenario
-        if (scenarioSettings[scenarioId]?.is_locked) return false;
 
+    const isUnlocked = (scenarioId) => {
+        if (scenarioSettings[scenarioId]?.is_locked) return false;
         if (!progress) return scenarioId === role?.scenarios[0];
         return progress.unlocked_scenarios?.includes(scenarioId) ||
             progress.completed_scenarios?.includes(scenarioId) ||
@@ -81,7 +77,6 @@ export default function RoleHub() {
     };
 
     const getScenarioStatus = (scenarioId) => {
-        // Teacher lock overrides everything
         if (scenarioSettings[scenarioId]?.is_locked) return 'locked';
         if (isCompleted(scenarioId)) return 'completed';
         if (isUnlocked(scenarioId)) return 'unlocked';
@@ -108,43 +103,27 @@ export default function RoleHub() {
             {/* Header */}
             <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/70 border-b border-slate-800">
                 <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <Link
-                        to={createPageUrl('Home')}
-                        className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
-                    >
+                    <Link to="/" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
                         <ArrowLeft className="w-5 h-5" />
                         <span>Back to Roles</span>
                     </Link>
-
-                    <div className="flex items-center gap-4">
-                        <Badge className={`${colors.accent} bg-slate-800 border ${colors.border}`}>
-                            {role.difficulty}
-                        </Badge>
-                    </div>
+                    <Badge className={`${colors.accent} bg-slate-800 border ${colors.border}`}>
+                        {role.difficulty}
+                    </Badge>
                 </div>
             </header>
 
             {/* Role Header */}
             <section className="py-16 px-6">
                 <div className="max-w-6xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex flex-col md:flex-row items-start gap-8"
-                    >
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                        className="flex flex-col md:flex-row items-start gap-8">
                         <div className="w-24 h-24 rounded-3xl bg-slate-800/50 flex items-center justify-center text-6xl border border-slate-700">
                             {role.icon}
                         </div>
-
                         <div className="flex-1">
-                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                                {role.title}
-                            </h1>
-                            <p className="text-xl text-slate-400 mb-6 leading-relaxed">
-                                {role.description}
-                            </p>
-
-                            {/* Progress bar */}
+                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{role.title}</h1>
+                            <p className="text-xl text-slate-400 mb-6 leading-relaxed">{role.description}</p>
                             <div className="max-w-md">
                                 <div className="flex justify-between text-sm mb-2">
                                     <span className="text-slate-500">Role Progress</span>
@@ -155,14 +134,9 @@ export default function RoleHub() {
                                 <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
                                     <motion.div
                                         initial={{ width: 0 }}
-                                        animate={{
-                                            width: `${((progress?.completed_scenarios?.filter(s => role.scenarios.includes(s)).length || 0) / role.scenarios.length) * 100}%`
-                                        }}
+                                        animate={{ width: `${((progress?.completed_scenarios?.filter(s => role.scenarios.includes(s)).length || 0) / role.scenarios.length) * 100}%` }}
                                         transition={{ duration: 0.8 }}
-                                        className={`h-full bg-gradient-to-r from-${role.color}-500 to-${role.color}-400 rounded-full`}
-                                        style={{
-                                            background: `linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to))`
-                                        }}
+                                        className="h-full bg-gradient-to-r from-teal-500 to-emerald-400 rounded-full"
                                     />
                                 </div>
                             </div>
@@ -175,7 +149,6 @@ export default function RoleHub() {
             <section className="pb-20 px-6">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-2xl font-bold text-white mb-8">Available Scenarios</h2>
-
                     {loading ? (
                         <div className="flex justify-center py-20">
                             <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
@@ -185,7 +158,6 @@ export default function RoleHub() {
                             {role.scenarios.map((scenarioId, index) => {
                                 const scenario = SCENARIOS[scenarioId];
                                 if (!scenario) return null;
-
                                 return (
                                     <ScenarioCard
                                         key={scenarioId}
@@ -196,7 +168,7 @@ export default function RoleHub() {
                                         settings={scenarioSettings[scenarioId]}
                                         onClick={() => {
                                             if (isUnlocked(scenarioId) || isCompleted(scenarioId)) {
-                                                navigate(createPageUrl('ScenarioPlayer') + `?scenario=${scenarioId}`);
+                                                navigate(`/ScenarioPlayer?scenario=${scenarioId}`);
                                             }
                                         }}
                                     />

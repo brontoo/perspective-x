@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -29,12 +30,11 @@ export default function ScenarioPlayer() {
     const [isTeacher, setIsTeacher] = useState(false);
     const [showCertificate, setShowCertificate] = useState(false);
     const [scenarioResult, setScenarioResult] = useState(null);
+    const [profileName, setProfileName] = useState(null);
 
     const baseScenario = SCENARIOS[scenarioId];
     const uaeScenario = UAE_SCENARIOS?.[scenarioId];
     const scenario = baseScenario ? { ...baseScenario, ...(uaeScenario || {}) } : null;
-    const [profileName, setProfileName] = useState(null);
-
 
     useEffect(() => { loadData(); }, [scenarioId]);
 
@@ -53,9 +53,17 @@ export default function ScenarioPlayer() {
             if (teacher) setCurrentScene(0);
             setProfileName(profile?.full_name || profile?.name || null);
 
+            // جلب سجل التقدم العام (بدون scenario_id)
             const { data: progressData } = await supabase
-                .from('student_progress').select('*').eq('user_id', currentUser.id).single();
-            if (progressData) setProgress(progressData);
+                .from('student_progress')
+                .select('*')
+                .eq('student_id', currentUser.id)
+                .is('scenario_id', null)
+                .maybeSingle();
+
+            if (progressData) {
+                setProgress(progressData);
+            }
         } catch (e) {
             console.error('Error loading data:', e);
         } finally {
@@ -69,28 +77,85 @@ export default function ScenarioPlayer() {
     };
 
     const handleExitTicketComplete = async (exitTicketData) => {
-        const result = { ...responses, exitTicket: exitTicketData, passed: exitTicketData.score >= 70 };
+        const result = {
+            ...responses,
+            exitTicket: exitTicketData,
+            passed: exitTicketData.score >= 70
+        };
         setScenarioResult(result);
         setResponses(result);
 
         if (!isTeacher && user) {
             try {
+                // ── 1. حفظ نتيجة هذا السيناريو ──
                 const { data: existing } = await supabase
-                    .from('student_progress').select('id')
-                    .eq('student_id', user.id).eq('scenario_id', scenarioId).single();
+                    .from('student_progress')
+                    .select('id')
+                    .eq('student_id', user.id)
+                    .eq('scenario_id', scenarioId)
+                    .maybeSingle();
 
                 if (existing) {
                     await supabase.from('student_progress')
-                        .update({ answers: result, score: exitTicketData.score, completed_at: new Date().toISOString() })
+                        .update({
+                            answers: result,
+                            score: exitTicketData.score,
+                            completed_at: new Date().toISOString()
+                        })
                         .eq('id', existing.id);
                 } else {
                     await supabase.from('student_progress').insert({
-                        student_id: user.id, scenario_id: scenarioId,
-                        scenario_title: scenario.title, answers: result,
-                        score: exitTicketData.score, completed_at: new Date().toISOString()
+                        student_id: user.id,
+                        scenario_id: scenarioId,
+                        scenario_title: scenario.title,
+                        answers: result,
+                        score: exitTicketData.score,
+                        completed_at: new Date().toISOString()
                     });
                 }
-            } catch (e) { console.error('Error saving progress:', e); }
+
+                // ── 2. تحديث سجل التقدم العام وفتح السيناريو التالي ──
+                if (result.passed) {
+                    const currentRole = Object.values(ROLES).find(r => r.scenarios.includes(scenarioId));
+                    const currentIndex = currentRole?.scenarios.indexOf(scenarioId);
+                    const nextScenarioId = currentRole?.scenarios[currentIndex + 1];
+
+                    // جلب سجل التقدم العام (scenario_id = null)
+                    const { data: overallRecord } = await supabase
+                        .from('student_progress')
+                        .select('*')
+                        .eq('student_id', user.id)
+                        .is('scenario_id', null)
+                        .maybeSingle();
+
+                    const prevCompleted = overallRecord?.completed_scenarios || [];
+                    const prevUnlocked = overallRecord?.unlocked_scenarios || [];
+
+                    const updatedCompleted = [...new Set([...prevCompleted, scenarioId])];
+                    const updatedUnlocked = nextScenarioId
+                        ? [...new Set([...prevUnlocked, nextScenarioId])]
+                        : prevUnlocked;
+
+                    if (overallRecord) {
+                        await supabase.from('student_progress')
+                            .update({
+                                completed_scenarios: updatedCompleted,
+                                unlocked_scenarios: updatedUnlocked
+                            })
+                            .eq('id', overallRecord.id);
+                    } else {
+                        await supabase.from('student_progress').insert({
+                            student_id: user.id,
+                            scenario_id: null,
+                            completed_scenarios: updatedCompleted,
+                            unlocked_scenarios: updatedUnlocked
+                        });
+                    }
+                }
+
+            } catch (e) {
+                console.error('Error saving progress:', e);
+            }
         }
         setCurrentScene(5);
     };
@@ -118,7 +183,6 @@ export default function ScenarioPlayer() {
     return (
         <div className="min-h-screen bg-slate-950">
 
-            {/* Cinematic Title — scene -2 */}
             <AnimatePresence>
                 {currentScene === -2 && (
                     <CinematicTitle
@@ -130,7 +194,6 @@ export default function ScenarioPlayer() {
                 )}
             </AnimatePresence>
 
-            {/* Main content — after title */}
             {currentScene > -2 && (
                 <>
                     <header className="sticky top-0 z-40 backdrop-blur-xl bg-slate-900/80 border-b border-slate-800">
@@ -169,21 +232,13 @@ export default function ScenarioPlayer() {
                         <AnimatePresence mode="wait">
 
                             {currentScene === -1 && (
-                                <CinematicVideoIntro
-                                    key="video"
-                                    scenarioId={scenarioId}
-                                    isTeacher={isTeacher}
-                                    onComplete={() => setCurrentScene(0)}
-                                />
+                                <CinematicVideoIntro key="video" scenarioId={scenarioId}
+                                    isTeacher={isTeacher} onComplete={() => setCurrentScene(0)} />
                             )}
 
                             {currentScene === 0 && (
-                                <ScenarioIntro
-                                    key="intro"
-                                    scenario={scenario}
-                                    onStart={() => setCurrentScene(1)}
-                                    isTeacher={isTeacher}
-                                />
+                                <ScenarioIntro key="intro" scenario={scenario}
+                                    onStart={() => setCurrentScene(1)} isTeacher={isTeacher} />
                             )}
 
                             {currentScene === 1 && (
@@ -241,7 +296,7 @@ export default function ScenarioPlayer() {
     );
 }
 
-// ── Scenario Intro — simple one-page summary ──
+// ── Scenario Intro ──
 function ScenarioIntro({ scenario, onStart, isTeacher }) {
     return (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
