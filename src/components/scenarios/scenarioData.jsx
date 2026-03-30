@@ -57,12 +57,12 @@ export const ROLES = {
     },
     fertilizer_engineer: {
         id: 'fertilizer_engineer',
-        title: 'Fertilizer Engineer',
+        title: 'Stoichiometry Specialist',
         icon: '🌱',
         color: 'green',
         description: 'Optimize chemical reactions to maximize crop yield and sustainability',
         difficulty: 'On-Level',
-        scenarios: ['haber_process']
+        scenarios: ['haber_process', 'aspirin_percent_yield']
     },
     geologist: {
         id: 'geologist',
@@ -1462,142 +1462,284 @@ export const SCENARIOS = {
     },
 
     // ============================================
-    // SCENARIO 12: Haber Process (Fertilizer Production - On-Level Stoichiometry)
+    // SCENARIO 12: Fuel Production Optimization (Stoichiometry - Mole Conversions)
     // ============================================
     haber_process: {
         id: 'haber_process',
-        title: 'The Fertilizer Dilemma',
-        role: 'Fertilizer Production Engineer – Haber Process Specialist',
-        roleQuote: 'The right calculation today feeds millions tomorrow.',
-        context: 'A fertilizer plant in the UAE uses the Haber Process to produce ammonia (NH₃) for agricultural fertilizer. A supply disruption has limited nitrogen gas (N₂) availability, creating a limiting reactant crisis. The plant must supply fertilizer to farms before the planting season starts in 3 days.',
-        scienceFocus: ['Limiting reactants', 'Mole ratios', 'Theoretical vs actual yield', 'Industrial stoichiometry'],
+        title: 'Fuel Production Optimization',
+        role: 'Industrial Chemist – Fuel Production Facility',
+        roleQuote: 'Precise calculations today power a cleaner tomorrow.',
+        context: 'You are an industrial chemist working in a fuel production facility in the UAE. The plant produces hydrogen gas — a clean fuel — by reacting methane with steam. The plant starts with 16 g of methane (CH₄) and needs you to calculate the expected hydrogen output.',
+        scienceFocus: ['Mole-to-mole conversions', 'Mass-to-mass conversions', 'Balanced chemical equations', 'Industrial stoichiometry'],
         strand: 'Chemistry',
-        estimatedTime: 15,
-        badge: 'Yield Optimizer',
-        badgeIcon: '🌱',
+        estimatedTime: 14,
+        badge: 'Conversion Specialist',
+        badgeIcon: '⚗️',
 
         scenes: [
             {
                 id: 1,
-                title: 'Identifying the Limiting Reactant',
-                narrative: 'The Haber Process reaction is: N₂ + 3H₂ → 2NH₃. Your plant has 280 kg of N₂ and 90 kg of H₂ available. You need to identify which reactant will run out first — the limiting reactant — before you can calculate how much ammonia you can produce.',
+                title: 'Understanding the Reaction Data',
+                narrative: 'Your plant produces hydrogen gas by reacting methane with steam. The balanced equation is: CH₄ + 2H₂O → CO₂ + 4H₂. The plant begins with 16 g of methane (CH₄). Water (steam) is available in excess, so methane is your key reactant. Your first task is to convert the mass of methane into moles before any further calculations can be done.',
                 data: {
                     type: 'table_and_graph',
                     table: {
-                        headers: ['Reactant', 'Molar Mass', 'Available Mass', 'Moles Available', 'Moles Needed per mol N₂'],
+                        headers: ['Substance', 'Role', 'Amount', 'Molar Mass'],
                         rows: [
-                            ['Nitrogen (N₂)', '28 g/mol', '280 kg = 280,000 g', '10,000 mol', '1 mol N₂'],
-                            ['Hydrogen (H₂)', '2 g/mol', '90 kg = 90,000 g', '45,000 mol', '3 mol H₂'],
-                            ['Ammonia (NH₃)', '17 g/mol', 'Product', 'To calculate', '2 mol NH₃']
+                            ['CH₄ (methane)', 'Reactant', '16 g', '16 g/mol'],
+                            ['H₂O (steam)', 'Reactant', 'Excess', '18 g/mol'],
+                            ['CO₂', 'Product', 'To calculate', '44 g/mol'],
+                            ['H₂ (hydrogen gas)', 'Product — clean fuel', 'To calculate', '2 g/mol']
                         ]
                     },
-                    graphDescription: 'N₂ + 3H₂ → 2NH₃: For every 1 mol N₂, you need 3 mol H₂ and produce 2 mol NH₃',
-                    mapNote: 'To use all 10,000 mol N₂ you would need 30,000 mol H₂ — but you only have 45,000 mol H₂ available'
+                    graphDescription: 'CH₄ + 2H₂O → CO₂ + 4H₂ — 1 mol CH₄ produces 4 mol H₂',
+                    mapNote: 'Moles = Mass ÷ Molar Mass. For CH₄: 16 g ÷ 16 g/mol = 1 mol'
                 },
-                question: 'Which reactant is the limiting reactant, and why?',
+                question: 'How many moles of methane (CH₄) are used? (Molar mass of CH₄ = 16 g/mol)',
                 options: [
-                    { id: 'A', text: 'N₂ is limiting — you have fewer moles of N₂ (10,000 mol) than H₂ (45,000 mol)', correct: false, feedback: 'Having fewer moles alone doesn\'t determine the limiting reactant. You must compare what\'s available to what\'s needed based on the mole ratio.' },
-                    { id: 'B', text: 'H₂ is limiting — to use all N₂ (10,000 mol) you\'d need 30,000 mol H₂, but only have 45,000 mol, which is more than enough', correct: false, feedback: 'Check your math: to use 10,000 mol N₂ you need 10,000 × 3 = 30,000 mol H₂. You have 45,000 mol H₂ — that\'s more than needed, so H₂ is NOT limiting.' },
-                    { id: 'C', text: 'N₂ is limiting — to use all H₂ (45,000 mol) you\'d need 15,000 mol N₂, but you only have 10,000 mol', correct: true, feedback: 'Correct! 45,000 mol H₂ ÷ 3 = 15,000 mol N₂ needed. You only have 10,000 mol N₂. N₂ runs out first — it is the limiting reactant.' },
-                    { id: 'D', text: 'Neither is limiting — both are present in sufficient amounts', correct: false, feedback: 'With a 1:3 ratio, you cannot assume both are sufficient. Always check the stoichiometry.' }
+                    { id: 'A', text: '0.5 mol', correct: false, feedback: 'Incorrect. Use moles = mass ÷ molar mass: 16 ÷ 16 = 1 mol, not 0.5.' },
+                    { id: 'B', text: '1 mol', correct: true, feedback: 'Correct! 16 g ÷ 16 g/mol = 1 mol of CH₄.' },
+                    { id: 'C', text: '2 mol', correct: false, feedback: 'Incorrect. 16 ÷ 16 = 1, not 2.' },
+                    { id: 'D', text: '16 mol', correct: false, feedback: 'Incorrect. 16 is the molar mass, not the number of moles. Divide mass by molar mass.' }
                 ],
-                learningObjective: 'Identifying the limiting reactant using mole ratios'
+                learningObjective: 'Converting mass to moles using the formula: moles = mass ÷ molar mass'
             },
             {
                 id: 2,
-                title: 'Maximizing Yield Under Constraints',
-                narrative: 'You have confirmed N₂ is the limiting reactant. With 10,000 mol N₂, the theoretical yield is 20,000 mol NH₃ = 340,000 g = 340 kg. However, the plant\'s actual efficiency is only 65% due to high pressure and temperature conditions. The farms need at least 180 kg of ammonia-based fertilizer. What action do you take?',
-                question: 'Given a 65% actual yield (221 kg of NH₃), what do you recommend?',
+                title: 'Predicting Hydrogen Output',
+                narrative: 'The plant manager asks you to predict how much hydrogen gas can be produced from the 1 mol of methane available. This prediction is critical — the facility needs to plan how much clean fuel it can supply to UAE transport operators before committing to the contract.',
+                question: 'Based on the balanced equation CH₄ + 2H₂O → CO₂ + 4H₂, how many moles of hydrogen gas (H₂) will be produced from 1 mol of CH₄?',
                 options: [
                     {
                         id: 'A',
-                        text: 'Proceed — 221 kg exceeds the 180 kg minimum requirement',
-                        icon: '✅',
-                        tags: ['Meets target', 'Uses available resources fully'],
-                        consequence: 'proceed',
-                        ethical: 'practical'
+                        text: '1 mol H₂ — same as the moles of CH₄',
+                        icon: '1️⃣',
+                        tags: ['Ignores mole ratio', 'Incorrect'],
+                        consequence: 'one_mol',
+                        ethical: 'incorrect'
                     },
                     {
                         id: 'B',
-                        text: 'Emergency purchase of more N₂ to guarantee 300 kg output',
-                        icon: '🚢',
-                        tags: ['Higher output', 'Import cost and delay'],
-                        consequence: 'extra_n2',
-                        ethical: 'overcautious'
+                        text: '2 mol H₂ — using the coefficient of H₂O',
+                        icon: '2️⃣',
+                        tags: ['Wrong coefficient used', 'Incorrect'],
+                        consequence: 'two_mol',
+                        ethical: 'incorrect'
                     },
                     {
                         id: 'C',
-                        text: 'Increase temperature dramatically to boost reaction rate',
-                        icon: '🔥',
-                        tags: ['Faster reaction', 'Lower yield — equilibrium shift'],
-                        consequence: 'high_temp',
-                        ethical: 'risky'
+                        text: '4 mol H₂ — from the 1:4 mole ratio in the balanced equation',
+                        icon: '✅',
+                        tags: ['Correct mole ratio', 'From balanced equation'],
+                        consequence: 'four_mol',
+                        ethical: 'correct'
                     },
                     {
                         id: 'D',
-                        text: 'Report only theoretical yield (340 kg) to management and farms',
-                        icon: '📋',
-                        tags: ['Looks better on paper', 'Scientifically dishonest'],
-                        consequence: 'lie',
-                        ethical: 'dishonest'
+                        text: '8 mol H₂ — doubling the coefficient',
+                        icon: '8️⃣',
+                        tags: ['Over-counted', 'Incorrect'],
+                        consequence: 'eight_mol',
+                        ethical: 'incorrect'
                     }
                 ],
-                justificationStarter: 'Based on stoichiometric calculations, the best choice is...',
-                learningObjective: 'Applying theoretical vs actual yield to real production decisions'
+                justificationStarter: 'Based on the mole ratio from the balanced equation...',
+                learningObjective: 'Applying mole-to-mole ratios from a balanced chemical equation'
             },
             {
                 id: 3,
-                title: 'Harvest Season Results',
+                title: 'Calculating the Mass of Hydrogen Produced',
                 consequences: {
-                    proceed: {
-                        outcome: '221 kg NH₃ produced and delivered on time. Farms receive adequate fertilizer. Planting season proceeds successfully.',
-                        message: 'Actual yield calculation: 10,000 mol N₂ × 2 mol NH₃/mol N₂ × 17 g/mol × 65% = 221,000 g = 221 kg. Production was accurate and responsible.',
-                        newData: 'Crop yield: 92% of projected. Plant efficiency noted for improvement. No waste.'
+                    four_mol: {
+                        outcome: 'Excellent! From 1 mol CH₄ → 4 mol H₂ (mole ratio from equation). Mass of H₂ = 4 mol × 2 g/mol = 8 g of hydrogen gas. The plant correctly reports 8 g of H₂ output and secures the fuel supply contract with the UAE transport authority.',
+                        message: 'Step 1: Mole ratio → 1 mol CH₄ : 4 mol H₂. Step 2: Mass = moles × molar mass = 4 × 2 = 8 g. This is the correct mass-to-mass stoichiometric pathway.',
+                        newData: 'H₂ produced: 8 g per 16 g CH₄. Contract signed. Plant scales to 160 kg CH₄ → 80 kg H₂ for full production run.'
                     },
-                    extra_n2: {
-                        outcome: 'Extra N₂ arrives 2 days late. Planting season delayed. Farms miss optimal soil temperature window. Crop yield reduced by 20%.',
-                        message: 'When calculations show you have enough, unnecessary delays cause more harm than help.',
-                        newData: 'Final output: 300 kg. But late delivery cost farms 20% of projected crop revenue.'
+                    one_mol: {
+                        outcome: 'Your prediction of 1 mol H₂ (= 2 g) severely underestimates production. The facility only supplies 2 g instead of 8 g. The UAE transport contract is voided due to under-delivery.',
+                        message: 'You ignored the mole ratio. The equation shows 1 mol CH₄ produces 4 mol H₂, not 1 mol. Always read the coefficients from the balanced equation.',
+                        newData: 'Delivery shortfall: 6 g per batch. Contract penalty issued. Recalculation required.'
                     },
-                    high_temp: {
-                        outcome: 'Reaction rate increases but the equilibrium shifts BACKWARD at high temperature, reducing yield to 38%. Only 129 kg produced — below the 180 kg minimum.',
-                        message: 'Le Chatelier\'s Principle: For this exothermic reaction, higher temperatures reduce equilibrium yield. Industrial compromise uses moderate temperatures.',
-                        newData: '129 kg produced. Farms receive 72% of needed fertilizer. Partial crop failure.'
+                    two_mol: {
+                        outcome: 'Using the H₂O coefficient (2) instead of the H₂ coefficient (4) gave an incorrect prediction of 4 g instead of 8 g. The plant under-delivers on its fuel contract.',
+                        message: 'The coefficient of H₂O (2) applies to water, not hydrogen. Always match the coefficient to the correct substance in the equation.',
+                        newData: 'Production: 4 g H₂ instead of 8 g. Quality audit flagged the stoichiometry error.'
                     },
-                    lie: {
-                        outcome: 'Farms plan for 340 kg but receive only 221 kg. Under-fertilized fields produce 40% less crop. Company faces compensation claims.',
-                        message: 'Reporting theoretical yield as actual yield causes planning failures downstream. Scientific honesty is essential.',
-                        newData: 'Legal claim filed. Trust relationship with farms damaged. 40% crop loss reported.'
+                    eight_mol: {
+                        outcome: 'Predicting 8 mol H₂ (= 16 g) overstates production. The plant promises 16 g to clients but only delivers 8 g. A regulatory complaint is filed with the UAE Energy Authority.',
+                        message: '8 mol would require 2 mol of CH₄, not 1. Never double coefficients without a reason — use the balanced equation as written.',
+                        newData: 'Over-promise of 16 g vs actual 8 g. Client dispute raised. Stoichiometry re-training ordered.'
                     }
                 },
-                followUpQuestion: 'If the plant improved its efficiency from 65% to 80%, how much more NH₃ would be produced from the same 10,000 mol N₂?',
-                learningObjective: 'Calculating the impact of efficiency changes on actual yield'
+                followUpQuestion: 'Why is the balanced equation essential for calculating the mass of hydrogen produced?',
+                learningObjective: 'Performing a complete mass-to-mass stoichiometric calculation'
             }
         ],
 
         exitTicket: {
             mcqs: [
                 {
-                    question: 'In the reaction N₂ + 3H₂ → 2NH₃, if you start with 4 mol N₂ and 9 mol H₂, what is the limiting reactant?',
+                    question: 'In CH₄ + 2H₂O → CO₂ + 4H₂, what is the mole ratio between CH₄ and H₂?',
                     options: [
-                        { id: 'A', text: 'N₂, because it has fewer moles', correct: false },
-                        { id: 'B', text: 'H₂, because 4 mol N₂ needs 12 mol H₂ but only 9 mol are available', correct: true },
-                        { id: 'C', text: 'Neither — both are in the correct ratio', correct: false },
-                        { id: 'D', text: 'NH₃, because it is the product', correct: false }
+                        { id: 'A', text: '1:1', correct: false },
+                        { id: 'B', text: '1:2', correct: false },
+                        { id: 'C', text: '1:4', correct: true },
+                        { id: 'D', text: '4:1', correct: false }
                     ]
                 },
                 {
-                    question: 'A reaction has a theoretical yield of 50 g and an actual yield of 35 g. The percentage yield is:',
+                    question: 'To convert the mass of a substance to moles, you should:',
                     options: [
-                        { id: 'A', text: '35%', correct: false },
-                        { id: 'B', text: '143%', correct: false },
-                        { id: 'C', text: '70%', correct: true },
-                        { id: 'D', text: '50%', correct: false }
+                        { id: 'A', text: 'Multiply mass by molar mass', correct: false },
+                        { id: 'B', text: 'Divide molar mass by mass', correct: false },
+                        { id: 'C', text: 'Divide mass by molar mass', correct: true },
+                        { id: 'D', text: 'Add mass and molar mass', correct: false }
                     ]
                 }
             ],
-            reflectionPrompt: 'How does identifying the limiting reactant before production begin prevent waste and improve planning?',
-            transferQuestion: 'A different process uses 2A + B → 3C. You have 60 mol A and 40 mol B. Which is limiting, and what is the maximum theoretical yield of C in moles?'
+            reflectionPrompt: 'How does using mole ratios from balanced equations help predict product quantities in industrial processes?',
+            transferQuestion: 'If 32 g of CH₄ is used in the same reaction (CH₄ + 2H₂O → CO₂ + 4H₂), calculate the mass of hydrogen gas produced. Show your working.'
+        }
+    },
+
+    // ============================================
+    // SCENARIO 13: Aspirin Percent Yield (UAE Pharmaceutical - Stoichiometry Specialist)
+    // ============================================
+    aspirin_percent_yield: {
+        id: 'aspirin_percent_yield',
+        title: 'The Efficiency Report',
+        role: 'Chemical Process Engineer – Pharmaceutical Quality Control',
+        roleQuote: 'In a UAE pharmaceutical plant, every percentage point of yield counts.',
+        context: 'You are a chemical process engineer at a pharmaceutical company in the UAE producing Aspirin (Acetylsalicylic Acid) — a widely used pain reliever. The factory has completed a production run and needs you to evaluate the reaction efficiency before the next batch.',
+        scienceFocus: ['Percent yield', 'Theoretical vs actual yield', 'Stoichiometry', 'Quality control in pharmaceutical production'],
+        strand: 'Chemistry',
+        estimatedTime: 12,
+        badge: 'Efficiency Analyst',
+        badgeIcon: '📊',
+
+        scenes: [
+            {
+                id: 1,
+                title: 'Understanding Yield',
+                narrative: 'The factory has completed its aspirin production run. The chemical reaction used is: Salicylic acid + Acetic anhydride → Aspirin + Acetic acid. Your team used 138 g of salicylic acid. Based on stoichiometric calculations, the theoretical yield of aspirin is 180 g. After production, the team collected only 135 g of aspirin.',
+                data: {
+                    type: 'table_and_graph',
+                    table: {
+                        headers: ['Quantity', 'Value'],
+                        rows: [
+                            ['Mass of salicylic acid used', '138 g'],
+                            ['Theoretical yield of aspirin', '180 g'],
+                            ['Actual yield collected', '135 g'],
+                            ['Chemical equation', 'C₇H₆O₃ + C₄H₆O₃ → C₉H₈O₄ + CH₃COOH']
+                        ]
+                    },
+                    graphDescription: 'Salicylic acid + Acetic anhydride → Aspirin + Acetic acid (1:1:1:1 mole ratio)',
+                    mapNote: '138 g of salicylic acid (MW 138 g/mol) = 1 mol → produces 1 mol aspirin (MW 180 g/mol) = 180 g theoretical yield'
+                },
+                question: 'What does the theoretical yield of 180 g represent in this process?',
+                options: [
+                    { id: 'A', text: 'The amount of product actually collected', correct: false, feedback: 'That describes the actual yield (135 g), not the theoretical yield.' },
+                    { id: 'B', text: 'The maximum amount of product expected from the reaction', correct: true, feedback: 'Correct! The theoretical yield is the maximum amount of product that can be formed based on the balanced equation and given reactants.' },
+                    { id: 'C', text: 'The leftover reactants after the reaction', correct: false, feedback: 'Leftover reactants are excess reagents, not the theoretical yield.' },
+                    { id: 'D', text: 'The amount of waste produced during manufacturing', correct: false, feedback: 'Waste is a separate consideration. The theoretical yield refers to the maximum possible product.' }
+                ],
+                learningObjective: 'Distinguishing between theoretical yield and actual yield in a chemical reaction'
+            },
+            {
+                id: 2,
+                title: 'Evaluating Process Efficiency',
+                narrative: 'The production manager notices that only 135 g of aspirin was collected — less than the expected 180 g. They ask you to evaluate how efficient the production process was so the company can report accurately to UAE pharmaceutical regulators.',
+                question: 'What is the BEST way to determine how efficient the reaction was?',
+                options: [
+                    {
+                        id: 'A',
+                        text: 'Compare actual yield to theoretical yield using percent yield formula',
+                        icon: '📐',
+                        tags: ['Scientifically accurate', 'Industry standard'],
+                        consequence: 'percent_yield',
+                        ethical: 'correct'
+                    },
+                    {
+                        id: 'B',
+                        text: 'Subtract actual yield from theoretical yield only (180 − 135 = 45 g lost)',
+                        icon: '➖',
+                        tags: ['Shows mass lost', 'Not a measure of efficiency'],
+                        consequence: 'subtraction',
+                        ethical: 'incomplete'
+                    },
+                    {
+                        id: 'C',
+                        text: 'Divide theoretical yield by actual yield (180 ÷ 135)',
+                        icon: '🔀',
+                        tags: ['Wrong formula', 'Misleading result'],
+                        consequence: 'wrong_formula',
+                        ethical: 'incorrect'
+                    },
+                    {
+                        id: 'D',
+                        text: 'Ignore the difference since product was still formed',
+                        icon: '🙈',
+                        tags: ['No analysis done', 'Regulatory risk'],
+                        consequence: 'ignore',
+                        ethical: 'negligent'
+                    }
+                ],
+                justificationStarter: 'Based on the relationship between actual and theoretical yield...',
+                learningObjective: 'Selecting the correct method to calculate and communicate reaction efficiency'
+            },
+            {
+                id: 3,
+                title: 'Calculating the Percent Yield',
+                consequences: {
+                    percent_yield: {
+                        outcome: 'You apply the percent yield formula: (135 ÷ 180) × 100 = 75%. The process is 75% efficient. You report this accurately to the production manager. The company identifies that product loss occurred during filtration and purification steps, and plans process improvements.',
+                        message: 'Correct! Percent yield = (Actual Yield ÷ Theoretical Yield) × 100 = (135 ÷ 180) × 100 = 75%. This is the industry-standard measure of reaction efficiency.',
+                        newData: 'Percent yield: 75%. Loss attributed to: product transfer (10%), purification step (15%). Next batch target: ≥80% yield.'
+                    },
+                    subtraction: {
+                        outcome: 'You report that 45 g was "lost." The manager asks: "But how efficient is our process compared to others?" You cannot answer without a percent yield. The regulator flags the report as incomplete.',
+                        message: 'Mass difference alone doesn\'t communicate efficiency. A 45 g loss from 180 g (75%) is very different from 45 g loss from 500 g (91%).',
+                        newData: 'Regulatory report rejected — insufficient efficiency data. Rework required.'
+                    },
+                    wrong_formula: {
+                        outcome: 'Your calculation gives 180 ÷ 135 = 1.33, or 133%. A percent yield above 100% is impossible and signals a calculation error. The quality control team flags the report immediately.',
+                        message: 'Reversing the formula gives a result over 100%, which is physically impossible. Always use: (Actual ÷ Theoretical) × 100.',
+                        newData: 'Report flagged for error. Credibility of analysis questioned. Re-submission required.'
+                    },
+                    ignore: {
+                        outcome: 'You submit no efficiency analysis. The UAE Ministry of Health pharmaceutical audit finds no yield data on file. The production license is placed under review for missing quality control documentation.',
+                        message: 'Pharmaceutical regulations in the UAE require yield reporting for every production batch. Ignoring data gaps violates Good Manufacturing Practice (GMP) standards.',
+                        newData: 'Audit flag raised. Production license under review. Company faces AED 50,000 compliance penalty.'
+                    }
+                },
+                followUpQuestion: 'Why is the percent yield less than 100% even when the reaction is carried out correctly?',
+                learningObjective: 'Calculating percent yield and interpreting efficiency in a real pharmaceutical context'
+            }
+        ],
+
+        exitTicket: {
+            mcqs: [
+                {
+                    question: 'What does a percent yield of 100% indicate?',
+                    options: [
+                        { id: 'A', text: 'No reaction occurred', correct: false },
+                        { id: 'B', text: 'The maximum possible product was obtained', correct: true },
+                        { id: 'C', text: 'Reactants were wasted', correct: false },
+                        { id: 'D', text: 'The reaction was too slow', correct: false }
+                    ]
+                },
+                {
+                    question: 'The correct formula for percent yield is:',
+                    options: [
+                        { id: 'A', text: '(Theoretical Yield ÷ Actual Yield) × 100', correct: false },
+                        { id: 'B', text: 'Actual Yield − Theoretical Yield', correct: false },
+                        { id: 'C', text: '(Actual Yield ÷ Theoretical Yield) × 100', correct: true },
+                        { id: 'D', text: 'Theoretical Yield × Actual Yield', correct: false }
+                    ]
+                }
+            ],
+            reflectionPrompt: 'How does percent yield help improve pharmaceutical production processes in real-world factories like those in the UAE?',
+            transferQuestion: 'A reaction has a theoretical yield of 90 g and an actual yield of 72 g. Calculate the percent yield and explain what it tells you about the reaction efficiency.'
         }
     },
 
@@ -1750,7 +1892,8 @@ export const BADGES = {
     'Efficiency Expert': { icon: '🏠', color: 'teal', description: 'Reduced energy waste' },
     'Life Support Hero': { icon: '🚀', color: 'indigo', description: 'Kept astronauts alive in space' },
     'Precision Chemist': { icon: '💊', color: 'teal', description: 'Applied stoichiometry to pharmaceutical production' },
-    'Yield Optimizer': { icon: '🌱', color: 'green', description: 'Mastered limiting reactants and yield calculations' },
+    'Conversion Specialist': { icon: '⚗️', color: 'green', description: 'Mastered mole-to-mole and mass-to-mass stoichiometric conversions' },
+    'Efficiency Analyst': { icon: '📊', color: 'teal', description: 'Calculated percent yield and evaluated pharmaceutical production efficiency' },
     'Ethical Thinker': { icon: '🤔', color: 'violet', description: 'Considered ethical implications in decisions' },
     'Data Detective': { icon: '🔍', color: 'cyan', description: 'Extracted insights from scientific data' },
     'Risk Manager': { icon: '⚠️', color: 'rose', description: 'Balanced risks and benefits effectively' }
