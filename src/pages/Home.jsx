@@ -48,13 +48,15 @@ export default function Home() {
             if (role !== 'teacher') {
                 const { data: progressList } = await supabase
                     .from('student_progress')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false });
+                    .select('scenario_id, score')
+                    .eq('student_id', currentUser.id)
+                    .not('scenario_id', 'is', null);
 
-                if (progressList && progressList.length > 0) {
-                    setProgress(progressList[0]);
-                }
+                const completedScenarios = (progressList || [])
+                    .filter(r => r.score >= 70)
+                    .map(r => r.scenario_id);
+
+                setProgress({ completed_scenarios: completedScenarios });
             }
 
         } catch (e) {
