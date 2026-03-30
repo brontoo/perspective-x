@@ -327,12 +327,30 @@ export default function Dashboard() {
                                                     {percentage}%
                                                 </span>
                                             </div>
-                                            <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+
+                                            {/* Progress bar */}
+                                            <div className="h-2 bg-slate-700 rounded-full overflow-hidden mb-3">
                                                 <div className={`h-full rounded-full transition-all ${percentage === 100
                                                     ? 'bg-gradient-to-r from-emerald-500 to-teal-500'
                                                     : 'bg-gradient-to-r from-teal-500 to-emerald-500'}`}
                                                     style={{ width: `${percentage}%` }} />
                                             </div>
+
+                                            {/* Scenario dots */}
+                                            <div className="flex gap-1.5 flex-wrap">
+                                                {role.scenarios.map((scenarioId) => {
+                                                    const isComp = progress?.completed_scenarios?.includes(scenarioId);
+                                                    const scenario = SCENARIOS[scenarioId];
+                                                    return (
+                                                        <div key={scenarioId}
+                                                            title={scenario?.title || scenarioId}
+                                                            className={`h-2 rounded-full transition-all ${isComp
+                                                                ? 'bg-emerald-500 w-6'
+                                                                : 'bg-slate-600 w-2'}`} />
+                                                    );
+                                                })}
+                                            </div>
+
                                             {percentage === 100 && (
                                                 <div className="mt-2 flex items-center gap-1 text-emerald-400">
                                                     <Zap className="w-3 h-3" />
