@@ -89,19 +89,16 @@ export default function RoleHub() {
         progress?.completed_scenarios?.includes(scenarioId) || false;
 
     const isUnlocked = (scenarioId) => {
+        // المدرس يتحكم بالكامل — is_locked يأتي أولاً دائماً
+        if (scenarioSettings[scenarioId]?.is_locked) return false;
         if (scenarioId === role?.scenarios[0]) return true;
         if (!progress) return false;
         if (progress.completed_scenarios?.includes(scenarioId)) return true;
-        if (scenarioSettings[scenarioId]?.is_locked) return false;
         return progress.unlocked_scenarios?.includes(scenarioId);
     };
 
     const getScenarioStatus = (scenarioId) => {
-        if (scenarioId === role?.scenarios[0]) {
-            if (isCompleted(scenarioId)) return 'completed';
-            if (scenarioSettings[scenarioId]?.is_locked) return 'locked';
-            return 'unlocked';
-        }
+        // is_locked يأتي أولاً دائماً
         if (scenarioSettings[scenarioId]?.is_locked) return 'locked';
         if (isCompleted(scenarioId)) return 'completed';
         if (isUnlocked(scenarioId)) return 'unlocked';
