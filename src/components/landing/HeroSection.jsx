@@ -1,12 +1,12 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Sparkles, LogIn } from 'lucide-react';
+import { Play, Sparkles, LogIn, ArrowRight, Users, Trophy, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/lib/supabaseClient';
 
 function ParticleCanvas() {
     const canvasRef = useRef(null);
-
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -14,46 +14,30 @@ function ParticleCanvas() {
         let animationId;
         let particles = [];
         let mouse = { x: null, y: null, radius: 150 };
-
-        const resize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
+        const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
         resize();
         window.addEventListener('resize', resize);
-
-        const handleMouse = (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        };
+        const handleMouse = (e) => { mouse.x = e.clientX; mouse.y = e.clientY; };
         window.addEventListener('mousemove', handleMouse);
-
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 2 + 0.5;
-                this.baseX = this.x;
-                this.baseY = this.y;
+                this.baseX = this.x; this.baseY = this.y;
                 this.density = Math.random() * 30 + 1;
                 this.color = `hsla(${170 + Math.random() * 30}, 70%, ${50 + Math.random() * 20}%, ${0.3 + Math.random() * 0.4})`;
             }
             update() {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
+                let dx = mouse.x - this.x, dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
-                let forceDirectionX = dx / distance;
-                let forceDirectionY = dy / distance;
-                let maxDistance = mouse.radius;
-                let force = (maxDistance - distance) / maxDistance;
-                let directionX = forceDirectionX * force * this.density;
-                let directionY = forceDirectionY * force * this.density;
+                let force = (mouse.radius - distance) / mouse.radius;
                 if (distance < mouse.radius) {
-                    this.x -= directionX;
-                    this.y -= directionY;
+                    this.x -= (dx / distance) * force * this.density;
+                    this.y -= (dy / distance) * force * this.density;
                 } else {
-                    if (this.x !== this.baseX) { let dx = this.x - this.baseX; this.x -= dx / 10; }
-                    if (this.y !== this.baseY) { let dy = this.y - this.baseY; this.y -= dy / 10; }
+                    if (this.x !== this.baseX) this.x -= (this.x - this.baseX) / 10;
+                    if (this.y !== this.baseY) this.y -= (this.y - this.baseY) / 10;
                 }
             }
             draw() {
@@ -63,22 +47,19 @@ function ParticleCanvas() {
                 ctx.fill();
             }
         }
-
         const createParticles = () => {
             particles = [];
-            const numberOfParticles = Math.min(200, (canvas.width * canvas.height) / 8000);
-            for (let i = 0; i < numberOfParticles; i++) particles.push(new Particle());
+            const n = Math.min(200, (canvas.width * canvas.height) / 8000);
+            for (let i = 0; i < n; i++) particles.push(new Particle());
         };
         createParticles();
-
         const connect = () => {
             for (let a = 0; a < particles.length; a++) {
                 for (let b = a; b < particles.length; b++) {
-                    let dx = particles[a].x - particles[b].x;
-                    let dy = particles[a].y - particles[b].y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 100) {
-                        ctx.strokeStyle = `rgba(20, 184, 166, ${0.15 - distance / 800})`;
+                    let dx = particles[a].x - particles[b].x, dy = particles[a].y - particles[b].y;
+                    let d = Math.sqrt(dx * dx + dy * dy);
+                    if (d < 100) {
+                        ctx.strokeStyle = `rgba(20, 184, 166, ${0.15 - d / 800})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
                         ctx.moveTo(particles[a].x, particles[a].y);
@@ -88,31 +69,25 @@ function ParticleCanvas() {
                 }
             }
         };
-
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const gradient = ctx.createRadialGradient(
-                canvas.width / 2, canvas.height / 2, 0,
-                canvas.width / 2, canvas.height / 2, canvas.width / 1.5
-            );
+            const gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 1.5);
             gradient.addColorStop(0, 'rgba(20, 184, 166, 0.05)');
             gradient.addColorStop(0.5, 'rgba(139, 92, 246, 0.03)');
             gradient.addColorStop(1, 'transparent');
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            for (let particle of particles) { particle.update(); particle.draw(); }
+            for (let p of particles) { p.update(); p.draw(); }
             connect();
             animationId = requestAnimationFrame(animate);
         };
         animate();
-
         return () => {
             window.removeEventListener('resize', resize);
             window.removeEventListener('mousemove', handleMouse);
             cancelAnimationFrame(animationId);
         };
     }, []);
-
     return <canvas ref={canvasRef} className="absolute inset-0 z-0" style={{ background: 'transparent' }} />;
 }
 
@@ -174,17 +149,43 @@ function FloatingMolecules() {
     );
 }
 
-// ✅ أضفنا isLoggedIn و isLoading كـ props
-export default function HeroSection({ onStart, isLoggedIn = false, isLoading = false }) {
+export default function HeroSection({ onStart, isLoggedIn = false, isLoading = false, lastRole = null }) {
     const navigate = useNavigate();
+
+    // ── 1. Dynamic Stats from Supabase ──
+    const [liveStats, setLiveStats] = useState({ students: 0, badges: 0, completions: 0 });
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const [{ count: students }, { data: progress }] = await Promise.all([
+                    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
+                    supabase.from('student_progress').select('score').not('scenario_id', 'is', null)
+                ]);
+                const completions = (progress || []).filter(r => r.score >= 70).length;
+                setLiveStats({
+                    students: students || 0,
+                    badges: completions,
+                    completions
+                });
+            } catch (e) { console.log('Stats error:', e); }
+        };
+        fetchStats();
+    }, []);
+
+    // ── 2. CTA label based on user state ──
+    const ctaLabel = isLoading ? 'Loading...'
+        : isLoggedIn && lastRole ? `Continue as ${lastRole}`
+            : isLoggedIn ? 'Continue Learning'
+                : 'Begin Your Journey';
+
+    const ctaIcon = isLoggedIn ? <ArrowRight className="w-6 h-6" /> : <Play className="w-6 h-6" />;
 
     return (
         <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden bg-slate-950">
             <ParticleCanvas />
             <DNAHelix />
             <FloatingMolecules />
-
-
 
             {/* Hexagon grid */}
             <div className="absolute inset-0 opacity-5 pointer-events-none">
@@ -220,6 +221,10 @@ export default function HeroSection({ onStart, isLoggedIn = false, isLoading = f
                             <Sparkles className="w-5 h-5 text-teal-400" />
                         </motion.div>
                         <span className="text-teal-300 font-medium">Interactive Science Learning</span>
+                        {/* ── 5. Social Proof ── */}
+                        <span className="hidden sm:block text-slate-500 text-xs border-l border-slate-700 pl-3 ml-1">
+                            Um Al Emarat School
+                        </span>
                     </motion.div>
 
                     {/* Title */}
@@ -240,20 +245,18 @@ export default function HeroSection({ onStart, isLoggedIn = false, isLoading = f
                         make critical choices, and see how your scientific reasoning shapes outcomes.
                     </motion.p>
 
-                    {/* ✅ CTA Buttons */}
+                    {/* ── 2. CTA Buttons ── */}
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
                         className="flex flex-col sm:flex-row items-center justify-center gap-4">
 
-                        {/* Begin Your Journey — يظهر دائماً */}
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            <button onClick={onStart}
-                                className="relative bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white px-14 py-5 text-xl rounded-2xl shadow-2xl shadow-teal-500/30 flex items-center gap-3 font-semibold transition">
-                                <Play className="w-6 h-6" />
-                                Begin Your Journey
+                            <button onClick={onStart} disabled={isLoading}
+                                className="relative bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 disabled:opacity-60 text-white px-14 py-5 text-xl rounded-2xl shadow-2xl shadow-teal-500/30 flex items-center gap-3 font-semibold transition">
+                                {ctaIcon}
+                                {ctaLabel}
                             </button>
                         </motion.div>
 
-                        {/* ✅ Sign In — يظهر فقط للزوار */}
                         {!isLoading && !isLoggedIn && (
                             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                                 <button onClick={() => navigate('/SignIn')}
@@ -266,17 +269,30 @@ export default function HeroSection({ onStart, isLoggedIn = false, isLoading = f
                     </motion.div>
                 </motion.div>
 
-                {/* Stats */}
+                {/* ── 1. Live Stats Bar ── */}
                 <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.8 }}
-                    className="mt-20 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+                    className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
                     {[
-                        { value: '10', label: 'Scenarios' },
-                        { value: '6', label: 'Roles' },
-                        { value: '5', label: 'Science Strands' },
+                        {
+                            value: liveStats.students > 0 ? `${liveStats.students}+` : '10',
+                            label: 'Students',
+                            icon: <Users className="w-5 h-5 text-teal-400 mx-auto mb-1" />
+                        },
+                        {
+                            value: liveStats.badges > 0 ? `${liveStats.badges}` : '0',
+                            label: 'Badges Earned',
+                            icon: <Trophy className="w-5 h-5 text-amber-400 mx-auto mb-1" />
+                        },
+                        {
+                            value: '10',
+                            label: 'Scenarios',
+                            icon: <BookOpen className="w-5 h-5 text-purple-400 mx-auto mb-1" />
+                        },
                     ].map((stat, i) => (
                         <motion.div key={i} className="text-center" whileHover={{ scale: 1.05 }}>
-                            <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-teal-400 to-emerald-600 mb-2">
+                            {stat.icon}
+                            <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-teal-400 to-emerald-600 mb-1">
                                 {stat.value}
                             </div>
                             <div className="text-slate-500 text-sm font-medium uppercase tracking-wider">{stat.label}</div>
@@ -285,14 +301,14 @@ export default function HeroSection({ onStart, isLoggedIn = false, isLoading = f
                 </motion.div>
             </div>
 
-            {/* Scroll indicator — absolute لتجنب التداخل */}
+            {/* ── 3. Scroll Indicator ── */}
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10">
-                <span className="text-slate-500 text-xs tracking-widest uppercase"> </span>
+                <span className="text-slate-600 text-xs tracking-widest uppercase">Scroll</span>
                 <div className="w-6 h-10 border-2 border-teal-400/60 rounded-full flex justify-center">
                     <motion.div
                         className="w-1.5 h-3 bg-teal-400 rounded-full mt-1"
                         animate={{ y: [0, 12, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
                     />
                 </div>
             </div>
