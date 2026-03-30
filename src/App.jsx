@@ -1,3 +1,5 @@
+import RoleHub from '@/pages/RoleHub'; // أو المسار الصحيح للملف
+import ScenarioPlayer from '@/pages/ScenarioPlayer'; // إذا لم يكن موجوداً
 import LeaderboardPage from './pages/LeaderboardPage';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -103,6 +105,16 @@ function AppRoutes() {
                     </LayoutWrapper>
                 } />
                 <Route path="*" element={<PageNotFound />} />
+                <Route path="/role-hub" element={
+                    <LayoutWrapper currentPageName="RoleHub">
+                        <RoleHub />
+                    </LayoutWrapper>
+                } />
+                <Route path="/ScenarioPlayer" element={
+                    <LayoutWrapper currentPageName="ScenarioPlayer">
+                        <ScenarioPlayer />
+                    </LayoutWrapper>
+                } />
             </Routes>
         </ProtectedRoute>
     );

@@ -44,10 +44,11 @@ export default function Dashboard() {
                 .order('completed_at', { ascending: false });
 
             if (progressRows && progressRows.length > 0) {
-                const completedScenarios = progressRows.map(r => r.scenario_id);
-
+                const completedScenarios = progressRows
+                    .filter(r => r.scenario_id !== null && r.score >= 70)
+                    .map(r => r.scenario_id);
                 const badges = progressRows
-                    .filter(r => r.score >= 70)
+                    .filter(r => r.scenario_id !== null && r.score >= 70)
                     .map(r => SCENARIOS[r.scenario_id]?.badge)
                     .filter(Boolean);
 

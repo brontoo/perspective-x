@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
@@ -28,28 +29,28 @@ export default function RoleHub() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) { navigate('/login'); return; }
 
-            // جلب سجل التقدم العام (scenario_id = null)
-            const { data: progressData } = await supabase
+            const { data: completedRows } = await supabase
                 .from('student_progress')
-                .select('*')
+                .select('scenario_id, score')
                 .eq('student_id', user.id)
-                .is('scenario_id', null)
-                .maybeSingle();
+                .not('scenario_id', 'is', null);
 
-            if (progressData) {
-                setProgress(progressData);
-            } else {
-                const { data: newProgress } = await supabase
-                    .from('student_progress')
-                    .insert({
-                        student_id: user.id,
-                        scenario_id: null,
-                        completed_scenarios: [],
-                        unlocked_scenarios: [role.scenarios[0]]
-                    })
-                    .select().single();
-                setProgress(newProgress);
-            }
+            const completedScenarios = (completedRows || [])
+                .filter(r => r.score >= 70)
+                .map(r => r.scenario_id);
+
+            const unlockedScenarios = [role.scenarios[0]];
+            completedScenarios.forEach(scenarioId => {
+                const idx = role.scenarios.indexOf(scenarioId);
+                if (idx !== -1 && idx + 1 < role.scenarios.length) {
+                    unlockedScenarios.push(role.scenarios[idx + 1]);
+                }
+            });
+
+            setProgress({
+                completed_scenarios: completedScenarios,
+                unlocked_scenarios: [...new Set(unlockedScenarios)]
+            });
 
             const { data: settings } = await supabase.from('scenario_settings').select('*');
             const settingsMap = {};
@@ -63,20 +64,31 @@ export default function RoleHub() {
         }
     };
 
-
-    const isUnlocked = (scenarioId) => {
-        if (scenarioSettings[scenarioId]?.is_locked) return false;
-        if (!progress) return scenarioId === role?.scenarios[0];
-        return progress.unlocked_scenarios?.includes(scenarioId) ||
-            progress.completed_scenarios?.includes(scenarioId) ||
-            scenarioId === role?.scenarios[0];
+    // ✅ دالة isCompleted
+    const isCompleted = (scenarioId) => {
+        return progress?.completed_scenarios?.includes(scenarioId) || false;
     };
 
-    const isCompleted = (scenarioId) => {
-        return progress?.completed_scenarios?.includes(scenarioId);
+    const isUnlocked = (scenarioId) => {
+        // السيناريو الأول دائماً مفتوح
+        if (scenarioId === role?.scenarios[0]) return true;
+
+        if (!progress) return false;
+
+        // إذا أنجز الطالب السيناريو — يبقى مفتوحاً بغض النظر عن is_locked
+        if (progress.completed_scenarios?.includes(scenarioId)) return true;
+
+        // باقي السيناريوهات — تحقق من is_locked أولاً ثم unlocked
+        if (scenarioSettings[scenarioId]?.is_locked) return false;
+
+        return progress.unlocked_scenarios?.includes(scenarioId);
     };
 
     const getScenarioStatus = (scenarioId) => {
+        if (scenarioId === role?.scenarios[0]) {
+            if (isCompleted(scenarioId)) return 'completed';
+            return 'unlocked';
+        }
         if (scenarioSettings[scenarioId]?.is_locked) return 'locked';
         if (isCompleted(scenarioId)) return 'completed';
         if (isUnlocked(scenarioId)) return 'unlocked';
@@ -100,7 +112,6 @@ export default function RoleHub() {
 
     return (
         <div className={`min-h-screen bg-gradient-to-br ${colors.bg}`}>
-            {/* Header */}
             <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/70 border-b border-slate-800">
                 <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
@@ -113,7 +124,6 @@ export default function RoleHub() {
                 </div>
             </header>
 
-            {/* Role Header */}
             <section className="py-16 px-6">
                 <div className="max-w-6xl mx-auto">
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
@@ -145,7 +155,6 @@ export default function RoleHub() {
                 </div>
             </section>
 
-            {/* Scenarios Grid */}
             <section className="pb-20 px-6">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-2xl font-bold text-white mb-8">Available Scenarios</h2>

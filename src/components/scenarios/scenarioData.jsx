@@ -73,6 +73,7 @@ export const ROLES = {
         difficulty: 'Beginner',
         scenarios: ['unstable_slope']
     }
+
 };
 
 export const SCENARIOS = {
@@ -1462,143 +1463,143 @@ export const SCENARIOS = {
     },
 
     // ============================================
-    // SCENARIO 12: Fuel Production Optimization (Stoichiometry - Mole Conversions)
+    // SCENARIO 12: Fuel Production Optimization (Stoichiometry - Limiting Reactant)
     // ============================================
     haber_process: {
         id: 'haber_process',
         title: 'Fuel Production Optimization',
-        role: 'Industrial Chemist – Fuel Production Facility',
-        roleQuote: 'Precise calculations today power a cleaner tomorrow.',
-        context: 'You are an industrial chemist working in a fuel production facility in the UAE. The plant produces hydrogen gas — a clean fuel — by reacting methane with steam. The plant starts with 16 g of methane (CH₄) and needs you to calculate the expected hydrogen output.',
-        scienceFocus: ['Mole-to-mole conversions', 'Mass-to-mass conversions', 'Balanced chemical equations', 'Industrial stoichiometry'],
+        role: 'Fuel Blending Engineer at ADNOC Distribution',
+        roleQuote: 'Your chemical calculations keep Abu Dhabi moving.',
+        context: 'You are a fuel blending engineer at ADNOC Distribution. A large shipment of premium fuel additive is needed for stations across Abu Dhabi before a busy holiday weekend. One key additive is produced by reacting sulfur with oxygen to form sulfur dioxide.',
+        scienceFocus: ['Mole-to-mole conversions', 'Mass-to-mass conversions', 'Balanced chemical equations', 'Limiting reactant'],
         strand: 'Chemistry',
-        estimatedTime: 14,
-        badge: 'Conversion Specialist',
-        badgeIcon: '⚗️',
+        estimatedTime: 17,
+        badge: 'ADNOC Fuel Process Specialist',
+        badgeIcon: '⛽',
 
         scenes: [
             {
                 id: 1,
-                title: 'Understanding the Reaction Data',
-                narrative: 'Your plant produces hydrogen gas by reacting methane with steam. The balanced equation is: CH₄ + 2H₂O → CO₂ + 4H₂. The plant begins with 16 g of methane (CH₄). Water (steam) is available in excess, so methane is your key reactant. Your first task is to convert the mass of methane into moles before any further calculations can be done.',
+                title: 'Emergency Fuel Order',
+                narrative: 'A large shipment of premium fuel additive is needed before a busy holiday weekend. The reaction used is: S + O₂ → SO₂. You have 64 g of sulfur and 64 g of oxygen gas available. Your first task is to convert these masses into moles.',
                 data: {
                     type: 'table_and_graph',
                     table: {
-                        headers: ['Substance', 'Role', 'Amount', 'Molar Mass'],
+                        headers: ['Substance', 'Role', 'Mass Available', 'Molar Mass'],
                         rows: [
-                            ['CH₄ (methane)', 'Reactant', '16 g', '16 g/mol'],
-                            ['H₂O (steam)', 'Reactant', 'Excess', '18 g/mol'],
-                            ['CO₂', 'Product', 'To calculate', '44 g/mol'],
-                            ['H₂ (hydrogen gas)', 'Product — clean fuel', 'To calculate', '2 g/mol']
+                            ['Sulfur (S)', 'Reactant', '64 g', '32 g/mol'],
+                            ['Oxygen gas (O₂)', 'Reactant', '64 g', '32 g/mol'],
+                            ['Sulfur dioxide (SO₂)', 'Product', '—', '64 g/mol'],
                         ]
                     },
-                    graphDescription: 'CH₄ + 2H₂O → CO₂ + 4H₂ — 1 mol CH₄ produces 4 mol H₂',
-                    mapNote: 'Moles = Mass ÷ Molar Mass. For CH₄: 16 g ÷ 16 g/mol = 1 mol'
+                    graphDescription: 'S + O₂ → SO₂  |  1 mol S reacts with 1 mol O₂ to produce 1 mol SO₂',
+                    mapNote: 'Moles = Mass ÷ Molar Mass. For S: 64 g ÷ 32 g/mol = 2 mol'
                 },
-                question: 'How many moles of methane (CH₄) are used? (Molar mass of CH₄ = 16 g/mol)',
+                question: 'Convert the given masses into moles. How many moles of each reactant do you have?',
                 options: [
-                    { id: 'A', text: '0.5 mol', correct: false, feedback: 'Incorrect. Use moles = mass ÷ molar mass: 16 ÷ 16 = 1 mol, not 0.5.' },
-                    { id: 'B', text: '1 mol', correct: true, feedback: 'Correct! 16 g ÷ 16 g/mol = 1 mol of CH₄.' },
-                    { id: 'C', text: '2 mol', correct: false, feedback: 'Incorrect. 16 ÷ 16 = 1, not 2.' },
-                    { id: 'D', text: '16 mol', correct: false, feedback: 'Incorrect. 16 is the molar mass, not the number of moles. Divide mass by molar mass.' }
+                    { id: 'A', text: '64 g S = 1 mol,  64 g O₂ = 1 mol', correct: false, feedback: 'Check your calculation: moles = mass ÷ molar mass. For S: 64 ÷ 32 = 2 mol, not 1 mol.' },
+                    { id: 'B', text: '64 g S = 2 mol,  64 g O₂ = 2 mol', correct: true, feedback: 'Correct! 64 ÷ 32 = 2 mol for each. You have 2 mol of sulfur and 2 mol of oxygen.' },
+                    { id: 'C', text: '64 g S = 2 mol,  64 g O₂ = 1 mol', correct: false, feedback: 'The molar mass of O₂ is 32 g/mol, so 64 ÷ 32 = 2 mol, not 1 mol.' },
+                    { id: 'D', text: '64 g S = 1 mol,  64 g O₂ = 2 mol', correct: false, feedback: 'The molar mass of S is 32 g/mol, so 64 ÷ 32 = 2 mol, not 1 mol.' },
                 ],
                 learningObjective: 'Converting mass to moles using the formula: moles = mass ÷ molar mass'
             },
             {
                 id: 2,
-                title: 'Predicting Hydrogen Output',
-                narrative: 'The plant manager asks you to predict how much hydrogen gas can be produced from the 1 mol of methane available. This prediction is critical — the facility needs to plan how much clean fuel it can supply to UAE transport operators before committing to the contract.',
-                question: 'Based on the balanced equation CH₄ + 2H₂O → CO₂ + 4H₂, how many moles of hydrogen gas (H₂) will be produced from 1 mol of CH₄?',
+                title: 'Which Reactant Runs Out First?',
+                narrative: 'The balanced equation shows a 1:1 mole ratio: 1 mol S + 1 mol O₂ → 1 mol SO₂. The operations manager asks whether one reactant will run out before the other. Getting this wrong could cause the plant to over-order materials or under-produce the additive.',
+                question: 'Based on the balanced equation and your mole calculations, which substance is the limiting reactant?',
                 options: [
                     {
                         id: 'A',
-                        text: '1 mol H₂ — same as the moles of CH₄',
-                        icon: '1️⃣',
-                        tags: ['Ignores mole ratio', 'Incorrect'],
-                        consequence: 'one_mol',
+                        text: 'Sulfur — it will run out first',
+                        icon: '🔴',
+                        tags: ['Incorrect', 'Both are equal'],
+                        consequence: 'sulfur',
                         ethical: 'incorrect'
                     },
                     {
                         id: 'B',
-                        text: '2 mol H₂ — using the coefficient of H₂O',
-                        icon: '2️⃣',
-                        tags: ['Wrong coefficient used', 'Incorrect'],
-                        consequence: 'two_mol',
+                        text: 'Oxygen — it will run out first',
+                        icon: '🔴',
+                        tags: ['Incorrect', 'Both are equal'],
+                        consequence: 'oxygen',
                         ethical: 'incorrect'
                     },
                     {
                         id: 'C',
-                        text: '4 mol H₂ — from the 1:4 mole ratio in the balanced equation',
+                        text: 'Neither — both are used completely (1:1 ratio, 2 mol each)',
                         icon: '✅',
-                        tags: ['Correct mole ratio', 'From balanced equation'],
-                        consequence: 'four_mol',
+                        tags: ['Correct mole ratio', 'No limiting reactant'],
+                        consequence: 'neither',
                         ethical: 'correct'
                     },
                     {
                         id: 'D',
-                        text: '8 mol H₂ — doubling the coefficient',
-                        icon: '8️⃣',
-                        tags: ['Over-counted', 'Incorrect'],
-                        consequence: 'eight_mol',
+                        text: 'Sulfur dioxide — it is produced in limited amounts',
+                        icon: '🔴',
+                        tags: ['SO₂ is the product', 'Not a reactant'],
+                        consequence: 'so2',
                         ethical: 'incorrect'
                     }
                 ],
-                justificationStarter: 'Based on the mole ratio from the balanced equation...',
-                learningObjective: 'Applying mole-to-mole ratios from a balanced chemical equation'
+                justificationStarter: 'Based on the balanced equation, the mole ratio between sulfur and oxygen is…',
+                learningObjective: 'Identifying the limiting reactant using mole ratios from a balanced equation'
             },
             {
                 id: 3,
-                title: 'Calculating the Mass of Hydrogen Produced',
+                title: 'Predicting Production — Reduced Supply',
+                narrative: 'A delivery problem occurs. Now only 32 g of oxygen gas is available while sulfur remains at 64 g. You must identify the new limiting reactant and calculate exactly how much SO₂ can still be produced.',
                 consequences: {
-                    four_mol: {
-                        outcome: 'Excellent! From 1 mol CH₄ → 4 mol H₂ (mole ratio from equation). Mass of H₂ = 4 mol × 2 g/mol = 8 g of hydrogen gas. The plant correctly reports 8 g of H₂ output and secures the fuel supply contract with the UAE transport authority.',
-                        message: 'Step 1: Mole ratio → 1 mol CH₄ : 4 mol H₂. Step 2: Mass = moles × molar mass = 4 × 2 = 8 g. This is the correct mass-to-mass stoichiometric pathway.',
-                        newData: 'H₂ produced: 8 g per 16 g CH₄. Contract signed. Plant scales to 160 kg CH₄ → 80 kg H₂ for full production run.'
+                    neither: {
+                        outcome: 'With 2 mol S and 2 mol O₂ and a 1:1 ratio, both reactants are fully consumed. Mass of SO₂ = 2 mol × 64 g/mol = 128 g. The production team confirms the full batch and the holiday supply is secured.',
+                        message: 'Step 1: Both reactants = 2 mol each. Step 2: 1:1 ratio → 2 mol SO₂ formed. Step 3: 2 × 64 = 128 g SO₂. No waste, no shortage.',
+                        newData: 'SO₂ produced: 128 g. Full batch completed. All Abu Dhabi stations supplied on time.'
                     },
-                    one_mol: {
-                        outcome: 'Your prediction of 1 mol H₂ (= 2 g) severely underestimates production. The facility only supplies 2 g instead of 8 g. The UAE transport contract is voided due to under-delivery.',
-                        message: 'You ignored the mole ratio. The equation shows 1 mol CH₄ produces 4 mol H₂, not 1 mol. Always read the coefficients from the balanced equation.',
-                        newData: 'Delivery shortfall: 6 g per batch. Contract penalty issued. Recalculation required.'
+                    sulfur: {
+                        outcome: 'Incorrectly identifying sulfur as limiting caused the team to discard 32 g of usable oxygen. The batch was undersized and two stations ran short.',
+                        message: 'With 2 mol S and 2 mol O₂, neither is limiting. Always compare available moles against the required ratio before deciding.',
+                        newData: 'Batch undersized by 64 g SO₂. Two stations experienced supply delays.'
                     },
-                    two_mol: {
-                        outcome: 'Using the H₂O coefficient (2) instead of the H₂ coefficient (4) gave an incorrect prediction of 4 g instead of 8 g. The plant under-delivers on its fuel contract.',
-                        message: 'The coefficient of H₂O (2) applies to water, not hydrogen. Always match the coefficient to the correct substance in the equation.',
-                        newData: 'Production: 4 g H₂ instead of 8 g. Quality audit flagged the stoichiometry error.'
+                    oxygen: {
+                        outcome: 'Incorrectly identifying oxygen as limiting caused the team to order more O₂ unnecessarily, wasting budget. The actual batch size was correct.',
+                        message: 'Both reactants were available in equal moles (2 mol each) matching the 1:1 ratio. No single reactant was limiting.',
+                        newData: 'Unnecessary O₂ order placed. AED 4,000 wasted. Inventory audit requested.'
                     },
-                    eight_mol: {
-                        outcome: 'Predicting 8 mol H₂ (= 16 g) overstates production. The plant promises 16 g to clients but only delivers 8 g. A regulatory complaint is filed with the UAE Energy Authority.',
-                        message: '8 mol would require 2 mol of CH₄, not 1. Never double coefficients without a reason — use the balanced equation as written.',
-                        newData: 'Over-promise of 16 g vs actual 8 g. Client dispute raised. Stoichiometry re-training ordered.'
+                    so2: {
+                        outcome: 'SO₂ is the product of the reaction, not a reactant. It cannot be a limiting reactant. The production calculation was skipped and the batch was delayed.',
+                        message: 'The limiting reactant is always one of the starting materials (reactants), never the product. Review the balanced equation carefully.',
+                        newData: 'Production delayed 3 hours. Manager requested stoichiometry re-training for the team.'
                     }
                 },
-                followUpQuestion: 'Why is the balanced equation essential for calculating the mass of hydrogen produced?',
-                learningObjective: 'Performing a complete mass-to-mass stoichiometric calculation'
+                followUpQuestion: 'If only 32 g of oxygen gas were available instead of 64 g, which reactant would now be limiting and how much SO₂ would be produced?',
+                learningObjective: 'Performing a complete mass-to-mass stoichiometric calculation using the limiting reactant'
             }
         ],
 
         exitTicket: {
             mcqs: [
                 {
-                    question: 'In CH₄ + 2H₂O → CO₂ + 4H₂, what is the mole ratio between CH₄ and H₂?',
+                    question: 'In a chemical reaction, what does the limiting reactant determine?',
                     options: [
-                        { id: 'A', text: '1:1', correct: false },
-                        { id: 'B', text: '1:2', correct: false },
-                        { id: 'C', text: '1:4', correct: true },
-                        { id: 'D', text: '4:1', correct: false }
+                        { id: 'A', text: 'The color of the product', correct: false },
+                        { id: 'B', text: 'The amount of product formed', correct: true },
+                        { id: 'C', text: 'The reaction temperature', correct: false },
+                        { id: 'D', text: 'The number of reactants', correct: false },
                     ]
                 },
                 {
-                    question: 'To convert the mass of a substance to moles, you should:',
+                    question: 'A reaction uses 96 g of sulfur (M = 32 g/mol) and 64 g of oxygen (M = 32 g/mol). Which is the limiting reactant?',
                     options: [
-                        { id: 'A', text: 'Multiply mass by molar mass', correct: false },
-                        { id: 'B', text: 'Divide molar mass by mass', correct: false },
-                        { id: 'C', text: 'Divide mass by molar mass', correct: true },
-                        { id: 'D', text: 'Add mass and molar mass', correct: false }
+                        { id: 'A', text: 'Sulfur — because its mass is larger', correct: false },
+                        { id: 'B', text: 'Oxygen — because it provides fewer moles (2 mol vs 3 mol)', correct: true },
+                        { id: 'C', text: 'Neither — both masses are similar', correct: false },
+                        { id: 'D', text: 'Sulfur dioxide — it is produced in limited amounts', correct: false },
                     ]
                 }
             ],
-            reflectionPrompt: 'How does using mole ratios from balanced equations help predict product quantities in industrial processes?',
-            transferQuestion: 'If 32 g of CH₄ is used in the same reaction (CH₄ + 2H₂O → CO₂ + 4H₂), calculate the mass of hydrogen gas produced. Show your working.'
+            reflectionPrompt: 'Why is it important for engineers at ADNOC Distribution to know which reactant is limiting before starting a production batch?',
+            transferQuestion: 'A reaction uses 96 g of sulfur and 64 g of oxygen gas. (1) Convert each to moles. (2) Identify the limiting reactant. (3) Calculate the mass of sulfur dioxide produced.'
         }
     },
 

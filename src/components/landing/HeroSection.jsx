@@ -285,14 +285,17 @@ export default function HeroSection({ onStart, isLoggedIn = false, isLoading = f
                 </motion.div>
             </div>
 
-            {/* Scroll indicator */}
-            <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2"
-                animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                <div className="w-7 h-12 rounded-full border-2 border-slate-700 flex items-start justify-center p-2">
-                    <motion.div className="w-2 h-3 bg-gradient-to-b from-teal-400 to-emerald-400 rounded-full"
-                        animate={{ y: [0, 12, 0] }} transition={{ duration: 1.5, repeat: Infinity }} />
+            {/* Scroll indicator — absolute لتجنب التداخل */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10">
+                <span className="text-slate-500 text-xs tracking-widest uppercase"> </span>
+                <div className="w-6 h-10 border-2 border-teal-400/60 rounded-full flex justify-center">
+                    <motion.div
+                        className="w-1.5 h-3 bg-teal-400 rounded-full mt-1"
+                        animate={{ y: [0, 12, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    />
                 </div>
-            </motion.div>
+            </div>
         </section>
     );
 }

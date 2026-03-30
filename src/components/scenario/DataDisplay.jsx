@@ -1,34 +1,47 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Table, BarChart3, TrendingUp, Activity } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+import { Table, Activity } from 'lucide-react';
 
-// Centralized, responsive data display component
 export default function DataDisplay({ data, className = '' }) {
     if (!data) return null;
 
-    // Render table data
     if (data.table) {
         return (
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`w-full flex justify-center ${className}`}
+                transition={{ duration: 0.6 }}
+                className={`w-full ${className}`}
             >
-                <Card className="bg-slate-900/95 border-slate-700 p-6 sm:p-8 shadow-2xl max-w-4xl w-full">
-                    <div className="flex flex-col items-center gap-4 mb-6">
-                        <div className="w-14 h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center">
-                            <Table className="w-7 h-7 text-teal-400" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-white text-center">Scientific Data</h3>
-                    </div>
+                {/* Equation Banner */}
+                {data.graphDescription && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="mb-6 p-6 rounded-2xl bg-gradient-to-r from-teal-900/60 to-cyan-900/60 border border-teal-500/40 text-center"
+                    >
+                        <p className="text-xs font-bold uppercase tracking-widest text-teal-400 mb-3">⚗️ Chemical Equation</p>
+                        <p className="text-2xl sm:text-3xl font-mono font-bold text-white tracking-wider">
+                            {data.graphDescription}
+                        </p>
+                    </motion.div>
+                )}
 
-                    <div className="overflow-x-auto">
+                {/* Table */}
+                <div className="rounded-2xl overflow-hidden border border-slate-700 shadow-2xl">
+                    <div className="bg-gradient-to-r from-slate-800 to-slate-900 px-6 py-4 flex items-center gap-3 border-b border-slate-700">
+                        <div className="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center">
+                            <Table className="w-5 h-5 text-teal-400" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white">Scientific Data</h3>
+                    </div>
+                    <div className="overflow-x-auto bg-slate-900/80">
                         <table className="w-full">
                             <thead>
-                                <tr className="border-b-2 border-teal-500/30">
+                                <tr className="border-b-2 border-teal-500/30 bg-slate-800/60">
                                     {data.table.headers.map((header, i) => (
-                                        <th key={i} className="text-left py-4 px-4 text-teal-400 font-bold text-sm sm:text-base uppercase tracking-wide">
+                                        <th key={i} className="text-left py-4 px-6 text-teal-300 font-bold text-base uppercase tracking-widest">
                                             {header}
                                         </th>
                                     ))}
@@ -38,13 +51,15 @@ export default function DataDisplay({ data, className = '' }) {
                                 {data.table.rows.map((row, i) => (
                                     <motion.tr
                                         key={i}
-                                        initial={{ opacity: 0, x: -20 }}
+                                        initial={{ opacity: 0, x: -30 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: i * 0.1 }}
-                                        className="border-b border-slate-800 hover:bg-slate-800/50 transition-colors"
+                                        transition={{ delay: 0.1 + i * 0.12 }}
+                                        className="border-b border-slate-800 hover:bg-teal-500/5 transition-colors"
                                     >
                                         {row.map((cell, j) => (
-                                            <td key={j} className={`py-4 px-4 text-sm sm:text-base ${j === 0 ? 'text-white font-semibold' : 'text-slate-300'
+                                            <td key={j} className={`py-5 px-6 text-base ${j === 0 ? 'text-white font-bold text-lg' :
+                                                    j === row.length - 1 ? 'text-teal-300 font-mono font-bold text-lg' :
+                                                        'text-slate-300 text-base'
                                                 }`}>
                                                 {cell}
                                             </td>
@@ -54,109 +69,173 @@ export default function DataDisplay({ data, className = '' }) {
                             </tbody>
                         </table>
                     </div>
+                </div>
 
-                    {data.graphDescription && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                            className="mt-6 flex items-center gap-3 p-4 rounded-xl bg-slate-800/50 border border-teal-500/20"
-                        >
-                            <BarChart3 className="w-5 h-5 text-teal-400 flex-shrink-0" />
-                            <span className="text-slate-300 text-sm">{data.graphDescription}</span>
-                        </motion.div>
-                    )}
-
-                    {data.mapNote && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.6 }}
-                            className="mt-3 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20"
-                        >
-                            <span className="text-blue-300 text-sm">📍 {data.mapNote}</span>
-                        </motion.div>
-                    )}
-                </Card>
+                {/* Map Note */}
+                {data.mapNote && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                        className="mt-4 p-5 rounded-2xl bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border border-blue-500/30 flex items-start gap-3"
+                    >
+                        <span className="text-2xl mt-0.5">💡</span>
+                        <div>
+                            <p className="text-blue-300 font-bold text-sm uppercase tracking-wider mb-1">Key Formula</p>
+                            <p className="text-blue-100 text-base font-medium">{data.mapNote}</p>
+                        </div>
+                    </motion.div>
+                )}
             </motion.div>
         );
     }
 
-    // Render time-series readings
+    if (data.equation) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className={`w-full ${className}`}
+            >
+                <div className="p-8 rounded-2xl bg-gradient-to-br from-teal-900/50 to-slate-900 border-2 border-teal-500/40 text-center shadow-2xl">
+                    <p className="text-xs font-bold uppercase tracking-widest text-teal-400 mb-4">⚗️ Balanced Equation</p>
+                    <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-3xl sm:text-4xl font-mono font-bold text-white tracking-wider mb-6"
+                    >
+                        {data.equation}
+                    </motion.p>
+                    {data.note && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.5 }}
+                            className="inline-block px-6 py-3 rounded-xl bg-teal-500/10 border border-teal-500/30"
+                        >
+                            <p className="text-teal-300 font-semibold text-lg">{data.note}</p>
+                        </motion.div>
+                    )}
+                </div>
+            </motion.div>
+        );
+    }
+
+    if (data.steps) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`w-full space-y-4 ${className}`}
+            >
+                <p className="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2">📐 Calculation Steps</p>
+                {data.steps.map((step, i) => (
+                    <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.15 }}
+                        className="flex items-start gap-4 p-5 rounded-xl bg-slate-800/60 border border-slate-700"
+                    >
+                        <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center flex-shrink-0 font-bold text-amber-400">
+                            {i + 1}
+                        </div>
+                        <p className="text-white font-mono text-base pt-1">{step}</p>
+                    </motion.div>
+                ))}
+                {data.table && (
+                    <div className="mt-6 rounded-2xl overflow-hidden border border-slate-700">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="bg-slate-800 border-b border-slate-700">
+                                    {data.table.headers.map((h, i) => (
+                                        <th key={i} className="text-left py-4 px-5 text-teal-300 font-bold text-sm uppercase tracking-wider">{h}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.table.rows.map((row, i) => (
+                                    <tr key={i} className="border-b border-slate-800 bg-slate-900/60">
+                                        {row.map((cell, j) => (
+                                            <td key={j} className={`py-4 px-5 text-base ${j === 0 ? 'text-slate-400' : 'text-white font-bold'}`}>{cell}</td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </motion.div>
+        );
+    }
+
     if (data.readings) {
         return (
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`w-full flex justify-center ${className}`}
+                className={`w-full ${className}`}
             >
-                <Card className="bg-slate-900/95 border-slate-700 p-6 sm:p-8 shadow-2xl max-w-3xl w-full">
-                    <div className="flex flex-col items-center gap-4 mb-6">
-                        <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center">
-                            <Activity className="w-7 h-7 text-amber-400" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-white text-center">Real-Time Measurements</h3>
+                <div className="rounded-2xl overflow-hidden border border-slate-700 shadow-2xl">
+                    <div className="bg-slate-800 px-6 py-4 flex items-center gap-3 border-b border-slate-700">
+                        <Activity className="w-5 h-5 text-amber-400" />
+                        <h3 className="text-lg font-bold text-white">Real-Time Measurements</h3>
                     </div>
-
-                    <div className="space-y-3">
+                    <div className="bg-slate-900/80 p-4 space-y-3">
                         {data.readings.map((reading, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.1 }}
-                                className="flex items-center gap-4 p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 transition-colors"
+                                className="flex items-center gap-6 p-4 rounded-xl bg-slate-800/60 hover:bg-slate-800/80 transition-colors"
                             >
-                                <span className="text-slate-500 text-sm font-mono w-20">{reading.time}</span>
-                                <span className="text-amber-400 font-mono text-lg font-bold">{reading.temp}</span>
-                                <span className={`text-sm px-3 py-1 rounded-full font-medium ${reading.pressure === 'Critical' ? 'bg-red-500/20 text-red-400 border border-red-500/50' :
-                                        reading.pressure === 'Elevated' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/50' :
-                                            'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50'
-                                    }`}>
-                                    {reading.pressure}
-                                </span>
+                                <span className="text-slate-400 font-mono text-sm w-20">{reading.time}</span>
+                                <span className="text-amber-300 font-mono text-2xl font-bold">{reading.temp}</span>
+                                <span className={`px-4 py-1.5 rounded-full text-sm font-bold border ${reading.pressure === 'Critical' ? 'bg-red-500/20 text-red-300 border-red-500/50' :
+                                        reading.pressure === 'Elevated' ? 'bg-amber-500/20 text-amber-300 border-amber-500/50' :
+                                            'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
+                                    }`}>{reading.pressure}</span>
                             </motion.div>
                         ))}
                     </div>
-                </Card>
+                </div>
             </motion.div>
         );
     }
 
-    // Render genetic outcomes
     if (data.outcomes) {
         return (
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`w-full flex justify-center ${className}`}
+                className={`w-full ${className}`}
             >
-                <Card className="bg-slate-900/95 border-slate-700 p-6 sm:p-8 shadow-2xl max-w-3xl w-full">
-                    <div className="flex flex-col items-center gap-4 mb-6">
-                        <div className="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-3xl">
-                            🧬
-                        </div>
-                        <h3 className="text-2xl font-bold text-white text-center">Genetic Outcomes</h3>
+                <div className="rounded-2xl overflow-hidden border border-purple-500/30 shadow-2xl">
+                    <div className="bg-purple-900/30 px-6 py-4 flex items-center gap-3 border-b border-purple-500/20">
+                        <span className="text-2xl">🧬</span>
+                        <h3 className="text-lg font-bold text-white">Genetic Outcomes</h3>
                     </div>
-
-                    <div className="space-y-3">
+                    <div className="bg-slate-900/80 p-4 space-y-3">
                         {data.outcomes.map((outcome, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: i * 0.15 }}
-                                className="flex justify-between items-center p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 transition-colors"
+                                className="flex justify-between items-center p-5 rounded-xl bg-slate-800/60 hover:bg-slate-800/80 transition-colors"
                             >
                                 <div>
-                                    <span className="text-white font-mono text-lg font-bold">{outcome.genotype}</span>
-                                    <span className="text-slate-400 ml-3 text-sm">{outcome.phenotype}</span>
+                                    <span className="text-white font-mono text-2xl font-bold">{outcome.genotype}</span>
+                                    <p className="text-slate-400 text-sm mt-1">{outcome.phenotype}</p>
                                 </div>
-                                <span className="text-teal-400 font-bold text-xl">{outcome.probability}</span>
+                                <span className="text-teal-300 font-bold text-3xl">{outcome.probability}</span>
                             </motion.div>
                         ))}
                     </div>
-                </Card>
+                </div>
             </motion.div>
         );
     }
