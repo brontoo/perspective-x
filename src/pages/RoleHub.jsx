@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
@@ -16,13 +15,38 @@ export default function RoleHub() {
     const [progress, setProgress] = useState(null);
     const [loading, setLoading] = useState(true);
     const [scenarioSettings, setScenarioSettings] = useState({});
+    const intervalRef = useRef(null);
 
     const role = ROLES[roleId];
 
     useEffect(() => {
         if (!role) { navigate('/'); return; }
+
         loadProgress();
+
+        // Polling كل 30 ثانية لجلب إعدادات المدرس
+        intervalRef.current = setInterval(() => {
+            fetchSettings();
+        }, 30000);
+
+        return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+        };
     }, [roleId]);
+
+    // جلب إعدادات السيناريوهات فقط (خفيف)
+    const fetchSettings = async () => {
+        try {
+            const { data: settings } = await supabase
+                .from('scenario_settings')
+                .select('*');
+            const settingsMap = {};
+            settings?.forEach(s => { settingsMap[s.scenario_id] = s; });
+            setScenarioSettings(settingsMap);
+        } catch (e) {
+            console.error('Error fetching settings:', e);
+        }
+    };
 
     const loadProgress = async () => {
         try {
@@ -52,10 +76,7 @@ export default function RoleHub() {
                 unlocked_scenarios: [...new Set(unlockedScenarios)]
             });
 
-            const { data: settings } = await supabase.from('scenario_settings').select('*');
-            const settingsMap = {};
-            settings?.forEach(s => { settingsMap[s.scenario_id] = s; });
-            setScenarioSettings(settingsMap);
+            await fetchSettings();
 
         } catch (e) {
             console.error('Error loading progress:', e);
@@ -64,29 +85,21 @@ export default function RoleHub() {
         }
     };
 
-    // ✅ دالة isCompleted
-    const isCompleted = (scenarioId) => {
-        return progress?.completed_scenarios?.includes(scenarioId) || false;
-    };
+    const isCompleted = (scenarioId) =>
+        progress?.completed_scenarios?.includes(scenarioId) || false;
 
     const isUnlocked = (scenarioId) => {
-        // السيناريو الأول دائماً مفتوح
         if (scenarioId === role?.scenarios[0]) return true;
-
         if (!progress) return false;
-
-        // إذا أنجز الطالب السيناريو — يبقى مفتوحاً بغض النظر عن is_locked
         if (progress.completed_scenarios?.includes(scenarioId)) return true;
-
-        // باقي السيناريوهات — تحقق من is_locked أولاً ثم unlocked
         if (scenarioSettings[scenarioId]?.is_locked) return false;
-
         return progress.unlocked_scenarios?.includes(scenarioId);
     };
 
     const getScenarioStatus = (scenarioId) => {
         if (scenarioId === role?.scenarios[0]) {
             if (isCompleted(scenarioId)) return 'completed';
+            if (scenarioSettings[scenarioId]?.is_locked) return 'locked';
             return 'unlocked';
         }
         if (scenarioSettings[scenarioId]?.is_locked) return 'locked';
@@ -167,16 +180,17 @@ export default function RoleHub() {
                             {role.scenarios.map((scenarioId, index) => {
                                 const scenario = SCENARIOS[scenarioId];
                                 if (!scenario) return null;
+                                const status = getScenarioStatus(scenarioId);
                                 return (
                                     <ScenarioCard
                                         key={scenarioId}
                                         scenario={scenario}
-                                        status={getScenarioStatus(scenarioId)}
+                                        status={status}
                                         index={index}
                                         roleColor={role.color}
                                         settings={scenarioSettings[scenarioId]}
                                         onClick={() => {
-                                            if (isUnlocked(scenarioId) || isCompleted(scenarioId)) {
+                                            if (status !== 'locked') {
                                                 navigate(`/ScenarioPlayer?scenario=${scenarioId}`);
                                             }
                                         }}
