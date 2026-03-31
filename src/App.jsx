@@ -1,5 +1,5 @@
-import RoleHub from '@/pages/RoleHub'; // أو المسار الصحيح للملف
-import ScenarioPlayer from '@/pages/ScenarioPlayer'; // إذا لم يكن موجوداً
+import RoleHub from '@/pages/RoleHub';
+import ScenarioPlayer from '@/pages/ScenarioPlayer';
 import LeaderboardPage from './pages/LeaderboardPage';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -56,6 +56,18 @@ function AppRoutes() {
     const location = useLocation();
     const isPublicPath = location.pathname === '/' || location.pathname === '/SignIn';
 
+    // ── ScenarioPlayer: fullscreen, no Layout, no Navbar ──
+    // يجب أن يكون خارج LayoutWrapper تماماً لأنه صفحة مستقلة
+    if (location.pathname === '/ScenarioPlayer') {
+        return (
+            <ProtectedRoute>
+                <Routes>
+                    <Route path="/ScenarioPlayer" element={<ScenarioPlayer />} />
+                </Routes>
+            </ProtectedRoute>
+        );
+    }
+
     if (isPublicPath) {
         return (
             <Routes>
@@ -98,23 +110,17 @@ function AppRoutes() {
                         <ProfileSettings />
                     </LayoutWrapper>
                 } />
-                {/* ✅ Route جديد لصفحة Leaderboard */}
                 <Route path="/leaderboard" element={
                     <LayoutWrapper currentPageName="Leaderboard">
                         <LeaderboardPage />
                     </LayoutWrapper>
                 } />
-                <Route path="*" element={<PageNotFound />} />
                 <Route path="/role-hub" element={
                     <LayoutWrapper currentPageName="RoleHub">
                         <RoleHub />
                     </LayoutWrapper>
                 } />
-                <Route path="/ScenarioPlayer" element={
-                    <LayoutWrapper currentPageName="ScenarioPlayer">
-                        <ScenarioPlayer />
-                    </LayoutWrapper>
-                } />
+                <Route path="*" element={<PageNotFound />} />
             </Routes>
         </ProtectedRoute>
     );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
@@ -111,20 +111,54 @@ const DEFAULT_THEME = {
     alertColor: '',
 };
 
+const PHASE = {
+    TITLE: -2,
+    VIDEO: -1,
+    INTRO: 0,
+    SCENE1: 1,
+    SCENE2: 2,
+    SCENE3: 3,
+    EXIT: 4,
+    COMPLETE: 5,
+};
+
 export default function ScenarioPlayer() {
     const navigate = useNavigate();
     const params = new URLSearchParams(window.location.search);
     const scenarioId = params.get('scenario');
 
-    const [currentScene, setCurrentScene] = useState(-2);
+    const [currentScene, setCurrentScene] = useState(PHASE.TITLE);
     const [responses, setResponses] = useState({});
+    const [scenarioResult, setScenarioResult] = useState(null);
     const [loading, setLoading] = useState(true);
     const [progress, setProgress] = useState(null);
     const [user, setUser] = useState(null);
     const [isTeacher, setIsTeacher] = useState(false);
     const [showCertificate, setShowCertificate] = useState(false);
-    const [scenarioResult, setScenarioResult] = useState(null);
     const [profileName, setProfileName] = useState(null);
+    const [videoState, setVideoState] = useState('idle');
+
+    const videoCompletedRef = useRef(false);
+    const currentSceneRef = useRef(currentScene);
+    const mainRef = useRef(null);
+    const loadedOnceRef = useRef(false);
+
+    useEffect(() => {
+        currentSceneRef.current = currentScene;
+        console.log('📊 Scene updated:', currentScene);
+    }, [currentScene]);
+
+    useLayoutEffect(() => {
+        const id = requestAnimationFrame(() => {
+            if (mainRef.current) {
+                mainRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
+            } else {
+                window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            }
+        });
+
+        return () => cancelAnimationFrame(id);
+    }, [currentScene]);
 
     const baseScenario = SCENARIOS[scenarioId];
     const uaeScenario = UAE_SCENARIOS?.[scenarioId];
@@ -132,37 +166,107 @@ export default function ScenarioPlayer() {
     const role = Object.values(ROLES).find(r => r.scenarios.includes(scenarioId));
     const theme = ROLE_THEMES[role?.id] || DEFAULT_THEME;
 
-    useEffect(() => { loadData(); }, [scenarioId]);
+    const advanceFrom = useCallback((expectedPhase, nextPhase) => {
+        console.log(`[ADVANCE] Trying: ${expectedPhase} -> ${nextPhase}. Current: ${currentSceneRef.current}`);
 
-    const loadData = async () => {
-        if (!scenario) { navigate('/'); return; }
-        try {
-            const { data: { user: currentUser } } = await supabase.auth.getUser();
-            if (!currentUser) { navigate('/login'); return; }
-            setUser(currentUser);
+        setCurrentScene(prev => {
+            if (prev !== expectedPhase) {
+                console.warn(`[BLOCKED] Expected ${expectedPhase} but current is ${prev}`);
+                return prev;
+            }
+            console.log(`[SUCCESS] Moving to ${nextPhase}`);
+            return nextPhase;
+        });
+    }, []);
 
-            const { data: profile } = await supabase
-                .from('profiles').select('*').eq('id', currentUser.id).single();
+    const handleTitleComplete = useCallback(() => {
+        advanceFrom(PHASE.TITLE, PHASE.VIDEO);
+    }, [advanceFrom]);
 
-            const teacher = profile?.user_type === 'teacher';
-            setIsTeacher(teacher);
-            if (teacher) setCurrentScene(0);
-            setProfileName(profile?.full_name || profile?.name || null);
-
-            const { data: progressData } = await supabase
-                .from('student_progress')
-                .select('*')
-                .eq('student_id', currentUser.id)
-                .is('scenario_id', null)
-                .maybeSingle();
-
-            if (progressData) setProgress(progressData);
-        } catch (e) {
-            console.error('Error loading data:', e);
-        } finally {
-            setLoading(false);
+    const handleVideoComplete = useCallback(() => {
+        if (videoCompletedRef.current || currentSceneRef.current !== PHASE.VIDEO) {
+            console.log('🔒 Video complete blocked');
+            return;
         }
-    };
+        console.log('🎥 Video FINISHED');
+        videoCompletedRef.current = true;
+        setVideoState('completed'); // ✅ هذا الحل!
+        advanceFrom(PHASE.VIDEO, PHASE.INTRO);
+    }, [advanceFrom]);
+
+    const handleStartScenario = useCallback(() => {
+        console.log('🚀 Begin clicked - current:', currentSceneRef.current);
+
+        if (currentSceneRef.current !== PHASE.INTRO) {
+            console.warn('🚫 Begin blocked - wrong phase');
+            return;
+        }
+
+        advanceFrom(PHASE.INTRO, PHASE.SCENE1);
+    }, [advanceFrom]);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const loadData = async () => {
+            if (!scenario) {
+                navigate('/');
+                return;
+            }
+
+            try {
+                const { data: { user: currentUser } } = await supabase.auth.getUser();
+                if (cancelled) return;
+                if (!currentUser) {
+                    navigate('/login');
+                    return;
+                }
+
+                setUser(currentUser);
+
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (cancelled) return;
+
+                const teacher = profile?.user_type === 'teacher';
+                setIsTeacher(teacher);
+
+                // Only reset phase state on FIRST load — never re-reset
+                // if the user has already progressed past TITLE
+                if (!loadedOnceRef.current) {
+                    loadedOnceRef.current = true;
+                    videoCompletedRef.current = false;
+                    setVideoState('idle');
+                    setCurrentScene(PHASE.TITLE);
+                }
+
+                setProfileName(profile?.full_name || profile?.name || null);
+
+                const { data: progressData } = await supabase
+                    .from('student_progress')
+                    .select('*')
+                    .eq('student_id', currentUser.id)
+                    .is('scenario_id', null)
+                    .maybeSingle();
+
+                if (cancelled) return;
+                if (progressData) setProgress(progressData);
+            } catch (e) {
+                console.error('Error loading data:', e);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        };
+
+        loadData();
+
+        return () => { cancelled = true; };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [scenarioId]);
 
     const handleSceneComplete = (sceneNum, response) => {
         setResponses(prev => ({ ...prev, [`scene${sceneNum}`]: response }));
@@ -173,104 +277,93 @@ export default function ScenarioPlayer() {
         const result = {
             ...responses,
             exitTicket: exitTicketData,
-            passed: exitTicketData.score >= 70
+            passed: exitTicketData.score >= 70,
         };
+
         setScenarioResult(result);
         setResponses(result);
 
         if (!isTeacher && user) {
             try {
                 const { data: existing } = await supabase
-                    .from('student_progress').select('id')
-                    .eq('student_id', user.id).eq('scenario_id', scenarioId).maybeSingle();
+                    .from('student_progress')
+                    .select('id')
+                    .eq('student_id', user.id)
+                    .eq('scenario_id', scenarioId)
+                    .maybeSingle();
 
                 if (existing) {
-                    await supabase.from('student_progress')
-                        .update({ answers: result, score: exitTicketData.score, completed_at: new Date().toISOString() })
+                    await supabase
+                        .from('student_progress')
+                        .update({
+                            answers: result,
+                            score: exitTicketData.score,
+                            completed_at: new Date().toISOString(),
+                        })
                         .eq('id', existing.id);
                 } else {
                     await supabase.from('student_progress').insert({
-                        student_id: user.id, scenario_id: scenarioId,
-                        scenario_title: scenario.title, answers: result,
-                        score: exitTicketData.score, completed_at: new Date().toISOString()
+                        student_id: user.id,
+                        scenario_id: scenarioId,
+                        scenario_title: scenario.title,
+                        answers: result,
+                        score: exitTicketData.score,
+                        completed_at: new Date().toISOString(),
                     });
-                }
-
-                if (result.passed) {
-                    const currentRole = Object.values(ROLES).find(r => r.scenarios.includes(scenarioId));
-                    const currentIndex = currentRole?.scenarios.indexOf(scenarioId);
-                    const nextScenarioId = currentRole?.scenarios[currentIndex + 1];
-
-                    const { data: overallRecord } = await supabase
-                        .from('student_progress').select('*')
-                        .eq('student_id', user.id).eq('role_id', currentRole?.id)
-                        .is('scenario_id', null).maybeSingle();
-
-                    const prevCompleted = overallRecord?.completed_scenarios || [];
-                    const prevUnlocked = overallRecord?.unlocked_scenarios || [];
-                    const updatedCompleted = [...new Set([...prevCompleted, scenarioId])];
-                    const updatedUnlocked = nextScenarioId
-                        ? [...new Set([...prevUnlocked, nextScenarioId])] : prevUnlocked;
-
-                    if (overallRecord) {
-                        await supabase.from('student_progress')
-                            .update({ completed_scenarios: updatedCompleted, unlocked_scenarios: updatedUnlocked })
-                            .eq('id', overallRecord.id);
-                    } else {
-                        await supabase.from('student_progress').insert({
-                            student_id: user.id, scenario_id: null, role_id: currentRole?.id,
-                            completed_scenarios: updatedCompleted, unlocked_scenarios: updatedUnlocked
-                        });
-                    }
                 }
             } catch (e) {
                 console.error('Error saving progress:', e);
             }
         }
-        setCurrentScene(5);
+
+        setCurrentScene(PHASE.COMPLETE);
     };
 
     const handleShowCertificate = () => setShowCertificate(true);
 
-    if (!scenario) return (
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-            <div className="text-center">
-                <p className="text-slate-400 mb-4">Scenario not found</p>
-                <Button onClick={() => navigate('/')}>Return Home</Button>
+    if (!scenario) {
+        return (
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-slate-400 mb-4">Scenario not found</p>
+                    <Button onClick={() => navigate('/')}>Return Home</Button>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 
-    if (loading) return (
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-            <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
-        </div>
-    );
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
+            </div>
+        );
+    }
 
     const getProgressPercentage = () => Math.max(0, ((currentScene + 2) / 6) * 100);
 
     return (
         <div className={`min-h-screen bg-gradient-to-br ${theme.bg} relative`}>
-
-            {/* Subtle background pattern */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+            <div
+                className="absolute inset-0 opacity-[0.03] pointer-events-none"
                 style={{
                     backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-                    backgroundSize: '40px 40px'
-                }} />
+                    backgroundSize: '40px 40px',
+                }}
+            />
 
             <AnimatePresence>
-                {currentScene === -2 && (
+                {currentScene === PHASE.TITLE && (
                     <CinematicTitle
                         title={scenario.title}
                         subtitle={scenario.context?.substring(0, 100) + '...'}
                         character={scenario.character}
-                        onComplete={() => setCurrentScene(-1)}
+                        onComplete={handleTitleComplete}
                     />
                 )}
             </AnimatePresence>
 
-            {currentScene > -2 && (
+            {currentScene > PHASE.TITLE && (
                 <>
                     {/* ── Header ── */}
                     <header className="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800">
@@ -301,12 +394,17 @@ export default function ScenarioPlayer() {
                                         </p>
                                     </div>
                                 </div>
-                                <Button variant="ghost" size="icon"
-                                    onClick={() => isTeacher
-                                        ? navigate('/TeacherDashboard')
-                                        : navigate(`/role-hub?role=${role?.id || ''}`)
+
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() =>
+                                        isTeacher
+                                            ? navigate('/TeacherDashboard')
+                                            : navigate(`/role-hub?role=${role?.id || ''}`)
                                     }
-                                    className="text-slate-400 hover:text-white">
+                                    className="text-slate-400 hover:text-white"
+                                >
                                     <X className="w-5 h-5" />
                                 </Button>
                             </div>
@@ -331,56 +429,93 @@ export default function ScenarioPlayer() {
                         </div>
                     </header>
 
-                    {/* ── Main Content ── */}
-                    <main className="max-w-6xl mx-auto px-6 py-8 relative z-10">
+                    <main ref={mainRef} className="max-w-6xl mx-auto px-6 py-8 relative z-10">
                         <AnimatePresence mode="wait">
+                            <motion.div
+                                key={`phase-${currentScene}`}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -8 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                {currentScene === PHASE.VIDEO && videoState !== 'completed' && (
+                                    <motion.div
+                                        key="video-intro"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                    >
+                                        <CinematicVideoIntro
+                                            scenarioId={scenarioId}
+                                            isTeacher={isTeacher}
+                                            videoState={videoState}
+                                            onComplete={handleVideoComplete}
+                                        />
+                                    </motion.div>
+                                )}
 
-                            {currentScene === -1 && (
-                                <CinematicVideoIntro key="video" scenarioId={scenarioId}
-                                    isTeacher={isTeacher} onComplete={() => setCurrentScene(0)} />
-                            )}
 
-                            {currentScene === 0 && (
-                                <ScenarioIntro key="intro" scenario={scenario} theme={theme}
-                                    onStart={() => setCurrentScene(1)} isTeacher={isTeacher} />
-                            )}
+                                {currentScene === PHASE.INTRO && (
+                                    <ScenarioIntro
+                                        scenario={scenario}
+                                        theme={theme}
+                                        onStart={handleStartScenario}
+                                        isTeacher={isTeacher}
+                                    />
+                                )}
 
-                            {currentScene === 1 && (
-                                <SceneOne key="scene1" scene={scenario.scenes[0]}
-                                    scenarioTitle={scenario.title} theme={theme}
-                                    onComplete={(r) => handleSceneComplete(1, r)}
-                                    isTeacher={isTeacher} />
-                            )}
+                                {currentScene === PHASE.SCENE1 && (
+                                    <SceneOne
+                                        scene={scenario.scenes[0]}
+                                        scenarioId={scenarioId}
+                                        scenarioTitle={scenario.title}
+                                        theme={theme}
+                                        onComplete={(r) => handleSceneComplete(1, r)}
+                                        isTeacher={isTeacher}
+                                    />
+                                )}
 
-                            {currentScene === 2 && (
-                                <SceneTwo key="scene2" scene={scenario.scenes[1]}
-                                    scenarioTitle={scenario.title} theme={theme}
-                                    onComplete={(r) => handleSceneComplete(2, r)}
-                                    isTeacher={isTeacher} />
-                            )}
+                                {currentScene === PHASE.SCENE2 && (
+                                    <SceneTwo
+                                        scene={scenario.scenes[1]}
+                                        scenarioTitle={scenario.title}
+                                        theme={theme}
+                                        onComplete={(r) => handleSceneComplete(2, r)}
+                                        isTeacher={isTeacher}
+                                    />
+                                )}
 
-                            {currentScene === 3 && (
-                                <SceneThree key="scene3" scene={scenario.scenes[2]}
-                                    previousDecision={responses.scene2?.selectedOption}
-                                    scenarioTitle={scenario.title} theme={theme}
-                                    onComplete={(r) => { handleSceneComplete(3, r); setCurrentScene(4); }}
-                                    isTeacher={isTeacher} />
-                            )}
+                                {currentScene === PHASE.SCENE3 && (
+                                    <SceneThree
+                                        scene={scenario.scenes[2]}
+                                        previousDecision={responses.scene2?.selectedOption}
+                                        scenarioTitle={scenario.title}
+                                        theme={theme}
+                                        onComplete={(r) => handleSceneComplete(3, r)}
+                                        isTeacher={isTeacher}
+                                    />
+                                )}
 
-                            {currentScene === 4 && (
-                                <ExitTicket key="exit" exitTicket={scenario.exitTicket}
-                                    scenarioTitle={scenario.title} theme={theme}
-                                    onComplete={handleExitTicketComplete}
-                                    isTeacher={isTeacher} />
-                            )}
+                                {currentScene === PHASE.EXIT && (
+                                    <ExitTicket
+                                        exitTicket={scenario.exitTicket}
+                                        scenarioTitle={scenario.title}
+                                        theme={theme}
+                                        onComplete={handleExitTicketComplete}
+                                        isTeacher={isTeacher}
+                                    />
+                                )}
 
-                            {currentScene === 5 && (
-                                <ScenarioComplete key="complete" scenario={scenario}
-                                    responses={scenarioResult || responses}
-                                    role={role} theme={theme}
-                                    onShowCertificate={handleShowCertificate} />
-                            )}
-
+                                {currentScene === PHASE.COMPLETE && (
+                                    <ScenarioComplete
+                                        scenario={scenario}
+                                        responses={scenarioResult || responses}
+                                        role={role}
+                                        theme={theme}
+                                        onShowCertificate={handleShowCertificate}
+                                    />
+                                )}
+                            </motion.div>
                         </AnimatePresence>
                     </main>
                 </>
@@ -403,9 +538,12 @@ export default function ScenarioPlayer() {
 // ── Scenario Intro ─────────────────────────────────────────────
 function ScenarioIntro({ scenario, onStart, isTeacher, theme }) {
     return (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }} className="max-w-3xl mx-auto">
-
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="max-w-3xl mx-auto"
+        >
             <div className={`rounded-3xl border ${theme.border} bg-slate-900/60 backdrop-blur-sm p-8 shadow-2xl`}>
 
                 {/* Avatar + Role */}
@@ -420,7 +558,9 @@ function ScenarioIntro({ scenario, onStart, isTeacher, theme }) {
                         <h2 className="text-3xl font-bold text-white mb-1">
                             {scenario.character?.name || 'Your Role'}
                         </h2>
-                        <p className="text-slate-400 text-base">{scenario.character?.title || scenario.role}</p>
+                        <p className="text-slate-400 text-base">
+                            {scenario.character?.title || scenario.role}
+                        </p>
                     </div>
                 </div>
 
@@ -446,7 +586,10 @@ function ScenarioIntro({ scenario, onStart, isTeacher, theme }) {
                         { icon: <Target className="w-5 h-5" />, label: 'Strand', value: scenario.strand },
                         { icon: <BookOpen className="w-5 h-5" />, label: 'Concepts', value: `${scenario.scienceFocus?.length || 4} topics` },
                     ].map((stat, i) => (
-                        <div key={i} className={`p-4 rounded-2xl bg-slate-800/50 border ${theme.border} text-center`}>
+                        <div
+                            key={i}
+                            className={`p-4 rounded-2xl bg-slate-800/50 border ${theme.border} text-center`}
+                        >
                             <div className={`flex justify-center mb-2 ${theme.text}`}>{stat.icon}</div>
                             <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">{stat.label}</p>
                             <p className="text-white font-bold text-sm">{stat.value}</p>
@@ -459,16 +602,21 @@ function ScenarioIntro({ scenario, onStart, isTeacher, theme }) {
                     <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-3">Science Focus</p>
                     <div className="flex flex-wrap gap-2">
                         {scenario.scienceFocus?.map((focus, i) => (
-                            <span key={i} className={`px-4 py-2 rounded-xl text-sm font-medium border ${theme.border} ${theme.text} bg-slate-800/50`}>
+                            <span
+                                key={i}
+                                className={`px-4 py-2 rounded-xl text-sm font-medium border ${theme.border} ${theme.text} bg-slate-800/50`}
+                            >
                                 {focus}
                             </span>
                         ))}
                     </div>
                 </div>
 
-                {/* Start Button */}
-                <Button onClick={onStart} size="lg"
-                    className={`w-full bg-gradient-to-r ${theme.accent} hover:opacity-90 py-7 text-lg font-bold rounded-2xl shadow-xl`}>
+                <Button
+                    onClick={onStart}
+                    size="lg"
+                    className={`w-full bg-gradient-to-r ${theme.accent} hover:opacity-90 py-7 text-lg font-bold rounded-2xl shadow-xl`}
+                >
                     <Play className="w-5 h-5 mr-2" />
                     {isTeacher ? 'Preview Scenario' : 'Begin Scenario'}
                 </Button>
