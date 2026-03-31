@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -111,7 +112,7 @@ const VIDEO_CONTENT = {
     },
     aspirin_production: {
         scenes: [
-            { visual: 'Pharmaceutical production facility in Abu Dhabi', narration: 'Welcome to Gulf Pharma, one of the UAE\'s leading pharmaceutical manufacturers in Abu Dhabi. This facility produces over 50 million tablets annually, supplying hospitals and clinics across the region.', duration: 7000, showData: false },
+            { visual: 'Pharmaceutical production facility in Abu Dhabi', narration: "Welcome to Gulf Pharma, one of the UAE's leading pharmaceutical manufacturers in Abu Dhabi. This facility produces over 50 million tablets annually, supplying hospitals and clinics across the region.", duration: 7000, showData: false },
             { visual: 'Aspirin tablet production line', narration: 'Today, we must fulfill an urgent order for 1000 aspirin tablets destined for a hospital pain management programme. Each tablet must contain exactly 500 milligrams of active ingredient — acetylsalicylic acid, commonly known as aspirin.', duration: 8000, showData: false },
             { visual: 'Chemical reaction diagram on whiteboard', narration: 'Aspirin is made by reacting salicylic acid with acetic anhydride. The balanced equation shows a 1 to 1 mole ratio: one mole of salicylic acid produces one mole of aspirin. This is the foundation of our stoichiometric calculation.', duration: 8000, showData: false },
             { visual: 'Production data and inventory table', narration: 'Here is the key data you need. Aspirin has a molar mass of 180 grams per mole. Salicylic acid, our raw material, has a molar mass of 138 grams per mole. We need 500 grams of aspirin total. Because of the 1 to 1 ratio, the moles of reactant equal the moles of product.', duration: 11000, showData: true, dataTable: { headers: ['Substance', 'Molar Mass', 'Required / Available', 'Mole Ratio'], rows: [['Salicylic acid (reactant)', '138 g/mol', '? grams needed', '1 mol'], ['Acetic anhydride', '102 g/mol', 'Excess available', '1 mol'], ['Aspirin (product)', '180 g/mol', '500 g needed', '1 mol']] } },
@@ -121,7 +122,7 @@ const VIDEO_CONTENT = {
     haber_process: {
         scenes: [
             { visual: 'ADNOC fertilizer plant, Ruwais, UAE', narration: 'The ADNOC fertilizer complex in Ruwais is one of the largest in the Middle East. This plant uses the Haber Process to produce ammonia, the key ingredient in nitrogen fertilizer that feeds crops across the UAE and beyond.', duration: 7000, showData: false },
-            { visual: 'Agricultural fields in Al Ain needing fertilizer', narration: 'Farms across Al Ain are waiting for this season\'s fertilizer supply. The planting window opens in 3 days. A supply disruption has limited our nitrogen gas stock. We must calculate exactly how much ammonia we can produce with what is available.', duration: 8000, showData: false },
+            { visual: 'Agricultural fields in Al Ain needing fertilizer', narration: "Farms across Al Ain are waiting for this season's fertilizer supply. The planting window opens in 3 days. A supply disruption has limited our nitrogen gas stock. We must calculate exactly how much ammonia we can produce with what is available.", duration: 8000, showData: false },
             { visual: 'Chemical equation on display screen', narration: 'The Haber Process reaction is: nitrogen gas plus 3 moles of hydrogen gas produces 2 moles of ammonia. The mole ratio is 1 to 3 to 2. Understanding this ratio is essential for calculating the theoretical yield of ammonia from our available reactants.', duration: 8000, showData: false },
             { visual: 'Inventory and stoichiometry table', narration: 'Our current inventory shows 280 kilograms of nitrogen gas and 90 kilograms of hydrogen gas. Nitrogen has a molar mass of 28 grams per mole, giving us 10,000 moles. Hydrogen has a molar mass of 2 grams per mole, giving us 45,000 moles. Ammonia has a molar mass of 17 grams per mole.', duration: 12000, showData: true, dataTable: { headers: ['Reactant', 'Molar Mass', 'Available', 'Moles Available'], rows: [['Nitrogen (N₂)', '28 g/mol', '280 kg', '10,000 mol'], ['Hydrogen (H₂)', '2 g/mol', '90 kg', '45,000 mol'], ['Ammonia (NH₃)', '17 g/mol', 'Product', 'Calculate →']] } },
             { visual: 'Engineer analyzing yield data', narration: 'To identify the limiting reactant, we compare what we have to what we need. To use all 10,000 moles of nitrogen, we would need 30,000 moles of hydrogen. We have 45,000 moles, which is more than enough. But to use all 45,000 moles of hydrogen, we would need 15,000 moles of nitrogen, yet we only have 10,000. Nitrogen is our limiting reactant. The theoretical yield is 20,000 moles of ammonia. At 65 percent plant efficiency, what is our actual yield? Your calculation determines whether the farms receive their fertilizer on time.', duration: 14000, showData: true, dataTable: { headers: ['Reactant', 'Molar Mass', 'Available', 'Moles Available'], rows: [['Nitrogen (N₂)', '28 g/mol', '280 kg', '10,000 mol'], ['Hydrogen (H₂)', '2 g/mol', '90 kg', '45,000 mol'], ['Ammonia (NH₃)', '17 g/mol', 'Product', 'Calculate →']] } }
@@ -138,29 +139,64 @@ const VIDEO_CONTENT = {
     }
 };
 
-// Voice selection based on character gender
-const getGenderMatchedVoice = (character, voices) => {
-    const isFemale = character?.gender === 'female';
-    const arabicVoices = voices.filter(v => v.lang.includes('ar'));
-    const englishVoices = voices.filter(v => v.lang.includes('en'));
+// ============================================================
+// VOICE SELECTION — English only, gender-matched for iOS/Android
+// ============================================================
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    const femalePatterns = ['female', 'woman', 'zira', 'samantha', 'karen', 'moira', 'fiona', 'victoria', 'susan', 'heather'];
-    const malePatterns = ['male', 'man', 'david', 'daniel', 'james', 'alex', 'tom', 'mark', 'lee', 'george'];
+const getGenderMatchedVoice = (character, voices) => {
+    if (!voices || voices.length === 0) return null;
+
+    const isFemale = character?.gender === 'female';
+
+    const femalePatterns = [
+        'samantha', 'karen', 'moira', 'fiona', 'tessa', 'zoe', 'veena',
+        'female', 'woman', 'emma', 'aria', 'jenny', 'michelle', 'ava',
+        'victoria', 'susan', 'heather', 'zira'
+    ];
+    const malePatterns = [
+        'daniel', 'alex', 'fred', 'tom', 'lee', 'aaron', 'gordon', 'reed',
+        'male', 'man', 'david', 'james', 'guy', 'ryan', 'matthew',
+        'oliver', 'mark', 'george', 'john'
+    ];
+
     const patterns = isFemale ? femalePatterns : malePatterns;
 
-    let voice = arabicVoices.find(v => patterns.some(p => v.name.toLowerCase().includes(p)));
-    if (!voice && arabicVoices.length > 0) voice = arabicVoices[0];
-    if (!voice) voice = englishVoices.find(v => patterns.some(p => v.name.toLowerCase().includes(p)));
-    return voice || englishVoices[0] || voices[0];
+    // English only — exclude Arabic and other non-English voices
+    const englishVoices = voices.filter(v => {
+        const lang = v.lang?.toLowerCase() || '';
+        return lang.startsWith('en') && !lang.includes('ar');
+    });
+
+    const enUSVoices = englishVoices.filter(v =>
+        v.lang?.toLowerCase() === 'en-us'
+    );
+
+    const findMatch = (list) =>
+        list.find(v =>
+            patterns.some(p => v.name?.toLowerCase().includes(p))
+        );
+
+    return (
+        findMatch(enUSVoices) ||
+        findMatch(englishVoices) ||
+        // iOS guaranteed fallback: Samantha (female) / Daniel (male)
+        englishVoices.find(v => isFemale ? v.name === 'Samantha' : v.name === 'Daniel') ||
+        englishVoices.find(v => v.name === 'Samantha') ||
+        enUSVoices[0] ||
+        englishVoices[0] ||
+        voices.find(v => v.default) ||
+        voices[0] ||
+        null
+    );
 };
 
 export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher = false }) {
     const content = VIDEO_CONTENT[scenarioId];
     const character = CHARACTERS[scenarioId];
 
-    // Core state
     const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
-    const [playbackState, setPlaybackState] = useState('idle'); // idle, playing, paused, complete
+    const [playbackState, setPlaybackState] = useState('idle');
     const [isMuted, setIsMuted] = useState(false);
     const [showSubtitles, setShowSubtitles] = useState(true);
     const [progress, setProgress] = useState(0);
@@ -168,22 +204,21 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
     const [voiceReady, setVoiceReady] = useState(false);
     const [error, setError] = useState(null);
 
-    // Sentence-based subtitle segmentation
     const [subtitleSegments, setSubtitleSegments] = useState([]);
     const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
     const segmentTimerRef = useRef(null);
 
-    // Refs for cleanup
     const isMountedRef = useRef(true);
     const progressTimerRef = useRef(null);
     const autoAdvanceTimerRef = useRef(null);
+    const iosKeepAliveRef = useRef(null);
     const sceneCompleteRef = useRef({ visual: false, narration: false });
 
     const scenes = content?.scenes || [];
     const currentScene = scenes[currentSceneIndex];
     const totalScenes = scenes.length;
 
-    // ============ CLEANUP FUNCTION ============
+    // ============ CLEANUP ============
     const stopAllPlayback = useCallback(() => {
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         if (progressTimerRef.current) { clearInterval(progressTimerRef.current); progressTimerRef.current = null; }
@@ -191,28 +226,35 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
         if (autoAdvanceTimerRef.current) { clearTimeout(autoAdvanceTimerRef.current); autoAdvanceTimerRef.current = null; }
     }, []);
 
-    // ============ MOUNT/UNMOUNT CLEANUP ============
+    // ============ MOUNT/UNMOUNT ============
     useEffect(() => {
         isMountedRef.current = true;
+
+        // iOS 15-second speech bug fix
+        if (isIOS() && 'speechSynthesis' in window) {
+            iosKeepAliveRef.current = setInterval(() => {
+                if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+                    window.speechSynthesis.pause();
+                    window.speechSynthesis.resume();
+                }
+            }, 10000);
+        }
 
         return () => {
             isMountedRef.current = false;
             stopAllPlayback();
+            if (iosKeepAliveRef.current) clearInterval(iosKeepAliveRef.current);
         };
     }, [stopAllPlayback]);
 
-    // ============ VOICE INITIALIZATION ============
+    // ============ VOICE INIT ============
     useEffect(() => {
-        if (!('speechSynthesis' in window)) {
-            setVoiceReady(true);
-            return;
-        }
+        if (!('speechSynthesis' in window)) { setVoiceReady(true); return; }
 
         const loadVoices = () => {
             const voices = window.speechSynthesis.getVoices();
             if (voices.length > 0 && isMountedRef.current) {
-                const voice = getGenderMatchedVoice(character, voices);
-                setSelectedVoice(voice);
+                setSelectedVoice(getGenderMatchedVoice(character, voices));
                 setVoiceReady(true);
             }
         };
@@ -220,44 +262,34 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
         loadVoices();
         window.speechSynthesis.onvoiceschanged = loadVoices;
 
-        // Fallback if voices don't load
         const timeout = setTimeout(() => {
-            if (isMountedRef.current && !voiceReady) {
-                setVoiceReady(true);
-            }
+            if (isMountedRef.current && !voiceReady) setVoiceReady(true);
         }, 2000);
 
         return () => clearTimeout(timeout);
     }, [character, voiceReady]);
 
-    // ============ SCENE COMPLETION HANDLER ============
+    // ============ SCENE COMPLETE ============
     const handleSceneComplete = useCallback(() => {
         if (!isMountedRef.current) return;
-
         stopAllPlayback();
         setPlaybackState('complete');
-
-        // Auto-advance after delay (students only, not on last scene)
         if (!isTeacher && currentSceneIndex < totalScenes - 1) {
             autoAdvanceTimerRef.current = setTimeout(() => {
-                if (isMountedRef.current) {
-                    goToNextScene();
-                }
+                if (isMountedRef.current) goToNextScene();
             }, 1500);
         }
     }, [currentSceneIndex, totalScenes, isTeacher, stopAllPlayback]);
 
-    // ============ CHECK SCENE COMPLETION ============
     const checkCompletion = useCallback(() => {
         if (sceneCompleteRef.current.visual && sceneCompleteRef.current.narration) {
             handleSceneComplete();
         }
     }, [handleSceneComplete]);
 
-    // ============ SEGMENT NARRATION INTO SHORT PHRASES ============
+    // ============ SEGMENTATION ============
     const segmentNarration = (text) => {
         if (!text) return [];
-        // Split on sentence endings, commas, or every ~10 words max
         const raw = text.split(/(?<=[.!?,])\s+|(?<=\w{3,})\s+(?=\w)/g);
         const segments = [];
         let current = '';
@@ -272,7 +304,6 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
             }
         }
         if (current.trim()) segments.push(current.trim());
-        // Fallback: split every 10 words if above produced nothing useful
         if (segments.length <= 1 && text.split(/\s+/).length > 12) {
             const words = text.split(/\s+/);
             for (let i = 0; i < words.length; i += 10) {
@@ -313,7 +344,7 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
             }
         }, 50);
 
-        // Segment cycling — evenly spaced, synchronized to total duration
+        // Segment cycling
         if (segments.length > 1) {
             const segDuration = duration / segments.length;
             let segIdx = 0;
@@ -333,48 +364,60 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
         // Speech synthesis
         if (!isMuted && 'speechSynthesis' in window && text) {
             window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.85;
-            utterance.pitch = 1;
-            utterance.volume = 1;
-            if (selectedVoice) utterance.voice = selectedVoice;
 
-            // Use boundary events to sync subtitles when available
-            let segmentBoundaries = null;
-            if (segments.length > 1) {
-                let charIdx = 0;
-                segmentBoundaries = segments.map(seg => {
-                    const start = charIdx;
-                    charIdx += seg.length + 1;
-                    return start;
-                });
+            const speakUtterance = () => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.85;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                utterance.lang = 'en-US'; // Force English — critical on Arabic-language devices
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    utterance.lang = selectedVoice.lang || 'en-US';
+                }
+
+                let segmentBoundaries = null;
+                if (segments.length > 1) {
+                    let charIdx = 0;
+                    segmentBoundaries = segments.map(seg => {
+                        const start = charIdx;
+                        charIdx += seg.length + 1;
+                        return start;
+                    });
+                }
+
+                utterance.onboundary = (e) => {
+                    if (!isMountedRef.current || !segmentBoundaries || e.name !== 'word') return;
+                    let seg = 0;
+                    for (let i = segmentBoundaries.length - 1; i >= 0; i--) {
+                        if (e.charIndex >= segmentBoundaries[i]) { seg = i; break; }
+                    }
+                    setCurrentSegmentIndex(seg);
+                };
+
+                utterance.onend = () => {
+                    if (isMountedRef.current) {
+                        sceneCompleteRef.current.narration = true;
+                        checkCompletion();
+                    }
+                };
+                utterance.onerror = (e) => {
+                    console.warn('Speech error:', e.error);
+                    if (isMountedRef.current) {
+                        sceneCompleteRef.current.narration = true;
+                        checkCompletion();
+                    }
+                };
+
+                window.speechSynthesis.speak(utterance);
+            };
+
+            // iOS needs delay after cancel() before speak()
+            if (isIOS()) {
+                setTimeout(speakUtterance, 250);
+            } else {
+                speakUtterance();
             }
-
-            utterance.onboundary = (e) => {
-                if (!isMountedRef.current || !segmentBoundaries || e.name !== 'word') return;
-                const charPos = e.charIndex;
-                // Find which segment this word belongs to
-                let seg = 0;
-                for (let i = segmentBoundaries.length - 1; i >= 0; i--) {
-                    if (charPos >= segmentBoundaries[i]) { seg = i; break; }
-                }
-                setCurrentSegmentIndex(seg);
-            };
-
-            utterance.onend = () => {
-                if (isMountedRef.current) {
-                    sceneCompleteRef.current.narration = true;
-                    checkCompletion();
-                }
-            };
-            utterance.onerror = (e) => {
-                console.warn('Speech error:', e.error);
-                if (isMountedRef.current) {
-                    sceneCompleteRef.current.narration = true;
-                    checkCompletion();
-                }
-            };
-            window.speechSynthesis.speak(utterance);
         } else {
             setTimeout(() => {
                 if (isMountedRef.current) {
@@ -388,22 +431,12 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
     // ============ NAVIGATION ============
     const handleScenarioComplete = async (sid) => {
         if (isTeacher) return;
-
         const pointsMap = {
-            water_contamination: 40,
-            reaction_gone_wrong: 50,
-            acid_rain: 35,
-            mutation_dilemma: 45,
-            reaction_time: 30,
-            unstable_slope: 40,
-            invasive_species: 35,
-            power_grid: 50,
-            heat_loss: 35,
-            aspirin_production: 45,
-            haber_process: 50,
-            oxygen_failure: 60,
+            water_contamination: 40, reaction_gone_wrong: 50, acid_rain: 35,
+            mutation_dilemma: 45, reaction_time: 30, unstable_slope: 40,
+            invasive_species: 35, power_grid: 50, heat_loss: 35,
+            aspirin_production: 45, haber_process: 50, oxygen_failure: 60,
         };
-
         try {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
@@ -415,6 +448,7 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
             console.warn('Points update failed:', e);
         }
     };
+
     const goToNextScene = useCallback(() => {
         if (!isMountedRef.current) return;
         stopAllPlayback();
@@ -460,18 +494,15 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
         } else if (playbackState === 'paused') {
             if ('speechSynthesis' in window) window.speechSynthesis.resume();
             setPlaybackState('playing');
-            // Resume timers would need more complex state tracking
         } else {
             playCurrentScene();
         }
     }, [playbackState, playCurrentScene]);
 
-    // ============ MUTE TOGGLE ============
+    // ============ MUTE ============
     const toggleMute = useCallback(() => {
         setIsMuted(prev => {
-            if (!prev && 'speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-            }
+            if (!prev && 'speechSynthesis' in window) window.speechSynthesis.cancel();
             return !prev;
         });
     }, []);
@@ -482,13 +513,11 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
         goToNextScene();
     }, [isTeacher, goToNextScene]);
 
-    // ============ AUTO-START ON SCENE CHANGE ============
+    // ============ AUTO-START ============
     useEffect(() => {
         if (voiceReady && playbackState === 'idle' && currentScene) {
             const timer = setTimeout(() => {
-                if (isMountedRef.current) {
-                    playCurrentScene();
-                }
+                if (isMountedRef.current) playCurrentScene();
             }, 500);
             return () => clearTimeout(timer);
         }
@@ -515,6 +544,7 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
     return (
         <div className="max-w-5xl mx-auto">
             <Card className="bg-slate-900 border-slate-800 overflow-hidden">
+
                 {/* Header */}
                 <div className="px-4 py-2 bg-slate-800/50 border-b border-slate-700 flex items-center justify-between flex-wrap gap-2">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -529,14 +559,12 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                             {playbackState === 'paused' && <><Pause className="w-3 h-3 mr-1" />Paused</>}
                             {playbackState === 'idle' && 'Ready'}
                         </Badge>
-
                         {isTeacher && (
                             <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
                                 Teacher Preview
                             </Badge>
                         )}
                     </div>
-
                     <div className="text-slate-500 text-sm">
                         Scene {currentSceneIndex + 1} / {totalScenes}
                     </div>
@@ -550,8 +578,7 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                             <span className="text-amber-300 text-sm">{error}</span>
                         </div>
                         <Button size="sm" variant="ghost" onClick={replayScene} className="text-amber-400">
-                            <RefreshCw className="w-4 h-4 mr-1" />
-                            Retry
+                            <RefreshCw className="w-4 h-4 mr-1" />Retry
                         </Button>
                     </div>
                 )}
@@ -566,7 +593,6 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                             exit={{ opacity: 0 }}
                             className="flex flex-col"
                         >
-                            {/* Scene location label */}
                             {currentScene?.visual && (
                                 <motion.div
                                     initial={{ opacity: 0, y: -8 }}
@@ -578,9 +604,7 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                                 </motion.div>
                             )}
 
-                            {/* Central Visual Display */}
                             <div className="flex items-center justify-center p-5 sm:p-8 min-h-[260px] sm:min-h-[340px]">
-                                {/* Scenario-specific illustrated visual */}
                                 {!currentScene?.showData && (
                                     <ScenarioVisual
                                         scenarioId={scenarioId}
@@ -589,8 +613,6 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                                         avatar={character?.avatar}
                                     />
                                 )}
-
-                                {/* Structured Data Table */}
                                 {currentScene?.showData && currentScene?.dataTable && (
                                     <motion.div
                                         initial={{ opacity: 0, y: 20 }}
@@ -637,7 +659,7 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                         </motion.div>
                     </AnimatePresence>
 
-                    {/* Audio waveform indicator */}
+                    {/* Audio waveform */}
                     {!isMuted && playbackState === 'playing' && (
                         <motion.div className="absolute top-3 right-3 flex items-center gap-1 bg-slate-800/80 backdrop-blur px-2.5 py-1.5 rounded-full">
                             <Volume2 className="w-3.5 h-3.5 text-teal-400 mr-1" />
@@ -652,7 +674,7 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                     )}
                 </div>
 
-                {/* Subtitle Panel — sentence-segmented, synchronized */}
+                {/* Subtitles */}
                 <div className="bg-slate-950/90 border-t border-slate-700/50 px-4 py-3 min-h-[80px]">
                     <div className="flex items-start gap-3">
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-lg flex-shrink-0 shadow-lg shadow-teal-500/20">
@@ -674,7 +696,6 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                                             {subtitleSegments[currentSegmentIndex] || currentScene?.narration?.split(/[.!?]/)[0] || ''}
                                         </motion.p>
                                     </AnimatePresence>
-                                    {/* Upcoming phrase preview */}
                                     {subtitleSegments[currentSegmentIndex + 1] && (
                                         <p className="text-xs text-slate-500 truncate">
                                             {subtitleSegments[currentSegmentIndex + 1]}
@@ -688,7 +709,6 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
 
                 {/* Controls */}
                 <div className="p-4 bg-slate-800/50 border-t border-slate-700">
-                    {/* Progress Bars */}
                     <div className="space-y-2 mb-4">
                         <div className="flex items-center gap-2">
                             <span className="text-xs text-slate-500 w-16">Scene</span>
@@ -704,25 +724,20 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                         </div>
                     </div>
 
-                    {/* Control Buttons */}
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <Button variant="ghost" size="icon" onClick={togglePlayPause} className="text-slate-400 hover:text-white">
                                 {playbackState === 'playing' ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                             </Button>
-
                             <Button variant="ghost" size="icon" onClick={goToPrevScene} disabled={currentSceneIndex === 0} className="text-slate-400 hover:text-white disabled:opacity-30">
                                 <SkipBack className="w-5 h-5" />
                             </Button>
-
                             <Button variant="ghost" size="icon" onClick={replayScene} className="text-slate-400 hover:text-white" title="Replay">
                                 <RotateCcw className="w-5 h-5" />
                             </Button>
-
                             <Button variant="ghost" size="icon" onClick={toggleMute} className="text-slate-400 hover:text-white">
                                 {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                             </Button>
-
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -744,7 +759,6 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                                     <SkipForward className="w-4 h-4 ml-2" />
                                 </Button>
                             )}
-
                             {isTeacher && (
                                 <>
                                     <Button
@@ -762,13 +776,13 @@ export default function CinematicVideoIntro({ scenarioId, onComplete, isTeacher 
                         </div>
                     </div>
 
-                    {/* Lock Message */}
                     {!isTeacher && playbackState === 'playing' && (
                         <p className="text-center text-slate-500 text-sm mt-3">
                             🔒 Complete the narration to continue
                         </p>
                     )}
                 </div>
+
             </Card>
         </div>
     );
