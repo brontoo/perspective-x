@@ -638,16 +638,19 @@ const SCENE_VISUALS = {
         null, null,
     ],
 
-    haber_process: [
+    fuelproduction: [
         () => (
             <div className="flex flex-col items-center gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="text-5xl">⚗️</div>
+                    <div className="text-6xl">🏭</div>
                     <div className="flex flex-col gap-1">
-                        <div className="text-sm text-white font-semibold">ADNOC Fertilizer Complex</div>
-                        <div className="text-xs text-teal-400">Ruwais, UAE — Middle East's largest</div>
-                        <div className="text-xs text-slate-400">Haber Process — ammonia production</div>
+                        <div className="text-sm text-white font-semibold">Jebel Ali Fuel Plant</div>
+                        <div className="text-xs text-teal-400">Masdar Clean Energy Partner</div>
+                        <div className="text-xs text-slate-400">Dubai International Airport Supply</div>
                     </div>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded text-xs text-amber-400">
+                    ✈️ Hajj Season Demand Surge
                 </div>
             </div>
         ),
@@ -655,57 +658,45 @@ const SCENE_VISUALS = {
             <div className="flex flex-col items-center gap-4 w-full">
                 <div className="flex items-center gap-6 justify-center">
                     <div className="flex flex-col items-center gap-2">
-                        <div className="text-5xl">🌾</div>
-                        <div className="text-xs text-green-400 text-center">Al Ain farms<br />waiting</div>
+                        <div className="text-4xl text-blue-400 font-bold">CH₄</div>
+                        <div className="text-xs text-slate-400">Methane</div>
                     </div>
-                    <div className="flex flex-col items-center gap-1">
-                        <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1, repeat: Infinity }} className="text-xs text-red-400 font-bold">⏰ 3 days</motion.div>
-                        <div className="text-xs text-slate-400">planting window</div>
-                    </div>
+                    <div className="text-slate-500 text-xl">+</div>
                     <div className="flex flex-col items-center gap-2">
-                        <div className="text-5xl">⚗️</div>
-                        <div className="text-xs text-amber-400 text-center">Supply disruption<br />N₂ limited</div>
+                        <div className="text-4xl text-blue-300">2H₂O</div>
+                        <div className="text-xs text-slate-400">Steam</div>
                     </div>
+                    <div className="text-teal-500 text-2xl">→</div>
+                    <div className="flex flex-col items-center gap-2">
+                        <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }} className="text-4xl text-teal-400 font-bold">4H₂</motion.div>
+                        <div className="text-xs text-teal-400 font-bold">Hydrogen Fuel</div>
+                    </div>
+                </div>
+                <div className="px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                    <p className="text-blue-300 text-xs text-center">1:4 Mole Ratio — Yield Optimization</p>
                 </div>
             </div>
         ),
         () => (
             <div className="flex flex-col items-center gap-4 w-full">
-                {/* Haber process equation */}
-                <div className="text-xs text-slate-400 mb-1">Haber Process Reaction</div>
-                <div className="flex items-center gap-2 flex-wrap justify-center">
+                <div className="flex items-center gap-8 justify-center">
                     <div className="flex flex-col items-center gap-1">
-                        <div className="px-3 py-2 bg-blue-500/20 border border-blue-500/40 rounded-lg text-center">
-                            <div className="text-white text-xs font-bold">Nitrogen</div>
-                            <div className="text-blue-300 text-xs font-bold">N₂</div>
-                        </div>
-                        <div className="text-teal-400 text-xs font-bold">1 mol</div>
+                        <div className="text-4xl">🧪</div>
+                        <div className="text-xs text-slate-400">16g CH₄</div>
+                        <div className="text-xs text-teal-400 font-bold">(1 mole)</div>
                     </div>
-                    <div className="text-slate-400 text-lg">+</div>
+                    <div className="text-slate-500 text-xl">→</div>
                     <div className="flex flex-col items-center gap-1">
-                        <div className="px-3 py-2 bg-red-500/20 border border-red-500/40 rounded-lg text-center">
-                            <div className="text-white text-xs font-bold">Hydrogen</div>
-                            <div className="text-red-300 text-xs font-bold">3H₂</div>
-                        </div>
-                        <div className="text-teal-400 text-xs font-bold">3 mol</div>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <div className="text-xs text-amber-400 mb-1">400°C, 200 atm</div>
-                        <motion.div animate={{ x: [0, 4, 0] }} transition={{ duration: 1, repeat: Infinity }} className="text-teal-400 text-xl">⇌</motion.div>
-                        <div className="text-xs text-amber-400 mt-1">Fe catalyst</div>
-                    </div>
-                    <div className="flex flex-col items-center gap-1">
-                        <div className="px-3 py-2 bg-emerald-500/20 border border-emerald-500/40 rounded-lg text-center">
-                            <div className="text-white text-xs font-bold">Ammonia</div>
-                            <div className="text-emerald-300 text-xs font-bold">2NH₃</div>
-                        </div>
-                        <div className="text-teal-400 text-xs font-bold">2 mol</div>
+                        <motion.div animate={{ y: [0, -4, 0] }} transition={{ duration: 1, repeat: Infinity }} className="text-5xl">⛽</motion.div>
+                        <div className="text-xs text-teal-400 font-bold">8g Hydrogen</div>
+                        <div className="text-xs text-slate-400">(4 moles)</div>
                     </div>
                 </div>
-                <div className="text-xs text-slate-400">Mole ratio 1 : 3 : 2</div>
+                <div className="px-4 py-2 bg-emerald-500/15 border border-emerald-500/40 rounded-lg">
+                    <p className="text-emerald-300 text-xs text-center font-semibold">✓ Production Estimate Verified</p>
+                </div>
             </div>
         ),
-        null, null,
     ],
 
     oxygen_failure: [

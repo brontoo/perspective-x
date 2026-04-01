@@ -21,22 +21,651 @@ const CHARACTERS = {
     heat_loss: { name: 'Eng. Hamad Al Ketbi', avatar: '👨‍💼', gender: 'male' },
     oxygen_failure: { name: 'Eng. Hazza Al Mansoori', avatar: '👨‍🚀', gender: 'male' },
     aspirin_production: { name: 'Dr. Aisha Al Breiki', avatar: '👩‍🔬', gender: 'female' },
-    haber_process: { name: 'Eng. Saeed Al Romaithi', avatar: '👨‍🔬', gender: 'male' }
+    fuelproduction: { name: 'Eng. Khaled Al Mansoori', avatar: '👨‍🔬', gender: 'male' }
 };
 
 const VIDEO_CONTENT = {
-    water_contamination: { scenes: [{ visual: 'Aerial view of Ras Al Khaimah coastline with desalination plant', narration: 'Welcome to Ras Al Khaimah. This beautiful coastal emirate, like all of the UAE, depends entirely on desalinated seawater for its freshwater supply. The Al Hamra desalination plant you see here provides clean water to over 50,000 residents.', duration: 8000, showData: false }, { visual: 'Industrial zone expanding near the coast', narration: 'Six months ago, the Al Hamra Industrial Zone expanded its operations. New chemical manufacturing facilities now operate just 2 kilometers upstream from our primary water intake point. This proximity raises immediate concerns.', duration: 7000, showData: false }, { visual: 'Water quality monitoring station', narration: 'Our water quality monitoring stations collect samples every 6 hours. Today readings revealed concerning results. Let me show you the data that triggered this investigation.', duration: 6000, showData: false }, { visual: 'Data table showing water quality measurements', narration: 'Look at this water quality table. We measured three key substances. First, Nitrates: measured at 55 parts per million. The safe limit is 50 parts per million. This reading exceeds the safety threshold by 10 percent.', duration: 9000, showData: true, dataTable: { headers: ['Substance', 'Measured (ppm)', 'Safe Limit (ppm)', 'Status'], rows: [['Nitrates', '55', '50', '⚠️ Exceeded'], ['Chlorides', '210', '250', '✓ Safe'], ['Heavy Metals', 'Trace', '0', '⚠️ Detected']] } }, { visual: 'Continued data explanation', narration: 'Second, Chlorides: measured at 210 parts per million, below the 250 ppm limit. This is within safe range. Third, Heavy Metals: we detected trace amounts. The safe limit is zero. Any detection requires investigation.', duration: 9000, showData: true, dataTable: { headers: ['Substance', 'Measured (ppm)', 'Safe Limit (ppm)', 'Status'], rows: [['Nitrates', '55', '50', '⚠️ Exceeded'], ['Chlorides', '210', '250', '✓ Safe'], ['Heavy Metals', 'Trace', '0', '⚠️ Detected']] } }, { visual: 'Map showing water flow direction', narration: 'This map shows groundwater flow direction. The industrial zone sits upstream. Contaminants flow directly toward our intake. The science indicates the factory is the likely source. Your analysis and recommendations will determine how we protect this community.', duration: 8000, showData: false }] },
-    reaction_gone_wrong: { scenes: [{ visual: 'ADNOC Ruwais petrochemical facility', narration: 'This is the ADNOC Ruwais facility in Abu Dhabi. One of the largest integrated refining and petrochemical complexes in the world. We produce industrial solvents essential for manufacturing across the globe.', duration: 7000, showData: false }, { visual: 'Control room with monitoring screens', narration: 'I am monitoring reactor vessel 7 from the control room. This exothermic reaction produces heat during the chemical process. The cooling system normally removes this excess heat to maintain safe temperatures.', duration: 7000, showData: false }, { visual: 'Temperature readings on display', narration: 'The reaction should stabilize at 90 degrees Celsius. But observe these readings. At time zero, temperature was normal at 80 degrees. The pressure was also normal.', duration: 6000, showData: true, dataTable: { headers: ['Time', 'Temperature (°C)', 'Pressure', 'Status'], rows: [['0 min', '80', 'Normal', '✓ Stable'], ['2 min', '95', 'Elevated', '⚠️ Warning'], ['5 min', '120', 'Critical', '🚨 Danger']] } }, { visual: 'Escalating readings', narration: 'At 2 minutes, temperature climbed to 95 degrees with elevated pressure. Now at 5 minutes, we see 120 degrees Celsius with critical pressure. This is a 50 percent increase above safe operating limits.', duration: 8000, showData: true, dataTable: { headers: ['Time', 'Temperature (°C)', 'Pressure', 'Status'], rows: [['0 min', '80', 'Normal', '✓ Stable'], ['2 min', '95', 'Elevated', '⚠️ Warning'], ['5 min', '120', 'Critical', '🚨 Danger']] } }, { visual: 'Diagram of runaway reaction', narration: 'This is a runaway exothermic reaction. Heat builds faster than the cooling system can remove it. Without intervention, temperature and pressure will continue rising. We have approximately 3 minutes before critical failure. Your chemistry knowledge is essential.', duration: 8000, showData: false }] },
-    acid_rain: { scenes: [{ visual: 'Al Ain date palm oasis', narration: 'Al Ain, the Garden City of the UAE. These date palm groves represent thousands of years of agricultural heritage. The Al Ain oasis has been a UNESCO World Heritage site, sustaining communities across generations.', duration: 7000, showData: false }, { visual: 'Farmers reporting damaged crops', narration: 'Local farmers have reported unusual damage to palm fronds. Yellow discoloration and weakened leaves that should remain green year-round. Our atmospheric monitoring stations detected anomalies that may explain this damage.', duration: 7000, showData: false }, { visual: 'pH measurement equipment', narration: 'We collected rainfall samples from four locations across the region. The pH scale measures acidity: 7 is neutral, below 7 is acidic. Normal rain has a pH of approximately 5.6 due to natural carbon dioxide.', duration: 7000, showData: false }, { visual: 'Rainfall pH data table', narration: 'Examine this data carefully. Agricultural Zone A shows pH 4.2 with sulfur dioxide at 85 parts per billion. The Oasis District: pH 4.5 with 72 ppb sulfur dioxide. Urban Area: pH 5.1 with 45 ppb. Control Site in the desert: pH 5.5 with only 12 ppb.', duration: 12000, showData: true, dataTable: { headers: ['Location', 'Rainfall pH', 'Normal pH', 'SO₂ (ppb)'], rows: [['Agricultural Zone A', '4.2', '5.6', '85'], ['Oasis District', '4.5', '5.6', '72'], ['Urban Area', '5.1', '5.6', '45'], ['Control Site (Desert)', '5.5', '5.6', '12']] } }, { visual: 'Analysis explanation', narration: 'The pattern is clear. Areas with higher sulfur dioxide show lower pH values. Agricultural Zone A at pH 4.2 is approximately 25 times more acidic than normal rain. At this acidity level, plant tissues suffer direct chemical damage. What solution will you recommend?', duration: 9000, showData: true, dataTable: { headers: ['Location', 'Rainfall pH', 'Normal pH', 'SO₂ (ppb)'], rows: [['Agricultural Zone A', '4.2', '5.6', '85'], ['Oasis District', '4.5', '5.6', '72'], ['Urban Area', '5.1', '5.6', '45'], ['Control Site (Desert)', '5.5', '5.6', '12']] } }] },
-    mutation_dilemma: { scenes: [{ visual: 'Sheikh Khalifa Medical City genetics center', narration: 'Welcome to the National Genetics Center at Sheikh Khalifa Medical City in Abu Dhabi. Here we help Emirati families understand their genetic heritage and make informed decisions about their future.', duration: 7000, showData: false }, { visual: 'Young Emirati couple in consultation', narration: 'Today I am meeting with Omar and Layla. They are planning to start a family. However, genetic screening has revealed that both of them carry a variant for an autosomal recessive condition.', duration: 7000, showData: false }, { visual: 'Punnett square diagram', narration: 'Let me explain the inheritance pattern using a Punnett square. When both parents are carriers, written as Aa, each parent passes one gene copy to their children. The square shows all possible combinations.', duration: 7000, showData: false }, { visual: 'Genetic probability table', narration: 'Here are the precise probabilities. First outcome: AA genotype, meaning unaffected and not a carrier. Probability is 25 percent. Second outcome: Aa genotype, carrier like the parents but unaffected. Probability is 50 percent.', duration: 9000, showData: true, dataTable: { headers: ['Outcome', 'Genotype', 'Probability'], rows: [['Unaffected (not carrier)', 'AA', '25%'], ['Carrier (unaffected)', 'Aa', '50%'], ['Affected', 'aa', '25%']] } }, { visual: 'Final probability explanation', narration: 'Third outcome: aa genotype, affected by the condition. Probability is 25 percent. These probabilities apply to each pregnancy independently. Omar and Layla need guidance that balances scientific facts with their emotional needs and cultural values.', duration: 9000, showData: true, dataTable: { headers: ['Outcome', 'Genotype', 'Probability'], rows: [['Unaffected (not carrier)', 'AA', '25%'], ['Carrier (unaffected)', 'Aa', '50%'], ['Affected', 'aa', '25%']] } }] },
-    reaction_time: { scenes: [{ visual: 'Zayed Sports City training facility', narration: 'Welcome to the UAE National Training Center at Zayed Sports City. Here we develop world-class athletes using cutting-edge sports science. Our goal is Olympic excellence for the Emirates.', duration: 6000, showData: false }, { visual: 'Emirati sprinter Rashid at starting blocks', narration: 'Meet Rashid, one of our most promising 100-meter sprinters. He is preparing for the Asian Games. His reaction times at the starting blocks have always been exceptional, consistently under 0.15 seconds.', duration: 7000, showData: false }, { visual: 'Reaction time testing equipment', narration: 'Recently, Rashid performance has declined. We conducted standardized reaction time tests under controlled conditions to identify the cause. His baseline when fully rested was 0.14 seconds, which is excellent.', duration: 7000, showData: false }, { visual: 'Test results data table', narration: 'Examine these test results carefully. After 8 hours of sleep, reaction time was 0.15 seconds, a 7 percent increase from baseline. After only 5 hours of sleep, reaction time jumped to 0.21 seconds. That is a 50 percent increase, extremely significant.', duration: 10000, showData: true, dataTable: { headers: ['Condition', 'Reaction Time', 'Change from Baseline'], rows: [['Baseline (fully rested)', '0.14s', '—'], ['After 8 hours sleep', '0.15s', '+7%'], ['After 5 hours sleep', '0.21s', '+50%'], ['After caffeine intake', '0.13s', '-7%'], ['During high stress', '0.19s', '+36%']] } }, { visual: 'Additional data analysis', narration: 'After caffeine, reaction time improved to 0.13 seconds, 7 percent faster than baseline. During high stress conditions, reaction time increased to 0.19 seconds, 36 percent slower. The nervous system is clearly affected by multiple factors. What training protocol will optimize his performance?', duration: 10000, showData: true, dataTable: { headers: ['Condition', 'Reaction Time', 'Change from Baseline'], rows: [['Baseline (fully rested)', '0.14s', '—'], ['After 8 hours sleep', '0.15s', '+7%'], ['After 5 hours sleep', '0.21s', '+50%'], ['After caffeine intake', '0.13s', '-7%'], ['During high stress', '0.19s', '+36%']] } }] },
-    unstable_slope: { scenes: [{ visual: 'Hajar Mountains near Hatta', narration: 'The Hajar Mountains near Hatta, a geological treasure of the UAE. These ancient rock formations have stood for millions of years. Mountain communities here enjoy stunning views, but nature can present sudden challenges.', duration: 7000, showData: false }, { visual: 'Recent heavy rainfall', narration: 'This month brought unusual weather. Rainfall measured 300 percent above average. The normally dry wadis filled with rushing water. Now residents report alarming ground changes near their homes.', duration: 6000, showData: false }, { visual: 'Ground cracks visible', narration: 'My field survey revealed serious warning signs. These cracks in the ground measure 5 to 10 centimeters wide, extending for 50 meters along the hillside. This is not normal settling. This indicates potential slope failure.', duration: 7000, showData: false }, { visual: 'Geological survey data', narration: 'Let me present the geological findings. Soil type: clay-rich with low drainage capacity, rated high risk. Slope angle: 35 degrees, well above the 25 degree stability threshold, rated critical risk. Vegetation: recently cleared for construction, eliminating root stabilization, high risk.', duration: 11000, showData: true, dataTable: { headers: ['Factor', 'Finding', 'Risk Level'], rows: [['Soil Type', 'Clay-rich, low drainage', 'High'], ['Slope Angle', '35° (threshold: 25°)', 'Critical'], ['Vegetation', 'Recently cleared', 'High'], ['Crack Width', '5-10 cm, extending 50m', 'Severe']] } }, { visual: 'Risk assessment conclusion', narration: 'Crack width and extent: 5 to 10 centimeters wide across 50 meters, rated severe. Water seepage is visible at the slope base. Fifteen families live in the potential impact zone. More rain is forecast. What is your recommendation to protect these residents?', duration: 9000, showData: true, dataTable: { headers: ['Factor', 'Finding', 'Risk Level'], rows: [['Soil Type', 'Clay-rich, low drainage', 'High'], ['Slope Angle', '35° (threshold: 25°)', 'Critical'], ['Vegetation', 'Recently cleared', 'High'], ['Crack Width', '5-10 cm, extending 50m', 'Severe']] } }] },
-    invasive_species: { scenes: [{ visual: 'Abu Dhabi mangrove forests', narration: 'The mangrove forests of Abu Dhabi, a critical coastal ecosystem. These trees protect our shoreline from erosion, capture carbon dioxide, and nurture marine biodiversity. For decades, conservation efforts have helped these forests thrive.', duration: 7000, showData: false }, { visual: 'Invasive algae on water surface', narration: 'Three months ago, monitoring teams detected an invasive algae species. It likely arrived in ship ballast water discharged in our coastal waters. This organism has no natural predators in our ecosystem.', duration: 7000, showData: false }, { visual: 'Spread progression', narration: 'The spread has been exponential. In month one, coverage was 5 percent of the water surface. Month two: 12 percent coverage. Month three: 20 percent coverage. This doubling pattern threatens to overwhelm the entire system.', duration: 8000, showData: false }, { visual: 'Ecosystem impact data', narration: 'Examine the ecosystem impact data. Current algae coverage: 20 percent now, projected to reach 80 percent in 6 months. Native fish population: declined 40 percent, rated critical. Mangrove health: stressed condition, rated endangered if trends continue.', duration: 10000, showData: true, dataTable: { headers: ['Metric', 'Current Status', 'Projection'], rows: [['Algae Coverage', '20%', '80% in 6 months'], ['Native Fish Population', '-40%', 'Critical'], ['Mangrove Health', 'Stressed', 'Endangered'], ['Water Oxygen Levels', 'Declining', 'Dangerous']] } }, { visual: 'Call to action', narration: 'Water oxygen levels: declining, rated dangerous for marine life. The algae blocks sunlight from underwater plants that produce oxygen through photosynthesis. The entire food web is collapsing. What conservation strategy do you recommend?', duration: 8000, showData: true, dataTable: { headers: ['Metric', 'Current Status', 'Projection'], rows: [['Algae Coverage', '20%', '80% in 6 months'], ['Native Fish Population', '-40%', 'Critical'], ['Mangrove Health', 'Stressed', 'Endangered'], ['Water Oxygen Levels', 'Declining', 'Dangerous']] } }] },
-    power_grid: { scenes: [{ visual: 'Dubai skyline during heatwave', narration: 'Dubai, a city of innovation, facing an extreme summer day. The temperature has reached 48 degrees Celsius. Every air conditioning unit across the emirate operates at maximum capacity. The electrical grid is under unprecedented stress.', duration: 7000, showData: false }, { visual: 'DEWA smart grid control room', narration: 'I am in the DEWA Smart Grid Command Center. Our screens display real-time power flow across Dubai entire electrical network. The situation is critical. Demand has exceeded our projections.', duration: 6000, showData: false }, { visual: 'Supply and demand display', narration: 'Here are the critical numbers. Total electricity demand: 45,000 megawatts. Total generation capacity: 42,000 megawatts. The deficit: 3,000 megawatts. We cannot generate enough power to meet demand.', duration: 8000, showData: true, dataTable: { headers: ['Source', 'Output (MW)', 'Status'], rows: [['Natural Gas Plants', '20,000', 'Maximum'], ['Solar (MBR Solar Park)', '2,000', 'Declining'], ['Nuclear (Barakah)', '5,600', 'Steady'], ['Other Sources', '14,400', 'Maximum'], ['TOTAL SUPPLY', '42,000', '—'], ['TOTAL DEMAND', '45,000', '🚨 Deficit']] } }, { visual: 'Generation breakdown', narration: 'Generation breakdown: Natural gas plants produce 20,000 megawatts at maximum output. The Mohammed bin Rashid Solar Park provides 2,000 megawatts but is declining as evening approaches. Barakah nuclear provides 5,600 megawatts steady output. All other sources: 14,400 megawatts at maximum.', duration: 11000, showData: true, dataTable: { headers: ['Source', 'Output (MW)', 'Status'], rows: [['Natural Gas Plants', '20,000', 'Maximum'], ['Solar (MBR Solar Park)', '2,000', 'Declining'], ['Nuclear (Barakah)', '5,600', 'Steady'], ['Other Sources', '14,400', 'Maximum'], ['TOTAL SUPPLY', '42,000', '—'], ['TOTAL DEMAND', '45,000', '🚨 Deficit']] } }, { visual: 'Grid frequency warning', narration: 'When demand exceeds supply, grid frequency drops below 50 hertz. If it falls too low, automatic protection systems trigger cascading blackouts. We have 30 minutes before the grid becomes unstable. What emergency action do you recommend?', duration: 8000, showData: false }] },
-    heat_loss: { scenes: [{ visual: 'Al Fahidi Historical District building', narration: 'Al Fahidi Historical District in Dubai, where heritage meets the future. This 80-year-old building preserves Emirati architectural traditions. It is being retrofitted for modern sustainability while maintaining its cultural significance.', duration: 7000, showData: false }, { visual: 'Energy consumption data', narration: 'The building current annual cooling cost is 180,000 dirhams, approximately 45,000 US dollars. In the UAE climate, cooling consumes over 70 percent of building energy. The school board wants to reduce costs without damaging the historic structure.', duration: 8000, showData: false }, { visual: 'Thermal imaging survey', narration: 'I conducted a thermal imaging survey. The camera detects temperature differences, showing where conditioned air escapes and where external heat enters. The brighter areas indicate heat gain. Let me show you the detailed breakdown.', duration: 7000, showData: false }, { visual: 'Heat loss data table', narration: 'Heat gain analysis: Windows account for 35 percent of heat gain through radiation and conduction, the single largest factor. The roof accounts for 25 percent through conduction. Walls contribute 20 percent through conduction.', duration: 10000, showData: true, dataTable: { headers: ['Area', 'Heat Gain', 'Transfer Method'], rows: [['Windows (single-pane)', '35%', 'Radiation + Conduction'], ['Roof', '25%', 'Conduction'], ['Walls', '20%', 'Conduction'], ['Air Leaks', '15%', 'Convection'], ['Floor', '5%', 'Conduction']] } }, { visual: 'Complete analysis', narration: 'Air leaks through gaps and cracks contribute 15 percent through convection. The floor contributes only 5 percent. The budget is 400,000 dirhams. Heritage regulations limit exterior modifications. How do you recommend maximizing efficiency while respecting cultural preservation?', duration: 10000, showData: true, dataTable: { headers: ['Area', 'Heat Gain', 'Transfer Method'], rows: [['Windows (single-pane)', '35%', 'Radiation + Conduction'], ['Roof', '25%', 'Conduction'], ['Walls', '20%', 'Conduction'], ['Air Leaks', '15%', 'Convection'], ['Floor', '5%', 'Conduction']] } }] },
-    aspirin_production: { scenes: [{ visual: 'Pharmaceutical production facility in Abu Dhabi', narration: "Welcome to Gulf Pharma, one of the UAE's leading pharmaceutical manufacturers in Abu Dhabi. This facility produces over 50 million tablets annually, supplying hospitals and clinics across the region.", duration: 7000, showData: false }, { visual: 'Aspirin tablet production line', narration: 'Today, we must fulfill an urgent order for 1000 aspirin tablets destined for a hospital pain management programme. Each tablet must contain exactly 500 milligrams of active ingredient — acetylsalicylic acid, commonly known as aspirin.', duration: 8000, showData: false }, { visual: 'Chemical reaction diagram on whiteboard', narration: 'Aspirin is made by reacting salicylic acid with acetic anhydride. The balanced equation shows a 1 to 1 mole ratio: one mole of salicylic acid produces one mole of aspirin. This is the foundation of our stoichiometric calculation.', duration: 8000, showData: false }, { visual: 'Production data and inventory table', narration: 'Here is the key data you need. Aspirin has a molar mass of 180 grams per mole. Salicylic acid, our raw material, has a molar mass of 138 grams per mole. We need 500 grams of aspirin total. Because of the 1 to 1 ratio, the moles of reactant equal the moles of product.', duration: 11000, showData: true, dataTable: { headers: ['Substance', 'Molar Mass', 'Required / Available', 'Mole Ratio'], rows: [['Salicylic acid (reactant)', '138 g/mol', '? grams needed', '1 mol'], ['Acetic anhydride', '102 g/mol', 'Excess available', '1 mol'], ['Aspirin (product)', '180 g/mol', '500 g needed', '1 mol']] } }, { visual: 'Lab technician with inventory concern', narration: 'There is a problem. Our inventory shows only 300 grams of salicylic acid, not the 383 grams that stoichiometry tells us we need. The hospital order is urgent — they need the medication within 24 hours. What is the scientifically responsible action?', duration: 10000, showData: true, dataTable: { headers: ['Substance', 'Molar Mass', 'Required / Available', 'Mole Ratio'], rows: [['Salicylic acid (reactant)', '138 g/mol', '? grams needed', '1 mol'], ['Acetic anhydride', '102 g/mol', 'Excess available', '1 mol'], ['Aspirin (product)', '180 g/mol', '500 g needed', '1 mol']] } }] },
-    haber_process: { scenes: [{ visual: 'ADNOC fertilizer plant, Ruwais, UAE', narration: 'The ADNOC fertilizer complex in Ruwais is one of the largest in the Middle East. This plant uses the Haber Process to produce ammonia, the key ingredient in nitrogen fertilizer that feeds crops across the UAE and beyond.', duration: 7000, showData: false }, { visual: 'Agricultural fields in Al Ain needing fertilizer', narration: "Farms across Al Ain are waiting for this season's fertilizer supply. The planting window opens in 3 days. A supply disruption has limited our nitrogen gas stock. We must calculate exactly how much ammonia we can produce with what is available.", duration: 8000, showData: false }, { visual: 'Chemical equation on display screen', narration: 'The Haber Process reaction is: nitrogen gas plus 3 moles of hydrogen gas produces 2 moles of ammonia. The mole ratio is 1 to 3 to 2. Understanding this ratio is essential for calculating the theoretical yield of ammonia from our available reactants.', duration: 8000, showData: false }, { visual: 'Inventory and stoichiometry table', narration: 'Our current inventory shows 280 kilograms of nitrogen gas and 90 kilograms of hydrogen gas. Nitrogen has a molar mass of 28 grams per mole, giving us 10,000 moles. Hydrogen has a molar mass of 2 grams per mole, giving us 45,000 moles. Ammonia has a molar mass of 17 grams per mole.', duration: 12000, showData: true, dataTable: { headers: ['Reactant', 'Molar Mass', 'Available', 'Moles Available'], rows: [['Nitrogen (N₂)', '28 g/mol', '280 kg', '10,000 mol'], ['Hydrogen (H₂)', '2 g/mol', '90 kg', '45,000 mol'], ['Ammonia (NH₃)', '17 g/mol', 'Product', 'Calculate →']] } }, { visual: 'Engineer analyzing yield data', narration: 'To identify the limiting reactant, we compare what we have to what we need. To use all 10,000 moles of nitrogen, we would need 30,000 moles of hydrogen. We have 45,000 moles, which is more than enough. But to use all 45,000 moles of hydrogen, we would need 15,000 moles of nitrogen, yet we only have 10,000. Nitrogen is our limiting reactant. The theoretical yield is 20,000 moles of ammonia. At 65 percent plant efficiency, what is our actual yield? Your calculation determines whether the farms receive their fertilizer on time.', duration: 14000, showData: true, dataTable: { headers: ['Reactant', 'Molar Mass', 'Available', 'Moles Available'], rows: [['Nitrogen (N₂)', '28 g/mol', '280 kg', '10,000 mol'], ['Hydrogen (H₂)', '2 g/mol', '90 kg', '45,000 mol'], ['Ammonia (NH₃)', '17 g/mol', 'Product', 'Calculate →']] } }] },
-    oxygen_failure: { scenes: [{ visual: 'UAE spacecraft approaching Mars', narration: 'This is the Emirates Mars Crew Vehicle, the successor to the historic Hope Probe. We are 8 months into humanity first UAE-led crewed mission to Mars. Our position: 60 million kilometers from Earth. Too far for any rescue mission.', duration: 8000, showData: false }, { visual: 'Warning alarms in spacecraft', narration: 'At 0400 hours UAE time, alarms woke the entire crew. Our primary oxygen generation system has failed. The electrolysis unit, which splits water into breathable oxygen, has stopped functioning completely.', duration: 7000, showData: false }, { visual: 'Life support status display', narration: 'Here is our critical situation. Crew members: 4 astronauts aboard. Oxygen requirement: 0.84 kilograms per person per day. Backup oxygen supply: 72 hours remaining. After that, we cannot breathe.', duration: 8000, showData: true, dataTable: { headers: ['Parameter', 'Value', 'Status'], rows: [['Crew Members', '4', '—'], ['O₂ Need per Person/Day', '0.84 kg', '—'], ['Backup O₂ Supply', '72 hours', '⚠️ Critical'], ['Water Available', '200 kg', 'Potential O₂'], ['Distance to Earth', '60 million km', 'No rescue']] } }, { visual: 'Chemical equation display', narration: 'Water available: 200 kilograms, which could become oxygen through chemistry. Distance to Earth: 60 million kilometers, no rescue possible. The electrolysis reaction is our lifeline: 2 H2O yields 2 H2 plus O2. Two water molecules split into hydrogen and oxygen gas.', duration: 10000, showData: true, dataTable: { headers: ['Parameter', 'Value', 'Status'], rows: [['Crew Members', '4', '—'], ['O₂ Need per Person/Day', '0.84 kg', '—'], ['Backup O₂ Supply', '72 hours', '⚠️ Critical'], ['Water Available', '200 kg', 'Potential O₂'], ['Distance to Earth', '60 million km', 'No rescue']] } }, { visual: 'Crew reviewing emergency options', narration: 'We have water. We have chemicals from our scientific experiments. The UAE legacy in space exploration depends on what we do next. Your knowledge of chemistry could save four lives. What emergency oxygen generation method do you recommend?', duration: 8000, showData: false }] }
+    water_contamination: {
+        scenes: [
+            {
+                visual: 'Aerial view of Ras Al Khaimah coastline with desalination plant',
+                narration: 'Welcome to Ras Al Khaimah. This beautiful coastal emirate, like all of the UAE, depends entirely on desalinated seawater for its freshwater supply. The Al Hamra desalination plant you see here provides clean water to over 50,000 residents.',
+                duration: 8000,
+                showData: false
+            },
+            {
+                visual: 'Industrial zone expanding near the coast',
+                narration: 'Six months ago, the Al Hamra Industrial Zone expanded its operations. New chemical manufacturing facilities now operate just 2 kilometers upstream from our primary water intake point. This proximity raises immediate concerns.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Water quality monitoring station',
+                narration: 'Our water quality monitoring stations collect samples every 6 hours. Today readings revealed concerning results. Let me show you the data that triggered this investigation.',
+                duration: 6000,
+                showData: false
+            },
+            {
+                visual: 'Data table showing water quality measurements',
+                narration: 'Look at this water quality table. We measured three key substances. First, Nitrates: measured at 55 parts per million. The safe limit is 50 parts per million. This reading exceeds the safety threshold by 10 percent.',
+                duration: 9000,
+                showData: true,
+                dataTable: {
+                    headers: ['Substance', 'Measured (ppm)', 'Safe Limit (ppm)', 'Status'],
+                    rows: [
+                        ['Nitrates', '55', '50', '⚠️ Exceeded'],
+                        ['Chlorides', '210', '250', '✓ Safe'],
+                        ['Heavy Metals', 'Trace', '0', '⚠️ Detected']
+                    ]
+                }
+            },
+            {
+                visual: 'Continued data explanation',
+                narration: 'Second, Chlorides: measured at 210 parts per million, below the 250 ppm limit. This is within safe range. Third, Heavy Metals: we detected trace amounts. The safe limit is zero. Any detection requires investigation.',
+                duration: 9000,
+                showData: true,
+                dataTable: {
+                    headers: ['Substance', 'Measured (ppm)', 'Safe Limit (ppm)', 'Status'],
+                    rows: [
+                        ['Nitrates', '55', '50', '⚠️ Exceeded'],
+                        ['Chlorides', '210', '250', '✓ Safe'],
+                        ['Heavy Metals', 'Trace', '0', '⚠️ Detected']
+                    ]
+                }
+            },
+            {
+                visual: 'Map showing water flow direction',
+                narration: 'This map shows groundwater flow direction. The industrial zone sits upstream. Contaminants flow directly toward our intake. The science indicates the factory is the likely source. Your analysis and recommendations will determine how we protect this community.',
+                duration: 8000,
+                showData: false
+            }
+        ]
+    },
+
+    reaction_gone_wrong: {
+        scenes: [
+            {
+                visual: 'ADNOC Ruwais petrochemical facility',
+                narration: 'This is the ADNOC Ruwais facility in Abu Dhabi. One of the largest integrated refining and petrochemical complexes in the world. We produce industrial solvents essential for manufacturing across the globe.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Control room with monitoring screens',
+                narration: 'I am monitoring reactor vessel 7 from the control room. This exothermic reaction produces heat during the chemical process. The cooling system normally removes this excess heat to maintain safe temperatures.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Temperature readings on display',
+                narration: 'The reaction should stabilize at 90 degrees Celsius. But observe these readings. At time zero, temperature was normal at 80 degrees. The pressure was also normal.',
+                duration: 6000,
+                showData: true,
+                dataTable: {
+                    headers: ['Time', 'Temperature (°C)', 'Pressure', 'Status'],
+                    rows: [
+                        ['0 min', '80', 'Normal', '✓ Stable'],
+                        ['2 min', '95', 'Elevated', '⚠️ Warning'],
+                        ['5 min', '120', 'Critical', '🚨 Danger']
+                    ]
+                }
+            },
+            {
+                visual: 'Escalating readings',
+                narration: 'At 2 minutes, temperature climbed to 95 degrees with elevated pressure. Now at 5 minutes, we see 120 degrees Celsius with critical pressure. This is a 50 percent increase above safe operating limits.',
+                duration: 8000,
+                showData: true,
+                dataTable: {
+                    headers: ['Time', 'Temperature (°C)', 'Pressure', 'Status'],
+                    rows: [
+                        ['0 min', '80', 'Normal', '✓ Stable'],
+                        ['2 min', '95', 'Elevated', '⚠️ Warning'],
+                        ['5 min', '120', 'Critical', '🚨 Danger']
+                    ]
+                }
+            },
+            {
+                visual: 'Diagram of runaway reaction',
+                narration: 'This is a runaway exothermic reaction. Heat builds faster than the cooling system can remove it. Without intervention, temperature and pressure will continue rising. We have approximately 3 minutes before critical failure. Your chemistry knowledge is essential.',
+                duration: 8000,
+                showData: false
+            }
+        ]
+    },
+
+    acid_rain: {
+        scenes: [
+            {
+                visual: 'Al Ain date palm oasis',
+                narration: 'Al Ain, the Garden City of the UAE. These date palm groves represent thousands of years of agricultural heritage. The Al Ain oasis has been a UNESCO World Heritage site, sustaining communities across generations.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Farmers reporting damaged crops',
+                narration: 'Local farmers have reported unusual damage to palm fronds. Yellow discoloration and weakened leaves that should remain green year-round. Our atmospheric monitoring stations detected anomalies that may explain this damage.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'pH measurement equipment',
+                narration: 'We collected rainfall samples from four locations across the region. The pH scale measures acidity: 7 is neutral, below 7 is acidic. Normal rain has a pH of approximately 5.6 due to natural carbon dioxide.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Rainfall pH data table',
+                narration: 'Examine this data carefully. Agricultural Zone A shows pH 4.2 with sulfur dioxide at 85 parts per billion. The Oasis District: pH 4.5 with 72 ppb sulfur dioxide. Urban Area: pH 5.1 with 45 ppb. Control Site in the desert: pH 5.5 with only 12 ppb.',
+                duration: 12000,
+                showData: true,
+                dataTable: {
+                    headers: ['Location', 'Rainfall pH', 'Normal pH', 'SO₂ (ppb)'],
+                    rows: [
+                        ['Agricultural Zone A', '4.2', '5.6', '85'],
+                        ['Oasis District', '4.5', '5.6', '72'],
+                        ['Urban Area', '5.1', '5.6', '45'],
+                        ['Control Site (Desert)', '5.5', '5.6', '12']
+                    ]
+                }
+            },
+            {
+                visual: 'Analysis explanation',
+                narration: 'The pattern is clear. Areas with higher sulfur dioxide show lower pH values. Agricultural Zone A at pH 4.2 is approximately 25 times more acidic than normal rain. At this acidity level, plant tissues suffer direct chemical damage. What solution will you recommend?',
+                duration: 9000,
+                showData: true,
+                dataTable: {
+                    headers: ['Location', 'Rainfall pH', 'Normal pH', 'SO₂ (ppb)'],
+                    rows: [
+                        ['Agricultural Zone A', '4.2', '5.6', '85'],
+                        ['Oasis District', '4.5', '5.6', '72'],
+                        ['Urban Area', '5.1', '5.6', '45'],
+                        ['Control Site (Desert)', '5.5', '5.6', '12']
+                    ]
+                }
+            }
+        ]
+    },
+
+    mutation_dilemma: {
+        scenes: [
+            {
+                visual: 'Sheikh Khalifa Medical City genetics center',
+                narration: 'Welcome to the National Genetics Center at Sheikh Khalifa Medical City in Abu Dhabi. Here we help Emirati families understand their genetic heritage and make informed decisions about their future.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Young Emirati couple in consultation',
+                narration: 'Today I am meeting with Omar and Layla. They are planning to start a family. However, genetic screening has revealed that both of them carry a variant for an autosomal recessive condition.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Punnett square diagram',
+                narration: 'Let me explain the inheritance pattern using a Punnett square. When both parents are carriers, written as Aa, each parent passes one gene copy to their children. The square shows all possible combinations.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Genetic probability table',
+                narration: 'Here are the precise probabilities. First outcome: AA genotype, meaning unaffected and not a carrier. Probability is 25 percent. Second outcome: Aa genotype, carrier like the parents but unaffected. Probability is 50 percent.',
+                duration: 9000,
+                showData: true,
+                dataTable: {
+                    headers: ['Outcome', 'Genotype', 'Probability'],
+                    rows: [
+                        ['Unaffected (not carrier)', 'AA', '25%'],
+                        ['Carrier (unaffected)', 'Aa', '50%'],
+                        ['Affected', 'aa', '25%']
+                    ]
+                }
+            },
+            {
+                visual: 'Final probability explanation',
+                narration: 'Third outcome: aa genotype, affected by the condition. Probability is 25 percent. These probabilities apply to each pregnancy independently. Omar and Layla need guidance that balances scientific facts with their emotional needs and cultural values.',
+                duration: 9000,
+                showData: true,
+                dataTable: {
+                    headers: ['Outcome', 'Genotype', 'Probability'],
+                    rows: [
+                        ['Unaffected (not carrier)', 'AA', '25%'],
+                        ['Carrier (unaffected)', 'Aa', '50%'],
+                        ['Affected', 'aa', '25%']
+                    ]
+                }
+            }
+        ]
+    },
+
+    reaction_time: {
+        scenes: [
+            {
+                visual: 'Zayed Sports City training facility',
+                narration: 'Welcome to the UAE National Training Center at Zayed Sports City. Here we develop world-class athletes using cutting-edge sports science. Our goal is Olympic excellence for the Emirates.',
+                duration: 6000,
+                showData: false
+            },
+            {
+                visual: 'Emirati sprinter Rashid at starting blocks',
+                narration: 'Meet Rashid, one of our most promising 100-meter sprinters. He is preparing for the Asian Games. His reaction times at the starting blocks have always been exceptional, consistently under 0.15 seconds.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Reaction time testing equipment',
+                narration: 'Recently, Rashid performance has declined. We conducted standardized reaction time tests under controlled conditions to identify the cause. His baseline when fully rested was 0.14 seconds, which is excellent.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Test results data table',
+                narration: 'Examine these test results carefully. After 8 hours of sleep, reaction time was 0.15 seconds, a 7 percent increase from baseline. After only 5 hours of sleep, reaction time jumped to 0.21 seconds. That is a 50 percent increase, extremely significant.',
+                duration: 10000,
+                showData: true,
+                dataTable: {
+                    headers: ['Condition', 'Reaction Time', 'Change from Baseline'],
+                    rows: [
+                        ['Baseline (fully rested)', '0.14s', '—'],
+                        ['After 8 hours sleep', '0.15s', '+7%'],
+                        ['After 5 hours sleep', '0.21s', '+50%'],
+                        ['After caffeine intake', '0.13s', '-7%'],
+                        ['During high stress', '0.19s', '+36%']
+                    ]
+                }
+            },
+            {
+                visual: 'Additional data analysis',
+                narration: 'After caffeine, reaction time improved to 0.13 seconds, 7 percent faster than baseline. During high stress conditions, reaction time increased to 0.19 seconds, 36 percent slower. The nervous system is clearly affected by multiple factors. What training protocol will optimize his performance?',
+                duration: 10000,
+                showData: true,
+                dataTable: {
+                    headers: ['Condition', 'Reaction Time', 'Change from Baseline'],
+                    rows: [
+                        ['Baseline (fully rested)', '0.14s', '—'],
+                        ['After 8 hours sleep', '0.15s', '+7%'],
+                        ['After 5 hours sleep', '0.21s', '+50%'],
+                        ['After caffeine intake', '0.13s', '-7%'],
+                        ['During high stress', '0.19s', '+36%']
+                    ]
+                }
+            }
+        ]
+    },
+
+    unstable_slope: {
+        scenes: [
+            {
+                visual: 'Hajar Mountains near Hatta',
+                narration: 'The Hajar Mountains near Hatta, a geological treasure of the UAE. These ancient rock formations have stood for millions of years. Mountain communities here enjoy stunning views, but nature can present sudden challenges.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Recent heavy rainfall',
+                narration: 'This month brought unusual weather. Rainfall measured 300 percent above average. The normally dry wadis filled with rushing water. Now residents report alarming ground changes near their homes.',
+                duration: 6000,
+                showData: false
+            },
+            {
+                visual: 'Ground cracks visible',
+                narration: 'My field survey revealed serious warning signs. These cracks in the ground measure 5 to 10 centimeters wide, extending for 50 meters along the hillside. This is not normal settling. This indicates potential slope failure.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Geological survey data',
+                narration: 'Let me present the geological findings. Soil type: clay-rich with low drainage capacity, rated high risk. Slope angle: 35 degrees, well above the 25 degree stability threshold, rated critical risk. Vegetation: recently cleared for construction, eliminating root stabilization, high risk.',
+                duration: 11000,
+                showData: true,
+                dataTable: {
+                    headers: ['Factor', 'Finding', 'Risk Level'],
+                    rows: [
+                        ['Soil Type', 'Clay-rich, low drainage', 'High'],
+                        ['Slope Angle', '35° (threshold: 25°)', 'Critical'],
+                        ['Vegetation', 'Recently cleared', 'High'],
+                        ['Crack Width', '5-10 cm, extending 50m', 'Severe']
+                    ]
+                }
+            },
+            {
+                visual: 'Risk assessment conclusion',
+                narration: 'Crack width and extent: 5 to 10 centimeters wide across 50 meters, rated severe. Water seepage is visible at the slope base. Fifteen families live in the potential impact zone. More rain is forecast. What is your recommendation to protect these residents?',
+                duration: 9000,
+                showData: true,
+                dataTable: {
+                    headers: ['Factor', 'Finding', 'Risk Level'],
+                    rows: [
+                        ['Soil Type', 'Clay-rich, low drainage', 'High'],
+                        ['Slope Angle', '35° (threshold: 25°)', 'Critical'],
+                        ['Vegetation', 'Recently cleared', 'High'],
+                        ['Crack Width', '5-10 cm, extending 50m', 'Severe']
+                    ]
+                }
+            }
+        ]
+    },
+
+    invasive_species: {
+        scenes: [
+            {
+                visual: 'Abu Dhabi mangrove forests',
+                narration: 'The mangrove forests of Abu Dhabi, a critical coastal ecosystem. These trees protect our shoreline from erosion, capture carbon dioxide, and nurture marine biodiversity. For decades, conservation efforts have helped these forests thrive.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Invasive algae on water surface',
+                narration: 'Three months ago, monitoring teams detected an invasive algae species. It likely arrived in ship ballast water discharged in our coastal waters. This organism has no natural predators in our ecosystem.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Spread progression',
+                narration: 'The spread has been exponential. In month one, coverage was 5 percent of the water surface. Month two: 12 percent coverage. Month three: 20 percent coverage. This doubling pattern threatens to overwhelm the entire system.',
+                duration: 8000,
+                showData: false
+            },
+            {
+                visual: 'Ecosystem impact data',
+                narration: 'Examine the ecosystem impact data. Current algae coverage: 20 percent now, projected to reach 80 percent in 6 months. Native fish population: declined 40 percent, rated critical. Mangrove health: stressed condition, rated endangered if trends continue.',
+                duration: 10000,
+                showData: true,
+                dataTable: {
+                    headers: ['Metric', 'Current Status', 'Projection'],
+                    rows: [
+                        ['Algae Coverage', '20%', '80% in 6 months'],
+                        ['Native Fish Population', '-40%', 'Critical'],
+                        ['Mangrove Health', 'Stressed', 'Endangered'],
+                        ['Water Oxygen Levels', 'Declining', 'Dangerous']
+                    ]
+                }
+            },
+            {
+                visual: 'Call to action',
+                narration: 'Water oxygen levels: declining, rated dangerous for marine life. The algae blocks sunlight from underwater plants that produce oxygen through photosynthesis. The entire food web is collapsing. What conservation strategy do you recommend?',
+                duration: 8000,
+                showData: true,
+                dataTable: {
+                    headers: ['Metric', 'Current Status', 'Projection'],
+                    rows: [
+                        ['Algae Coverage', '20%', '80% in 6 months'],
+                        ['Native Fish Population', '-40%', 'Critical'],
+                        ['Mangrove Health', 'Stressed', 'Endangered'],
+                        ['Water Oxygen Levels', 'Declining', 'Dangerous']
+                    ]
+                }
+            }
+        ]
+    },
+
+    power_grid: {
+        scenes: [
+            {
+                visual: 'Dubai skyline during heatwave',
+                narration: 'Dubai, a city of innovation, facing an extreme summer day. The temperature has reached 48 degrees Celsius. Every air conditioning unit across the emirate operates at maximum capacity. The electrical grid is under unprecedented stress.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'DEWA smart grid control room',
+                narration: 'I am in the DEWA Smart Grid Command Center. Our screens display real-time power flow across Dubai entire electrical network. The situation is critical. Demand has exceeded our projections.',
+                duration: 6000,
+                showData: false
+            },
+            {
+                visual: 'Supply and demand display',
+                narration: 'Here are the critical numbers. Total electricity demand: 45,000 megawatts. Total generation capacity: 42,000 megawatts. The deficit: 3,000 megawatts. We cannot generate enough power to meet demand.',
+                duration: 8000,
+                showData: true,
+                dataTable: {
+                    headers: ['Source', 'Output (MW)', 'Status'],
+                    rows: [
+                        ['Natural Gas Plants', '20,000', 'Maximum'],
+                        ['Solar (MBR Solar Park)', '2,000', 'Declining'],
+                        ['Nuclear (Barakah)', '5,600', 'Steady'],
+                        ['Other Sources', '14,400', 'Maximum'],
+                        ['TOTAL SUPPLY', '42,000', '—'],
+                        ['TOTAL DEMAND', '45,000', '🚨 Deficit']
+                    ]
+                }
+            },
+            {
+                visual: 'Generation breakdown',
+                narration: 'Generation breakdown: Natural gas plants produce 20,000 megawatts at maximum output. The Mohammed bin Rashid Solar Park provides 2,000 megawatts but is declining as evening approaches. Barakah nuclear provides 5,600 megawatts steady output. All other sources: 14,400 megawatts at maximum.',
+                duration: 11000,
+                showData: true,
+                dataTable: {
+                    headers: ['Source', 'Output (MW)', 'Status'],
+                    rows: [
+                        ['Natural Gas Plants', '20,000', 'Maximum'],
+                        ['Solar (MBR Solar Park)', '2,000', 'Declining'],
+                        ['Nuclear (Barakah)', '5,600', 'Steady'],
+                        ['Other Sources', '14,400', 'Maximum'],
+                        ['TOTAL SUPPLY', '42,000', '—'],
+                        ['TOTAL DEMAND', '45,000', '🚨 Deficit']
+                    ]
+                }
+            },
+            {
+                visual: 'Grid frequency warning',
+                narration: 'When demand exceeds supply, grid frequency drops below 50 hertz. If it falls too low, automatic protection systems trigger cascading blackouts. We have 30 minutes before the grid becomes unstable. What emergency action do you recommend?',
+                duration: 8000,
+                showData: false
+            }
+        ]
+    },
+
+    heat_loss: {
+        scenes: [
+            {
+                visual: 'Al Fahidi Historical District building',
+                narration: 'Al Fahidi Historical District in Dubai, where heritage meets the future. This 80-year-old building preserves Emirati architectural traditions. It is being retrofitted for modern sustainability while maintaining its cultural significance.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Energy consumption data',
+                narration: 'The building current annual cooling cost is 180,000 dirhams, approximately 45,000 US dollars. In the UAE climate, cooling consumes over 70 percent of building energy. The school board wants to reduce costs without damaging the historic structure.',
+                duration: 8000,
+                showData: false
+            },
+            {
+                visual: 'Thermal imaging survey',
+                narration: 'I conducted a thermal imaging survey. The camera detects temperature differences, showing where conditioned air escapes and where external heat enters. The brighter areas indicate heat gain. Let me show you the detailed breakdown.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Heat loss data table',
+                narration: 'Heat gain analysis: Windows account for 35 percent of heat gain through radiation and conduction, the single largest factor. The roof accounts for 25 percent through conduction. Walls contribute 20 percent through conduction.',
+                duration: 10000,
+                showData: true,
+                dataTable: {
+                    headers: ['Area', 'Heat Gain', 'Transfer Method'],
+                    rows: [
+                        ['Windows (single-pane)', '35%', 'Radiation + Conduction'],
+                        ['Roof', '25%', 'Conduction'],
+                        ['Walls', '20%', 'Conduction'],
+                        ['Air Leaks', '15%', 'Convection'],
+                        ['Floor', '5%', 'Conduction']
+                    ]
+                }
+            },
+            {
+                visual: 'Complete analysis',
+                narration: 'Air leaks through gaps and cracks contribute 15 percent through convection. The floor contributes only 5 percent. The budget is 400,000 dirhams. Heritage regulations limit exterior modifications. How do you recommend maximizing efficiency while respecting cultural preservation?',
+                duration: 10000,
+                showData: true,
+                dataTable: {
+                    headers: ['Area', 'Heat Gain', 'Transfer Method'],
+                    rows: [
+                        ['Windows (single-pane)', '35%', 'Radiation + Conduction'],
+                        ['Roof', '25%', 'Conduction'],
+                        ['Walls', '20%', 'Conduction'],
+                        ['Air Leaks', '15%', 'Convection'],
+                        ['Floor', '5%', 'Conduction']
+                    ]
+                }
+            }
+        ]
+    },
+
+    aspirin_production: {
+        scenes: [
+            {
+                visual: 'Pharmaceutical production facility in Abu Dhabi',
+                narration: "Welcome to Gulf Pharma, one of the UAE's leading pharmaceutical manufacturers in Abu Dhabi. This facility produces over 50 million tablets annually, supplying hospitals and clinics across the region.",
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Aspirin tablet production line',
+                narration: 'Today, we must fulfill an urgent order for 1000 aspirin tablets destined for a hospital pain management programme. Each tablet must contain exactly 500 milligrams of active ingredient — acetylsalicylic acid, commonly known as aspirin.',
+                duration: 8000,
+                showData: false
+            },
+            {
+                visual: 'Chemical reaction diagram on whiteboard',
+                narration: 'Aspirin is made by reacting salicylic acid with acetic anhydride. The balanced equation shows a 1 to 1 mole ratio: one mole of salicylic acid produces one mole of aspirin. This is the foundation of our stoichiometric calculation.',
+                duration: 8000,
+                showData: false
+            },
+            {
+                visual: 'Production data and inventory table',
+                narration: 'Here is the key data you need. Aspirin has a molar mass of 180 grams per mole. Salicylic acid, our raw material, has a molar mass of 138 grams per mole. We need 500 grams of aspirin total. Because of the 1 to 1 ratio, the moles of reactant equal the moles of product.',
+                duration: 11000,
+                showData: true,
+                dataTable: {
+                    headers: ['Substance', 'Molar Mass', 'Required / Available', 'Mole Ratio'],
+                    rows: [
+                        ['Salicylic acid (reactant)', '138 g/mol', '? grams needed', '1 mol'],
+                        ['Acetic anhydride', '102 g/mol', 'Excess available', '1 mol'],
+                        ['Aspirin (product)', '180 g/mol', '500 g needed', '1 mol']
+                    ]
+                }
+            },
+            {
+                visual: 'Lab technician with inventory concern',
+                narration: 'There is a problem. Our inventory shows only 300 grams of salicylic acid, not the 383 grams that stoichiometry tells us we need. The hospital order is urgent — they need the medication within 24 hours. What is the scientifically responsible action?',
+                duration: 10000,
+                showData: true,
+                dataTable: {
+                    headers: ['Substance', 'Molar Mass', 'Required / Available', 'Mole Ratio'],
+                    rows: [
+                        ['Salicylic acid (reactant)', '138 g/mol', '? grams needed', '1 mol'],
+                        ['Acetic anhydride', '102 g/mol', 'Excess available', '1 mol'],
+                        ['Aspirin (product)', '180 g/mol', '500 g needed', '1 mol']
+                    ]
+                }
+            }
+        ]
+    },
+
+    fuelproduction: {
+        scenes: [
+            {
+                visual: 'Jebel Ali Fuel Plant, Dubai, UAE - Aerial view and Masdar Office',
+                narration: 'Welcome to the Jebel Ali fuel plant in Dubai. I am Eng. Khaled Al Mansoori from Masdar Clean Energy. As the Hajj season approaches, the demand for aircraft fuel and clean hydrogen at Dubai International Airport reaches its annual peak.',
+                duration: 9000,
+                showData: false
+            },
+            {
+                visual: 'Fuel processing facility operations',
+                narration: 'Our facility must operate at maximum capacity to keep global travel moving. We are partnering with the Jebel Ali plant to produce hydrogen gas as a clean alternative fuel. To meet our transport contracts, we need precise stoichiometric calculations.',
+                duration: 8000,
+                showData: false
+            },
+            {
+                visual: 'Chemical reaction: CH₄ + 2H₂O → CO₂ + 4H₂',
+                narration: 'Our process reacts methane with steam to produce hydrogen and carbon dioxide. The balanced equation shows that one mole of methane reacts with two moles of steam to produce four moles of hydrogen gas. Every mole of methane is a potential source of clean energy.',
+                duration: 9000,
+                showData: false
+            },
+            {
+                visual: 'Inventory data: 16g Methane, Excess Steam',
+                narration: 'Today, we are starting a test run with 16 grams of methane. Steam is available in excess, so methane will determine our total production. Methane has a molar mass of 16 grams per mole, which means we are processing exactly one mole of reactant.',
+                duration: 10000,
+                showData: true,
+                dataTable: {
+                    headers: ['Reactant', 'Molar Mass', 'Measured Mass', 'Moles Available'],
+                    rows: [
+                        ['Methane (CH₄)', '16 g/mol', '16 g', '1.0 mol'],
+                        ['Steam (H₂O)', '18 g/mol', 'Excess', '—'],
+                        ['Hydrogen (H₂)', '2 g/mol', 'Product', 'Calculate →']
+                    ]
+                }
+            },
+            {
+                visual: 'Production yield analysis',
+                narration: 'Using the one-to-four mole ratio, one mole of methane will produce four moles of hydrogen gas. Since hydrogen has a molar mass of 2 grams per mole, what is the total mass of clean fuel we can deliver? Your calculation determines if we meet the airport\'s surge in demand.',
+                duration: 12000,
+                showData: true,
+                dataTable: {
+                    headers: ['Reactant', 'Molar Mass', 'Measured Mass', 'Moles Available'],
+                    rows: [
+                        ['Methane (CH₄)', '16 g/mol', '16 g', '1.0 mol'],
+                        ['Steam (H₂O)', '18 g/mol', 'Excess', '—'],
+                        ['Hydrogen (H₂)', '2 g/mol', 'Product', '4.0 mol']
+                    ]
+                }
+            }
+        ]
+    },
+
+    oxygen_failure: {
+        scenes: [
+            {
+                visual: 'UAE spacecraft approaching Mars',
+                narration: 'This is the Emirates Mars Crew Vehicle, the successor to the historic Hope Probe. We are 8 months into humanity first UAE-led crewed mission to Mars. Our position: 60 million kilometers from Earth. Too far for any rescue mission.',
+                duration: 8000,
+                showData: false
+            },
+            {
+                visual: 'Warning alarms in spacecraft',
+                narration: 'At 0400 hours UAE time, alarms woke the entire crew. Our primary oxygen generation system has failed. The electrolysis unit, which splits water into breathable oxygen, has stopped functioning completely.',
+                duration: 7000,
+                showData: false
+            },
+            {
+                visual: 'Life support status display',
+                narration: 'Here is our critical situation. Crew members: 4 astronauts aboard. Oxygen requirement: 0.84 kilograms per person per day. Backup oxygen supply: 72 hours remaining. After that, we cannot breathe.',
+                duration: 8000,
+                showData: true,
+                dataTable: {
+                    headers: ['Parameter', 'Value', 'Status'],
+                    rows: [
+                        ['Crew Members', '4', '—'],
+                        ['O₂ Need per Person/Day', '0.84 kg', '—'],
+                        ['Backup O₂ Supply', '72 hours', '⚠️ Critical'],
+                        ['Water Available', '200 kg', 'Potential O₂'],
+                        ['Distance to Earth', '60 million km', 'No rescue']
+                    ]
+                }
+            },
+            {
+                visual: 'Chemical equation display',
+                narration: 'Water available: 200 kilograms, which could become oxygen through chemistry. Distance to Earth: 60 million kilometers, no rescue possible. The electrolysis reaction is our lifeline: 2 H2O yields 2 H2 plus O2. Two water molecules split into hydrogen and oxygen gas.',
+                duration: 10000,
+                showData: true,
+                dataTable: {
+                    headers: ['Parameter', 'Value', 'Status'],
+                    rows: [
+                        ['Crew Members', '4', '—'],
+                        ['O₂ Need per Person/Day', '0.84 kg', '—'],
+                        ['Backup O₂ Supply', '72 hours', '⚠️ Critical'],
+                        ['Water Available', '200 kg', 'Potential O₂'],
+                        ['Distance to Earth', '60 million km', 'No rescue']
+                    ]
+                }
+            },
+            {
+                visual: 'Crew reviewing emergency options',
+                narration: 'We have water. We have chemicals from our scientific experiments. The UAE legacy in space exploration depends on what we do next. Your knowledge of chemistry could save four lives. What emergency oxygen generation method do you recommend?',
+                duration: 8000,
+                showData: false
+            }
+        ]
+    }
 };
 
 const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -63,10 +692,10 @@ const getGenderMatchedVoice = (character, voices) => {
         findMatch(englishVoices) ||
         englishVoices.find(v => (isFemale ? v.name === 'Samantha' : v.name === 'Daniel')) ||
         englishVoices.find(v => v.name === 'Samantha') ||
-        enUSVoices[0] ||
-        englishVoices[0] ||
+        enUSVoices ||
+        englishVoices ||
         voices.find(v => v.default) ||
-        voices[0] ||
+        voices ||
         null
     );
 };
@@ -98,7 +727,6 @@ export default function CinematicVideoIntro({
     const iosKeepAliveRef = useRef(null);
     const sceneCompleteRef = useRef({ visual: false, narration: false });
 
-    // يمنع onComplete من العمل أكثر من مرة
     const onCompleteCalledRef = useRef(false);
     const safeOnComplete = useCallback(() => {
         if (onCompleteCalledRef.current) return;
@@ -223,7 +851,6 @@ export default function CinematicVideoIntro({
         stopAllPlayback();
         setPlaybackState('complete');
 
-        // آخر مشهد: انهي الفيديو تلقائياً
         if (isLastScene) {
             autoAdvanceTimerRef.current = setTimeout(() => {
                 if (!isMountedRef.current) return;
@@ -232,7 +859,6 @@ export default function CinematicVideoIntro({
             return;
         }
 
-        // غير آخر مشهد: انتقل تلقائياً
         autoAdvanceTimerRef.current = setTimeout(() => {
             if (!isMountedRef.current) return;
             setSubtitleSegments([]);
@@ -663,7 +1289,7 @@ export default function CinematicVideoIntro({
                                             transition={{ duration: 0.2 }}
                                             className="text-sm sm:text-base text-white font-medium leading-relaxed"
                                         >
-                                            {subtitleSegments[currentSegmentIndex] || currentScene?.narration?.split(/[.!?]/)[0] || ''}
+                                            {subtitleSegments[currentSegmentIndex] || currentScene?.narration?.split(/[.!?]/) || ''}
                                         </motion.p>
                                     </AnimatePresence>
 

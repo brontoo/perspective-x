@@ -9,7 +9,7 @@ export default function SceneTwo({ scene, scenarioTitle, onComplete, isTeacher =
     const [selectedOption, setSelectedOption] = useState(null);
     const [justification, setJustification] = useState('');
     const [showThinkTimer, setShowThinkTimer] = useState(true);
-    const [thinkTime, setThinkTime] = useState(30);
+    const [thinkTime, setThinkTime] = useState(120);
 
     const accent = theme.accent || 'from-teal-500 to-emerald-500';
     const border = theme.border || 'border-teal-500/30';
