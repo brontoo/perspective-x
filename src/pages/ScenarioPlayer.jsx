@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import { SCENARIOS, ROLES } from '@/components/scenarios/scenarioData';
 import { UAE_SCENARIOS } from '@/components/scenarios/uaeScenarioData';
-import { X, Loader2, Clock, Target, BookOpen, Play, MapPin } from 'lucide-react';
+import { X, Loader2, Clock, Target, BookOpen, Play, MapPin, SkipBack, SkipForward } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import CinematicTitle from '@/components/scenario/CinematicTitle';
@@ -232,8 +232,12 @@ export default function ScenarioPlayer() {
 
                 if (cancelled) return;
 
-                const teacher = profile?.user_type === 'teacher';
-                setIsTeacher(teacher);
+                // Check URL params first
+                const params = new URLSearchParams(window.location.search);
+                const isPreview = params.get('preview') === 'true';
+
+                const isTeacherRole = profile?.role === 'teacher';
+                setIsTeacher(isTeacherRole || isPreview);
 
                 // Only reset phase state on FIRST load — never re-reset
                 // if the user has already progressed past TITLE
@@ -271,6 +275,20 @@ export default function ScenarioPlayer() {
     const handleSceneComplete = (sceneNum, response) => {
         setResponses(prev => ({ ...prev, [`scene${sceneNum}`]: response }));
         setCurrentScene(prev => prev + 1);
+    };
+
+    const handleGoBack = () => {
+        if (!isTeacher) return;
+        if (currentScene > PHASE.INTRO) {
+            setCurrentScene(prev => prev - 1);
+        }
+    };
+
+    const handleGoForward = () => {
+        if (!isTeacher) return;
+        if (currentScene < PHASE.EXIT) {
+            setCurrentScene(prev => prev + 1);
+        }
     };
 
     const handleExitTicketComplete = async (exitTicketData) => {
@@ -422,10 +440,33 @@ export default function ScenarioPlayer() {
                             </div>
 
                             {isTeacher && (
-                                <div className="mt-2">
+                                <div className="mt-2 flex items-center justify-between">
                                     <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
                                         👁️ Teacher Preview Mode - Full Access
                                     </Badge>
+
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={handleGoBack}
+                                            disabled={currentScene <= PHASE.INTRO}
+                                            className="h-8 border-purple-500/30 text-purple-400 hover:bg-purple-500/10 text-xs gap-1"
+                                        >
+                                            <SkipBack className="w-3 h-3" />
+                                            Previous Scene
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={handleGoForward}
+                                            disabled={currentScene >= PHASE.COMPLETE}
+                                            className="h-8 border-purple-500/30 text-purple-400 hover:bg-purple-500/10 text-xs gap-1"
+                                        >
+                                            Next Scene
+                                            <SkipForward className="w-3 h-3" />
+                                        </Button>
+                                    </div>
                                 </div>
                             )}
                         </div>

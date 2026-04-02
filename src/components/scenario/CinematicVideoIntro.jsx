@@ -1064,13 +1064,8 @@ export default function CinematicVideoIntro({
 
     const teacherSkip = useCallback(() => {
         if (!isTeacher) return;
-
-        if (isLastScene) {
-            safeOnComplete();
-        } else {
-            goToNextScene();
-        }
-    }, [isTeacher, isLastScene, safeOnComplete, goToNextScene]);
+        safeOnComplete();
+    }, [isTeacher, safeOnComplete]);
 
     useEffect(() => {
         if (voiceReady && playbackState === 'idle' && currentScene) {
