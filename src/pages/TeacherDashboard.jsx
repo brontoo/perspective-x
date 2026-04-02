@@ -13,7 +13,7 @@ import {
     Loader2, LogOut, GraduationCap, CheckCircle2,
     Target, Home, Eye, MessageSquare, Send, Trash2,
     Trophy, Brain, BarChart3, ChevronDown, ChevronUp,
-    UserCircle, Download  // ← أضف Download
+    UserCircle, Download, X, XCircle, Repeat
 } from 'lucide-react';
 
 
@@ -34,6 +34,7 @@ export default function TeacherDashboard() {
     const [feedbackForm, setFeedbackForm] = useState({
         student_email: '', message: '', type: 'general', scenario_id: ''
     });
+    const [selectedAttempt, setSelectedAttempt] = useState(null);
     const [sendingFeedback, setSendingFeedback] = useState(false);
 
     useEffect(() => { loadData(); }, []);
@@ -72,20 +73,31 @@ export default function TeacherDashboard() {
     };
 
     const getStudentProgress = (studentId) => {
-        const rows = studentProgress.filter(p => p.student_id === studentId);
-        if (rows.length === 0) return null;
+        const allRows = studentProgress.filter(p => p.student_id === studentId);
+        if (allRows.length === 0) return null;
 
-        const completedScenarios = rows.map(r => r.scenario_id);
-        const badges = rows
-            .filter(r => r.score >= 70)
+        // Group by scenario_id and pick the BEST score for each
+        const scenarioGroups = {};
+        allRows.forEach(row => {
+            if (!row.scenario_id) return; // Skip general progress if it exists
+            const existing = scenarioGroups[row.scenario_id];
+            if (!existing || (row.score || 0) > (existing.score || 0)) {
+                scenarioGroups[row.scenario_id] = row;
+            }
+        });
+        const uniqueRows = Object.values(scenarioGroups);
+
+        const completedScenarios = uniqueRows.map(r => r.scenario_id);
+        const badges = uniqueRows
+            .filter(r => (r.score || 0) >= 70)
             .map(r => SCENARIOS[r.scenario_id]?.badge)
             .filter(Boolean);
 
         const skillsMap = {};
         const skillKeys = Object.keys(SKILLS);
-        rows.forEach(row => {
+        uniqueRows.forEach(row => {
             const scenarioData = SCENARIOS[row.scenario_id];
-            if (scenarioData && row.score > 0) {
+            if (scenarioData && (row.score || 0) > 0) {
                 scenarioData.scienceFocus?.forEach((focus, i) => {
                     const key = skillKeys[i % skillKeys.length];
                     if (key) {
@@ -100,7 +112,7 @@ export default function TeacherDashboard() {
             completed_scenarios: completedScenarios,
             badges: [...new Set(badges)],
             skills: skillsMap,
-            rows
+            rows: uniqueRows // Use deduplicated rows for display and scoring
         };
     };
 
@@ -562,17 +574,28 @@ export default function TeacherDashboard() {
                                                                         </div>
                                                                     )}
                                                                 </div>
-
                                                                 <div>
                                                                     <h4 className="text-slate-400 text-sm font-semibold mb-3 flex items-center gap-2">
                                                                         <Target className="w-4 h-4" /> Scores
                                                                     </h4>
                                                                     <div className="space-y-1">
                                                                         {(progress?.rows || []).map(row => (
-                                                                            <div key={row.id} className="flex justify-between items-center">
-                                                                                <span className="text-slate-400 text-xs truncate max-w-[160px]">
-                                                                                    {SCENARIOS[row.scenario_id]?.title || row.scenario_id}
-                                                                                </span>
+                                                                            <div key={row.id} className="flex justify-between items-center group/item hover:bg-slate-800/80 p-1 rounded-lg transition-colors">
+                                                                                <div className="flex items-center gap-2 overflow-hidden">
+                                                                                    <span className="text-slate-400 text-xs truncate max-w-[120px]">
+                                                                                        {SCENARIOS[row.scenario_id]?.title || row.scenario_id}
+                                                                                    </span>
+                                                                                    <button
+                                                                                        onClick={(e) => {
+                                                                                            e.stopPropagation();
+                                                                                            setSelectedAttempt({ ...row, student_name: studentName });
+                                                                                        }}
+                                                                                        className="opacity-0 group-hover/item:opacity-100 p-1 hover:text-teal-400 transition"
+                                                                                        title="View Detailed Answers"
+                                                                                    >
+                                                                                        <Eye className="w-3.5 h-3.5" />
+                                                                                    </button>
+                                                                                </div>
                                                                                 <span className={`text-xs font-bold ${row.score >= 70 ? 'text-emerald-400' : 'text-amber-400'}`}>
                                                                                     {row.score}%
                                                                                 </span>
@@ -878,6 +901,183 @@ export default function TeacherDashboard() {
                     )}
                 </div>
             </main>
+            {/* Student Answers Modal */}
+            <StudentAnswersModal
+                attempt={selectedAttempt}
+                onClose={() => setSelectedAttempt(null)}
+            />
+        </div>
+    );
+}
+
+// ── Student Answers Detailed View Modal ──
+function StudentAnswersModal({ attempt, onClose }) {
+    if (!attempt) return null;
+
+    const scenario = SCENARIOS[attempt.scenario_id];
+    const answers = typeof attempt.answers === 'string'
+        ? JSON.parse(attempt.answers)
+        : attempt.answers || {};
+
+    const exitTicket = answers.exitTicket || {};
+
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={onClose}
+                className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
+            />
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-4xl max-h-[90vh] bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            >
+                {/* Modal Header */}
+                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400">
+                            <BookOpen className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-bold text-white">Student Submission Details</h3>
+                            <p className="text-xs text-slate-400">
+                                {attempt.student_name} • {scenario?.title || attempt.scenario_id} • {attempt.score}%
+                            </p>
+                        </div>
+                    </div>
+                    <button onClick={onClose} className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition">
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+
+                {/* Modal Body */}
+                <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+                    
+                    {/* 1. Scenes & Decisions */}
+                    <section>
+                        <h4 className="text-teal-400 text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <Target className="w-4 h-4" /> Scenario Decisions
+                        </h4>
+                        <div className="grid gap-4">
+                            {[1, 2, 3].map((num) => {
+                                const sceneAns = answers[`scene${num}`];
+                                if (!sceneAns) return null;
+                                const sceneData = scenario?.scenes[num - 1];
+                                const selectedOption = sceneData?.options?.find(o => o.id === sceneAns.selectedOption);
+
+                                return (
+                                    <div key={num} className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
+                                        <div className="flex items-start gap-4">
+                                            <div className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 flex-shrink-0">
+                                                {num}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-slate-300 text-xs font-semibold mb-1 uppercase tracking-wider">Scene {num}: {sceneData?.title}</p>
+                                                <p className="text-white font-medium mb-3">{sceneData?.question}</p>
+                                                
+                                                <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-800 mb-3">
+                                                    <p className="text-xs text-slate-500 mb-1 font-bold">STUDENT SELECTION:</p>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs ${selectedOption?.correct ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                                                            {sceneAns.selectedOption}
+                                                        </span>
+                                                        <span className="text-white text-sm font-semibold">{selectedOption?.text || 'Option ' + sceneAns.selectedOption}</span>
+                                                        {selectedOption?.correct && <CheckCircle2 className="w-4 h-4 text-emerald-400 ml-auto" />}
+                                                    </div>
+                                                </div>
+
+                                                <div className="bg-teal-500/5 rounded-lg p-3 border border-teal-500/10">
+                                                    <p className="text-xs text-teal-500/60 mb-1 font-bold">JUSTIFICATION:</p>
+                                                    <p className="text-slate-300 text-sm italic leading-relaxed">
+                                                        "{sceneAns.justification || 'No justification provided'}"
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </section>
+
+                    {/* 2. Exit Ticket MCQs */}
+                    <section>
+                        <h4 className="text-amber-400 text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4" /> Exit Ticket Quiz
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {(scenario?.exitTicket?.mcqs || []).map((q, idx) => {
+                                const ansId = exitTicket.mcq_answers?.[idx];
+                                const isCorrect = q.options?.find(o => o.id === ansId)?.correct;
+                                const correctOption = q.options?.find(o => o.correct);
+
+                                return (
+                                    <div key={idx} className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
+                                        <p className="text-white text-sm font-medium mb-2">{q.question}</p>
+                                        <div className="flex items-center gap-2 text-xs">
+                                            <span className={`px-2 py-0.5 rounded-full font-bold border ${isCorrect ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-red-500/10 text-red-400 border-red-500/30'}`}>
+                                                {ansId || 'N/A'}
+                                            </span>
+                                            {!isCorrect && (
+                                                <span className="text-slate-500">
+                                                    Correct: <span className="text-emerald-400 font-bold">{correctOption?.id}</span>
+                                                </span>
+                                            )}
+                                            {isCorrect ? (
+                                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 ml-auto" />
+                                            ) : (
+                                                <XCircle className="w-3.5 h-3.5 text-red-400 ml-auto" />
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </section>
+
+                    {/* 3. Written Reflections */}
+                    <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 className="text-purple-400 text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <Brain className="w-4 h-4" /> Reflection
+                            </h4>
+                            <div className="p-5 rounded-xl bg-slate-800/30 border border-slate-700/50 min-h-[140px]">
+                                <p className="text-xs text-slate-500 font-bold mb-2 uppercase tracking-tight">Prompt: {scenario?.exitTicket?.reflectionPrompt}</p>
+                                <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
+                                    {exitTicket.reflection || 'No reflection provided'}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 className="text-blue-400 text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <Repeat className="w-4 h-4" /> Transfer Question
+                            </h4>
+                            <div className="p-5 rounded-xl bg-slate-800/30 border border-slate-700/50 min-h-[140px]">
+                                <p className="text-xs text-slate-500 font-bold mb-2 uppercase tracking-tight">Prompt: {scenario?.exitTicket?.transferQuestion}</p>
+                                <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
+                                    {exitTicket.transfer_answer || 'No answer provided'}
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+
+                {/* Modal Footer */}
+                <div className="px-6 py-4 border-t border-slate-800 flex justify-end bg-slate-900/50">
+                    <button
+                        onClick={onClose}
+                        className="px-6 py-2 rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition font-bold text-sm"
+                    >
+                        Close Details
+                    </button>
+                </div>
+            </motion.div>
         </div>
     );
 }

@@ -285,12 +285,14 @@ export default function ScenarioPlayer() {
 
         if (!isTeacher && user) {
             try {
-                const { data: existing } = await supabase
+                const { data: existingRows } = await supabase
                     .from('student_progress')
                     .select('id')
                     .eq('student_id', user.id)
                     .eq('scenario_id', scenarioId)
-                    .maybeSingle();
+                    .limit(1);
+
+                const existing = existingRows?.[0];
 
                 if (existing) {
                     await supabase
