@@ -44,34 +44,78 @@ export default function Dashboard() {
                 .order('completed_at', { ascending: false });
 
             if (progressRows && progressRows.length > 0) {
-                const completedScenarios = progressRows
-                    .filter(r => r.scenario_id !== null && r.score >= 70)
-                    .map(r => r.scenario_id);
-                const badges = progressRows
-                    .filter(r => r.scenario_id !== null && r.score >= 70)
-                    .map(r => SCENARIOS[r.scenario_id]?.badge)
-                    .filter(Boolean);
+                // ✅ فقط السيناريوهات الفريدة المكتملة
+                const completedScenarios = [
+                    ...new Set(
+                        progressRows
+                            .filter(r => r.scenario_id !== null && r.score >= 70)
+                            .map(r => r.scenario_id)
+                    )
+                ];
+
+                const badges = [
+                    ...new Set(
+                        completedScenarios
+                            .map(id => SCENARIOS[id]?.badge)
+                            .filter(Boolean)
+                    )
+                ];
 
                 const skillsMap = {};
                 const skillKeys = Object.keys(SKILLS);
-                progressRows.forEach(row => {
-                    const scenarioData = SCENARIOS[row.scenario_id];
-                    if (scenarioData && row.score > 0) {
-                        scenarioData.scienceFocus?.forEach((focus, i) => {
-                            const key = skillKeys[i % skillKeys.length];
-                            if (key) {
-                                const gained = Math.round((row.score / 100) * 25);
-                                skillsMap[key] = Math.min(100, (skillsMap[key] || 0) + gained);
-                            }
-                        });
-                    }
+
+                // ✅ نستخدم السيناريوهات الفريدة المكتملة فقط
+                completedScenarios.forEach(scenarioId => {
+                    const latestRow = progressRows.find(r =>
+                        r.scenario_id === scenarioId && r.score >= 70
+                    );
+                    if (!latestRow) return;
+
+                    const scenarioData = SCENARIOS[scenarioId];
+                    if (!scenarioData) return;
+
+                    scenarioData.scienceFocus?.forEach((focus, i) => {
+                        const key = skillKeys[i % skillKeys.length];
+                        if (key) {
+                            // كل سيناريو مكتمل = 10 نقاط فقط (لتصل 100% بعد 10 سيناريوهات)
+                            const gained = Math.round((latestRow.score / 100) * 10);
+                            skillsMap[key] = Math.min(100, (skillsMap[key] || 0) + gained);
+                        }
+                    });
                 });
+
+                // جمع كل القرارات من السيناريوهات المكتملة فقط
+                // ✅ نأخذ آخر صف لكل سيناريو فريد فقط
+                const allDecisions = completedScenarios.flatMap(scenarioId => {
+                    const latestRow = progressRows.find(r =>
+                        r.scenario_id === scenarioId && r.score >= 70
+                    );
+                    if (!latestRow?.answers) return [];
+
+                    const ans = typeof latestRow.answers === 'string'
+                        ? JSON.parse(latestRow.answers)
+                        : latestRow.answers;
+
+                    // استخرج القرارات من scene1, scene2, scene3
+                    return ['scene1', 'scene2', 'scene3']
+                        .filter(scene => ans[scene]?.selectedOption)
+                        .map(scene => ({
+                            scenario_id: scenarioId,
+                            scene: scene,
+                            decision: ans[scene]?.selectedOption,
+                            justification: ans[scene]?.justification
+                        }));
+                });
+
+                // الوقت الفعلي من قاعدة البيانات أو حساب بناءً على المكتمل
+                // ✅ نستخدم completedScenarios الذي هو فريد بالفعل
+                const totalTime = completedScenarios.length * 15;
 
                 setProgress({
                     completed_scenarios: completedScenarios,
                     badges: [...new Set(badges)],
-                    decision_history: progressRows,
-                    total_time_spent: progressRows.length * 15,
+                    decision_history: allDecisions,          // ✅ array حقيقي
+                    total_time_spent: totalTime,             // ✅ وقت حقيقي
                     skills: skillsMap
                 });
             }

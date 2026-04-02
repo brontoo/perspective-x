@@ -113,31 +113,58 @@ export default function ScenarioComplete({ scenario, responses, role, onShowCert
                         Exit Ticket Results
                     </h3>
                     <div className="space-y-3">
-                        {[
-                            {
-                                label: 'Concept Questions',
-                                value: `${responses.exitTicket?.score || 0}/2 correct`,
-                                ok: responses.exitTicket?.score >= 1
-                            },
-                            {
-                                label: 'Reflection',
-                                value: responses.exitTicket?.reflection?.length >= 10 ? 'Completed' : 'Incomplete',
-                                ok: responses.exitTicket?.reflection?.length >= 10
-                            },
-                            {
-                                label: 'Transfer Question',
-                                value: responses.exitTicket?.transfer_answer?.length >= 10 ? 'Completed' : 'Incomplete',
-                                ok: responses.exitTicket?.transfer_answer?.length >= 10
-                            },
-                        ].map((item) => (
-                            <div key={item.label}
-                                className={`flex items-center justify-between p-3 rounded-xl border ${item.ok ? border : 'border-slate-800'} bg-slate-800/40`}>
-                                <span className="text-slate-400">{item.label}</span>
-                                <span className={`font-semibold ${item.ok ? text : 'text-amber-400'}`}>
-                                    {item.value}
-                                </span>
-                            </div>
-                        ))}
+
+                        {/* 1. Concept Questions */}
+                        <div className={`flex items-center justify-between p-3 rounded-xl border ${Number(responses.exitTicket?.score) === 100
+                                ? border : 'border-slate-800'
+                            } bg-slate-800/40`}>
+                            <span className="text-slate-400">Concept Questions</span>
+                            <span className={`font-semibold ${Number(responses.exitTicket?.score) === 100
+                                    ? text : 'text-amber-400'
+                                }`}>
+                                {Number(responses.exitTicket?.score) === 100
+                                    ? scenario.conceptQuestions?.length || 2
+                                    : Math.round((Number(responses.exitTicket?.score) || 0) / 100 * (scenario.conceptQuestions?.length || 2))
+                                }/{scenario.conceptQuestions?.length || 2} correct
+                            </span>
+                        </div>
+
+                        {/* 2. Questions Accuracy */}
+                        <div className={`flex items-center justify-between p-3 rounded-xl border ${responses.exitTicket?.score >= (scenario.conceptQuestions?.length || 2)
+                            ? border : 'border-slate-800'
+                            } bg-slate-800/40`}>
+                            <span className="text-slate-400">Questions Accuracy</span>
+                            <span className={`font-semibold ${responses.exitTicket?.score >= (scenario.conceptQuestions?.length || 2)
+                                ? text : 'text-amber-400'
+                                }`}>
+                                {Math.min(100, Math.round((Number(responses.exitTicket?.score) || 0) / (scenario.conceptQuestions?.length || 2) * 100))}%
+                            </span>
+                        </div>
+
+                        {/* 3. Reflection */}
+                        <div className={`flex items-center justify-between p-3 rounded-xl border ${responses.exitTicket?.reflection?.length >= 10
+                            ? border : 'border-slate-800'
+                            } bg-slate-800/40`}>
+                            <span className="text-slate-400">Reflection</span>
+                            <span className={`font-semibold ${responses.exitTicket?.reflection?.length >= 10
+                                ? text : 'text-amber-400'
+                                }`}>
+                                {responses.exitTicket?.reflection?.length >= 10 ? 'Completed' : 'Incomplete'}
+                            </span>
+                        </div>
+
+                        {/* 4. Transfer Question */}
+                        <div className={`flex items-center justify-between p-3 rounded-xl border ${responses.exitTicket?.transfer_answer?.length >= 10
+                            ? border : 'border-slate-800'
+                            } bg-slate-800/40`}>
+                            <span className="text-slate-400">Transfer Question</span>
+                            <span className={`font-semibold ${responses.exitTicket?.transfer_answer?.length >= 10
+                                ? text : 'text-amber-400'
+                                }`}>
+                                {responses.exitTicket?.transfer_answer?.length >= 10 ? 'Completed' : 'Incomplete'}
+                            </span>
+                        </div>
+
                     </div>
                 </Card>
             </motion.div>
