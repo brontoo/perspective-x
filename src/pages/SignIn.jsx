@@ -1,7 +1,8 @@
+
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { motion } from 'framer-motion';
-import { GraduationCap, BookOpen, Mail } from 'lucide-react';
+import { GraduationCap, BookOpen } from 'lucide-react'; // ← حذفنا Mail لأننا لن نستخدمها
 
 export default function SignIn() {
     const [mode, setMode] = useState('signin');
@@ -12,7 +13,7 @@ export default function SignIn() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const [showEmailConfirm, setShowEmailConfirm] = useState(false); // ✅ حالة جديدة
+    // ← حذفنا showEmailConfirm بالكامل
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,22 +50,26 @@ export default function SignIn() {
                 }
             }
 
-            // ✅ بدل setSuccess وتغيير الـ mode — نعرض شاشة تأكيد الإيميل
-            setShowEmailConfirm(true);
+            // ← بعد التسجيل مباشرة، حوّله حسب الدور بدون أي شاشة تأكيد
+            if (role === 'teacher') {
+                window.location.href = '/TeacherDashboard';
+            } else {
+                window.location.href = '/Dashboard';
+            }
+
             setLoading(false);
             return;
         }
 
         // ── Sign In ──
-        const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
 
         if (signInError) {
-            // ✅ رسالة خاصة إذا لم يتم تأكيد الإيميل
-            if (signInError.message.toLowerCase().includes('email not confirmed')) {
-                setError('⚠️ Please confirm your email first. Check your inbox and click the confirmation link.');
-            } else {
-                setError('Invalid email or password.');
-            }
+            // ← رسالة خطأ موحدة بدون ذكر تأكيد البريد
+            setError('Invalid email or password.');
             setLoading(false);
             return;
         }
@@ -93,146 +98,148 @@ export default function SignIn() {
         }
     };
 
-    // ✅ شاشة تأكيد الإيميل
-    if (showEmailConfirm) {
-        return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 relative overflow-hidden">
-                <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
-
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="bg-slate-900/80 border border-teal-900/30 rounded-2xl p-10 w-full max-w-md shadow-2xl backdrop-blur-sm relative z-10 text-center"
-                >
-                    {/* أيقونة البريد */}
-                    <div className="w-20 h-20 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center mx-auto mb-6">
-                        <Mail className="w-10 h-10 text-teal-400" />
-                    </div>
-
-                    <h2 className="text-2xl font-black text-white mb-2">Check Your Email</h2>
-                    <p className="text-slate-400 text-sm mb-2">
-                        We sent a confirmation link to:
-                    </p>
-                    <p className="text-teal-300 font-semibold text-sm mb-6 bg-teal-500/10 border border-teal-500/20 rounded-lg px-4 py-2 inline-block">
-                        {email}
-                    </p>
-
-                    <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4 mb-6 text-left space-y-2">
-                        <p className="text-slate-300 text-sm font-semibold">📋 Next steps:</p>
-                        <p className="text-slate-400 text-xs">1. Open your email inbox</p>
-                        <p className="text-slate-400 text-xs">2. Find the email from Perspective X</p>
-                        <p className="text-slate-400 text-xs">3. Click the <span className="text-teal-400 font-semibold">Confirm your email</span> button</p>
-                        <p className="text-slate-400 text-xs">4. Return here and sign in</p>
-                    </div>
-
-                    <button
-                        onClick={() => {
-                            setShowEmailConfirm(false);
-                            setMode('signin');
-                            setPassword('');
-                        }}
-                        className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-black font-bold py-3 rounded-xl transition"
-                    >
-                        Go to Sign In
-                    </button>
-
-                    <p className="text-slate-600 text-xs mt-4">
-                        Didn't receive the email? Check your spam folder.
-                    </p>
-                </motion.div>
-            </div>
-        );
-    }
-
+    // ── UI ──
     return (
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 relative overflow-hidden">
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
-
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-                className="bg-slate-900/80 border border-teal-900/30 rounded-2xl p-8 w-full max-w-md shadow-2xl backdrop-blur-sm relative z-10">
-
-                <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 text-center mb-1">
-                    Perspective X
-                </h2>
-                <p className="text-slate-500 text-center mb-6 text-sm">
-                    {mode === 'signin' ? 'Welcome back — sign in to continue' : 'Create your account to get started'}
-                </p>
-
-                {/* Toggle */}
-                <div className="flex bg-slate-800 rounded-xl p-1 mb-6">
-                    <button onClick={() => { setMode('signin'); setError(''); setSuccess(''); }}
-                        className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition ${mode === 'signin' ? 'bg-teal-500 text-black' : 'text-slate-400 hover:text-white'}`}>
-                        Sign In
-                    </button>
-                    <button onClick={() => { setMode('signup'); setError(''); setSuccess(''); }}
-                        className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition ${mode === 'signup' ? 'bg-teal-500 text-black' : 'text-slate-400 hover:text-white'}`}>
-                        Sign Up
-                    </button>
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-md"
+            >
+                {/* Logo / Header */}
+                <div className="text-center mb-8">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-teal-500/30">
+                        <GraduationCap className="w-8 h-8 text-white" />
+                    </div>
+                    <h1 className="text-2xl font-black text-white">Perspective X</h1>
+                    <p className="text-slate-400 text-sm mt-1">
+                        {mode === 'signin' ? 'Welcome back — sign in to continue' : 'Create your account to get started'}
+                    </p>
                 </div>
 
-                {error && (
-                    <div className="bg-red-900/30 border border-red-500/40 text-red-400 rounded-lg p-3 mb-4 text-sm text-center">
-                        {error}
-                    </div>
-                )}
-                {success && (
-                    <div className="bg-teal-900/30 border border-teal-500/40 text-teal-400 rounded-lg p-3 mb-4 text-sm text-center">
-                        {success}
-                    </div>
-                )}
+                {/* Card */}
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    {mode === 'signup' && (
-                        <div>
-                            <label className="text-slate-400 text-sm mb-1 block">Full Name</label>
-                            <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required
-                                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition"
-                                placeholder="Your full name" />
-                        </div>
-                    )}
-
-                    <div>
-                        <label className="text-slate-400 text-sm mb-1 block">Email Address</label>
-                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition"
-                            placeholder="example@email.com" />
+                    {/* Toggle */}
+                    <div className="flex gap-1 bg-slate-800 rounded-xl p-1 mb-6">
+                        {['signin', 'signup'].map(m => (
+                            <button
+                                key={m}
+                                onClick={() => { setMode(m); setError(''); setSuccess(''); }}
+                                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${mode === m
+                                        ? 'bg-teal-500 text-white shadow-md'
+                                        : 'text-slate-400 hover:text-white'
+                                    }`}
+                            >
+                                {m === 'signin' ? 'Sign In' : 'Sign Up'}
+                            </button>
+                        ))}
                     </div>
 
-                    <div>
-                        <label className="text-slate-400 text-sm mb-1 block">Password</label>
-                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
-                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition"
-                            placeholder="••••••••" />
-                    </div>
+                    <form onSubmit={handleSubmit} className="space-y-4">
 
-                    {mode === 'signup' && (
-                        <div>
-                            <label className="text-slate-400 text-sm mb-2 block">I am a...</label>
-                            <div className="grid grid-cols-2 gap-3">
-                                <button type="button" onClick={() => setRole('student')}
-                                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition ${role === 'student' ? 'border-teal-500 bg-teal-500/10 text-teal-400' : 'border-slate-700 text-slate-500 hover:border-slate-600'}`}>
-                                    <GraduationCap className="w-7 h-7" />
-                                    <span className="font-semibold text-sm">Student</span>
-                                </button>
-                                <button type="button" onClick={() => setRole('teacher')}
-                                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition ${role === 'teacher' ? 'border-teal-500 bg-teal-500/10 text-teal-400' : 'border-slate-700 text-slate-500 hover:border-slate-600'}`}>
-                                    <BookOpen className="w-7 h-7" />
-                                    <span className="font-semibold text-sm">Teacher</span>
-                                </button>
+                        {/* Full Name — signup only */}
+                        {mode === 'signup' && (
+                            <div>
+                                <label className="text-slate-400 text-sm mb-1 block">Full Name</label>
+                                <input
+                                    type="text"
+                                    value={fullName}
+                                    onChange={e => setFullName(e.target.value)}
+                                    placeholder="Your full name"
+                                    required
+                                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500 transition"
+                                />
                             </div>
+                        )}
+
+                        {/* Role — signup only */}
+                        {mode === 'signup' && (
+                            <div>
+                                <label className="text-slate-400 text-sm mb-1 block">I am a...</label>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {[
+                                        { value: 'student', label: 'Student', icon: BookOpen },
+                                        { value: 'teacher', label: 'Teacher', icon: GraduationCap },
+                                    ].map(({ value, label, icon: Icon }) => (
+                                        <button
+                                            key={value}
+                                            type="button"
+                                            onClick={() => setRole(value)}
+                                            className={`flex items-center gap-2 p-3 rounded-xl border text-sm font-semibold transition-all ${role === value
+                                                    ? 'bg-teal-500/20 border-teal-500/60 text-teal-400'
+                                                    : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-600'
+                                                }`}
+                                        >
+                                            <Icon className="w-4 h-4" />
+                                            {label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Email */}
+                        <div>
+                            <label className="text-slate-400 text-sm mb-1 block">Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                placeholder="your@email.com"
+                                required
+                                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500 transition"
+                            />
                         </div>
-                    )}
 
-                    <button type="submit" disabled={loading}
-                        className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-black font-bold py-3 rounded-xl transition disabled:opacity-50 mt-2">
-                        {loading ? 'Please wait...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
-                    </button>
-                </form>
+                        {/* Password */}
+                        <div>
+                            <label className="text-slate-400 text-sm mb-1 block">Password</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                placeholder="••••••••"
+                                required
+                                minLength={6}
+                                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500 transition"
+                            />
+                        </div>
 
-                <p className="text-slate-600 text-xs text-center mt-4">
-                    By signing up, you agree to our Terms of Service
-                </p>
+                        {/* Error */}
+                        {error && (
+                            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                                {error}
+                            </div>
+                        )}
+
+                        {/* Success */}
+                        {success && (
+                            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm">
+                                {success}
+                            </div>
+                        )}
+
+                        {/* Submit */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-black font-bold py-3 rounded-xl transition disabled:opacity-50 shadow-lg shadow-teal-500/20"
+                        >
+                            {loading
+                                ? '...'
+                                : mode === 'signin' ? 'Sign In' : 'Create Account'
+                            }
+                        </button>
+
+                        {/* Terms */}
+                        {mode === 'signup' && (
+                            <p className="text-xs text-slate-500 text-center">
+                                By signing up, you agree to our Terms of Service
+                            </p>
+                        )}
+                    </form>
+                </div>
             </motion.div>
         </div>
     );
