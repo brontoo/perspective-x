@@ -1,7 +1,9 @@
+
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const LEVEL_CONFIG = {
@@ -16,6 +18,7 @@ const RANK_CONFIG = [
   { medal: '🥈', bg: 'from-slate-400/30 to-slate-700/10', border: 'border-slate-400/50', glow: 'shadow-slate-400/20' },
   { medal: '🥉', bg: 'from-orange-600/30 to-orange-900/10', border: 'border-orange-600/50', glow: 'shadow-orange-600/20' },
 ];
+
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function getInitials(name) {
@@ -33,6 +36,7 @@ function getAvatarColor(name) {
   ];
   return colors[name.charCodeAt(0) % colors.length];
 }
+
 
 // ─── Level Progress Bar ───────────────────────────────────────────────────────
 function LevelProgress({ points, level }) {
@@ -65,6 +69,7 @@ function LevelProgress({ points, level }) {
     </div>
   );
 }
+
 
 // ─── Podium Card (Top 3) ──────────────────────────────────────────────────────
 function PodiumCard({ entry, position }) {
@@ -107,6 +112,7 @@ function PodiumCard({ entry, position }) {
   );
 }
 
+
 // ─── Leaderboard Row ──────────────────────────────────────────────────────────
 function LeaderboardRow({ entry, isCurrentUser, index }) {
   const lvl = LEVEL_CONFIG[entry.level] || LEVEL_CONFIG['Explorer'];
@@ -117,8 +123,8 @@ function LeaderboardRow({ entry, isCurrentUser, index }) {
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.04 }}
       className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${isCurrentUser
-          ? 'bg-teal-500/10 border-teal-500/40 shadow-lg shadow-teal-500/10'
-          : 'bg-slate-800/40 border-slate-700/40 hover:bg-slate-800/60'
+        ? 'bg-teal-500/10 border-teal-500/40 shadow-lg shadow-teal-500/10'
+        : 'bg-slate-800/40 border-slate-700/40 hover:bg-slate-800/60'
         }`}
     >
       {/* Rank */}
@@ -171,6 +177,7 @@ function LeaderboardRow({ entry, isCurrentUser, index }) {
   );
 }
 
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function LeaderboardPage() {
   const navigate = useNavigate();
@@ -178,12 +185,23 @@ export default function LeaderboardPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all_time');
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [currentUserRole, setCurrentUserRole] = useState(null); // ← جديد
   const [userRank, setUserRank] = useState(null);
 
   useEffect(() => {
-    // جيب الـ user الحالي
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) setCurrentUserId(user.id);
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (user) {
+        setCurrentUserId(user.id);
+
+        // ← جديد: جيب الـ role من profiles
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) setCurrentUserRole(profile.role);
+      }
     });
   }, []);
 
@@ -204,14 +222,18 @@ export default function LeaderboardPage() {
   }, [filter]);
 
   useEffect(() => {
-    if (currentUserId && data.length > 0) {
+    // ← معدّل: لا تحدد userRank إذا كان المستخدم مدرساً
+    if (currentUserId && currentUserRole === 'student' && data.length > 0) {
       const mine = data.find(r => r.id === currentUserId);
       setUserRank(mine || null);
     }
-  }, [currentUserId, data]);
+  }, [currentUserId, currentUserRole, data]);
 
   async function fetchLeaderboard() {
     setLoading(true);
+
+    // ← الـ view الآن يفلتر students فقط بعد تعديل SQL
+    // لكن نضيف فلتر إضافي هنا كطبقة ثانية للأمان
     const { data: rows, error } = await supabase
       .from('leaderboard_view')
       .select('*')
@@ -227,6 +249,9 @@ export default function LeaderboardPage() {
     { key: 'monthly', label: '📅 This Month' },
     { key: 'weekly', label: '⚡ This Week' },
   ];
+
+  // ← جديد: إذا كان المستخدم مدرساً، أظهر رسالة بدل "Your Position"
+  const isTeacher = currentUserRole === 'teacher';
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -248,6 +273,15 @@ export default function LeaderboardPage() {
           <div className="w-12" />
         </div>
 
+        {/* ← جديد: بانر المدرس */}
+        {isTeacher && (
+          <div className="mb-6 p-3 rounded-xl bg-purple-500/10 border border-purple-500/30 text-center">
+            <span className="text-purple-400 text-sm font-semibold">
+              👨‍🏫 You are viewing the student leaderboard as a teacher
+            </span>
+          </div>
+        )}
+
         {/* Filter Tabs */}
         <div className="flex gap-2 justify-center mb-8">
           {filters.map(f => (
@@ -255,8 +289,8 @@ export default function LeaderboardPage() {
               key={f.key}
               onClick={() => setFilter(f.key)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${filter === f.key
-                  ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
+                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                 }`}
             >
               {f.label}
@@ -290,8 +324,8 @@ export default function LeaderboardPage() {
               </div>
             )}
 
-            {/* Your Position — إذا لم تكن في Top 3 */}
-            {userRank && userRank.rank > 3 && (
+            {/* Your Position — للطلاب فقط وإذا لم يكونوا في Top 3 */}
+            {!isTeacher && userRank && userRank.rank > 3 && (
               <div className="mb-6">
                 <div className="text-xs text-teal-400 font-semibold mb-2 px-1 uppercase tracking-wide">
                   📍 Your Position
@@ -323,7 +357,8 @@ export default function LeaderboardPage() {
                   <LeaderboardRow
                     key={entry.id}
                     entry={entry}
-                    isCurrentUser={entry.id === currentUserId}
+                    // ← المدرس لا يُعلَّم بـ "You" في القائمة لأنه غير موجود أصلاً
+                    isCurrentUser={!isTeacher && entry.id === currentUserId}
                     index={i}
                   />
                 ))}
