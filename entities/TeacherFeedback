@@ -1,0 +1,37 @@
+{
+    "name": "TeacherFeedback",
+    "type": "object",
+    "properties": {
+        "student_email": {
+            "type": "string",
+            "description": "Email of the student receiving feedback"
+        },
+        "scenario_id": {
+            "type": "string",
+            "description": "Scenario this feedback relates to (optional)"
+        },
+        "message": {
+            "type": "string",
+            "description": "Feedback message from teacher"
+        },
+        "teacher_name": {
+            "type": "string",
+            "description": "Name of the teacher who wrote the feedback"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "general",
+                "praise",
+                "improvement",
+                "assignment"
+            ],
+            "default": "general",
+            "description": "Type of feedback"
+        }
+    },
+    "required": [
+        "student_email",
+        "message"
+    ]
+}

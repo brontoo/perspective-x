@@ -1,0 +1,498 @@
+[
+  {
+    "id": "water_contamination",
+    "title": "The Invisible Threat",
+    "scene1Question": "What is the most serious scientific concern in this situation?",
+    "scene1Correct": [
+      "C: Nitrate concentration above safe limit"
+    ],
+    "scene2Question": "What should you recommend FIRST as the environmental chemist?",
+    "scene2Outcome": [
+      "A: Increase chemical treatment at the water plant => SUCCESS (positive)",
+      "B: Shut down the factory temporarily => FAIL (low)",
+      "C: Conduct further testing and monitor nitrate trends => FAIL (medium)",
+      "D: Advise residents to boil water => SUCCESS (positive)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "Nitrates dissolve easily in water because they are:",
+        "correct": [
+          "C: Highly soluble ionic compounds"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "Which factor most directly affects groundwater contamination from a factory?",
+        "correct": [
+          "B: Direction of groundwater flow"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "reaction_gone_wrong",
+    "title": "The Reaction Gone Wrong",
+    "scene1Question": "What is the most likely cause of this runaway reaction?",
+    "scene1Correct": [
+      "B: Cooling system failure preventing heat removal"
+    ],
+    "scene2Question": "What is the safest immediate action?",
+    "scene2Outcome": [
+      "A: Add more reactants to dilute the mixture => FAIL (medium)",
+      "B: Emergency vent to release pressure => FAIL (medium)",
+      "C: Inject cold water directly into reactor => FAIL (medium)",
+      "D: Activate emergency quench system with inhibitor => SUCCESS (positive)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "In an exothermic reaction, heat is:",
+        "correct": [
+          "B: Released to surroundings"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "A runaway reaction can be prevented by:",
+        "correct": [
+          "C: Controlling temperature and using inhibitors"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "acid_rain",
+    "title": "Acid Rain Alert",
+    "scene1Question": "Which data point most clearly indicates acid rain damage?",
+    "scene1Correct": [
+      "B: Forest Zone A pH of 4.2 with high SO₂"
+    ],
+    "scene2Question": "What is your primary recommendation?",
+    "scene2Outcome": [
+      "A: Mandate scrubbers on all industrial smokestacks => SUCCESS (positive)",
+      "B: Add limestone to affected lakes to neutralize acid => SUCCESS (positive)",
+      "C: Relocate affected communities => SUCCESS (positive)",
+      "D: Implement emissions trading with gradual reduction targets => SUCCESS (positive)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "Acid rain forms primarily when these gases dissolve in water:",
+        "correct": [
+          "B: Sulfur dioxide and nitrogen oxides"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "A pH of 4.2 compared to normal rain (pH 5.6) is approximately:",
+        "correct": [
+          "B: 25 times more acidic"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mutation_dilemma",
+    "title": "The Mutation Dilemma",
+    "scene1Question": "What is the probability that their child will be affected by this condition?",
+    "scene1Correct": [
+      "B: 25% - one in four chance"
+    ],
+    "scene2Question": "What counseling approach do you recommend?",
+    "scene2Outcome": [
+      "A: Recommend they not have children to avoid the risk => SUCCESS (positive)",
+      "B: Explain options including IVF with genetic testing => SUCCESS (positive)",
+      "C: Suggest they adopt instead => SUCCESS (positive)",
+      "D: Present all information neutrally and let them decide => FAIL (low)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "If both parents are carriers (Aa) of a recessive condition, what fraction of their children will be carriers?",
+        "correct": [
+          "B: 1/2"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "A recessive genetic condition appears when an individual is:",
+        "correct": [
+          "C: Homozygous recessive (aa)"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "reaction_time",
+    "title": "The Reaction Time Test",
+    "scene1Question": "Which factor shows the most significant negative impact on reaction time?",
+    "scene1Correct": [
+      "B: Sleep deprivation (5 hours)"
+    ],
+    "scene2Question": "What training protocol do you recommend?",
+    "scene2Outcome": [
+      "A: Intense daily reaction drills with minimal rest => FAIL (medium)",
+      "B: Focus on sleep optimization and moderate training => SUCCESS (positive)",
+      "C: Caffeine supplementation before all practices => FAIL (low)",
+      "D: Meditation and stress reduction only => SUCCESS (positive)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "Reaction time is primarily controlled by which body system?",
+        "correct": [
+          "B: Nervous system"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "In an experiment testing reaction time, sleep duration would be considered a:",
+        "correct": [
+          "C: Independent variable"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unstable_slope",
+    "title": "The Unstable Slope",
+    "scene1Question": "Which combination of factors creates the highest landslide risk?",
+    "scene1Correct": [
+      "B: Clay soil, steep slope, removed vegetation, and heavy rain"
+    ],
+    "scene2Question": "What do you recommend as the immediate priority?",
+    "scene2Outcome": [
+      "A: Monitor the cracks and wait for more data => FAIL (medium)",
+      "B: Evacuate all residents immediately => FAIL (low)",
+      "C: Install drainage pipes to reduce water buildup => SUCCESS (positive)",
+      "D: Build a retaining wall at the base => SUCCESS (positive)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "Clay-rich soils increase landslide risk because they:",
+        "correct": [
+          "B: Become slippery when saturated with water"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "Vegetation on slopes reduces landslide risk by:",
+        "correct": [
+          "C: Root systems binding soil together"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "invasive_species",
+    "title": "Invasive Species Crisis",
+    "scene1Question": "Why is the water hyacinth particularly damaging to this ecosystem?",
+    "scene1Correct": [
+      "B: It blocks sunlight and oxygen, disrupting the food web"
+    ],
+    "scene2Question": "What control strategy do you recommend?",
+    "scene2Outcome": [
+      "A: Introduce a biological control agent (plant-eating insect) => SUCCESS (positive)",
+      "B: Chemical herbicide treatment of affected areas => FAIL (medium)",
+      "C: Manual removal with floating barriers to contain spread => SUCCESS (positive)",
+      "D: Drain the lake partially to expose and kill the plants => FAIL (low)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "Invasive species typically outcompete native species because they:",
+        "correct": [
+          "B: Lack natural predators and diseases in the new environment"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "A food web describes:",
+        "correct": [
+          "B: The interconnected feeding relationships in an ecosystem"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "power_grid",
+    "title": "Power Grid Failure",
+    "scene1Question": "What is the primary cause of this grid crisis?",
+    "scene1Correct": [
+      "B: Demand exceeds generation capacity by 3,000 MW"
+    ],
+    "scene2Question": "What immediate action should you take?",
+    "scene2Outcome": [
+      "A: Implement rolling blackouts to reduce demand => SUCCESS (positive)",
+      "B: Request emergency power from neighboring grids => SUCCESS (positive)",
+      "C: Broadcast public appeal to reduce AC use => SUCCESS (positive)",
+      "D: Start emergency diesel generators => SUCCESS (positive)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "Electrical power is calculated as:",
+        "correct": [
+          "B: Current × Voltage (P = IV)"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "When electrical demand exceeds supply, the grid frequency:",
+        "correct": [
+          "B: Decreases, potentially causing blackouts"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "heat_loss",
+    "title": "Heat Loss in Buildings",
+    "scene1Question": "Which area should be the primary focus for reducing heat loss?",
+    "scene1Correct": [
+      "B: Windows (35% loss through conduction and radiation)"
+    ],
+    "scene2Question": "What upgrade package do you recommend?",
+    "scene2Outcome": [
+      "A: Replace all windows with triple-pane glass => SUCCESS (positive)",
+      "B: Add interior storm windows (preserves historic exterior) => SUCCESS (positive)",
+      "C: Blow insulation into roof and seal air leaks => SUCCESS (positive)",
+      "D: Install a more powerful heating system => FAIL (low)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "Heat transfers through solid materials (like walls and windows) primarily by:",
+        "correct": [
+          "B: Conduction"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "Double or triple-pane windows reduce heat loss because:",
+        "correct": [
+          "B: Air gaps between panes are poor conductors of heat"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "aspirin_production",
+    "title": "The Aspirin Crisis",
+    "scene1Question": "The team needs 500 g of aspirin total (1000 tablets × 0.5 g each). Using the 1:1 mole ratio, how many grams of salicylic acid are needed?",
+    "scene1Correct": [
+      "B: 383 g — using molar mass ratio (138/180 × 500)"
+    ],
+    "scene2Question": "What is the most scientifically responsible decision?",
+    "scene2Outcome": [
+      "A: Produce tablets with less active ingredient to meet the order quantity => FAIL (medium)",
+      "B: Produce as many correct-dose tablets as possible and report the shortage => SUCCESS (positive)",
+      "C: Rush emergency order for more salicylic acid and delay production => SUCCESS (positive)",
+      "D: Add a filler material to make up the tablet weight to 500 mg => FAIL (medium)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "The synthesis of aspirin uses a 1:1 mole ratio of salicylic acid to aspirin. If you have 2.5 mol of salicylic acid, how many moles of aspirin can you make?",
+        "correct": [
+          "C: 2.5 mol"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "A mole of any substance contains approximately:",
+        "correct": [
+          "B: 6.02 × 10²³ particles"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "haber_process",
+    "title": "Fuel Production Optimization",
+    "scene1Question": "Convert the given masses into moles. How many moles of each reactant do you have?",
+    "scene1Correct": [
+      "B: 64 g S = 2 mol,  64 g O₂ = 2 mol"
+    ],
+    "scene2Question": "Based on the balanced equation and your mole calculations, which substance is the limiting reactant?",
+    "scene2Outcome": [
+      "A: Sulfur — it will run out first => FAIL (low)",
+      "B: Oxygen — it will run out first => SUCCESS (positive)",
+      "C: Neither — both are used completely (1:1 ratio, 2 mol each) => SUCCESS (positive)",
+      "D: Sulfur dioxide — it is produced in limited amounts => FAIL (low)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "In a chemical reaction, what does the limiting reactant determine?",
+        "correct": [
+          "B: The amount of product formed"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "A reaction uses 96 g of sulfur (M = 32 g/mol) and 64 g of oxygen (M = 32 g/mol). Which is the limiting reactant?",
+        "correct": [
+          "B: Oxygen — because it provides fewer moles (2 mol vs 3 mol)"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "aspirin_percent_yield",
+    "title": "The Efficiency Report",
+    "scene1Question": "What does the theoretical yield of 180 g represent in this process?",
+    "scene1Correct": [
+      "B: The maximum amount of product expected from the reaction"
+    ],
+    "scene2Question": "What is the BEST way to determine how efficient the reaction was?",
+    "scene2Outcome": [
+      "A: Compare actual yield to theoretical yield using percent yield formula => SUCCESS (positive)",
+      "B: Subtract actual yield from theoretical yield only (180 − 135 = 45 g lost) => SUCCESS (positive)",
+      "C: Divide theoretical yield by actual yield (180 ÷ 135) => SUCCESS (positive)",
+      "D: Ignore the difference since product was still formed => FAIL (medium)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "What does a percent yield of 100% indicate?",
+        "correct": [
+          "B: The maximum possible product was obtained"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "The correct formula for percent yield is:",
+        "correct": [
+          "C: (Actual Yield ÷ Theoretical Yield) × 100"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gas_boyle_adnoc",
+    "title": "Pressure Control at ADNOC Gas Storage",
+    "scene1Question": "When volume decreases in a sealed gas system, what happens to pressure?",
+    "scene1Correct": [
+      "B: Pressure increases"
+    ],
+    "scene2Question": "Using Boyle's Law (P₁V₁ = P₂V₂), what is the final pressure?",
+    "scene2Outcome": [
+      "A: 50 kPa => SUCCESS (positive)",
+      "B: 100 kPa => SUCCESS (positive)",
+      "C: 200 kPa => SUCCESS (positive)",
+      "D: 400 kPa => FAIL (medium)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "Boyle's Law describes which relationship?",
+        "correct": [
+          "B: Inverse pressure-volume"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "If volume is halved at constant temperature, pressure will:",
+        "correct": [
+          "C: Double"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gas_charles_aviation",
+    "title": "Gas Expansion in UAE Aviation",
+    "scene1Question": "At constant pressure, increasing temperature causes gas volume to:",
+    "scene1Correct": [
+      "B: Increase"
+    ],
+    "scene2Question": "Using Charles's Law (V₁/T₁ = V₂/T₂), what is the final volume?",
+    "scene2Outcome": [
+      "A: 1.5 L => SUCCESS (positive)",
+      "B: 3.0 L => SUCCESS (positive)",
+      "C: 6.0 L => SUCCESS (positive)",
+      "D: 9.0 L => SUCCESS (positive)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "In Charles's law calculations, temperature must be in:",
+        "correct": [
+          "B: Kelvin"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "If temperature doubles (in Kelvin) at constant pressure, volume will:",
+        "correct": [
+          "C: Double"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gas_gaylussac_cylinder",
+    "title": "Pressure Build-Up in Sealed Cylinder",
+    "scene1Question": "In a sealed container, increasing temperature causes pressure to:",
+    "scene1Correct": [
+      "B: Increase"
+    ],
+    "scene2Question": "Using Gay-Lussac's Law (P₁/T₁ = P₂/T₂), what is P₂?",
+    "scene2Outcome": [
+      "A: 100 kPa => SUCCESS (positive)",
+      "B: 150 kPa => SUCCESS (positive)",
+      "C: 225 kPa => SUCCESS (positive)",
+      "D: 300 kPa => FAIL (medium)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "Gay-Lussac's law describes the relation between:",
+        "correct": [
+          "A: Pressure and temperature (direct)"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "Heating a sealed cylinder without volume change will generally:",
+        "correct": [
+          "B: Increase pressure"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "oxygen_failure",
+    "title": "Mission Oxygen Failure",
+    "scene1Question": "What is the fundamental chemistry behind the normal oxygen generation system?",
+    "scene1Correct": [
+      "B: Electrolysis: using electricity to split H₂O into H₂ and O₂"
+    ],
+    "scene2Question": "Which emergency oxygen generation method should you implement?",
+    "scene2Outcome": [
+      "A: Activate chemical oxygen generators (lithium perchlorate candles) => SUCCESS (positive)",
+      "B: Attempt repair of electrolysis unit using spare parts => SUCCESS (positive)",
+      "C: Reduce crew activity to minimal levels to conserve oxygen => FAIL (low)",
+      "D: Use hydrogen peroxide decomposition (2H₂O₂ → 2H₂O + O₂) => SUCCESS (positive)"
+    ],
+    "exitMcq": [
+      {
+        "q": 1,
+        "question": "The balanced equation for water electrolysis is:",
+        "correct": [
+          "B: 2H₂O → 2H₂ + O₂"
+        ]
+      },
+      {
+        "q": 2,
+        "question": "Why is water an ideal source for oxygen generation in space?",
+        "correct": [
+          "B: It can be recycled from crew waste and provides both drinking water and oxygen"
+        ]
+      }
+    ]
+  }
+]
