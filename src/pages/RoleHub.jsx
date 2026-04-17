@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import { ROLES, SCENARIOS } from '@/components/scenarios/scenarioData';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, LayoutGrid, GitCommit, Lock, CheckCircle2, Play } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import ScenarioCard from '@/components/scenario/ScenarioCard';
 
@@ -15,6 +15,7 @@ export default function RoleHub() {
     const [progress, setProgress] = useState(null);
     const [loading, setLoading] = useState(true);
     const [scenarioSettings, setScenarioSettings] = useState({});
+    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'path'
     const intervalRef = useRef(null);
 
     const role = ROLES[roleId];
@@ -128,9 +129,25 @@ export default function RoleHub() {
                         <ArrowLeft className="w-5 h-5" />
                         <span>Back to Roles</span>
                     </Link>
-                    <Badge className={`${colors.accent} bg-slate-800 border ${colors.border}`}>
-                        {role.difficulty}
-                    </Badge>
+                    <div className="flex items-center gap-4">
+                        <div className="flex bg-slate-800/50 rounded-lg p-1 border border-slate-700">
+                            <button
+                                onClick={() => setViewMode('grid')}
+                                className={`p-1.5 rounded-md transition ${viewMode === 'grid' ? 'bg-teal-500 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                <LayoutGrid className="w-4 h-4" />
+                            </button>
+                            <button
+                                onClick={() => setViewMode('path')}
+                                className={`p-1.5 rounded-md transition ${viewMode === 'path' ? 'bg-teal-500 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                <GitCommit className="w-4 h-4" />
+                            </button>
+                        </div>
+                        <Badge className={`${colors.accent} bg-slate-800 border ${colors.border}`}>
+                            {role.difficulty}
+                        </Badge>
+                    </div>
                 </div>
             </header>
 
@@ -173,28 +190,101 @@ export default function RoleHub() {
                             <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {role.scenarios.map((scenarioId, index) => {
-                                const scenario = SCENARIOS[scenarioId];
-                                if (!scenario) return null;
-                                const status = getScenarioStatus(scenarioId);
-                                return (
-                                    <ScenarioCard
-                                        key={scenarioId}
-                                        scenario={scenario}
-                                        status={status}
-                                        index={index}
-                                        roleColor={role.color}
-                                        settings={scenarioSettings[scenarioId]}
-                                        onClick={() => {
-                                            if (status !== 'locked') {
-                                                navigate(`/ScenarioPlayer?scenario=${scenarioId}`);
-                                            }
-                                        }}
-                                    />
-                                );
-                            })}
-                        </div>
+                        <AnimatePresence mode="wait">
+                            {viewMode === 'grid' ? (
+                                <motion.div
+                                    key="grid"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                                >
+                                    {role.scenarios.map((scenarioId, index) => {
+                                        const scenario = SCENARIOS[scenarioId];
+                                        if (!scenario) return null;
+                                        const status = getScenarioStatus(scenarioId);
+                                        return (
+                                            <ScenarioCard
+                                                key={scenarioId}
+                                                scenario={scenario}
+                                                status={status}
+                                                index={index}
+                                                roleColor={role.color}
+                                                settings={scenarioSettings[scenarioId]}
+                                                onClick={() => {
+                                                    if (status !== 'locked') {
+                                                        navigate(`/ScenarioPlayer?scenario=${scenarioId}`);
+                                                    }
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="path"
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    className="relative flex flex-col items-center gap-12 py-10"
+                                >
+                                    {/* Vertical Connecting Line */}
+                                    <div className="absolute top-0 bottom-0 w-1 bg-gradient-to-b from-slate-800 via-teal-500/30 to-slate-800 rounded-full" />
+
+                                    {role.scenarios.map((scenarioId, index) => {
+                                        const scenario = SCENARIOS[scenarioId];
+                                        if (!scenario) return null;
+                                        const status = getScenarioStatus(scenarioId);
+                                        const isEven = index % 2 === 0;
+
+                                        return (
+                                            <motion.div
+                                                key={scenarioId}
+                                                initial={{ opacity: 0, y: 30 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: index * 0.1 }}
+                                                className={`relative w-full flex items-center gap-8 ${isEven ? 'flex-row' : 'flex-row-reverse'}`}
+                                            >
+                                                {/* Card Side */}
+                                                <div className="flex-1 flex justify-center">
+                                                    <div className="max-w-xs w-full">
+                                                        <ScenarioCard
+                                                            scenario={scenario}
+                                                            status={status}
+                                                            index={index}
+                                                            roleColor={role.color}
+                                                            settings={scenarioSettings[scenarioId]}
+                                                            onClick={() => {
+                                                                if (status !== 'locked') {
+                                                                    navigate(`/ScenarioPlayer?scenario=${scenarioId}`);
+                                                                }
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* Center Node */}
+                                                <div className="relative z-10 w-12 h-12 rounded-full border-4 border-slate-900 bg-slate-800 flex items-center justify-center shadow-lg">
+                                                    {status === 'completed' ? (
+                                                        <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+                                                    ) : status === 'unlocked' ? (
+                                                        <div className="relative">
+                                                            <div className="absolute inset-0 rounded-full bg-teal-500 animate-ping opacity-20" />
+                                                            <Play className="w-5 h-5 text-teal-400 fill-current" />
+                                                        </div>
+                                                    ) : (
+                                                        <Lock className="w-5 h-5 text-slate-600" />
+                                                    )}
+                                                </div>
+
+                                                {/* Placeholder for balance */}
+                                                <div className="flex-1 hidden md:block" />
+                                            </motion.div>
+                                        );
+                                    })}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     )}
                 </div>
             </section>

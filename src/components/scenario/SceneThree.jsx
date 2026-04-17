@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, FileText, TrendingUp, MessageSquare } from 'lucide-react';
+import { ArrowRight, Zap, FileText, TrendingUp, MessageSquare, Activity, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
+import ScenarioVisual from './ScenarioVisual';
 
-export default function SceneThree({ scene, previousDecision, scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
+// Custom typewriter hook for HUD feel
+function useTypewriter(text, speed = 30) {
+    const [displayedText, setDisplayedText] = useState('');
+    useEffect(() => {
+        if (!text) return;
+        setDisplayedText('');
+        let i = 0;
+        const timer = setInterval(() => {
+            setDisplayedText((prev) => prev + text.charAt(i));
+            i++;
+            if (i >= text.length) clearInterval(timer);
+        }, speed);
+        return () => clearInterval(timer);
+    }, [text]);
+    return displayedText;
+}
+
+export default function SceneThree({ scene, scenarioId, previousDecision, scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
     const consequence = scene.consequences[previousDecision] || scene.consequences[Object.keys(scene.consequences)[0]];
     const [followUpAnswer, setFollowUpAnswer] = useState('');
+    const displayedOutcome = useTypewriter(consequence.outcome || '');
 
     const accent = theme.accent || 'from-teal-500 to-emerald-500';
     const border = theme.border || 'border-teal-500/30';
@@ -38,41 +57,73 @@ export default function SceneThree({ scene, previousDecision, scenarioTitle, onC
                 <h2 className="text-2xl font-bold text-white">Consequences of Your Decision</h2>
             </div>
 
-            {/* Consequence Reveal */}
+            {/* Consequence Reveal - HUD Style */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3 }}
             >
-                <Card className={`bg-slate-900/50 border ${border} p-8 mb-6`}>
-                    <div className="flex items-start gap-4 mb-6">
-                        <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${accent} bg-opacity-20 border ${border} flex items-center justify-center flex-shrink-0`}
-                            style={{ background: 'rgba(255,255,255,0.05)' }}>
-                            <Zap className={`w-7 h-7 ${text}`} />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold text-white mb-3">What Happened</h3>
-                            <p className="text-slate-300 leading-relaxed text-lg">{consequence.outcome}</p>
-                        </div>
-                    </div>
+                <div className={`relative overflow-hidden rounded-3xl border ${border} bg-slate-950/80 backdrop-blur-md shadow-2xl mb-8`}>
+                    {/* Scanning Line */}
+                    <div className="absolute inset-x-0 h-px bg-teal-500/10 animate-scan pointer-events-none" />
+                    
+                    <div className="p-8 relative">
+                        {/* HUD Corners */}
+                        <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-teal-500/30 rounded-tl-lg" />
+                        <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-teal-500/30 rounded-tr-lg" />
 
-                    {/* Key Message */}
-                    <div className={`p-4 rounded-xl border ${border} bg-slate-800/40 mb-6`}>
-                        <div className="flex items-start gap-3">
-                            <MessageSquare className={`w-5 h-5 ${text} flex-shrink-0 mt-0.5`} />
-                            <p className={`${text} italic`}>{consequence.message}</p>
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className={`p-2 rounded-xl bg-slate-900 border ${border}`}>
+                                    <Zap className={`w-5 h-5 ${text} animate-pulse`} />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-bold text-white uppercase tracking-widest">Impact Analysis</h3>
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                        <span className="text-[10px] font-mono text-slate-500">PROCESSING OUTCOME...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <Activity className="w-6 h-6 text-teal-500/50" />
                         </div>
-                    </div>
 
-                    {/* Updated Data */}
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-800/50">
-                        <TrendingUp className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                        <div>
-                            <span className="text-slate-500 text-sm block mb-1">Updated Data:</span>
-                            <p className="text-emerald-300">{consequence.newData}</p>
+                        {/* Integrated Visual - Consequence Result */}
+                        <div className="mb-6 h-48 bg-slate-900/40 rounded-2xl border border-white/5 overflow-hidden flex items-center justify-center">
+                            <ScenarioVisual 
+                                scenarioId={scenarioId} 
+                                sceneIndex={2} 
+                                avatar={scene.avatar}
+                            />
+                        </div>
+
+                        <div className="min-h-[100px] mb-6">
+                            <p className="text-slate-300 leading-relaxed text-lg font-medium font-serif italic">
+                                {displayedOutcome}
+                                <span className="inline-block w-2 h-5 bg-teal-500 ml-1 animate-pulse" />
+                            </p>
+                        </div>
+
+                        {/* Analysis Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className={`p-4 rounded-xl border ${border} bg-slate-800/40 relative overflow-hidden group`}>
+                                <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                                <div className="flex items-start gap-3">
+                                    <MessageSquare className={`w-3.5 h-3.5 ${text} flex-shrink-0 mt-0.5`} />
+                                    <p className={`text-xs ${text} italic`}>{consequence.message}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-900 border border-white/5">
+                                <TrendingUp className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                                <div>
+                                    <span className="text-[8px] text-slate-500 uppercase font-bold block mb-1">Observation Data</span>
+                                    <p className="text-[11px] text-emerald-300 font-mono">{consequence.newData}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </Card>
+                </div>
             </motion.div>
 
             {/* Follow-up Question */}

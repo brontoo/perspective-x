@@ -1,16 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, AlertCircle, Timer, Sparkles, BookOpen } from 'lucide-react';
+import { ArrowRight, AlertCircle, Timer, Sparkles, BookOpen, Activity, Cpu, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import ScenarioVisual from './ScenarioVisual';
+
+// Custom typewriter hook for HUD feel
+function useTypewriter(text, speed = 30) {
+    const [displayedText, setDisplayedText] = useState('');
+    useEffect(() => {
+        setDisplayedText('');
+        let i = 0;
+        const timer = setInterval(() => {
+            setDisplayedText((prev) => prev + text.charAt(i));
+            i++;
+            if (i >= text.length) clearInterval(timer);
+        }, speed);
+        return () => clearInterval(timer);
+    }, [text]);
+    return displayedText;
+}
 
 export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [justification, setJustification] = useState('');
     const [showThinkTimer, setShowThinkTimer] = useState(true);
     const [thinkTime, setThinkTime] = useState(120);
+    const displayedNarrative = useTypewriter(scene.narrative || '');
 
     const accent = theme.accent || 'from-teal-500 to-emerald-500';
     const border = theme.border || 'border-teal-500/30';
@@ -55,23 +72,67 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left Side: Visual & Narrative */}
                 <div className="space-y-6">
-                    <Card className={`overflow-hidden border ${border} bg-slate-900/50 backdrop-blur-sm shadow-2xl ${glow}`}>
-                        <div className="relative aspect-video">
-                            {/* Scenario Visual Component */}
+                    <div className={`relative overflow-hidden rounded-3xl border ${border} bg-slate-950/80 backdrop-blur-md shadow-2xl ${glow}`}>
+                        {/* Scanning Line */}
+                        <div className="absolute inset-x-0 h-px bg-teal-500/20 animate-scan pointer-events-none" />
+                        
+                        <div className="relative aspect-video border-b border-white/5">
                             <ScenarioVisual scenarioId={scenarioId} sceneIndex={0} />
-                        </div>
-                        <div className="p-6">
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className={`p-2 rounded-lg bg-slate-800 border ${border}`}>
-                                    <AlertCircle className={`w-5 h-5 ${text}`} />
+                            
+                            {/* Overlay Technical Labels */}
+                            <div className="absolute top-4 left-4 flex flex-col gap-1">
+                                <div className="flex items-center gap-2 bg-slate-900/80 backdrop-blur-sm px-2 py-1 rounded border border-white/10">
+                                    <Activity className="w-3 h-3 text-teal-400" />
+                                    <span className="text-[8px] font-mono text-white/60 tracking-tighter uppercase">Live Visual Stream</span>
                                 </div>
-                                <h3 className="text-xl font-bold text-white">Current Situation</h3>
                             </div>
-                            <p className="text-slate-300 leading-relaxed text-lg">
-                                {scene.narrative}
-                            </p>
                         </div>
-                    </Card>
+
+                        <div className="p-8 relative">
+                            {/* HUD Corners */}
+                            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-teal-500/30 rounded-tl-lg" />
+                            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-teal-500/30 rounded-tr-lg" />
+
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-3">
+                                    <div className={`p-2 rounded-xl bg-slate-900 border ${border}`}>
+                                        <Cpu className={`w-5 h-5 ${text} animate-pulse`} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-bold text-white uppercase tracking-widest">Situation Input</h3>
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                            <span className="text-[10px] font-mono text-slate-500">ENCRYPTED DATA STREAM...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ShieldAlert className="w-6 h-6 text-amber-500/50" />
+                            </div>
+
+                            <div className="min-h-[120px]">
+                                <p className="text-slate-300 leading-relaxed text-lg font-medium font-serif italic">
+                                    {displayedNarrative}
+                                    <span className="inline-block w-2 h-5 bg-teal-500 ml-1 animate-pulse" />
+                                </p>
+                            </div>
+
+                            {/* Technical Readouts */}
+                            <div className="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/5">
+                                <div className="space-y-1">
+                                    <span className="text-[8px] text-slate-500 uppercase font-bold">Priority</span>
+                                    <span className="block text-xs text-amber-500 font-mono">CRITICAL</span>
+                                </div>
+                                <div className="space-y-1">
+                                    <span className="text-[8px] text-slate-500 uppercase font-bold">Area</span>
+                                    <span className="block text-xs text-blue-400 font-mono">SECTOR-X7</span>
+                                </div>
+                                <div className="space-y-1">
+                                    <span className="text-[8px] text-slate-500 uppercase font-bold">Confidence</span>
+                                    <span className="block text-xs text-emerald-400 font-mono">92.4%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Scientific Context / Learning Objective */}
                     <Card className="bg-slate-800/40 border-slate-700 p-4">

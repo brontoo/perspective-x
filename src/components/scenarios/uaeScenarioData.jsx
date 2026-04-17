@@ -211,6 +211,69 @@ export const UAE_SCENARIOS = {
         difficulty: 'high-achievers'
     },
 
+    aspirin_production: {
+        id: 'aspirin_production',
+        title: 'The Aspirin Crisis',
+        titleAr: 'أزمة الأسبرين',
+        role: 'Pharmaceutical Quality Lead',
+        character: {
+            name: 'Dr. Aisha Al Breiki',
+            nameAr: 'د. عائشة البريكي',
+            avatar: '👩‍🔬',
+            title: 'Quality Assurance Director, Julphar Pharmaceuticals'
+        },
+        context: 'At a pharmaceutical facility in Ras Al Khaimah, a batch of aspirin is found to have slightly lower active ingredient levels than required.',
+        uaeContext: 'The UAE pharmaceutical industry follows world-class quality standards to ensure patient safety across the region.',
+        scienceFocus: ['Scientific ethics', 'Chemical purity', 'Quality control', 'Public health'],
+        strand: 'Chemistry',
+        estimatedTime: 12,
+        badge: 'Ethics & Quality Guardian',
+        badgeIcon: '💊',
+        difficulty: 'on-level'
+    },
+
+    fuelproduction: {
+        id: 'fuelproduction',
+        title: 'Fueling the Nation',
+        titleAr: 'تزويد الوطن بالوقود',
+        role: 'Stoichiometry Specialist',
+        character: {
+            name: 'Eng. Khaled Al Mansoori',
+            nameAr: 'م. خالد المنصوري',
+            avatar: '👨‍🔬',
+            title: 'Lead Process Engineer, Jebel Ali Refining'
+        },
+        context: 'Modern transport systems in the UAE require high-purity hydrogen fuel. You must calculate the exact reactants needed for a major order.',
+        uaeContext: 'The UAE is a global leader in energy. Precision in fuel production is vital for our transport and industrial hubs.',
+        scienceFocus: ['Stoichiometry', 'Mole ratios', 'Mass calculations', 'Industrial efficiency'],
+        strand: 'Chemistry',
+        estimatedTime: 14,
+        badge: 'Stoichiometry Master',
+        badgeIcon: '⛽',
+        difficulty: 'on-level'
+    },
+
+    aspirin_percent_yield: {
+        id: 'aspirin_percent_yield',
+        title: 'The Efficiency Report',
+        titleAr: 'تقرير الكفاءة',
+        role: 'Efficiency Analyst',
+        character: {
+            name: 'Dr. Aisha Al Breiki',
+            nameAr: 'د. عائشة البريكي',
+            avatar: '👩‍🔬',
+            title: 'Production Efficiency Lead, Dubai Science Park'
+        },
+        context: 'A production run of aspirin at Dubai Science Park has finished. You need to verify the percent yield to ensure industrial efficiency.',
+        uaeContext: 'Industrial efficiency is key to the UAE\'s goal of becoming a global hub for high-tech manufacturing.',
+        scienceFocus: ['Percent yield', 'Theoretical vs Actual yield', 'Process optimization', 'Data reporting'],
+        strand: 'Chemistry',
+        estimatedTime: 13,
+        badge: 'Efficiency Excellence',
+        badgeIcon: '📊',
+        difficulty: 'on-level'
+    },
+
     gas_boyle_adnoc: {
         id: 'gas_boyle_adnoc',
         title: 'Pressure Control at ADNOC Gas Storage',
@@ -528,6 +591,133 @@ export const UAE_VIDEO_CONTENT = {
                 narration: 'With a correct pressure forecast, the team isolates and cools the cylinder before a dangerous build-up occurs.',
                 duration: 5000,
                 dataPoints: []
+            }
+        ]
+    },
+
+    aspirin_production: {
+        title: 'The Aspirin Crisis',
+        titleAr: 'أزمة الأسبرين',
+        character: UAE_SCENARIOS.aspirin_production.character,
+        scenes: [
+            {
+                visual: 'Modern pharmaceutical lab in Ras Al Khaimah',
+                narration: 'I am Dr. Aisha Al Breiki. At our facility in Ras Al Khaimah, we produce essential medicines for the nation. Today, a serious quality issue has arisen.',
+                duration: 5000,
+                dataPoints: []
+            },
+            {
+                visual: 'Pills being tested on a digital analyzer',
+                narration: 'A batch of aspirin was flagged for low purity. The active ingredient level is 94% instead of the required 99%.',
+                duration: 5000,
+                dataPoints: []
+            },
+            {
+                visual: 'Comparison table showing purity standards',
+                narration: 'Look at the data. Safe range is 99% or higher. Our measured level is 94%. We must decide if we can sell this as a lower dose or destroy the batch.',
+                duration: 6000,
+                showData: true,
+                dataPoints: [
+                    { label: 'Standard', value: '99% +', status: 'info' },
+                    { label: 'Measured', value: '94%', status: 'critical' },
+                    { label: 'Batch Size', value: '50,000 units', status: 'info' }
+                ]
+            },
+            {
+                visual: 'Ethical dilemma icons: public safety vs financial loss',
+                narration: 'Financial loss would be high, but the UAE\'s health standards are our highest priority. What is your ethical recommendation?',
+                duration: 5000,
+                dataPoints: []
+            }
+        ]
+    },
+
+    fuelproduction: {
+        title: 'Fueling the Nation',
+        titleAr: 'تزويد الوطن بالوقود',
+        character: UAE_SCENARIOS.fuelproduction.character,
+        scenes: [
+            {
+                visual: 'Jebel Ali refining complex at dusk',
+                narration: 'I am Khaled Al Mansoori. At Jebel Ali, we are producing high-purity hydrogen fuel for the national transport fleet.',
+                duration: 5000,
+                dataPoints: []
+            },
+            {
+                visual: 'Process engineering diagram of methane steam reforming',
+                narration: 'We use methane and steam to produce hydrogen. To meet a critical order, we need to calculate exact reactant quantities.',
+                duration: 5000,
+                dataPoints: []
+            },
+            {
+                visual: 'Stoichiometry table with given mass and mole ratios',
+                narration: 'The reaction requires 16 grams of methane to produce 8 grams of hydrogen. The client needs exactly 1,000 kilograms of hydrogen.',
+                duration: 6000,
+                showData: true,
+                dataPoints: [
+                    { label: 'Methane (CH₄)', value: '16g/mol', status: 'info' },
+                    { label: 'Hydrogen (H₂)', value: '8g/mol (Product)', status: 'info' },
+                    { label: 'Required H₂', value: '1,000 kg', status: 'warning' }
+                ]
+            },
+            {
+                visual: 'Solved calculation showing required methane mass',
+                narration: 'Using stoichiometry, we find we need exactly 2,000 kilograms of methane. Precision is the foundation of our energy leadership.',
+                duration: 6000,
+                showData: true,
+                dataTable: {
+                    headers: ['Step', 'Mass Calculation'],
+                    rows: [
+                        ['Mole Ratio', '1:1 Ratio (Effective)'],
+                        ['H₂ Target', '1,000 units'],
+                        ['CH₄ Required', '2,000 units']
+                    ]
+                }
+            }
+        ]
+    },
+
+    aspirin_percent_yield: {
+        title: 'The Efficiency Report',
+        titleAr: 'تقرير الكفاءة',
+        character: UAE_SCENARIOS.aspirin_percent_yield.character,
+        scenes: [
+            {
+                visual: 'Overview of Dubai Science Park industrial labs',
+                narration: 'I am Dr. Aisha Al Breiki. Efficiency is the heartbeat of modern manufacturing in the UAE. We just finished a major production run.',
+                duration: 5000,
+                dataPoints: []
+            },
+            {
+                visual: 'Theoretical vs Actual yield display',
+                narration: 'We predicted a theoretical yield of 180 grams based on stoichiometry. However, we only collected 135 grams of actual product.',
+                duration: 5000,
+                dataPoints: []
+            },
+            {
+                visual: 'Yield calculation variables on screen',
+                narration: 'To optimize our next batch, we must determine the percent yield. Here is the final batch data.',
+                duration: 6000,
+                showData: true,
+                dataPoints: [
+                    { label: 'Theoretical', value: '180 g', status: 'info' },
+                    { label: 'Actual', value: '135 g', status: 'info' },
+                    { label: 'Gap', value: '45 g', status: 'warning' }
+                ]
+            },
+            {
+                visual: 'Percent yield formula result',
+                narration: 'Final yield is 75%. This is a strong result, but we can improve. Your analysis will help us reach 90% in the future.',
+                duration: 6000,
+                showData: true,
+                dataTable: {
+                    headers: ['Metric', 'Calculation'],
+                    rows: [
+                        ['Formula', '(Actual / Theoretical) × 100'],
+                        ['Substitution', '(135 / 180) × 100'],
+                        ['Result', '75% Efficiency']
+                    ]
+                }
             }
         ]
     }

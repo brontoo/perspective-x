@@ -54,14 +54,28 @@ export default function ScenarioCard({ scenario, status, index, roleColor, onCli
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            whileHover={config.interactive ? { y: -4, scale: 1.01 } : {}}
+            whileHover={config.interactive ? { 
+                y: -8, 
+                transition: { duration: 0.3, ease: 'easeOut' }
+            } : {}}
             onClick={config.interactive ? onClick : undefined}
-            className={`relative rounded-2xl border p-6 transition-all duration-300 ${config.bgClass} ${config.interactive ? 'cursor-pointer hover:shadow-xl hover:shadow-black/20' : 'opacity-60'}`}
+            className={`group relative rounded-3xl border p-7 transition-all duration-500 overflow-hidden ${config.bgClass} ${config.interactive ? 'cursor-pointer hover:shadow-2xl hover:shadow-black/40' : 'opacity-50'}`}
         >
+            {/* Glossy Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+            
+            {/* Glowing Corner */}
+            <div className={`absolute -top-12 -right-12 w-24 h-24 blur-[60px] opacity-0 group-hover:opacity-60 transition-opacity duration-700 ${config.iconClass.replace('text', 'bg')}`} />
+
+            {/* Scanning Line Animation */}
+            {config.interactive && (
+                <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-y-full group-hover:animate-scan pointer-events-none" />
+            )}
+
             {/* Status indicator */}
-            <div className="absolute top-4 right-4">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${config.bgClass}`}>
-                    <StatusIcon className={`w-5 h-5 ${config.iconClass}`} />
+            <div className="absolute top-5 right-5 z-10">
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${config.bgClass} backdrop-blur-md border border-white/10 shadow-lg`}>
+                    <StatusIcon className={`w-6 h-6 ${config.iconClass} drop-shadow-[0_0_8px_rgba(20,184,166,0.5)]`} />
                 </div>
             </div>
 
@@ -97,30 +111,33 @@ export default function ScenarioCard({ scenario, status, index, roleColor, onCli
                 </p>
 
                 {/* Science focus tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-6">
                     {scenario.scienceFocus.slice(0, 3).map((focus, i) => (
-                        <span key={i} className="text-xs px-2 py-1 rounded-full bg-slate-800 text-slate-400">
+                        <span key={i} className="text-[10px] px-2.5 py-1 rounded-lg bg-slate-900/80 text-slate-400 border border-slate-700/50 backdrop-blur-sm group-hover:border-slate-600 transition-colors">
                             {focus}
                         </span>
                     ))}
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-4 border-t border-slate-700/50">
-                    <div className="flex items-center gap-2 text-slate-500 text-sm">
-                        <Clock className="w-4 h-4" />
-                        <span>{scenario.estimatedTime} min</span>
+                <div className="flex items-center justify-between pt-5 border-t border-white/5">
+                    <div className="flex items-center gap-2 text-slate-500 text-xs font-medium">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>{scenario.estimatedTime} MIN</span>
                     </div>
 
                     {status === 'completed' && (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
                             <span className="text-lg">{scenario.badgeIcon}</span>
-                            <span className="text-xs text-emerald-400 font-medium">{scenario.badge}</span>
+                            <span className="text-[10px] text-emerald-400 font-bold tracking-tighter uppercase">{scenario.badge}</span>
                         </div>
                     )}
 
                     {status === 'unlocked' && (
-                        <span className="text-sm text-teal-400 font-medium">Start →</span>
+                        <div className="flex items-center gap-1 text-teal-400 font-bold text-xs group-hover:translate-x-1 transition-transform">
+                            <span>START MISSION</span>
+                            <Play className="w-3 h-3 fill-current" />
+                        </div>
                     )}
                 </div>
             </div>

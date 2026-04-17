@@ -180,96 +180,103 @@ export default function DecisionImpact({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.4 }}
-        className="max-w-3xl mx-auto px-6 relative"
+        className="max-w-6xl mx-auto px-4 relative h-full flex items-center justify-center p-2 sm:p-6"
       >
         {/* Background page */}
-        <div className="relative rounded-3xl border-2 border-emerald-400/50 bg-gradient-to-br from-emerald-950/80 via-slate-950 to-teal-950/80 overflow-hidden shadow-2xl shadow-emerald-900/40 p-8">
+        <div className="relative rounded-3xl border border-emerald-400/30 bg-gradient-to-br from-emerald-950/90 via-slate-950 to-teal-950/90 overflow-hidden shadow-2xl shadow-emerald-900/40 p-6 lg:p-10 w-full">
           <GreenLines />
           <SuccessParticles />
 
-          <div className="relative z-10">
-            {/* Icon + title */}
-            <div className="flex flex-col items-center text-center mb-8">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* LEFT COLUMN: STATUS & ICON */}
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
               <motion.div
                 initial={{ scale: 0, rotate: -20 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: 'spring', bounce: 0.5, delay: 0.2 }}
-                className="w-24 h-24 rounded-3xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-xl shadow-emerald-500/30 mb-6"
+                className="w-20 h-20 lg:w-28 lg:h-28 rounded-3xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-xl shadow-emerald-500/30"
               >
-                <Trophy className="w-12 h-12 text-white drop-shadow" />
+                <Trophy className="w-10 h-10 lg:w-16 lg:h-16 text-white drop-shadow" />
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 }}
-              >
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-sm font-semibold mb-3">
-                  <CheckCircle2 className="w-4 h-4" />
-                  Scenario Passed — Excellent Decision
-                </div>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 leading-tight">
-                  Mission Success! 🎉
+              <div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-4"
+                >
+                  <CheckCircle2 className="w-3 h-3" />
+                  Mission Accomplished
+                </motion.div>
+                <h2 className="text-3xl lg:text-5xl font-black text-white mb-2 leading-none tracking-tight">
+                  Success! 🎉
                 </h2>
-                <p className="text-emerald-400 text-lg font-medium">Your choices made a real difference.</p>
-              </motion.div>
-            </div>
+                <p className="text-emerald-400 text-base lg:text-lg font-medium max-w-md">
+                  Your expert choices protected the project and the community.
+                </p>
+              </div>
 
-            {/* Impact message */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <Card className="bg-emerald-900/40 border-emerald-400/40 p-6 mb-6">
+              {/* Impact summary card */}
+              <Card className="bg-emerald-400/5 border-emerald-400/20 p-5 w-full backdrop-blur-sm">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <ShieldCheck className="w-5 h-5 text-emerald-300" />
-                  </div>
+                  <ShieldCheck className="w-6 h-6 text-emerald-400 shrink-0" />
                   <div>
-                    <h3 className="text-emerald-200 font-semibold text-lg mb-2">What your decision saved:</h3>
-                    <p className="text-emerald-100 leading-relaxed text-base">{impactText}</p>
+                    <h3 className="text-emerald-200 font-bold text-sm uppercase tracking-widest mb-1">Impact Analysis:</h3>
+                    <p className="text-emerald-50/90 leading-snug text-sm lg:text-base font-medium">
+                      {impactText}
+                    </p>
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </div>
 
-            {/* Consequence detail */}
-            {consequence && (
+            {/* RIGHT COLUMN: OUTCOME & CTA */}
+            <div className="flex flex-col gap-6">
+              {consequence && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <Card className="bg-slate-900/60 border-emerald-500/20 p-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                      <Zap className="w-12 h-12 text-emerald-400" />
+                    </div>
+                    <h4 className="text-emerald-400 font-bold text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
+                       Simulation Data Stream
+                    </h4>
+                    <p className="text-slate-200 leading-relaxed mb-4 text-sm lg:text-base">
+                      {consequence.outcome}
+                    </p>
+                    {consequence.newData && (
+                      <div className="bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
+                        <p className="text-emerald-300 text-sm font-mono">{consequence.newData}</p>
+                      </div>
+                    )}
+                  </Card>
+                </motion.div>
+              )}
+
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.65 }}
+                transition={{ delay: 0.7 }}
+                className="pt-2"
               >
-                <Card className="bg-slate-900/60 border-emerald-500/30 p-5 mb-8">
-                  <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-emerald-400" />
-                    Simulation Outcome
-                  </h4>
-                  <p className="text-slate-300 leading-relaxed mb-2">{consequence.outcome}</p>
-                  {consequence.newData && (
-                    <p className="text-emerald-300 text-sm font-medium">{consequence.newData}</p>
-                  )}
-                </Card>
+                <Button
+                  onClick={onContinueToExit}
+                  size="lg"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white h-16 text-xl font-bold rounded-2xl shadow-lg shadow-emerald-500/20 group"
+                >
+                  Continue to Certificate
+                  <ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+                <p className="text-center text-slate-500 text-[10px] mt-4 uppercase tracking-[0.2em]">
+                  End of Scenario Protocol • Authorized Personnel Only
+                </p>
               </motion.div>
-            )}
-
-            {/* CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="text-center"
-            >
-              <Button
-                onClick={onContinueToExit}
-                size="lg"
-                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 text-white px-10 py-6 text-lg font-bold rounded-2xl shadow-xl shadow-emerald-900/40"
-              >
-                Continue to Exit Ticket
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </motion.div>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -283,7 +290,7 @@ export default function DecisionImpact({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      className="max-w-3xl mx-auto px-6 relative"
+      className="max-w-6xl mx-auto px-4 relative h-full flex items-center justify-center p-2 sm:p-6"
     >
       <AnimatePresence>
         {alarmFlash && (
@@ -297,131 +304,118 @@ export default function DecisionImpact({
         )}
       </AnimatePresence>
 
-      <div className="relative rounded-3xl border-2 border-red-500/60 bg-gradient-to-br from-red-950/80 via-slate-950 to-rose-950/80 overflow-hidden shadow-2xl shadow-red-900/40 p-8">
+      <div className="relative rounded-3xl border border-red-500/40 bg-gradient-to-br from-red-950/90 via-slate-950 to-rose-950/90 overflow-hidden shadow-2xl shadow-red-900/50 p-6 lg:p-10 w-full">
         <RedLines />
         <FailurePulse />
 
-        <div className="relative z-10">
-          {/* Icon + title */}
-          <div className="flex flex-col items-center text-center mb-8">
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* LEFT COLUMN: STATUS & ICON */}
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
             <motion.div
               initial={{ scale: 0, rotate: 20 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: 'spring', bounce: 0.4, delay: 0.2 }}
-              className="w-24 h-24 rounded-3xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center shadow-xl shadow-red-500/40 mb-6"
+              className="w-20 h-20 lg:w-28 lg:h-28 rounded-3xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center shadow-xl shadow-red-500/40"
             >
-              <Skull className="w-12 h-12 text-red-100 drop-shadow" />
+              <Skull className="w-10 h-10 lg:w-16 lg:h-16 text-red-100 drop-shadow" />
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/20 border border-red-400/40 text-red-300 text-sm font-semibold mb-3">
-                <AlertOctagon className="w-4 h-4" />
-                Scenario Failed — Critical Outcome
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 leading-tight">
+            <div>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 border border-red-400/40 text-red-300 text-xs font-bold uppercase tracking-wider mb-4"
+              >
+                <AlertOctagon className="w-3 h-3" />
+                Critical Error Detected
+              </motion.div>
+              <h2 className="text-3xl lg:text-5xl font-black text-white mb-2 leading-none tracking-tight">
                 Decision Failed ❌
               </h2>
-              <p className="text-red-400 text-lg font-medium">Your choices led to a harmful outcome.</p>
-            </motion.div>
-          </div>
+              <p className="text-red-400 text-base lg:text-lg font-medium max-w-md">
+                Your choice led to negative consequences. Analyze the data and try again.
+              </p>
+            </div>
 
-          {/* Accountability message */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Card className="bg-red-950/60 border-red-500/50 p-6 mb-6">
+            {/* Responsibility Card */}
+            <Card className="bg-red-400/5 border-red-400/20 p-5 w-full backdrop-blur-sm">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-red-500/20 border border-red-400/40 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Skull className="w-5 h-5 text-red-300" />
-                </div>
+                <AlertOctagon className="w-6 h-6 text-red-400 shrink-0" />
                 <div>
-                  <h3 className="text-red-200 font-semibold text-lg mb-2">You are responsible for:</h3>
-                  <p className="text-red-100 leading-relaxed text-base font-medium">{impactText}</p>
-                  <p className="text-red-300 text-sm mt-3 italic">
-                    A scientist's decisions have real consequences. Review the evidence and choose again.
+                  <h3 className="text-red-200 font-bold text-sm uppercase tracking-widest mb-1">Accountability Log:</h3>
+                  <p className="text-red-50/90 leading-snug text-sm lg:text-base font-medium italic">
+                    "{impactText}"
                   </p>
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </div>
 
-          {/* Consequence detail */}
-          {consequence && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.65 }}
-            >
-              <Card className="bg-slate-900/60 border-red-500/30 p-5 mb-8">
-                <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                  <AlertOctagon className="w-4 h-4 text-red-400" />
-                  What Happened in the Simulation
-                </h4>
-                <p className="text-slate-300 leading-relaxed mb-2">{consequence.outcome}</p>
-                {consequence.newData && (
-                  <p className="text-red-300 text-sm font-medium">{consequence.newData}</p>
-                )}
-                <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30">
-                  <p className="text-red-200 text-sm font-semibold mb-1">Why this is a failure:</p>
-                  <p className="text-red-100 text-sm leading-relaxed">
-                    {consequence.message}
+          {/* RIGHT COLUMN: OUTCOME & ACTIONS */}
+          <div className="flex flex-col gap-6">
+            {consequence && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Card className="bg-slate-900/60 border-red-500/20 p-6 relative overflow-hidden">
+                  <h4 className="text-red-400 font-bold text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <Zap className="w-4 h-4" /> Post-Incident Report
+                  </h4>
+                  <p className="text-slate-200 leading-relaxed mb-4 text-sm lg:text-base">
+                    {consequence.outcome}
                   </p>
-                </div>
-              </Card>
-            </motion.div>
-          )}
+                  
+                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                    <p className="text-red-200 text-xs font-bold uppercase tracking-widest mb-1">Expert Evaluation:</p>
+                    <p className="text-red-100 text-sm leading-relaxed">
+                      {consequence.message}
+                    </p>
+                  </div>
+                </Card>
+              </motion.div>
+            )}
 
-          {/* Action buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <Button
-              onClick={onRetryScene1}
-              size="lg"
-              className="bg-gradient-to-r from-red-600 to-rose-600 hover:opacity-90 text-white px-8 py-5 text-base font-bold rounded-2xl shadow-lg shadow-red-900/40"
-            >
-              <RotateCcw className="w-5 h-5 mr-2" />
-              Retry from Scene 1
-            </Button>
-
-            <Button
-              onClick={onReplayVideo}
-              size="lg"
-              variant="outline"
-              className="border-red-500/50 text-red-300 hover:bg-red-500/10 px-8 py-5 text-base font-semibold rounded-2xl"
-            >
-              <Video className="w-5 h-5 mr-2" />
-              Replay Scenario Video
-            </Button>
-          </motion.div>
-
-          {/* teacher override */}
-          {isTeacher && (
+            {/* Action buttons */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-              className="text-center mt-4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="flex flex-col sm:flex-row gap-4"
             >
+              <Button
+                onClick={onRetryScene1}
+                size="lg"
+                className="flex-1 bg-red-600 hover:bg-red-500 text-white h-14 text-base font-bold rounded-xl shadow-lg shadow-red-900/40"
+              >
+                <RotateCcw className="w-5 h-5 mr-2" />
+                Retry Investigation
+              </Button>
+
+              <Button
+                onClick={onReplayVideo}
+                size="lg"
+                variant="outline"
+                className="flex-1 border-red-500/50 text-red-300 hover:bg-red-500/10 h-14 text-base font-bold rounded-xl"
+              >
+                <Video className="w-5 h-5 mr-2" />
+                Re-examine Evidence
+              </Button>
+            </motion.div>
+
+            {/* teacher override */}
+            {isTeacher && (
               <Button
                 onClick={onContinueToExit}
                 variant="ghost"
-                className="text-purple-400 hover:bg-purple-500/10 text-sm"
+                className="text-purple-400 hover:bg-purple-500/10 text-xs uppercase tracking-widest w-fit mx-auto"
               >
-                Skip to Exit Ticket (Teacher)
-                <ArrowRight className="w-4 h-4 ml-1" />
+                Skip to Exit (Teacher Override)
               </Button>
-            </motion.div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </motion.div>

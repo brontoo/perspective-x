@@ -1,15 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, AlertTriangle, Timer, Sparkles } from 'lucide-react';
+import { ArrowRight, AlertTriangle, Timer, Sparkles, Activity, Cpu, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
+import ScenarioVisual from './ScenarioVisual';
 
-export default function SceneTwo({ scene, scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
+// Custom typewriter hook for HUD feel
+function useTypewriter(text, speed = 30) {
+    const [displayedText, setDisplayedText] = useState('');
+    useEffect(() => {
+        setDisplayedText('');
+        let i = 0;
+        const timer = setInterval(() => {
+            setDisplayedText((prev) => prev + text.charAt(i));
+            i++;
+            if (i >= text.length) clearInterval(timer);
+        }, speed);
+        return () => clearInterval(timer);
+    }, [text]);
+    return displayedText;
+}
+
+export default function SceneTwo({ scene, scenarioId, scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [justification, setJustification] = useState('');
     const [showThinkTimer, setShowThinkTimer] = useState(true);
     const [thinkTime, setThinkTime] = useState(120);
+    const displayedNarrative = useTypewriter(scene.narrative || '');
 
     const accent = theme.accent || 'from-teal-500 to-emerald-500';
     const border = theme.border || 'border-teal-500/30';
@@ -60,18 +78,61 @@ export default function SceneTwo({ scene, scenarioTitle, onComplete, isTeacher =
                 <h2 className="text-2xl font-bold text-white">Time to Decide</h2>
             </div>
 
-            {/* Narrative */}
-            <Card className={`bg-slate-900/50 border ${border} p-6 mb-6`}>
-                <div className="flex items-start gap-4">
-                    <div className={`w-12 h-12 rounded-xl border ${border} bg-slate-800/50 flex items-center justify-center flex-shrink-0`}>
-                        <AlertTriangle className={`w-6 h-6 ${text}`} />
+            {/* Narrative - HUD Style */}
+            <div className={`relative overflow-hidden rounded-3xl border ${border} bg-slate-950/80 backdrop-blur-md shadow-2xl mb-8`}>
+                {/* Scanning Line */}
+                <div className="absolute inset-x-0 h-px bg-teal-500/10 animate-scan pointer-events-none" />
+                
+                <div className="p-8 relative">
+                    {/* HUD Corners */}
+                    <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-teal-500/30 rounded-tl-lg" />
+                    <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-teal-500/30 rounded-tr-lg" />
+
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-xl bg-slate-900 border ${border}`}>
+                                <Cpu className={`w-5 h-5 ${text} animate-pulse`} />
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-white uppercase tracking-widest">Update Transmission</h3>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                                    <span className="text-[10px] font-mono text-slate-500">RECEIVING UPDATE...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <Activity className="w-6 h-6 text-teal-500/50" />
                     </div>
-                    <div>
-                        <h3 className="text-lg font-semibold text-white mb-2">New Development</h3>
-                        <p className="text-slate-300 leading-relaxed">{scene.narrative}</p>
+
+                    {/* Integrated Visual */}
+                    <div className="mb-6 h-48 bg-slate-900/50 rounded-2xl border border-white/5 overflow-hidden flex items-center justify-center">
+                        <ScenarioVisual 
+                            scenarioId={scenarioId} 
+                            sceneIndex={1} 
+                            avatar={scene.avatar}
+                        />
+                    </div>
+
+                    <div className="min-h-[80px]">
+                        <p className="text-slate-300 leading-relaxed text-lg font-medium font-serif italic">
+                            {displayedNarrative}
+                            <span className="inline-block w-2 h-5 bg-teal-500 ml-1 animate-pulse" />
+                        </p>
+                    </div>
+
+                    {/* Metadata Footer */}
+                    <div className="flex gap-6 mt-6 pt-4 border-t border-white/5">
+                        <div className="flex flex-col">
+                            <span className="text-[7px] text-slate-500 uppercase">Timestamp</span>
+                            <span className="text-[10px] font-mono text-slate-400">T+{Math.floor(Date.now()/1000000)}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-[7px] text-slate-500 uppercase">Impact Level</span>
+                            <span className="text-[10px] font-mono text-blue-400">MODERATE</span>
+                        </div>
                     </div>
                 </div>
-            </Card>
+            </div>
 
             {/* Think Timer */}
             {showThinkTimer && (
