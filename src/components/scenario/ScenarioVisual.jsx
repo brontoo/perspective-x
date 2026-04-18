@@ -894,14 +894,27 @@ export default function ScenarioVisual({ scenarioId, sceneIndex, showData, avata
             transition={{ duration: 0.4 }}
             className="w-full h-full flex justify-center items-center p-4"
         >
-            <div className="w-full max-w-3xl mx-auto space-y-5 text-center">
+            <div className="w-full max-w-3xl mx-auto space-y-5 text-center relative">
+                {hasEnhancedLayout && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.35 }}
+                        className="absolute inset-x-12 top-10 h-20 bg-teal-500/10 blur-3xl pointer-events-none"
+                    />
+                )}
+
                 {(title || subtitle) && (
                     <motion.div
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1, duration: 0.35 }}
-                        className="space-y-2"
+                        className="space-y-2 relative z-10"
                     >
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-teal-500/20 bg-slate-900/70 text-[10px] font-semibold uppercase tracking-[0.2em] text-teal-300">
+                            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                            Visual Briefing
+                        </div>
                         {title && <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>}
                         {subtitle && <p className="text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">{subtitle}</p>}
                     </motion.div>
