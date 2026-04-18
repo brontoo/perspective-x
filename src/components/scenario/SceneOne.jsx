@@ -76,39 +76,39 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
                             {/* Scenario Visual Component */}
                             <ScenarioVisual scenarioId={scenarioId} sceneIndex={0} />
                         </div>
-                        <div className="p-6">
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className={`p-2 rounded-lg bg-slate-800 border ${border}`}>
-                                    <AlertCircle className={`w-5 h-5 ${text}`} />
+                        <div className="p-8">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className={`p-3 rounded-xl bg-slate-800 border ${border}`}>
+                                    <AlertCircle className={`w-6 h-6 ${text}`} />
                                 </div>
-                                <h3 className="text-xl font-bold text-white">Current Situation</h3>
+                                <h3 className="text-2xl font-bold text-white tracking-tight">Current Situation</h3>
                             </div>
-                            <p className="text-slate-300 leading-relaxed text-lg">
+                            <p className="text-slate-300 leading-relaxed text-lg space-y-4">
                                 {scene.narrative}
                             </p>
                         </div>
                     </Card>
 
                     {/* Learning Objective */}
-                    <Card className="bg-slate-800/40 border-slate-700 p-6">
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Learning Objective</p>
-                        <p className="text-slate-300">{scene.learningObjective}</p>
+                    <Card className="bg-slate-800/40 border-slate-700 p-8">
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Learning Objective</p>
+                        <p className="text-slate-300 text-lg leading-relaxed">{scene.learningObjective}</p>
                     </Card>
                 </div>
 
                 {/* Right Column */}
                 <div className="space-y-6">
                     {/* Question */}
-                    <div className="mb-6">
-                        <h2 className="text-2xl font-bold text-white mb-2">{scene.question}</h2>
-                        <p className={`text-sm ${text}`}>Select the best option below:</p>
+                    <div className="mb-8">
+                        <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">{scene.question}</h2>
+                        <p className={`text-base ${text} font-medium`}>Select the best option below:</p>
                     </div>
 
                     {/* Think Timer */}
                     {showThinkTimer && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-4">
-                            <div className="px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                                <p className="text-amber-200 text-sm font-medium">
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6">
+                            <div className="px-5 py-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                                <p className="text-amber-200 text-base font-medium">
                                     Critical Thinking Phase: <span className="font-bold text-amber-400">{thinkTime}s</span>
                                 </p>
                             </div>
@@ -116,17 +116,17 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
                     )}
 
                     {/* Options List */}
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         {scene.options.map((option) => (
                             <button
                                 key={option.id}
                                 onClick={() => handleSelect(option)}
-                                className={`w-full text-left p-4 rounded-lg border transition-all ${selectedOption?.id === option.id 
+                                className={`w-full text-left p-5 rounded-xl border transition-all ${selectedOption?.id === option.id 
                                     ? `border-2 ${border} bg-slate-800/50` 
                                     : 'border-slate-700 bg-slate-900/50 hover:bg-slate-800/30'
                                 }`}
                             >
-                                <p className="font-medium text-white">{option.text}</p>
+                                <p className="font-medium text-white text-lg leading-snug">{option.text}</p>
                             </button>
                         ))}
                     </div>
@@ -139,30 +139,30 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
                             exit={{ opacity: 0, height: 0 }}
                             className="space-y-4"
                         >
-                            <Card className={`border ${border} bg-slate-900/50 p-6`}>
-                                <h4 className="font-bold text-white mb-3">Scientific Justification</h4>
-                                <p className="text-slate-400 text-sm mb-3">
+                            <Card className={`border ${border} bg-slate-900/50 p-8`}>
+                                <h4 className="font-bold text-white text-xl mb-4">Scientific Justification</h4>
+                                <p className="text-slate-400 text-base mb-4">
                                     {scene.justificationStarter || 'Explain your reasoning:'}
                                 </p>
                                 <Textarea
                                     value={justification}
                                     onChange={(e) => setJustification(e.target.value)}
                                     placeholder="Enter your scientific reasoning..."
-                                    className="bg-slate-950/50 border-slate-700 text-white min-h-[100px]"
+                                    className="bg-slate-950/50 border-slate-700 text-white min-h-[120px] text-base"
                                 />
                             </Card>
 
-                            <div className={`p-4 rounded-lg border ${selectedOption.correct 
+                            <div className={`p-5 rounded-xl border ${selectedOption.correct 
                                 ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200' 
                                 : 'border-amber-500/40 bg-amber-500/10 text-amber-200'
                             }`}>
-                                <p className="text-sm">{selectedOption.feedback}</p>
+                                <p className="text-base leading-relaxed">{selectedOption.feedback}</p>
                             </div>
                         </motion.div>
                     )}
 
                     {/* Action Buttons */}
-                    <div className="pt-4">
+                    <div className="pt-6 space-y-4">
                         <Button
                             onClick={handleContinue}
                             disabled={!selectedOption || (justification.length < 15 && !isTeacher)}
@@ -173,7 +173,7 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
                         </Button>
 
                         {selectedOption && justification.length < 15 && !isTeacher && (
-                            <p className="text-amber-500/80 text-xs text-center mt-3">
+                            <p className="text-amber-500/80 text-sm text-center">
                                 Please provide a more detailed justification (min 15 characters)
                             </p>
                         )}
