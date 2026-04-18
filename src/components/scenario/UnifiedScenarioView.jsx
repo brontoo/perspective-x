@@ -135,3 +135,158 @@ export default function UnifiedScenarioView({ scenario, theme, onComplete }) {
     </div>
   );
 }
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '@/lib/supabaseClient';
+import ScenarioNarrator from './ScenarioNarrator';
+import DecisionQuestion from './DecisionQuestion';
+import DecisionImpact from './DecisionImpact';
+import ExitTicket from './ExitTicket';
+
+const PHASES = {
+  NARRATION: 'narration',
+  DECISION: 'decision',
+  IMPACT: 'impact',
+  REFLECTION: 'reflection'
+};
+
+export default function UnifiedScenarioView({ scenarioId, studentId, onComplete }) {
+  // State management
+  const [phase, setPhase] = useState(PHASES.NARRATION);
+  const [scenarioData, setScenarioData] = useState(null);
+  const [studentChoice, setStudentChoice] = useState(null);
+  const [answers, setAnswers] = useState({});
+  const [score, setScore] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Load scenario data
+  useEffect(() => {
+    const loadScenario = async () => {
+      try {
+        const { data } = await supabase
+          .from('scenarios')
+          .select('*')
+          .eq('id', scenarioId)
+          .single();
+        
+        if (data) {
+          setScenarioData(data);
+          setLoading(false);
+        } else {
+          throw new Error('Scenario not found');
+        }
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    loadScenario();
+  }, [scenarioId]);
+
+  // Save progress to database
+  const saveProgress = async (phaseData = {}) => {
+    try {
+      await supabase
+        .from('scenario_progress')
+        .upsert({
+          student_id: studentId,
+          scenario_id: scenarioId,
+          phase,
+          data: phaseData,
+          updated_at: new Date().toISOString()
+        });
+    } catch (err) {
+      console.error('Error saving progress:', err);
+    }
+  };
+
+  // Phase transition handlers
+  const moveToDecision = (narrationData) => {
+    setAnswers(prev => ({ ...prev, narration: narrationData }));
+    saveProgress({ narration: narrationData });
+    setPhase(PHASES.DECISION);
+  };
+
+  const moveToImpact = (decisionData) => {
+    setStudentChoice(decisionData.choice);
+    setAnswers(prev => ({ ...prev, decision: decisionData }));
+    saveProgress({ decision: decisionData });
+    setPhase(PHASES.IMPACT);
+  };
+
+  const moveToReflection = (impactData) => {
+    setAnswers(prev => ({ ...prev, impact: impactData }));
+    saveProgress({ impact: impactData });
+    setPhase(PHASES.REFLECTION);
+  };
+
+  const handleComplete = (finalScore) => {
+    setScore(finalScore);
+    onComplete({
+      scenarioId,
+      studentId,
+      score: finalScore,
+      answers
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-6 text-center">
+        <p className="text-red-300 mb-4">{error}</p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-red-500/10 border border-red-500/30 rounded hover:bg-red-500/20 text-red-200"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <AnimatePresence mode="wait">
+        {phase === PHASES.NARRATION && (
+          <ScenarioNarrator 
+            scenario={scenarioData}
+            onComplete={moveToDecision}
+          />
+        )}
+
+        {phase === PHASES.DECISION && (
+          <DecisionQuestion 
+            scenario={scenarioData}
+            onDecisionMade={moveToImpact}
+          />
+        )}
+
+        {phase === PHASES.IMPACT && (
+          <DecisionImpact 
+            scenario={scenarioData}
+            studentChoice={studentChoice}
+            onImpactShown={moveToReflection}
+          />
+        )}
+
+        {phase === PHASES.REFLECTION && (
+          <ExitTicket 
+            scenario={scenarioData}
+            studentChoice={studentChoice}
+            onComplete={handleComplete}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
