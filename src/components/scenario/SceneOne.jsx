@@ -232,6 +232,10 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
                                         className="bg-slate-950/50 border-slate-700 text-white min-h-[100px] focus:ring-1 focus:ring-teal-500"
                                     />
                                 </Card>
+
+                                <div className={`mt-3 p-3 rounded-xl border ${selectedOption.correct ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200' : 'border-amber-500/40 bg-amber-500/10 text-amber-200'}`}>
+                                    <p className="text-sm leading-relaxed">{selectedOption.feedback || 'Review the scientific evidence before continuing.'}</p>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
