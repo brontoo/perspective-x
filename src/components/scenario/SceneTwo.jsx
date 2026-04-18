@@ -113,11 +113,31 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle, onComplete,
                         />
                     </div>
 
-                    <div className="min-h-[80px]">
-                        <p className="text-slate-300 leading-relaxed text-lg font-medium font-serif italic">
-                            {displayedNarrative}
-                            <span className="inline-block w-2 h-5 bg-teal-500 ml-1 animate-pulse" />
-                        </p>
+                    <div className="min-h-[80px] space-y-3">
+                        {narrativeParagraphs.map((paragraph, i) => (
+                            <motion.p
+                                key={i}
+                                initial={{ opacity: 0.5 }}
+                                animate={{
+                                    opacity: displayedNarrative.includes(paragraph) ? 1 : 0.4,
+                                    filter: displayedNarrative.includes(paragraph) ? 'none' : 'blur(0.5px)'
+                                }}
+                                transition={{ duration: 0.3 }}
+                                className={`text-lg leading-relaxed font-medium font-serif italic ${
+                                    displayedNarrative.includes(paragraph) 
+                                        ? 'text-slate-100' 
+                                        : 'text-slate-500'
+                                }`}
+                            >
+                                {displayedNarrative.includes(paragraph) 
+                                    ? paragraph 
+                                    : paragraph.replace(/./g, match => match === ' ' ? ' ' : '·')}
+                                {displayedNarrative.includes(paragraph) && 
+                                 !displayedNarrative.endsWith(paragraph) && (
+                                    <span className="inline-block w-2 h-5 bg-teal-500 ml-1 animate-pulse" />
+                                )}
+                            </motion.p>
+                        ))}
                     </div>
 
                     {/* Metadata Footer */}
