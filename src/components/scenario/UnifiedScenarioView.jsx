@@ -69,20 +69,36 @@ export default function UnifiedScenarioView({ scenario, theme, onComplete }) {
     return () => clearInterval(timer);
   }, [phase, scenario.narrative, retryCount]);
 
-  // Save phase progress to database
-  const savePhaseProgress = async (phaseName, phaseData) => {
-    try {
-      await supabase
-        .from('scenario_progress')
-        .upsert({
-          phase: phaseName,
-          data: phaseData,
-          timestamp: new Date().toISOString()
-        });
-    } catch (error) {
-      console.error('Error saving phase progress:', error);
+  // Enhanced progress saving with retries and validation
+  const savePhaseProgress = useCallback(async (phaseName, phaseData = {}) => {
+    setLoadingState(LOADING_STATES.LOADING);
+    let attempts = 0;
+    
+    while (attempts < MAX_RETRIES) {
+      try {
+        const { error: supabaseError } = await supabase
+          .from('scenario_progress')
+          .upsert({
+            phase: phaseName,
+            data: phaseData,
+            timestamp: new Date().toISOString()
+          });
+
+        if (supabaseError) throw supabaseError;
+        
+        setLoadingState(LOADING_STATES.SUCCESS);
+        return;
+      } catch (err) {
+        attempts++;
+        if (attempts >= MAX_RETRIES) {
+          setError(err);
+          setLoadingState(LOADING_STATES.ERROR);
+          throw err;
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
     }
-  };
+  }, []);
 
   // Phase transition handler
   const handlePhaseTransition = (nextPhase, phaseData = {}) => {
