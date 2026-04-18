@@ -71,7 +71,7 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left Column */}
                 <div className="space-y-6">
-                    <Card className={`overflow-hidden border ${border} bg-slate-900/50 backdrop-blur-sm shadow-2xl ${glow}`}>
+                    <Card className={`overflow-hidden border ${border} bg-slate-900/50 backdrop-blur-sm shadow-2xl ${theme.glow}`}>
                         <div className="relative aspect-video">
                             {/* Scenario Visual Component */}
                             <ScenarioVisual scenarioId={scenarioId} sceneIndex={0} />
