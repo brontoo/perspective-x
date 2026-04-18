@@ -41,6 +41,9 @@ const SCENE_VISUALS = {
                     <div className="relative">
                         <motion.div animate={{ opacity: [0.8, 1, 0.8] }} transition={{ duration: 3, repeat: Infinity }} className="w-24 h-32 bg-slate-800 rounded-t-2xl border-2 border-blue-500/40 flex flex-col items-center p-3 relative overflow-hidden">
                             <div className="absolute inset-0 bg-blue-500/5 animate-pulse" />
+                            <div className="absolute -top-5 left-0 right-0 flex justify-center">
+                                <span className="text-[8px] font-mono text-blue-300 bg-blue-900/50 px-2 py-0.5 rounded-full border border-blue-700/20">Water Intake</span>
+                            </div>
                             <div className="w-full h-1 bg-blue-500/20 rounded-full mb-4 overflow-hidden">
                                 <motion.div animate={{ x: ['-100%', '100%'] }} transition={{ duration: 2, repeat: Infinity }} className="w-1/2 h-full bg-blue-400/60" />
                             </div>
@@ -52,8 +55,9 @@ const SCENE_VISUALS = {
                     </div>
                     <div className="flex flex-col items-center gap-4">
                         <Droplets className="w-10 h-10 text-blue-400 animate-bounce" />
-                        <div className="h-1 w-20 bg-slate-800 rounded-full overflow-hidden">
+                        <div className="relative h-1 w-20 bg-slate-800 rounded-full overflow-hidden">
                             <motion.div animate={{ width: ['0%', '100%'] }} transition={{ duration: 4, repeat: Infinity }} className="h-full bg-blue-500" />
+                            <span className="absolute -top-5 left-0 right-0 text-[8px] font-mono text-blue-300 text-center">Flow Rate</span>
                         </div>
                     </div>
                 </div>
@@ -63,6 +67,7 @@ const SCENE_VISUALS = {
             <HUDFrame title="Groundwater Plume Analysis">
                 <div className="relative w-64 h-40 bg-slate-950/40 rounded-lg overflow-hidden border border-white/5">
                     <div className="absolute top-4 left-4 text-2xl">🏭</div>
+                    <div className="absolute top-1 left-4 text-[8px] font-mono text-orange-300 bg-orange-900/50 px-2 py-0.5 rounded-full border border-orange-700/20">Factory</div>
                     <motion.div 
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1.5, opacity: 0.3 }}
@@ -75,6 +80,7 @@ const SCENE_VISUALS = {
                         className="absolute top-8 left-12 w-20 h-8 bg-gradient-to-r from-orange-500/40 to-transparent rounded-full"
                     />
                     <div className="absolute bottom-4 right-4 text-2xl">🏙️</div>
+                    <div className="absolute bottom-1 right-4 text-[8px] font-mono text-blue-300 bg-blue-900/50 px-2 py-0.5 rounded-full border border-blue-700/20">Residential</div>
                 </div>
             </HUDFrame>
         ),
@@ -82,6 +88,9 @@ const SCENE_VISUALS = {
             <HUDFrame title="Lab Result - Nitrate Sample">
                 <div className="flex flex-col items-center gap-4">
                     <div className="relative">
+                        <div className="absolute -top-4 left-0 right-0 flex justify-center">
+                            <span className="text-[8px] font-mono text-teal-300 bg-teal-900/50 px-2 py-0.5 rounded-full border border-teal-700/20">Sample Tube</span>
+                        </div>
                         <FlaskConical className="w-16 h-16 text-teal-400" />
                         <motion.div 
                             animate={{ height: ['20%', '60%', '20%'] }}
@@ -89,15 +98,20 @@ const SCENE_VISUALS = {
                             className="absolute bottom-2 left-1/2 -translate-x-1/2 w-6 bg-teal-500/30 rounded-b-sm"
                         />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mt-2">
                         {[1,2,3].map(i => (
                             <motion.div 
                                 key={i}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: i * 0.5 }}
-                                className="px-3 py-1 bg-red-500/20 border border-red-500/40 rounded text-[10px] text-red-300 font-mono"
+                                className="relative px-3 py-1 bg-red-500/20 border border-red-500/40 rounded text-[10px] text-red-300 font-mono"
                             >
+                                {i === 2 && (
+                                    <span className="absolute -bottom-4 left-0 right-0 text-center text-[8px] font-mono text-white/50">
+                                        safe limit: 50mg/L
+                                    </span>
+                                )}
                                 NO₃⁻: {45 + i * 2} mg/L
                             </motion.div>
                         ))}
