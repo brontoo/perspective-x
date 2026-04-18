@@ -4,7 +4,8 @@ import { ArrowRight, AlertCircle, Timer, Sparkles, BookOpen } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import ScenarioVisual from './ScenarioVisual';
+import ScenarioVisual from './ScenarioVisual'; 
+import ScenarioVisualEngine from './ScenarioVisualEngine';
 
 // Custom typewriter hook for HUD feel
 function useTypewriter(text, speed = 30) {
@@ -60,7 +61,7 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
             justification: 'Teacher preview - skipped'
         });
     };
-
+console.log("🔥 SceneOne NEW VERSION LOADED");
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -73,12 +74,11 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
                 <div className="space-y-6">
                     <Card className={`overflow-hidden border ${border} bg-slate-900/50 backdrop-blur-sm shadow-2xl ${theme.glow}`}>
                         <div className="relative aspect-video">
-                            {/* Scenario Visual Component with safe defaults */}
-                            <ScenarioVisualEngine 
-                                type={scene.type || 'default'} 
-                                data={scene.data || {}} 
-                            />
-                        </div>
+    <ScenarioVisualEngine 
+        type="water"
+        data={{ chloride: 60, nitrate: 52 }}
+    />
+</div>
                         <div className="p-8">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className={`p-3 rounded-xl bg-slate-800 border ${border}`}>
