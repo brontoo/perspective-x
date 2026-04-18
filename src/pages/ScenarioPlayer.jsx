@@ -1,3 +1,4 @@
+import ScenarioVisualEngine from "@/components/scenario/ScenarioVisualEngine";
 import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
