@@ -1,42 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import ScenarioVisualEngine from './ScenarioVisualEngine';
 import { supabase } from '@/lib/supabaseClient';
+import { ErrorBoundary } from 'react-error-boundary';
+import { Loader } from '@/components/ui/loader';
+import { validateScenarioData } from '@/lib/validators';
 
 const PHASES = {
   NARRATION: 'narration',
   DECISION: 'decision',
   IMPACT: 'impact',
-  REFLECTION: 'reflection'
+  REFLECTION: 'reflection',
+  COMPLETION: 'completion'
+};
+
+const MAX_RETRIES = 3;
+const LOADING_STATES = {
+  IDLE: 'idle',
+  LOADING: 'loading',
+  SUCCESS: 'success',
+  ERROR: 'error'
 };
 
 export default function UnifiedScenarioView({ scenario, theme, onComplete }) {
   const [phase, setPhase] = useState(PHASES.NARRATION);
-  const [scenarioData, setScenarioData] = useState(scenario);
+  const [scenarioData, setScenarioData] = useState(() => validateScenarioData(scenario));
   const [studentChoice, setStudentChoice] = useState(null);
   const [answers, setAnswers] = useState({});
   const [score, setScore] = useState(0);
   const [narrationText, setNarrationText] = useState('');
   const [isNarrationComplete, setIsNarrationComplete] = useState(false);
+  const [loadingState, setLoadingState] = useState(LOADING_STATES.IDLE);
+  const [retryCount, setRetryCount] = useState(0);
+  const [error, setError] = useState(null);
 
-  // Typewriter effect for narration
-  useEffect(() => {
+  // Enhanced typewriter effect with error handling
+  const typewriterEffect = useCallback(() => {
     if (phase !== PHASES.NARRATION) return;
 
+    setLoadingState(LOADING_STATES.LOADING);
     let i = 0;
     const timer = setInterval(() => {
-      setNarrationText(prev => prev + scenario.narrative.charAt(i));
-      i++;
-      if (i >= scenario.narrative.length) {
+      try {
+        setNarrationText(prev => {
+          const nextChar = scenario.narrative.charAt(i);
+          if (!nextChar) throw new Error('Invalid character in narrative');
+          return prev + nextChar;
+        });
+        i++;
+        if (i >= scenario.narrative.length) {
+          clearInterval(timer);
+          setIsNarrationComplete(true);
+          setLoadingState(LOADING_STATES.SUCCESS);
+        }
+      } catch (err) {
         clearInterval(timer);
-        setIsNarrationComplete(true);
+        setError(err);
+        setLoadingState(LOADING_STATES.ERROR);
+        if (retryCount < MAX_RETRIES) {
+          setRetryCount(prev => prev + 1);
+          setTimeout(typewriterEffect, 1000);
+        }
       }
     }, 30);
 
     return () => clearInterval(timer);
-  }, [phase, scenario.narrative]);
+  }, [phase, scenario.narrative, retryCount]);
 
   // Save phase progress to database
   const savePhaseProgress = async (phaseName, phaseData) => {
