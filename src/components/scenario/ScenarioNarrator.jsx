@@ -1,137 +1,117 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Loader } from '@/components/ui/loader';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Play } from 'lucide-react';
 
-const MAX_RETRIES = 3;
 const WORD_DELAY = 80;
-const INITIAL_DELAY = 500;
+const INITIAL_DELAY = 1500;
 
-export default function ScenarioNarrator({ scenario, onComplete }) {
+export default function ScenarioNarrator({ scenario, onNarrationComplete }) {
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
-  const [loadingState, setLoadingState] = useState('idle');
-  const [error, setError] = useState(null);
-  const [retryCount, setRetryCount] = useState(0);
+  const [showCharacter, setShowCharacter] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  // Enhanced typewriter effect with error handling
-  const startTypewriter = useCallback(() => {
-    if (!scenario?.narrative) {
-      setError('No narrative content found');
-      return;
-    }
+  // Typewriter effect
+  const startNarration = useCallback(() => {
+    if (!scenario?.narrative) return;
 
-    setLoadingState('loading');
-    let i = 0;
     const words = scenario.narrative.split(' ');
+    let i = 0;
     let currentSentence = '';
 
     const timer = setInterval(() => {
-      try {
-        if (i >= words.length) {
-          clearInterval(timer);
-          setIsComplete(true);
-          setLoadingState('complete');
-          return;
-        }
-
-        const word = words[i];
-        // Add punctuation-aware spacing
-        currentSentence += (word.match(/[.,!?]/) ? '' : ' ') + word;
-        setDisplayedText(currentSentence.trim());
-        i++;
-      } catch (err) {
+      if (i >= words.length) {
         clearInterval(timer);
-        setError(err.message);
-        setLoadingState('error');
-        if (retryCount < MAX_RETRIES) {
-          setRetryCount(prev => prev + 1);
-          setTimeout(startTypewriter, 1000);
-        }
+        setIsComplete(true);
+        onNarrationComplete();
+        return;
       }
+
+      const word = words[i];
+      // Add punctuation-aware spacing
+      currentSentence += (word.match(/[.,!?]/) ? '' : ' ') + word;
+      setDisplayedText(currentSentence.trim());
+      setProgress((i / words.length) * 100);
+      i++;
     }, WORD_DELAY);
 
     return () => clearInterval(timer);
-  }, [scenario?.narrative, retryCount]);
+  }, [scenario?.narrative, onNarrationComplete]);
 
+  // Show character info after delay
   useEffect(() => {
     const timeout = setTimeout(() => {
-      startTypewriter();
+      setShowCharacter(true);
     }, INITIAL_DELAY);
 
     return () => clearTimeout(timeout);
-  }, [startTypewriter]);
+  }, []);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="bg-slate-900/50 border border-slate-700 rounded-xl p-8"
-      aria-live="polite"
-      aria-busy={!isComplete}
+      className="bg-black/90 border-2 border-emerald-500/30 rounded-xl p-8 max-w-3xl mx-auto"
     >
-      <div className="flex items-start gap-6">
-        <motion.div
-          initial={{ scale: 0.9 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200 }}
-          className="w-20 h-20 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-3xl relative"
-        >
-          {scenario.character?.avatar || '🧑‍🔬'}
-          {loadingState === 'loading' && (
-            <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center">
-              <Loader className="w-6 h-6 text-teal-500 animate-spin" />
+      {/* Character Info */}
+      <AnimatePresence>
+        {showCharacter && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="flex items-center gap-6 mb-8"
+          >
+            <div className="w-20 h-20 rounded-full bg-emerald-500/10 border-2 border-emerald-500/30 flex items-center justify-center text-3xl">
+              {scenario.character?.avatar || '🧑‍🔬'}
             </div>
-          )}
-        </motion.div>
-        
-        <div className="flex-1">
-          <h3 className="text-xl font-bold text-teal-400 mb-2">
-            {scenario.character?.name || 'Scientist'}
-          </h3>
-          
-          <div className="min-h-[120px]">
-            {error ? (
-              <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
-                <p className="text-red-300">{error}</p>
-                {retryCount < MAX_RETRIES && (
-                  <button
-                    onClick={startTypewriter}
-                    className="mt-2 px-3 py-1.5 text-sm bg-red-500/10 border border-red-500/30 rounded hover:bg-red-500/20"
-                  >
-                    Retry
-                  </button>
-                )}
-              </div>
-            ) : (
-              <p className="text-slate-300 leading-relaxed">
-                {displayedText}
-                {!isComplete && (
-                  <span 
-                    className="inline-block w-2 h-4 bg-teal-400 ml-1 animate-pulse"
-                    aria-hidden="true"
-                  />
-                )}
+            <div>
+              <h2 className="text-2xl font-bold text-white">
+                {scenario.character?.name || 'Scientist'}
+              </h2>
+              <p className="text-emerald-400 text-sm mt-1">
+                {scenario.character?.title || 'Researcher'}
               </p>
-            )}
-          </div>
-        </div>
+              <p className="text-emerald-400 text-sm mt-1">
+                {scenario.character?.titleAr || 'باحث'}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Narration Text */}
+      <div className="min-h-[200px]">
+        <p className="text-white text-lg leading-relaxed">
+          {displayedText}
+          {!isComplete && (
+            <span className="inline-block w-2 h-4 bg-emerald-400 ml-1 animate-pulse" />
+          )}
+        </p>
       </div>
 
-      {isComplete && (
+      {/* Progress Bar */}
+      <div className="h-1.5 bg-emerald-500/10 rounded-full overflow-hidden mt-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-8 text-center"
+          className="h-full bg-emerald-500"
+          initial={{ width: '0%' }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.2 }}
+        />
+      </div>
+
+      {/* Play Button */}
+      {!isComplete && (
+        <motion.button
+          onClick={startNarration}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="mt-6 px-6 py-3 bg-emerald-500/10 border-2 border-emerald-500/30 rounded-lg text-emerald-400 font-medium flex items-center gap-2 hover:bg-emerald-500/20 transition-colors"
         >
-          <button
-            onClick={() => onComplete({ narration: displayedText })}
-            className="px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-lg text-white font-medium hover:opacity-90 transition-opacity focus:ring-2 focus:ring-teal-500 focus:outline-none"
-            aria-label="Continue to next section"
-          >
-            Continue to Decision
-          </button>
-        </motion.div>
+          <Play className="w-5 h-5" />
+          Play Narration
+        </motion.button>
       )}
     </motion.div>
   );
