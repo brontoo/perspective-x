@@ -28,7 +28,17 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
     const [justification, setJustification] = useState('');
     const [showThinkTimer, setShowThinkTimer] = useState(true);
     const [thinkTime, setThinkTime] = useState(120);
+    const [stage, setStage] = useState('briefing');
     const displayedNarrative = useTypewriter(scene.narrative || '');
+
+    useEffect(() => {
+        if (stage === 'briefing') {
+            const timer = setTimeout(() => {
+                setStage('data');
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [stage]);
 
     const accent = theme.accent || 'from-teal-500 to-emerald-500';
     const border = theme.border || 'border-teal-500/30';
@@ -101,67 +111,132 @@ console.log("🔥 SceneOne NEW VERSION LOADED");
 
                 {/* Right Column */}
                 <div className="space-y-6">
-                    {/* Question */}
-                    <div className="mb-8">
-                        <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">{scene.question}</h2>
-                        <p className={`text-base ${text} font-medium`}>Select the best option below:</p>
-                    </div>
-
-                    {/* Think Timer */}
-                    {showThinkTimer && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6">
-                            <div className="px-5 py-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                                <p className="text-amber-200 text-base font-medium">
-                                    Critical Thinking Phase: <span className="font-bold text-amber-400">{thinkTime}s</span>
-                                </p>
-                            </div>
-                        </motion.div>
-                    )}
-
-                    {/* Options List */}
-                    <div className="space-y-4">
-                        {scene.options.map((option) => (
-                            <button
-                                key={option.id}
-                                onClick={() => handleSelect(option)}
-                                className={`w-full text-left p-5 rounded-xl border transition-all ${selectedOption?.id === option.id 
-                                    ? `border-2 ${border} bg-slate-800/50` 
-                                    : 'border-slate-700 bg-slate-900/50 hover:bg-slate-800/30'
-                                }`}
-                            >
-                                <p className="font-medium text-white text-lg leading-snug">{option.text}</p>
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Justification */}
-                    {selectedOption && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="space-y-4"
-                        >
-                            <Card className={`border ${border} bg-slate-900/50 p-8`}>
-                                <h4 className="font-bold text-white text-xl mb-4">Scientific Justification</h4>
-                                <p className="text-slate-400 text-base mb-4">
-                                    {scene.justificationStarter || 'Explain your reasoning:'}
-                                </p>
-                                <Textarea
-                                    value={justification}
-                                    onChange={(e) => setJustification(e.target.value)}
-                                    placeholder="Enter your scientific reasoning..."
-                                    className="bg-slate-950/50 border-slate-700 text-white min-h-[120px] text-base"
-                                />
+                    {stage === 'briefing' && (
+                        <div className="space-y-6">
+                            <Card className={`overflow-hidden border ${border} bg-slate-900/50 backdrop-blur-sm shadow-2xl ${theme.glow}`}>
+                                <div className="relative aspect-video">
+                                    <ScenarioVisualEngine 
+                                        type="water"
+                                        data={{ chloride: 60, nitrate: 52 }}
+                                    />
+                                </div>
+                                <div className="p-8">
+                                    <div className="flex items-center gap-4 mb-6">
+                                        <div className={`p-3 rounded-xl bg-slate-800 border ${border}`}>
+                                            <AlertCircle className={`w-6 h-6 ${text}`} />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-white tracking-tight">Current Situation</h3>
+                                    </div>
+                                    <p className="text-slate-300 leading-relaxed text-lg space-y-4">
+                                        {displayedNarrative}
+                                    </p>
+                                </div>
                             </Card>
 
-                            <div className={`p-5 rounded-xl border ${selectedOption.correct 
-                                ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200' 
-                                : 'border-amber-500/40 bg-amber-500/10 text-amber-200'
-                            }`}>
-                                <p className="text-base leading-relaxed">{selectedOption.feedback}</p>
+                            <Card className="bg-slate-800/40 border-slate-700 p-8">
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Learning Objective</p>
+                                <p className="text-slate-300 text-lg leading-relaxed">{scene.learningObjective}</p>
+                            </Card>
+
+                            <Button
+                                onClick={() => setStage('data')}
+                                size="lg"
+                                className={`w-full bg-gradient-to-r ${accent}`}
+                            >
+                                Continue to Data Analysis
+                            </Button>
+                        </div>
+                    )}
+
+                    {stage === 'data' && (
+                        <div className="space-y-6">
+                            <ScenarioVisualEngine 
+                                type="water"
+                                data={{ chloride: 60, nitrate: 52 }}
+                            />
+                            
+                            <Card className={`border ${border} bg-slate-900/50 p-8`}>
+                                <h4 className="font-bold text-white text-xl mb-4">Data Analysis</h4>
+                                <p className="text-slate-300 text-lg leading-relaxed">
+                                    Review the data visualization and prepare to make your decision.
+                                </p>
+                            </Card>
+
+                            <Button
+                                onClick={() => setStage('decision')}
+                                size="lg"
+                                className={`w-full bg-gradient-to-r ${accent}`}
+                            >
+                                Continue to Decision
+                            </Button>
+                        </div>
+                    )}
+
+                    {stage === 'decision' && (
+                        <>
+                            {/* Question */}
+                            <div className="mb-8">
+                                <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">{scene.question}</h2>
+                                <p className={`text-base ${text} font-medium`}>Select the best option below:</p>
                             </div>
-                        </motion.div>
+
+                            {/* Think Timer */}
+                            {showThinkTimer && (
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6">
+                                    <div className="px-5 py-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                                        <p className="text-amber-200 text-base font-medium">
+                                            Critical Thinking Phase: <span className="font-bold text-amber-400">{thinkTime}s</span>
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {/* Options List */}
+                            <div className="space-y-4">
+                                {scene.options.map((option) => (
+                                    <button
+                                        key={option.id}
+                                        onClick={() => handleSelect(option)}
+                                        className={`w-full text-left p-5 rounded-xl border transition-all ${selectedOption?.id === option.id 
+                                            ? `border-2 ${border} bg-slate-800/50` 
+                                            : 'border-slate-700 bg-slate-900/50 hover:bg-slate-800/30'
+                                        }`}
+                                    >
+                                        <p className="font-medium text-white text-lg leading-snug">{option.text}</p>
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Justification */}
+                            {selectedOption && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="space-y-4"
+                                >
+                                    <Card className={`border ${border} bg-slate-900/50 p-8`}>
+                                        <h4 className="font-bold text-white text-xl mb-4">Scientific Justification</h4>
+                                        <p className="text-slate-400 text-base mb-4">
+                                            {scene.justificationStarter || 'Explain your reasoning:'}
+                                        </p>
+                                        <Textarea
+                                            value={justification}
+                                            onChange={(e) => setJustification(e.target.value)}
+                                            placeholder="Enter your scientific reasoning..."
+                                            className="bg-slate-950/50 border-slate-700 text-white min-h-[120px] text-base"
+                                        />
+                                    </Card>
+
+                                    <div className={`p-5 rounded-xl border ${selectedOption.correct 
+                                        ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200' 
+                                        : 'border-amber-500/40 bg-amber-500/10 text-amber-200'
+                                    }`}>
+                                        <p className="text-base leading-relaxed">{selectedOption.feedback}</p>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </>
                     )}
 
                     {/* Action Buttons */}
