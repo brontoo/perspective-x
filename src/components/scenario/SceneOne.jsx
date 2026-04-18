@@ -73,10 +73,10 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
                 <div className="space-y-6">
                     <Card className={`overflow-hidden border ${border} bg-slate-900/50 backdrop-blur-sm shadow-2xl ${theme.glow}`}>
                         <div className="relative aspect-video">
-                            {/* Scenario Visual Component */}
+                            {/* Scenario Visual Component with safe defaults */}
                             <ScenarioVisualEngine 
-                                type={scenario.scenes[0]?.type} 
-                                data={scenario.scenes[0]?.data} 
+                                type={scene.type || 'default'} 
+                                data={scene.data || {}} 
                             />
                         </div>
                         <div className="p-8">
