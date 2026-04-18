@@ -1,9 +1,10 @@
 import React from 'react';
+import WaterSystem from './WaterSystem';
 
 export default function ScenarioVisualEngine({ type, data }) {
     switch (type) {
         case 'water':
-            return <div>Water Visual Placeholder</div>;
+            return <WaterSystem chloride={data.chloride} nitrate={data.nitrate} />;
         case 'reactor':
             return <div>Reactor Visual Placeholder</div>;
         case 'genetics':
