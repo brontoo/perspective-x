@@ -241,28 +241,40 @@ console.log("🔥 SceneOne NEW VERSION LOADED");
 
                     {/* Action Buttons */}
                     <div className="pt-6 space-y-4">
-                        <Button
-                            onClick={handleContinue}
-                            disabled={!selectedOption || (justification.length < 15 && !isTeacher)}
-                            size="lg"
-                            className={`w-full bg-gradient-to-r ${accent}`}
-                        >
-                            Confirm Decision
-                        </Button>
+                        {stage === 'decision' ? (
+                            <>
+                                <Button
+                                    onClick={handleContinue}
+                                    disabled={!selectedOption || (justification.length < 15 && !isTeacher)}
+                                    size="lg"
+                                    className={`w-full bg-gradient-to-r ${accent}`}
+                                >
+                                    Confirm Decision
+                                </Button>
 
-                        {selectedOption && justification.length < 15 && !isTeacher && (
-                            <p className="text-amber-500/80 text-sm text-center">
-                                Please provide a more detailed justification (min 15 characters)
-                            </p>
-                        )}
+                                {selectedOption && justification.length < 15 && !isTeacher && (
+                                    <p className="text-amber-500/80 text-sm text-center">
+                                        Please provide a more detailed justification (min 15 characters)
+                                    </p>
+                                )}
 
-                        {isTeacher && (
+                                {isTeacher && (
+                                    <Button
+                                        variant="outline"
+                                        onClick={handleTeacherSkip}
+                                        className="w-full mt-3 border-dashed border-purple-500/50 text-purple-400"
+                                    >
+                                        Skip to Consequences (Teacher Mode)
+                                    </Button>
+                                )}
+                            </>
+                        ) : (
                             <Button
-                                variant="outline"
-                                onClick={handleTeacherSkip}
-                                className="w-full mt-3 border-dashed border-purple-500/50 text-purple-400"
+                                onClick={() => setStage(stage === 'briefing' ? 'data' : 'decision')}
+                                size="lg"
+                                className={`w-full bg-gradient-to-r ${accent}`}
                             >
-                                Skip to Consequences (Teacher Mode)
+                                Continue
                             </Button>
                         )}
                     </div>
