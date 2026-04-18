@@ -16,10 +16,33 @@ import { UAE_VIDEO_CONTENT, UAE_SCENARIOS } from '../scenarios/uaeScenarioData';
 
 const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
+const inferCharacterGender = (character) => {
+    const explicitGender = character?.gender?.toLowerCase();
+    if (explicitGender === 'female' || explicitGender === 'male') {
+        return explicitGender;
+    }
+
+    const femaleAvatars = new Set(['👩‍🔬', '👩‍⚕️', '👩‍💻', '👷‍♀️', '👩‍🚀']);
+    const maleAvatars = new Set(['👨‍🔬', '👨‍💼', '👨‍🚀']);
+
+    if (femaleAvatars.has(character?.avatar)) return 'female';
+    if (maleAvatars.has(character?.avatar)) return 'male';
+
+    const identityText = `${character?.name || ''} ${character?.title || ''}`.toLowerCase();
+    const femalePatterns = ['fatima', 'mariam', 'noura', 'aisha', 'reem', 'sheikha'];
+    const malePatterns = ['ahmed', 'sultan', 'khalid', 'khaled', 'hamad', 'hazza'];
+
+    if (femalePatterns.some((pattern) => identityText.includes(pattern))) return 'female';
+    if (malePatterns.some((pattern) => identityText.includes(pattern))) return 'male';
+
+    return null;
+};
+
 const getGenderMatchedVoice = (character, voices) => {
     if (!voices || voices.length === 0) return null;
 
-    const isFemale = character?.gender === 'female';
+    const inferredGender = inferCharacterGender(character);
+    const isFemale = inferredGender === 'female';
 
     const femalePatterns = ['samantha', 'karen', 'moira', 'fiona', 'tessa', 'zoe', 'veena', 'female', 'woman', 'emma', 'aria', 'jenny', 'michelle', 'ava', 'victoria', 'susan', 'heather', 'zira'];
     const malePatterns = ['daniel', 'alex', 'fred', 'tom', 'lee', 'aaron', 'gordon', 'reed', 'male', 'man', 'david', 'james', 'guy', 'ryan', 'matthew', 'oliver', 'mark', 'george', 'john'];
@@ -38,10 +61,10 @@ const getGenderMatchedVoice = (character, voices) => {
         findMatch(englishVoices) ||
         englishVoices.find(v => (isFemale ? v.name === 'Samantha' : v.name === 'Daniel')) ||
         englishVoices.find(v => v.name === 'Samantha') ||
-        enUSVoices ||
-        englishVoices ||
+        enUSVoices[0] ||
+        englishVoices[0] ||
         voices.find(v => v.default) ||
-        voices ||
+        voices[0] ||
         null
     );
 };
