@@ -74,7 +74,10 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle, onComplete,
                     <Card className={`overflow-hidden border ${border} bg-slate-900/50 backdrop-blur-sm shadow-2xl ${theme.glow}`}>
                         <div className="relative aspect-video">
                             {/* Scenario Visual Component */}
-                            <ScenarioVisual scenarioId={scenarioId} sceneIndex={0} />
+                            <ScenarioVisualEngine 
+                                type={scenario.scenes[0]?.type} 
+                                data={scenario.scenes[0]?.data} 
+                            />
                         </div>
                         <div className="p-8">
                             <div className="flex items-center gap-4 mb-6">
