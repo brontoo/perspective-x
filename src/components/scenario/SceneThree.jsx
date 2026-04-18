@@ -24,7 +24,9 @@ function useTypewriter(text, speed = 30) {
 }
 
 export default function SceneThree({ scene, scenarioId, previousDecision, scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
-    const consequence = scene.consequences[previousDecision] || scene.consequences[Object.keys(scene.consequences)[0]];
+    const fallbackConsequenceKey = Object.keys(scene.consequences)[0];
+    const resolvedConsequenceKey = scene.consequences[previousDecision] ? previousDecision : fallbackConsequenceKey;
+    const consequence = scene.consequences[resolvedConsequenceKey];
     const [followUpAnswer, setFollowUpAnswer] = useState('');
     const displayedOutcome = useTypewriter(consequence.outcome || '');
 
@@ -32,12 +34,29 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
     const border = theme.border || 'border-teal-500/30';
     const text = theme.text || 'text-teal-400';
 
+    const sceneThreeDataTable = scene.data?.table
+        ? scene.data.table
+        : consequence?.newData
+            ? {
+                headers: ['Metric', 'Value'],
+                rows: [['Observation', consequence.newData]],
+            }
+            : null;
+
     const handleContinue = () => {
-        onComplete({ followUpAnswer, consequence: previousDecision });
+        onComplete({
+            followUpAnswer,
+            consequence: resolvedConsequenceKey,
+            consequenceData: consequence,
+        });
     };
 
     const handleTeacherSkip = () => {
-        onComplete({ followUpAnswer: 'Teacher preview - skipped', consequence: previousDecision });
+        onComplete({
+            followUpAnswer: 'Teacher preview - skipped',
+            consequence: resolvedConsequenceKey,
+            consequenceData: consequence,
+        });
     };
 
     return (
@@ -94,6 +113,9 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
                                 scenarioId={scenarioId} 
                                 sceneIndex={2} 
                                 avatar={scene.avatar}
+                                title={scene.title}
+                                subtitle={consequence.message}
+                                dataTable={sceneThreeDataTable}
                             />
                         </div>
 
@@ -118,7 +140,7 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
                                 <TrendingUp className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
                                 <div>
                                     <span className="text-[8px] text-slate-500 uppercase font-bold block mb-1">Observation Data</span>
-                                    <p className="text-[11px] text-emerald-300 font-mono">{consequence.newData}</p>
+                                    <p className="text-[11px] text-emerald-300 font-mono">{consequence.newData || 'No data available'}</p>
                                 </div>
                             </div>
                         </div>

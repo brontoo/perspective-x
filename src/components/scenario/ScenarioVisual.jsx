@@ -524,101 +524,6 @@ const SCENE_VISUALS = {
         )
     ],
 
-    aspirin_production: [
-        () => (
-            <HUDFrame title="API Manufacturing Line">
-                <div className="flex items-center gap-6 py-10">
-                    <FlaskConical className="w-16 h-16 text-purple-400" />
-                </div>
-            </HUDFrame>
-        ),
-        () => (
-            <HUDFrame title="Stoichiometric Balance">
-                <div className="flex items-center gap-4 py-10">
-                    <div className="text-center space-y-2">
-                        <div className="text-xs font-bold text-blue-400">1.00 mol</div>
-                    </div>
-                    <div className="text-2xl text-slate-600">+</div>
-                    <div className="text-center space-y-2">
-                        <div className="text-xs font-bold text-blue-300">EXCESS</div>
-                    </div>
-                    <div className="text-2xl text-teal-500">→</div>
-                    <div className="text-center space-y-2">
-                        <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 1.5, repeat: Infinity }} className="text-xs font-bold text-teal-400">1.00 mol</motion.div>
-                    </div>
-                </div>
-            </HUDFrame>
-        ),
-        () => (
-            <HUDFrame title="Final Recovery Analysis">
-                <div className="flex items-end gap-10 py-10">
-                    <div className="relative">
-                        <Beaker className="w-20 h-20 text-teal-500/20" />
-                        <motion.div initial={{ height: 0 }} animate={{ height: '70%' }} transition={{ duration: 2 }} className="absolute bottom-1 left-2 right-2 bg-teal-500/40 rounded-b-lg" />
-                    </div>
-                    <span className="text-2xl font-mono font-bold text-teal-400">135.2 g</span>
-                </div>
-            </HUDFrame>
-        )
-    ],
-
-    fuelproduction: [
-        () => (
-            <HUDFrame title="H2 Production Facility">
-                <div className="relative flex items-center justify-center py-6 scale-125">
-                    <Factory className="w-20 h-20 text-blue-400" />
-                    <motion.div animate={{ x: [0, 40], y: [0, -20], opacity: [0, 1, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute text-xl">💨</motion.div>
-                </div>
-            </HUDFrame>
-        ),
-        () => (
-            <HUDFrame title="Substance Mole Ratio">
-                <div className="flex items-center gap-6 py-10">
-                    <div className="w-12 h-12 rounded border border-amber-500/40 bg-amber-500/10 flex items-center justify-center font-bold text-amber-400">CH₄</div>
-                    <div className="text-amber-500 text-2xl">:</div>
-                    <div className="w-12 h-12 rounded border border-blue-400/40 bg-blue-400/10 flex items-center justify-center font-bold text-blue-400">H₂</div>
-                </div>
-            </HUDFrame>
-        ),
-        () => (
-            <HUDFrame title="Production Yield Status">
-                <div className="w-full max-w-xs space-y-4 py-10">
-                    <div className="h-4 bg-slate-800 rounded border border-teal-500/20 relative">
-                        <motion.div initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 2 }} className="h-full bg-teal-500/40" />
-                    </div>
-                </div>
-            </HUDFrame>
-        )
-    ],
-
-    aspirin_percent_yield: [
-        () => (
-            <HUDFrame title="Aspirin Quality Control">
-                <div className="relative py-6 scale-125">
-                    <FlaskConical className="w-16 h-16 text-purple-400" />
-                    <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }} className="absolute inset-x-0 bottom-0 h-4 bg-purple-500/20 blur-lg" />
-                </div>
-            </HUDFrame>
-        ),
-        () => (
-            <HUDFrame title="Yield Mass Comparison">
-                <div className="w-full max-w-xs space-y-6 py-8">
-                    <div className="h-2 bg-slate-800 rounded-full overflow-hidden border border-blue-500/10">
-                        <motion.div initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 1 }} className="h-full bg-blue-500/40" />
-                    </div>
-                    <div className="h-2 bg-slate-800 rounded-full overflow-hidden border border-amber-500/10">
-                        <motion.div initial={{ width: 0 }} animate={{ width: '75%' }} transition={{ duration: 1.5, delay: 0.5 }} className="h-full bg-amber-500/40" />
-                    </div>
-                </div>
-            </HUDFrame>
-        ),
-        () => (
-            <HUDFrame title="Reaction Efficiency Score">
-                <div className="text-2xl font-mono font-bold text-white py-10">75% EFFICIENCY</div>
-            </HUDFrame>
-        )
-    ],
-
     unstable_slope: [
         () => (
             <HUDFrame title="Slope Stability Monitor">
@@ -743,7 +648,7 @@ const SCENE_VISUALS = {
                 <div className="flex flex-col items-center gap-4">
                     <div className="relative w-48 h-24 bg-slate-950/40 rounded border border-white/5 p-4 overflow-hidden">
                         <motion.div 
-                            animate={{ x: ['-10%", "110%'] }}
+                            animate={{ x: ['-10%', '110%'] }}
                             transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
                             className="absolute inset-y-0 w-1 bg-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.5)]"
                         />
@@ -930,26 +835,101 @@ const FallbackVisual = ({ avatar, scenarioId, sceneIndex }) => (
     </HUDFrame>
 );
 
-export default function ScenarioVisual({ scenarioId, sceneIndex, showData, avatar }) {
-    if (showData) return null; 
+function DataTable({ dataTable }) {
+    if (!dataTable) {
+        return (
+            <div className="rounded-xl border border-slate-700 bg-slate-950/80 p-4 text-center text-sm text-slate-400">
+                No data available
+            </div>
+        );
+    }
+
+    return (
+        <div className="w-full rounded-xl border border-slate-700 bg-slate-950/85 p-4 shadow-xl">
+            <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                    <thead>
+                        <tr className="border-b border-slate-700">
+                            {dataTable.headers?.map((header) => (
+                                <th key={header} className="px-3 py-2 text-left text-teal-300 font-semibold uppercase tracking-wide text-xs">
+                                    {header}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dataTable.rows?.map((row, rowIndex) => (
+                            <tr key={rowIndex} className="border-b border-slate-800 last:border-0">
+                                {row.map((cell, cellIndex) => (
+                                    <td key={`${rowIndex}-${cellIndex}`} className="px-3 py-2 text-slate-300 align-top">
+                                        {cell}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
+
+export default function ScenarioVisual({ scenarioId, sceneIndex, showData, avatar, title, subtitle, dataTable }) {
+    if (showData && !dataTable) return null; 
 
     const visualsForScenario = SCENE_VISUALS[scenarioId];
     const VisualComponent = visualsForScenario?.[sceneIndex];
+    const hasEnhancedLayout = Boolean(title || subtitle || dataTable);
 
-    if (!VisualComponent) {
+    if (!VisualComponent && !hasEnhancedLayout) {
         return <FallbackVisual avatar={avatar} scenarioId={scenarioId} sceneIndex={sceneIndex} />;
     }
 
     return (
         <motion.div
             key={`${scenarioId}-${sceneIndex}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
             className="w-full h-full flex justify-center items-center p-4"
         >
-            <VisualComponent />
+            <div className="w-full max-w-3xl mx-auto space-y-5 text-center">
+                {(title || subtitle) && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1, duration: 0.35 }}
+                        className="space-y-2"
+                    >
+                        {title && <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>}
+                        {subtitle && <p className="text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">{subtitle}</p>}
+                    </motion.div>
+                )}
+
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.97 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.15, duration: 0.35 }}
+                    className="w-full flex justify-center items-center"
+                >
+                    {VisualComponent
+                        ? <VisualComponent />
+                        : <FallbackVisual avatar={avatar} scenarioId={scenarioId} sceneIndex={sceneIndex} />}
+                </motion.div>
+
+                {(dataTable || hasEnhancedLayout) && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.35 }}
+                        className="max-w-2xl mx-auto"
+                    >
+                        <DataTable dataTable={dataTable} />
+                    </motion.div>
+                )}
+            </div>
         </motion.div>
     );
 }
+    
