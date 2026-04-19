@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { toMetricMap } from './scenarioHelpers';
 import { 
   ArrowRight, 
   CheckCircle, 
@@ -42,32 +43,6 @@ function normalizeConsequence(scenario, studentChoice, directConsequence) {
   }
 
   return consequences[studentChoice] || Object.values(consequences)[0] || null;
-}
-
-function normalizeMetricData(rawData) {
-  if (!rawData) return {};
-
-  if (typeof rawData === 'object' && !Array.isArray(rawData)) {
-    return rawData;
-  }
-
-  if (typeof rawData !== 'string') {
-    return { Observation: String(rawData) };
-  }
-
-  return rawData
-    .split(/[.;]\s+/)
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .reduce((result, item, index) => {
-      const [label, ...rest] = item.split(':');
-      if (rest.length > 0) {
-        result[label.trim()] = rest.join(':').trim();
-      } else {
-        result[`Observation ${index + 1}`] = item;
-      }
-      return result;
-    }, {});
 }
 
 function formatMetricValue(value) {
@@ -112,8 +87,8 @@ export default function DecisionImpact({
   const impactType = deriveImpactType({ consequence, decisionOption, studentChoice });
 
   // Data comparison
-  const beforeData = normalizeMetricData(baselineData || scenario?.baselineData || scenario?.data?.baselineData);
-  const afterData = normalizeMetricData(consequence?.newData);
+  const beforeData = toMetricMap(baselineData || scenario?.baselineData || scenario?.data?.baselineData);
+  const afterData = toMetricMap(consequence?.newData);
 
   const handleContinue = () => {
     if (onContinueToExit) {

@@ -3,52 +3,11 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Zap, FileText, TrendingUp, MessageSquare, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import ScenarioVisual from './ScenarioVisual';
+import { ScenarioLearningObjective, ScenarioResponseCard, ScenarioStageHeader, ScenarioVisualPanel } from './ScenarioPrimitives';
+import { toMetricRows } from './scenarioHelpers';
+import useTypewriter from './useTypewriter';
 
-function toMetricRows(rawData) {
-    if (!rawData) return [];
-
-    if (typeof rawData === 'object' && !Array.isArray(rawData)) {
-        return Object.entries(rawData).map(([label, value]) => [label, String(value)]);
-    }
-
-    if (typeof rawData !== 'string') {
-        return [['Observation', String(rawData)]];
-    }
-
-    return rawData
-        .split(/[.;]\s+/)
-        .map((item) => item.trim())
-        .filter(Boolean)
-        .map((item, index) => {
-            const [label, ...rest] = item.split(':');
-            if (rest.length > 0) {
-                return [label.trim(), rest.join(':').trim()];
-            }
-
-            return [`Observation ${index + 1}`, item];
-        });
-}
-
-// Custom typewriter hook for HUD feel
-function useTypewriter(text, speed = 30) {
-    const [displayedText, setDisplayedText] = useState('');
-    useEffect(() => {
-        if (!text) return;
-        setDisplayedText('');
-        let i = 0;
-        const timer = setInterval(() => {
-            setDisplayedText((prev) => prev + text.charAt(i));
-            i++;
-            if (i >= text.length) clearInterval(timer);
-        }, speed);
-        return () => clearInterval(timer);
-    }, [text]);
-    return displayedText;
-}
-
-export default function SceneThree({ scene, scenarioId, previousDecision, scenarioTitle, scenarioAvatar, onComplete, isTeacher = false, theme = {} }) {
+export default function SceneThree({ scene, scenarioId, previousDecision, scenarioTitle: _scenarioTitle, scenarioAvatar, onComplete, isTeacher = false, theme = {} }) {
     const consequenceEntries = Object.entries(scene?.consequences || {});
     const fallbackConsequenceKey = consequenceEntries[0]?.[0] || null;
     const resolvedConsequenceKey = previousDecision && scene?.consequences?.[previousDecision]
@@ -56,7 +15,7 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
         : fallbackConsequenceKey;
     const consequence = resolvedConsequenceKey ? scene?.consequences?.[resolvedConsequenceKey] : null;
     const [followUpAnswer, setFollowUpAnswer] = useState('');
-    const displayedOutcome = useTypewriter(consequence.outcome || '');
+    const displayedOutcome = useTypewriter(consequence?.outcome || '');
 
     const accent = theme.accent || 'from-teal-500 to-emerald-500';
     const border = theme.border || 'border-teal-500/30';
@@ -96,15 +55,14 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
             exit={{ opacity: 0, y: -20 }}
             className="max-w-4xl mx-auto px-6"
         >
-            {/* Scene Header */}
-            <div className="text-center mb-8">
-                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border ${border} bg-slate-900/50 text-sm mb-4`}>
-                    <span className={`font-bold ${text}`}>Scene 3</span>
-                    <span className="text-slate-600">•</span>
-                    <span className="text-slate-300">{scene.title}</span>
-                </div>
-                <h2 className="text-2xl font-bold text-white">Consequences of Your Decision</h2>
-            </div>
+            <ScenarioStageHeader
+                sceneNumber="Scene 3"
+                title={scene.title}
+                subtitle="Consequences of Your Decision"
+                border={border}
+                text={text}
+                className="mb-8"
+            />
 
             {/* Consequence Reveal - HUD Style */}
             <motion.div
@@ -137,17 +95,16 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
                             <Activity className="w-6 h-6 text-teal-500/50" />
                         </div>
 
-                        {/* Integrated Visual - Consequence Result */}
-                        <div className="mb-6 h-48 bg-slate-900/40 rounded-2xl border border-white/5 overflow-hidden flex items-center justify-center">
-                            <ScenarioVisual 
-                                scenarioId={scenarioId} 
-                                sceneIndex={2} 
-                                avatar={scene.avatar || scenarioAvatar}
-                                title={scene.title}
-                                subtitle={consequence?.message || consequence?.outcome || 'Outcome available below'}
-                                dataTable={sceneThreeDataTable}
-                            />
-                        </div>
+                        <ScenarioVisualPanel
+                            scenarioId={scenarioId}
+                            sceneIndex={2}
+                            avatar={scene.avatar || scenarioAvatar}
+                            title={scene.title}
+                            subtitle={consequence?.message || consequence?.outcome || 'Outcome available below'}
+                            dataTable={sceneThreeDataTable}
+                            border={border}
+                            className="mb-6"
+                        />
 
                         <div className="min-h-[100px] mb-6">
                             <p className="text-slate-300 leading-relaxed text-lg font-medium font-serif italic">
@@ -184,28 +141,20 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
             >
-                <Card className={`bg-slate-900/50 border ${border} p-6 mb-8`}>
-                    <div className="flex items-center gap-2 mb-4">
-                        <FileText className={`w-5 h-5 ${text}`} />
-                        <h4 className="font-semibold text-white">Reflection Question</h4>
-                    </div>
-                    <p className="text-slate-300 mb-4">{scene.followUpQuestion}</p>
-                    <Textarea
-                        value={followUpAnswer}
-                        onChange={(e) => setFollowUpAnswer(e.target.value)}
-                        placeholder="Type your response..."
-                        className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 min-h-[120px] resize-none"
-                    />
-                </Card>
+                <ScenarioResponseCard
+                    icon={FileText}
+                    title="Reflection Question"
+                    prompt={scene.followUpQuestion}
+                    value={followUpAnswer}
+                    onChange={setFollowUpAnswer}
+                    placeholder="Type your response..."
+                    border={border}
+                    text={text}
+                    className="mb-8"
+                />
             </motion.div>
 
-            {/* Learning Objective */}
-            <div className="mb-8 text-center">
-                <div className={`p-4 rounded-xl bg-slate-800/50 border ${border} inline-block`}>
-                    <span className="text-slate-500 text-sm">Learning Objective: </span>
-                    <span className={`${text} text-sm font-medium`}>{scene.learningObjective}</span>
-                </div>
-            </div>
+            <ScenarioLearningObjective value={scene.learningObjective} border={border} text={text} className="mb-8" />
 
             {/* Continue Button */}
             <motion.div

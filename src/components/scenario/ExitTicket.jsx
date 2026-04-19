@@ -12,29 +12,10 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
+import { ScenarioResponseCard } from './ScenarioPrimitives';
+import { normalizeExitTicketQuestions } from './scenarioHelpers';
 
-function normalizeQuestions(exitTicket) {
-  if (Array.isArray(exitTicket?.questions)) {
-    return exitTicket.questions.map((question, index) => ({
-      id: question.id || `q-${index + 1}`,
-      prompt: question.text || question.question || '',
-      options: question.options || [],
-    }));
-  }
-
-  if (Array.isArray(exitTicket?.mcqs)) {
-    return exitTicket.mcqs.map((question, index) => ({
-      id: question.id || `q-${index + 1}`,
-      prompt: question.text || question.question || '',
-      options: question.options || [],
-    }));
-  }
-
-  return [];
-}
-
-export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, theme = {} }) {
+export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, theme = {}, isTeacher = false }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [reflection, setReflection] = useState('');
@@ -45,7 +26,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
   const accent = theme.accent || 'from-teal-500 to-emerald-500';
   const border = theme.border || 'border-teal-500/30';
   const text = theme.text || 'text-teal-400';
-  const questions = normalizeQuestions(exitTicket);
+  const questions = normalizeExitTicketQuestions(exitTicket);
   const correctAnswers = answers.filter((answer) => answer.isCorrect).length;
   const score = questions.length > 0 ? Math.round((correctAnswers / questions.length) * 100) : 0;
 
@@ -81,9 +62,12 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
   };
 
   const handleSubmit = () => {
+    const hasReflection = reflection.trim().length >= 10 || isTeacher;
+    const hasTransfer = !exitTicket?.transferQuestion || transferAnswer.trim().length >= 10 || isTeacher;
+
     onComplete({
       score,
-      passed: score >= 70 && reflection.trim().length >= 10 && transferAnswer.trim().length >= 10,
+      passed: score >= 70 && hasReflection && hasTransfer,
       mcq_answers: answers,
       reflection,
       transfer_answer: transferAnswer,
@@ -222,50 +206,46 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
         )}
       </div>
 
-      <Card className={`border ${border} bg-slate-900/50 p-6`}>
-        <div className="flex items-center gap-3 mb-4">
-          <MessageSquare className={`w-5 h-5 ${text}`} />
-          <h3 className={`text-xs font-bold uppercase tracking-widest ${text}`}>Reflection</h3>
-        </div>
-        <p className="text-slate-400 mb-4">{exitTicket?.reflectionPrompt || `What did you learn from ${scenarioTitle || 'this scenario'}?`}</p>
-        <Textarea
-          value={reflection}
-          onChange={(e) => setReflection(e.target.value)}
-          placeholder="What did you learn from this scenario?"
-          className="bg-slate-800/50 border-slate-700 text-white min-h-[120px]"
-        />
-        <div className="flex justify-between items-center mt-2">
-          <span className="text-xs text-slate-500">
-            {reflection.length}/500 characters
-          </span>
-          {reflection.length > 0 && (
-            <span className="text-xs text-emerald-400">
-              {reflection.length > 200 ? 'Detailed!' : 'Keep going...'}
+      <ScenarioResponseCard
+        icon={MessageSquare}
+        title="Reflection"
+        prompt={exitTicket?.reflectionPrompt || `What did you learn from ${scenarioTitle || 'this scenario'}?`}
+        value={reflection}
+        onChange={setReflection}
+        placeholder="What did you learn from this scenario?"
+        border={border}
+        text={text}
+        footer={(
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-xs text-slate-500">
+              {reflection.length}/500 characters
             </span>
-          )}
-        </div>
-      </Card>
+            {reflection.length > 0 && (
+              <span className="text-xs text-emerald-400">
+                {reflection.length > 200 ? 'Detailed!' : 'Keep going...'}
+              </span>
+            )}
+          </div>
+        )}
+      />
 
       {exitTicket?.transferQuestion && (
-        <Card className={`border ${border} bg-slate-900/50 p-6`}>
-          <div className="flex items-center gap-3 mb-4">
-            <ClipboardList className={`w-5 h-5 ${text}`} />
-            <h3 className={`text-xs font-bold uppercase tracking-widest ${text}`}>Transfer Question</h3>
-          </div>
-          <p className="text-slate-400 mb-4">{exitTicket.transferQuestion}</p>
-          <Textarea
-            value={transferAnswer}
-            onChange={(e) => setTransferAnswer(e.target.value)}
-            placeholder="Apply this idea to a new situation..."
-            className="bg-slate-800/50 border-slate-700 text-white min-h-[120px]"
-          />
-        </Card>
+        <ScenarioResponseCard
+          icon={ClipboardList}
+          title="Transfer Question"
+          prompt={exitTicket.transferQuestion}
+          value={transferAnswer}
+          onChange={setTransferAnswer}
+          placeholder="Apply this idea to a new situation..."
+          border={border}
+          text={text}
+        />
       )}
 
       <Button
         onClick={handleSubmit}
         size="lg"
-        disabled={reflection.trim().length < 10 || (exitTicket?.transferQuestion && transferAnswer.trim().length < 10)}
+        disabled={(!isTeacher && reflection.trim().length < 10) || (!isTeacher && exitTicket?.transferQuestion && transferAnswer.trim().length < 10)}
         className={`w-full bg-gradient-to-r ${accent}`}
       >
         Complete Scenario

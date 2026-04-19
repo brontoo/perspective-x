@@ -133,7 +133,6 @@ export default function CinematicVideoIntro({
         isMountedRef.current = true;
 
         if (videoState === 'completed') {
-            console.log('🛑 CinematicVideoIntro: videoState completed, stopping playback');
             stopAllPlayback();
             return;
         }
@@ -344,7 +343,9 @@ export default function CinematicVideoIntro({
                 };
 
                 utterance.onerror = (e) => {
-                    console.warn('Speech error:', e.error);
+                    if (e.error !== 'interrupted') {
+                        console.warn('Speech error:', e.error);
+                    }
                     if (isMountedRef.current) {
                         sceneCompleteRef.current.narration = true;
                         checkCompletion();

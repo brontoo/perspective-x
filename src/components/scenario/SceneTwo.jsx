@@ -3,26 +3,10 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Timer, Sparkles, Activity, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import ScenarioVisual from './ScenarioVisual';
+import { ScenarioLearningObjective, ScenarioResponseCard, ScenarioStageHeader, ScenarioThinkTimer, ScenarioVisualPanel } from './ScenarioPrimitives';
+import useTypewriter from './useTypewriter';
 
-// Custom typewriter hook for HUD feel
-function useTypewriter(text, speed = 30) {
-    const [displayedText, setDisplayedText] = useState('');
-    useEffect(() => {
-        setDisplayedText('');
-        let i = 0;
-        const timer = setInterval(() => {
-            setDisplayedText((prev) => prev + text.charAt(i));
-            i++;
-            if (i >= text.length) clearInterval(timer);
-        }, speed);
-        return () => clearInterval(timer);
-    }, [text]);
-    return displayedText;
-}
-
-export default function SceneTwo({ scene, scenarioId, scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
+export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [justification, setJustification] = useState('');
     const [showThinkTimer, setShowThinkTimer] = useState(true);
@@ -109,13 +93,15 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle, onComplete,
                     </div>
 
                     {/* Integrated Visual */}
-                    <div className="mb-6 h-48 bg-slate-900/50 rounded-2xl border border-white/5 overflow-hidden flex items-center justify-center">
-                        <ScenarioVisual 
-                            scenarioId={scenarioId} 
-                            sceneIndex={1} 
-                            avatar={scene.avatar}
-                        />
-                    </div>
+                    <ScenarioVisualPanel
+                        scenarioId={scenarioId}
+                        sceneIndex={1}
+                        avatar={scene.avatar}
+                        title={scene.title}
+                        subtitle={scene.question}
+                        border={border}
+                        className="mb-6"
+                    />
 
                     <div className="min-h-[80px] space-y-3">
                         {narrativeParagraphs.map((paragraph, i) => (
@@ -158,18 +144,14 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle, onComplete,
                 </div>
             </div>
 
-            {/* Think Timer */}
-            {showThinkTimer && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6">
-                    <Card className="bg-purple-500/10 border-purple-500/30 p-4">
-                        <div className="flex items-center justify-center gap-4">
-                            <Timer className="w-5 h-5 text-purple-400" />
-                            <span className="text-purple-300">Think before you choose:</span>
-                            <span className="text-2xl font-bold text-purple-400 font-mono w-12">{thinkTime}s</span>
-                        </div>
-                    </Card>
-                </motion.div>
-            )}
+            <ScenarioThinkTimer
+                show={showThinkTimer}
+                time={thinkTime}
+                icon={Timer}
+                label="Think before you choose:"
+                tone="purple"
+                className="mb-6"
+            />
 
             {/* Question */}
             <div className="mb-6">
@@ -215,8 +197,8 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle, onComplete,
 
                                 {/* Tags */}
                                 <div className="flex flex-wrap gap-2">
-                                    {option.tags.map((tag, i) => (
-                                        <span key={i} className={`text-xs px-2 py-1 rounded-full border ${isSelected ? `${border} ${text} bg-slate-800/50` : 'bg-slate-800 text-slate-400 border-transparent'
+                                    {(Array.isArray(option.tags) ? option.tags : []).map((tag) => (
+                                        <span key={`${option.id}-${tag}`} className={`text-xs px-2 py-1 rounded-full border ${isSelected ? `${border} ${text} bg-slate-800/50` : 'bg-slate-800 text-slate-400 border-transparent'
                                             }`}>
                                             {tag}
                                         </span>
@@ -231,7 +213,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle, onComplete,
                                                     option.ethical === 'scientific' ? 'text-purple-400' :
                                                         'text-slate-500'
                                         }`}>
-                                        Focus: {option.ethical}
+                                        Focus: {option.ethical || 'contextual'}
                                     </span>
                                 </div>
                             </motion.button>
@@ -246,30 +228,22 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle, onComplete,
                         animate={{ opacity: 1, y: 0 }}
                         className="mb-8"
                     >
-                        <Card className={`bg-slate-900/50 border ${border} p-6`}>
-                            <div className="flex items-center gap-2 mb-4">
-                                <Sparkles className={`w-5 h-5 ${text}`} />
-                                <h4 className="font-semibold text-white">Justify Your Decision</h4>
-                            </div>
-                            <p className="text-slate-400 text-sm mb-3">{scene.justificationStarter}</p>
-                            <Textarea
-                                value={justification}
-                                onChange={(e) => setJustification(e.target.value)}
-                                placeholder="Explain your scientific reasoning..."
-                                className={`bg-slate-800/50 border-slate-700 focus:border-transparent text-white placeholder:text-slate-500 min-h-[100px] resize-none focus:ring-1`}
-                            />
-                        </Card>
+                        <ScenarioResponseCard
+                            icon={Sparkles}
+                            title="Justify Your Decision"
+                            prompt={scene.justificationStarter}
+                            value={justification}
+                            onChange={setJustification}
+                            placeholder="Explain your scientific reasoning..."
+                            border={border}
+                            text={text}
+                            minHeightClass="min-h-[100px]"
+                        />
                     </motion.div>
                 )}
             </div>
 
-            {/* Learning Objective */}
-            <div className="mb-8 text-center">
-                <div className={`p-4 rounded-xl bg-slate-800/50 border ${border} inline-block`}>
-                    <span className="text-slate-500 text-sm">Learning Objective: </span>
-                    <span className={`${text} text-sm font-medium`}>{scene.learningObjective}</span>
-                </div>
-            </div>
+            <ScenarioLearningObjective value={scene.learningObjective} border={border} text={text} className="mb-8" />
 
             {/* Continue Button */}
             <motion.div

@@ -3,28 +3,9 @@ import { motion } from 'framer-motion';
 import { AlertCircle, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import ScenarioVisual from './ScenarioVisual';
-
-function useTypewriter(text, speed = 30) {
-    const [displayedText, setDisplayedText] = useState('');
-
-    useEffect(() => {
-        setDisplayedText('');
-        let index = 0;
-        const timer = setInterval(() => {
-            setDisplayedText((prev) => prev + text.charAt(index));
-            index += 1;
-            if (index >= text.length) {
-                clearInterval(timer);
-            }
-        }, speed);
-
-        return () => clearInterval(timer);
-    }, [text, speed]);
-
-    return displayedText;
-}
+import { ScenarioLearningObjective, ScenarioResponseCard, ScenarioStageHeader, ScenarioThinkTimer } from './ScenarioPrimitives';
+import useTypewriter from './useTypewriter';
 
 export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
     const [selectedOption, setSelectedOption] = useState(null);
@@ -92,6 +73,15 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
             exit={{ opacity: 0, y: -20 }}
             className="max-w-6xl mx-auto"
         >
+            <ScenarioStageHeader
+                sceneNumber="Scene 1"
+                title={scene.title}
+                subtitle="Understand the situation before making your first decision"
+                border={border}
+                text={text}
+                className="mb-8"
+            />
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
                     <Card className={`overflow-hidden border ${border} bg-slate-900/50 backdrop-blur-sm shadow-2xl ${theme.glow}`}>
@@ -115,10 +105,6 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
                         </div>
                     </Card>
 
-                    <Card className="bg-slate-800/40 border-slate-700 p-8">
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Learning Objective</p>
-                        <p className="text-slate-300 text-lg leading-relaxed">{scene.learningObjective}</p>
-                    </Card>
                 </div>
 
                 <div className="space-y-6">
@@ -177,17 +163,14 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
                                 <p className={`text-base ${text} font-medium`}>Select the best option below:</p>
                             </div>
 
-                            {showThinkTimer && (
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6">
-                                    <div className="px-5 py-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                                        <div className="flex items-center gap-3">
-                                            <Timer className="w-5 h-5 text-amber-400 animate-pulse" />
-                                            <span className="text-amber-200 text-base font-medium">Critical Thinking Phase</span>
-                                            <span className="text-xl font-bold text-amber-400 font-mono ml-auto">{thinkTime}s</span>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
+                                <ScenarioThinkTimer
+                                    show={showThinkTimer}
+                                    time={thinkTime}
+                                    icon={Timer}
+                                    label="Critical Thinking Phase"
+                                    tone="amber"
+                                    className="mb-6"
+                                />
 
                             <div className="space-y-4">
                                 {scene.options.map((option) => (
@@ -211,18 +194,16 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
                                     exit={{ opacity: 0, height: 0 }}
                                     className="space-y-4"
                                 >
-                                    <Card className={`border ${border} bg-slate-900/50 p-8`}>
-                                        <h4 className="font-bold text-white text-xl mb-4">Scientific Justification</h4>
-                                        <p className="text-slate-400 text-base mb-4">
-                                            {scene.justificationStarter || 'Explain your reasoning:'}
-                                        </p>
-                                        <Textarea
-                                            value={justification}
-                                            onChange={(event) => setJustification(event.target.value)}
-                                            placeholder="Enter your scientific reasoning..."
-                                            className="bg-slate-950/50 border-slate-700 text-white min-h-[120px] text-base"
-                                        />
-                                    </Card>
+                                    <ScenarioResponseCard
+                                        title="Scientific Justification"
+                                        prompt={scene.justificationStarter || 'Explain your reasoning:'}
+                                        value={justification}
+                                        onChange={setJustification}
+                                        placeholder="Enter your scientific reasoning..."
+                                        border={border}
+                                        text={text}
+                                        className="p-8"
+                                    />
 
                                     <div className={`p-5 rounded-xl border ${selectedOption.correct
                                         ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200'
@@ -272,6 +253,8 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
                                 Continue
                             </Button>
                         )}
+
+                        <ScenarioLearningObjective value={scene.learningObjective} border={border} text={text} />
                     </div>
                 </div>
             </div>
