@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 export default function ScenarioComplete({ scenario, responses, role, onShowCertificate, theme = {} }) {
-    const passed = responses.exitTicket?.passed;
+    const passed = responses.exitTicket?.passed ?? responses.passed;
+    const exitQuestionCount = scenario.exitTicket?.questions?.length || scenario.exitTicket?.mcqs?.length || 2;
 
     const accent = theme.accent || 'from-teal-500 to-emerald-500';
     const border = theme.border || 'border-teal-500/30';
@@ -123,21 +124,21 @@ export default function ScenarioComplete({ scenario, responses, role, onShowCert
                                     ? text : 'text-amber-400'
                                 }`}>
                                 {Number(responses.exitTicket?.score) === 100
-                                    ? scenario.conceptQuestions?.length || 2
-                                    : Math.round((Number(responses.exitTicket?.score) || 0) / 100 * (scenario.conceptQuestions?.length || 2))
-                                }/{scenario.conceptQuestions?.length || 2} correct
+                                    ? exitQuestionCount
+                                    : Math.round((Number(responses.exitTicket?.score) || 0) / 100 * exitQuestionCount)
+                                }/{exitQuestionCount} correct
                             </span>
                         </div>
 
                         {/* 2. Questions Accuracy */}
-                        <div className={`flex items-center justify-between p-3 rounded-xl border ${responses.exitTicket?.score >= (scenario.conceptQuestions?.length || 2)
+                        <div className={`flex items-center justify-between p-3 rounded-xl border ${responses.exitTicket?.score >= 70
                             ? border : 'border-slate-800'
                             } bg-slate-800/40`}>
                             <span className="text-slate-400">Questions Accuracy</span>
-                            <span className={`font-semibold ${responses.exitTicket?.score >= (scenario.conceptQuestions?.length || 2)
+                            <span className={`font-semibold ${responses.exitTicket?.score >= 70
                                 ? text : 'text-amber-400'
                                 }`}>
-                                {Math.min(100, Math.round((Number(responses.exitTicket?.score) || 0) / (scenario.conceptQuestions?.length || 2) * 100))}%
+                                {Math.round(Number(responses.exitTicket?.score) || 0)}%
                             </span>
                         </div>
 

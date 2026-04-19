@@ -1,10 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, FileText, TrendingUp, MessageSquare, Activity, Cpu } from 'lucide-react';
+import { ArrowRight, Zap, FileText, TrendingUp, MessageSquare, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import ScenarioVisual from './ScenarioVisual';
+
+function toMetricRows(rawData) {
+    if (!rawData) return [];
+
+    if (typeof rawData === 'object' && !Array.isArray(rawData)) {
+        return Object.entries(rawData).map(([label, value]) => [label, String(value)]);
+    }
+
+    if (typeof rawData !== 'string') {
+        return [['Observation', String(rawData)]];
+    }
+
+    return rawData
+        .split(/[.;]\s+/)
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .map((item, index) => {
+            const [label, ...rest] = item.split(':');
+            if (rest.length > 0) {
+                return [label.trim(), rest.join(':').trim()];
+            }
+
+            return [`Observation ${index + 1}`, item];
+        });
+}
 
 // Custom typewriter hook for HUD feel
 function useTypewriter(text, speed = 30) {
@@ -23,10 +48,13 @@ function useTypewriter(text, speed = 30) {
     return displayedText;
 }
 
-export default function SceneThree({ scene, scenarioId, previousDecision, scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
-    const fallbackConsequenceKey = Object.keys(scene.consequences)[0];
-    const resolvedConsequenceKey = scene.consequences[previousDecision] ? previousDecision : fallbackConsequenceKey;
-    const consequence = scene.consequences[resolvedConsequenceKey];
+export default function SceneThree({ scene, scenarioId, previousDecision, scenarioTitle, scenarioAvatar, onComplete, isTeacher = false, theme = {} }) {
+    const consequenceEntries = Object.entries(scene?.consequences || {});
+    const fallbackConsequenceKey = consequenceEntries[0]?.[0] || null;
+    const resolvedConsequenceKey = previousDecision && scene?.consequences?.[previousDecision]
+        ? previousDecision
+        : fallbackConsequenceKey;
+    const consequence = resolvedConsequenceKey ? scene?.consequences?.[resolvedConsequenceKey] : null;
     const [followUpAnswer, setFollowUpAnswer] = useState('');
     const displayedOutcome = useTypewriter(consequence.outcome || '');
 
@@ -34,14 +62,16 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
     const border = theme.border || 'border-teal-500/30';
     const text = theme.text || 'text-teal-400';
 
-    const sceneThreeDataTable = scene.data?.table
-        ? scene.data.table
-        : consequence?.newData
-            ? {
-                headers: ['Metric', 'Value'],
-                rows: [['Observation', consequence.newData]],
-            }
-            : null;
+    const metricRows = scene.data?.table?.rows?.length
+        ? scene.data.table.rows
+        : toMetricRows(consequence?.newData);
+
+    const sceneThreeDataTable = metricRows.length
+        ? {
+            headers: ['Metric', 'Value'],
+            rows: metricRows,
+        }
+        : null;
 
     const handleContinue = () => {
         onComplete({
@@ -112,9 +142,9 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
                             <ScenarioVisual 
                                 scenarioId={scenarioId} 
                                 sceneIndex={2} 
-                                avatar={scene.avatar}
+                                avatar={scene.avatar || scenarioAvatar}
                                 title={scene.title}
-                                subtitle={consequence.message}
+                                subtitle={consequence?.message || consequence?.outcome || 'Outcome available below'}
                                 dataTable={sceneThreeDataTable}
                             />
                         </div>
@@ -132,7 +162,7 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
                                 <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                                 <div className="flex items-start gap-3">
                                     <MessageSquare className={`w-3.5 h-3.5 ${text} flex-shrink-0 mt-0.5`} />
-                                    <p className={`text-xs ${text} italic`}>{consequence.message}</p>
+                                    <p className={`text-xs ${text} italic`}>{consequence?.message || 'No additional summary available.'}</p>
                                 </div>
                             </div>
 
@@ -140,7 +170,7 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
                                 <TrendingUp className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
                                 <div>
                                     <span className="text-[8px] text-slate-500 uppercase font-bold block mb-1">Observation Data</span>
-                                    <p className="text-[11px] text-emerald-300 font-mono">{consequence.newData || 'No data available'}</p>
+                                    <p className="text-[11px] text-emerald-300 font-mono">{consequence?.newData || 'No data available'}</p>
                                 </div>
                             </div>
                         </div>

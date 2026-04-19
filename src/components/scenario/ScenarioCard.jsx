@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Lock, CheckCircle2, Play, Beaker, Dna, Mountain, Zap, Rocket, Star, AlertCircle } from 'lucide-react';
+import { Clock, Lock, CheckCircle2, Play, Beaker, Dna, Mountain, Zap, Rocket, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const strandIcons = {

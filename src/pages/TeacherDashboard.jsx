@@ -1,6 +1,6 @@
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-    ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, Legend
+    ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts';
 
 import React, { useState, useEffect } from 'react';
@@ -14,7 +14,7 @@ import {
     Loader2, LogOut, GraduationCap, CheckCircle2,
     Target, Home, Eye, MessageSquare, Send, Trash2,
     Trophy, Brain, BarChart3, ChevronDown, ChevronUp,
-    UserCircle, Download, X, XCircle, Repeat
+    UserCircle
 } from 'lucide-react';
 
 

@@ -6,6 +6,16 @@ import pluginUnusedImports from "eslint-plugin-unused-imports";
 
 export default [
     {
+        ignores: [
+            "dist/**",
+            "node_modules/**",
+            ".vercel/**",
+            "collection-claude-code-source-code/**",
+            "everything-claude-code/**",
+            ".aider*",
+        ],
+    },
+    {
         files: [
             "src/components/**/*.{js,mjs,cjs,jsx}",
             "src/pages/**/*.{js,mjs,cjs,jsx}",

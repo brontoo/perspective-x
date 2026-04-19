@@ -13,62 +13,90 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 
-export default function ExitTicket({ scenario, studentChoice, onComplete, theme = {} }) {
+function normalizeQuestions(exitTicket) {
+  if (Array.isArray(exitTicket?.questions)) {
+    return exitTicket.questions.map((question, index) => ({
+      id: question.id || `q-${index + 1}`,
+      prompt: question.text || question.question || '',
+      options: question.options || [],
+    }));
+  }
+
+  if (Array.isArray(exitTicket?.mcqs)) {
+    return exitTicket.mcqs.map((question, index) => ({
+      id: question.id || `q-${index + 1}`,
+      prompt: question.text || question.question || '',
+      options: question.options || [],
+    }));
+  }
+
+  return [];
+}
+
+export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, theme = {} }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [reflection, setReflection] = useState('');
+  const [transferAnswer, setTransferAnswer] = useState('');
   const [showResults, setShowResults] = useState(false);
-  const [score, setScore] = useState(0);
   const [achievements, setAchievements] = useState([]);
 
   const accent = theme.accent || 'from-teal-500 to-emerald-500';
   const border = theme.border || 'border-teal-500/30';
   const text = theme.text || 'text-teal-400';
+  const questions = normalizeQuestions(exitTicket);
+  const correctAnswers = answers.filter((answer) => answer.isCorrect).length;
+  const score = questions.length > 0 ? Math.round((correctAnswers / questions.length) * 100) : 0;
 
   // Calculate score and achievements
   useEffect(() => {
     if (showResults) {
-      const correctAnswers = answers.filter(a => a.isCorrect).length;
-      const newScore = Math.round((correctAnswers / scenario.exitTicket.questions.length) * 100);
-      setScore(newScore);
-
       const earnedAchievements = [];
-      if (newScore >= 90) earnedAchievements.push('Master Scientist');
-      if (newScore >= 70) earnedAchievements.push('Competent Researcher');
+      if (score >= 90) earnedAchievements.push('Master Scientist');
+      if (score >= 70) earnedAchievements.push('Competent Researcher');
       if (answers.every(a => a.isCorrect)) earnedAchievements.push('Perfect Score');
       if (reflection.length > 200) earnedAchievements.push('Deep Thinker');
       
       setAchievements(earnedAchievements);
     }
-  }, [showResults, answers, reflection, scenario]);
+  }, [showResults, answers, reflection, score]);
 
   const handleAnswer = (option, isCorrect) => {
-    setAnswers([...answers, { 
-      questionId: currentQuestion,
-      option,
-      isCorrect 
-    }]);
+    setAnswers((prev) => {
+      const nextAnswers = prev.filter((answer) => answer.questionId !== currentQuestion);
+      nextAnswers.push({ 
+        questionId: currentQuestion,
+        option,
+        isCorrect,
+      });
+      return nextAnswers;
+    });
 
-    if (currentQuestion < scenario.exitTicket.questions.length - 1) {
-      setTimeout(() => setCurrentQuestion(currentQuestion + 1), 1000);
+    if (currentQuestion < questions.length - 1) {
+      setTimeout(() => setCurrentQuestion((prev) => prev + 1), 300);
     } else {
-      setTimeout(() => setShowResults(true), 1000);
+      setTimeout(() => setShowResults(true), 300);
     }
   };
 
   const handleSubmit = () => {
     onComplete({
       score,
-      answers,
+      passed: score >= 70 && reflection.trim().length >= 10 && transferAnswer.trim().length >= 10,
+      mcq_answers: answers,
       reflection,
+      transfer_answer: transferAnswer,
       achievements
     });
   };
 
   const renderQuestion = () => {
-    const question = scenario.exitTicket.questions[currentQuestion];
+    const question = questions[currentQuestion];
+    if (!question) {
+      return null;
+    }
+
     return (
       <motion.div
         key={`question-${currentQuestion}`}
@@ -82,11 +110,11 @@ export default function ExitTicket({ scenario, studentChoice, onComplete, theme 
             <BookOpen className="w-5 h-5" />
           </div>
           <h3 className={`text-xs font-bold uppercase tracking-widest ${text}`}>
-            Question {currentQuestion + 1} of {scenario.exitTicket.questions.length}
+            Question {currentQuestion + 1} of {questions.length}
           </h3>
         </div>
 
-        <h2 className="text-2xl font-bold text-white mb-6">{question.text}</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">{question.prompt}</h2>
 
         <div className="space-y-3">
           {question.options.map((option) => (
@@ -162,7 +190,7 @@ export default function ExitTicket({ scenario, studentChoice, onComplete, theme 
             <div className="flex justify-between items-center">
               <span className="text-slate-400">Correct Answers:</span>
               <span className="font-bold text-white">
-                {answers.filter(a => a.isCorrect).length} / {scenario.exitTicket.questions.length}
+                {correctAnswers} / {questions.length}
               </span>
             </div>
             <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
@@ -199,7 +227,7 @@ export default function ExitTicket({ scenario, studentChoice, onComplete, theme 
           <MessageSquare className={`w-5 h-5 ${text}`} />
           <h3 className={`text-xs font-bold uppercase tracking-widest ${text}`}>Reflection</h3>
         </div>
-        <p className="text-slate-400 mb-4">{scenario.exitTicket.reflectionPrompt}</p>
+        <p className="text-slate-400 mb-4">{exitTicket?.reflectionPrompt || `What did you learn from ${scenarioTitle || 'this scenario'}?`}</p>
         <Textarea
           value={reflection}
           onChange={(e) => setReflection(e.target.value)}
@@ -218,9 +246,26 @@ export default function ExitTicket({ scenario, studentChoice, onComplete, theme 
         </div>
       </Card>
 
+      {exitTicket?.transferQuestion && (
+        <Card className={`border ${border} bg-slate-900/50 p-6`}>
+          <div className="flex items-center gap-3 mb-4">
+            <ClipboardList className={`w-5 h-5 ${text}`} />
+            <h3 className={`text-xs font-bold uppercase tracking-widest ${text}`}>Transfer Question</h3>
+          </div>
+          <p className="text-slate-400 mb-4">{exitTicket.transferQuestion}</p>
+          <Textarea
+            value={transferAnswer}
+            onChange={(e) => setTransferAnswer(e.target.value)}
+            placeholder="Apply this idea to a new situation..."
+            className="bg-slate-800/50 border-slate-700 text-white min-h-[120px]"
+          />
+        </Card>
+      )}
+
       <Button
         onClick={handleSubmit}
         size="lg"
+        disabled={reflection.trim().length < 10 || (exitTicket?.transferQuestion && transferAnswer.trim().length < 10)}
         className={`w-full bg-gradient-to-r ${accent}`}
       >
         Complete Scenario
@@ -240,8 +285,12 @@ export default function ExitTicket({ scenario, studentChoice, onComplete, theme 
           <h1 className="text-2xl font-bold text-white">Scenario Reflection</h1>
         </div>
 
+        {questions.length === 0 && (
+          <p className="text-slate-400">No exit ticket questions are configured for this scenario.</p>
+        )}
+
         <AnimatePresence mode="wait">
-          {!showResults ? renderQuestion() : renderResults()}
+          {!showResults && questions.length > 0 ? renderQuestion() : renderResults()}
         </AnimatePresence>
       </Card>
     </motion.div>

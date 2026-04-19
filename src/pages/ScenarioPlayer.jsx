@@ -1,4 +1,3 @@
-import ScenarioVisualEngine from "@/components/scenario/ScenarioVisualEngine";
 import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -316,10 +315,14 @@ export default function ScenarioPlayer() {
     };
 
     const handleExitTicketComplete = async (exitTicketData) => {
+        const passed = Boolean(exitTicketData?.passed ?? (exitTicketData?.score >= 70));
         const result = {
             ...responses,
-            exitTicket: exitTicketData,
-            passed: exitTicketData.score >= 70,
+            exitTicket: {
+                ...exitTicketData,
+                passed,
+            },
+            passed,
         };
 
         setScenarioResult(result);
@@ -559,6 +562,7 @@ export default function ScenarioPlayer() {
                                         scenarioId={scenario.id}
                                         previousDecision={responses.scene2?.consequence}
                                         scenarioTitle={scenario.title}
+                                        scenarioAvatar={scenario.character?.avatar}
                                         theme={theme}
                                         onComplete={handleScene3Complete}
                                         isTeacher={isTeacher}
@@ -567,7 +571,13 @@ export default function ScenarioPlayer() {
 
                                 {currentScene === PHASE.IMPACT && (() => {
                                     const consequenceKey = responses.scene2?.consequence;
+                                    const sceneOne = scenario.scenes[0];
+                                    const sceneTwo = scenario.scenes[1];
                                     const scene3 = scenario.scenes[2];
+                                    const decisionOption = sceneTwo?.options?.find((option) => option.id === responses.scene2?.selectedOption) || null;
+                                    const baselineData = Object.fromEntries(
+                                        (sceneOne?.data?.table?.rows || []).map(([label, value]) => [label, value])
+                                    );
                                     const rawConsequence = scene3?.consequences?.[consequenceKey]
                                         || scene3?.consequences?.[Object.keys(scene3?.consequences || {})[0]];
                                     const consequence = rawConsequence
@@ -575,7 +585,11 @@ export default function ScenarioPlayer() {
                                         : { key: consequenceKey };
                                     return (
                                         <DecisionImpact
+                                            scenario={scene3}
+                                            studentChoice={consequenceKey}
                                             consequence={consequence}
+                                            decisionOption={decisionOption}
+                                            baselineData={baselineData}
                                             scenarioId={scenarioId}
                                             onContinueToExit={handleImpactContinueToExit}
                                             onRetryScene1={handleImpactRetryScene1}

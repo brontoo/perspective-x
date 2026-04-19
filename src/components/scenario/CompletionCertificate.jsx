@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Award, CheckCircle2 } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';

@@ -5,8 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { 
   CheckCircle, 
-  AlertCircle, 
-  Clock,
+  AlertCircle,
   Zap,
   Shield,
   DollarSign,

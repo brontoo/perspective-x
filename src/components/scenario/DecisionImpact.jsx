@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { 
@@ -11,25 +11,118 @@ import {
   RefreshCw
 } from 'lucide-react';
 
+function deriveImpactType({ consequence, decisionOption, studentChoice }) {
+  if (consequence?.impactType) {
+    return consequence.impactType;
+  }
+
+  if (decisionOption?.correct === true || studentChoice === 'correct') {
+    return 'positive';
+  }
+
+  if (decisionOption?.ethical === 'inefficient' || studentChoice === 'too_high') {
+    return 'neutral';
+  }
+
+  return 'negative';
+}
+
+function normalizeConsequence(scenario, studentChoice, directConsequence) {
+  if (directConsequence) {
+    return directConsequence;
+  }
+
+  const consequences = scenario?.consequences;
+  if (!consequences) {
+    return null;
+  }
+
+  if (Array.isArray(consequences)) {
+    return consequences.find((item) => item.id === studentChoice) || consequences[0] || null;
+  }
+
+  return consequences[studentChoice] || Object.values(consequences)[0] || null;
+}
+
+function normalizeMetricData(rawData) {
+  if (!rawData) return {};
+
+  if (typeof rawData === 'object' && !Array.isArray(rawData)) {
+    return rawData;
+  }
+
+  if (typeof rawData !== 'string') {
+    return { Observation: String(rawData) };
+  }
+
+  return rawData
+    .split(/[.;]\s+/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .reduce((result, item, index) => {
+      const [label, ...rest] = item.split(':');
+      if (rest.length > 0) {
+        result[label.trim()] = rest.join(':').trim();
+      } else {
+        result[`Observation ${index + 1}`] = item;
+      }
+      return result;
+    }, {});
+}
+
+function formatMetricValue(value) {
+  if (value === null || value === undefined) {
+    return 'N/A';
+  }
+
+  return String(value);
+}
+
+function createImpactAnnouncement(impactType, consequence) {
+  const prefix = impactType === 'positive'
+    ? 'Success.'
+    : impactType === 'negative'
+      ? 'Failure.'
+      : 'Caution.';
+
+  return [prefix, consequence?.message || consequence?.outcome || 'Decision analysis ready.'].join(' ');
+}
+
 export default function DecisionImpact({ 
   scenario, 
   studentChoice, 
-  onImpactShown 
+  consequence: directConsequence,
+  decisionOption,
+  baselineData,
+  onImpactShown,
+  onContinueToExit,
+  onRetryScene1,
+  onReplayVideo,
+  isTeacher = false,
+  theme = {}
 }) {
   const [isComplete, setIsComplete] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [showBeforeAfter, setShowBeforeAfter] = useState(false);
 
   // Get consequence data based on student choice
-  const consequence = scenario.consequences?.find(c => c.id === studentChoice) || 
-    scenario.consequences?.[0];
+  const consequence = normalizeConsequence(scenario, studentChoice, directConsequence);
   
   // Determine impact type (positive/negative/neutral)
-  const impactType = consequence?.impactType || 'neutral';
+  const impactType = deriveImpactType({ consequence, decisionOption, studentChoice });
 
   // Data comparison
-  const beforeData = scenario.baselineData || {};
-  const afterData = consequence?.newData || {};
+  const beforeData = normalizeMetricData(baselineData || scenario?.baselineData || scenario?.data?.baselineData);
+  const afterData = normalizeMetricData(consequence?.newData);
+
+  const handleContinue = () => {
+    if (onContinueToExit) {
+      onContinueToExit();
+      return;
+    }
+
+    onImpactShown?.(consequence);
+  };
 
   // Color scheme based on impact
   const colors = {
@@ -55,6 +148,24 @@ export default function DecisionImpact({
 
   const currentColor = colors[impactType];
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || !(window.speechSynthesis && window.SpeechSynthesisUtterance) || !consequence) {
+      return undefined;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(createImpactAnnouncement(impactType, consequence));
+    utterance.rate = impactType === 'negative' ? 0.92 : 0.98;
+    utterance.pitch = impactType === 'positive' ? 1.08 : impactType === 'negative' ? 0.88 : 0.96;
+    utterance.volume = 1;
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+
+    return () => {
+      window.speechSynthesis.cancel();
+    };
+  }, [impactType, consequence]);
+
   // Animate through steps
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -62,12 +173,14 @@ export default function DecisionImpact({
         setCurrentStep(prev => prev + 1);
       } else if (!isComplete) {
         setIsComplete(true);
-        onImpactShown();
+        if (!onContinueToExit) {
+          onImpactShown?.(consequence);
+        }
       }
     }, currentStep === 0 ? 1000 : 2000);
 
     return () => clearTimeout(timer);
-  }, [currentStep, isComplete, onImpactShown]);
+  }, [currentStep, isComplete, onContinueToExit, onImpactShown, consequence]);
 
   // Show before/after after step 1
   useEffect(() => {
@@ -75,31 +188,6 @@ export default function DecisionImpact({
       setShowBeforeAfter(true);
     }
   }, [currentStep]);
-
-  // Animated number component
-  const AnimatedNumber = ({ value, duration = 1 }) => {
-    const [displayValue, setDisplayValue] = useState(0);
-
-    useEffect(() => {
-      let start = 0;
-      const end = value;
-      const increment = end / (duration * 60); // 60fps
-
-      const timer = setInterval(() => {
-        start += increment;
-        if (start >= end) {
-          setDisplayValue(end);
-          clearInterval(timer);
-        } else {
-          setDisplayValue(Math.floor(start));
-        }
-      }, 1000/60);
-
-      return () => clearInterval(timer);
-    }, [value, duration]);
-
-    return <span>{displayValue}</span>;
-  };
 
   return (
     <motion.div
@@ -148,12 +236,13 @@ export default function DecisionImpact({
                 Before Decision
               </h3>
               <div className="space-y-3">
+                {Object.keys(beforeData).length === 0 && (
+                  <p className="text-slate-500 text-sm">No baseline data available.</p>
+                )}
                 {Object.entries(beforeData).map(([key, value]) => (
                   <div key={`before-${key}`} className="flex justify-between items-center">
                     <span className="text-slate-400">{key}:</span>
-                    <span className="font-mono text-white">
-                      <AnimatedNumber value={value} />
-                    </span>
+                    <span className="font-mono text-white">{formatMetricValue(value)}</span>
                   </div>
                 ))}
               </div>
@@ -165,12 +254,13 @@ export default function DecisionImpact({
                 After Decision
               </h3>
               <div className="space-y-3">
+                {Object.keys(afterData).length === 0 && (
+                  <p className="text-slate-500 text-sm">No post-decision data available.</p>
+                )}
                 {Object.entries(afterData).map(([key, value]) => (
                   <div key={`after-${key}`} className="flex justify-between items-center">
                     <span className="text-slate-400">{key}:</span>
-                    <span className="font-mono text-white">
-                      <AnimatedNumber value={value} />
-                    </span>
+                    <span className="font-mono text-white">{formatMetricValue(value)}</span>
                   </div>
                 ))}
               </div>
@@ -203,7 +293,7 @@ export default function DecisionImpact({
             className="flex justify-end"
           >
             <Button
-              onClick={() => onImpactShown()}
+              onClick={handleContinue}
               className={`bg-gradient-to-r ${impactType === 'positive' ? 
                 'from-emerald-500 to-teal-500' : 
                 impactType === 'negative' ? 
@@ -214,6 +304,22 @@ export default function DecisionImpact({
               <ArrowRight className="ml-2" />
             </Button>
           </motion.div>
+        )}
+
+        {isTeacher && (onRetryScene1 || onReplayVideo) && (
+          <div className="mt-6 flex flex-wrap justify-end gap-3">
+            {onRetryScene1 && (
+              <Button variant="outline" onClick={onRetryScene1} className="border-slate-600 text-slate-200">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Retry From Scene 1
+              </Button>
+            )}
+            {onReplayVideo && (
+              <Button variant="outline" onClick={onReplayVideo} className="border-slate-600 text-slate-200">
+                Replay Intro Video
+              </Button>
+            )}
+          </div>
         )}
       </Card>
     </motion.div>

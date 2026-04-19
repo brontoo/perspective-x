@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Loader2, Eye, CheckCircle2, XCircle } from 'lucide-react';
+import { X, Eye, CheckCircle2, XCircle } from 'lucide-react';
 import { SCENARIOS } from '@/components/scenarios/scenarioData';
 
 export default function StudentAnswersModal({ isOpen, onClose, attempts = [], studentName }) {

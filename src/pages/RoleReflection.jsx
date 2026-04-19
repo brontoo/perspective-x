@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { ROLES, SCENARIOS } from '@/components/scenarios/scenarioData';
+import { ROLES } from '@/components/scenarios/scenarioData';
 import {
     ArrowLeft, Trophy, Sparkles, MessageSquare,
     Target, Briefcase, Loader2, CheckCircle2

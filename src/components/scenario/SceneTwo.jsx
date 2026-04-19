@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, AlertTriangle, Timer, Sparkles, Activity, Cpu, ShieldAlert } from 'lucide-react';
+import { ArrowRight, Timer, Sparkles, Activity, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,6 +28,10 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle, onComplete,
     const [showThinkTimer, setShowThinkTimer] = useState(true);
     const [thinkTime, setThinkTime] = useState(120);
     const displayedNarrative = useTypewriter(scene.narrative || '');
+    const narrativeParagraphs = (scene.narrative || '')
+        .split(/\n+/)
+        .map((paragraph) => paragraph.trim())
+        .filter(Boolean);
 
     const accent = theme.accent || 'from-teal-500 to-emerald-500';
     const border = theme.border || 'border-teal-500/30';
