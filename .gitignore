@@ -30,3 +30,5 @@ dist-ssr
 .env
 .vercel
 .env*.local
+collection-claude-code-source-code/
+everything-claude-code/
