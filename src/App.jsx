@@ -63,9 +63,6 @@ function AppRoutes() {
         return <ScenarioPlayer />;
     }
 
-    if (location.pathname === '/GasLawScenario' || location.pathname === '/gas-law-scenario') {
-        return <GasLawScenario />;
-    }
 
     if (isPublicPath) {
         return (
@@ -120,8 +117,6 @@ function AppRoutes() {
                     </LayoutWrapper>
                 } />
                 <Route path="*" element={<PageNotFound />} />
-                <Route path="/GasLawScenario" element={<GasLawScenario />} />
-                <Route path="/gas-law-scenario" element={<GasLawScenario />} />
             </Routes>
         </ProtectedRoute>
     );
