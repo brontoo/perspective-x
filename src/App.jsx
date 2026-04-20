@@ -60,13 +60,11 @@ function AppRoutes() {
     // ── ScenarioPlayer & GasLawScenario: fullscreen, no Layout, no Navbar ──
     // يجب أن يكون خارج LayoutWrapper تماماً لأنه صفحة مستقلة
     if (location.pathname === '/ScenarioPlayer') {
-        return (
-            <ProtectedRoute>
-                <Routes>
-                    <Route path="/ScenarioPlayer" element={<ScenarioPlayer />} />
-                </Routes>
-            </ProtectedRoute>
-        );
+        return <ScenarioPlayer />;
+    }
+
+    if (location.pathname === '/GasLawScenario' || location.pathname === '/gas-law-scenario') {
+        return <GasLawScenario />;
     }
 
     if (isPublicPath) {
@@ -122,11 +120,8 @@ function AppRoutes() {
                     </LayoutWrapper>
                 } />
                 <Route path="*" element={<PageNotFound />} />
-                {location.pathname === '/GasLawScenario' || location.pathname === '/gas-law-scenario' ? (
-                    <ProtectedRoute>
-                        <GasLawScenario />
-                    </ProtectedRoute>
-                ) : null}
+                <Route path="/GasLawScenario" element={<GasLawScenario />} />
+                <Route path="/gas-law-scenario" element={<GasLawScenario />} />
             </Routes>
         </ProtectedRoute>
     );
