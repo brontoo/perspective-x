@@ -69,17 +69,6 @@ function AppRoutes() {
         );
     }
 
-    if (location.pathname === '/GasLawScenario' || location.pathname === '/gas-law-scenario') {
-        return (
-            <ProtectedRoute>
-                <Routes>
-                    <Route path="/GasLawScenario" element={<GasLawScenario />} />
-                    <Route path="/gas-law-scenario" element={<GasLawScenario />} />
-                </Routes>
-            </ProtectedRoute>
-        );
-    }
-
     if (isPublicPath) {
         return (
             <Routes>
@@ -133,6 +122,16 @@ function AppRoutes() {
                     </LayoutWrapper>
                 } />
                 <Route path="*" element={<PageNotFound />} />
+                <Route path="/GasLawScenario" element={
+                    <ProtectedRoute>
+                        <GasLawScenario />
+                    </ProtectedRoute>
+                } />
+                <Route path="/gas-law-scenario" element={
+                    <ProtectedRoute>
+                        <GasLawScenario />
+                    </ProtectedRoute>
+                } />
             </Routes>
         </ProtectedRoute>
     );
