@@ -73,82 +73,10 @@ export const ROLES = {
         difficulty: 'Beginner',
         scenarios: ['unstable_slope']
     },
-    gas_laws_engineer: {
-        id: 'gas_laws_engineer',
-        title: 'Gas Laws Engineer',
-        icon: '🧯',
-        color: 'blue',
-        description: 'Apply gas laws to keep UAE industrial systems safe and efficient',
-        difficulty: 'On-Level',
-        scenarios: ['gas_boyle_adnoc', 'gas_charles_aviation', 'gas_gaylussac_cylinder']
-    }
 
 };
 
 export const SCENARIOS = {
-    // ============================================
-    // GAS LAW SCENARIOS
-    // ============================================
-    'pressure-control-adnoc': {
-        id: 'pressure-control-adnoc',
-        title: 'Pressure Control at ADNOC Gas Storage',
-        category: 'gas-laws', 
-        lawType: 'boyle',
-        description: 'Calculate the final pressure when compressing gas in an ADNOC storage vessel using Boyle\'s Law.',
-        narrator: {
-            name: 'Aisha Al Mansoori',
-            gender: 'female',
-            job: 'Process & Safety Engineer, ADNOC Gas Operations'
-        },
-        route: '/GasLawScenario?scenario=boyle',
-        difficulty: 'medium',
-        duration: '5-7 minutes',
-        learningObjectives: [
-            'Understand Boyle\'s Law (P₁V₁ = P₂V₂)',
-            'Calculate pressure changes with volume changes',
-            'Apply gas laws to industrial scenarios'
-        ]
-    },
-    'gas-expansion-aviation': {
-        id: 'gas-expansion-aviation',
-        title: 'Gas Expansion in UAE Aviation',
-        category: 'gas-laws',
-        lawType: 'charles',
-        description: 'Forecast gas volume expansion in airport equipment due to temperature changes using Charles\'s Law.',
-        narrator: {
-            name: 'Aisha Al Mansoori',
-            gender: 'female',
-            job: 'Process & Safety Engineer, Abu Dhabi Airport Systems'
-        },
-        route: '/GasLawScenario?scenario=charles',
-        difficulty: 'medium',
-        duration: '5-7 minutes',
-        learningObjectives: [
-            'Understand Charles\'s Law (V₁/T₁ = V₂/T₂)',
-            'Calculate volume changes with temperature changes',
-            'Apply gas laws to aviation scenarios'
-        ]
-    },
-    'pressure-buildup-cylinder': {
-        id: 'pressure-buildup-cylinder',
-        title: 'Pressure Build-Up in Sealed Cylinder',
-        category: 'gas-laws',
-        lawType: 'gayLussac',
-        description: 'Predict pressure increase in a sealed cylinder due to temperature rise using Gay-Lussac\'s Law.',
-        narrator: {
-            name: 'Aisha Al Mansoori',
-            gender: 'female',
-            job: 'Process & Safety Engineer, Abu Dhabi Industrial Complex'
-        },
-        route: '/GasLawScenario?scenario=gayLussac',
-        difficulty: 'medium',
-        duration: '5-7 minutes',
-        learningObjectives: [
-            'Understand Gay-Lussac\'s Law (P₁/T₁ = P₂/T₂)',
-            'Calculate pressure changes with temperature changes',
-            'Apply gas laws to industrial safety scenarios'
-        ]
-    },
 
     // ============================================
     // SCENARIO 1: Water Contamination (Environmental Chemistry)
