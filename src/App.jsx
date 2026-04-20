@@ -1,5 +1,6 @@
 import RoleHub from '@/pages/RoleHub';
 import ScenarioPlayer from '@/pages/ScenarioPlayer';
+import GasLawScenario from '@/pages/GasLawScenario';
 import LeaderboardPage from './pages/LeaderboardPage';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -56,13 +57,24 @@ function AppRoutes() {
     const location = useLocation();
     const isPublicPath = location.pathname === '/' || location.pathname === '/SignIn';
 
-    // ── ScenarioPlayer: fullscreen, no Layout, no Navbar ──
+    // ── ScenarioPlayer & GasLawScenario: fullscreen, no Layout, no Navbar ──
     // يجب أن يكون خارج LayoutWrapper تماماً لأنه صفحة مستقلة
     if (location.pathname === '/ScenarioPlayer') {
         return (
             <ProtectedRoute>
                 <Routes>
                     <Route path="/ScenarioPlayer" element={<ScenarioPlayer />} />
+                </Routes>
+            </ProtectedRoute>
+        );
+    }
+
+    if (location.pathname === '/GasLawScenario' || location.pathname === '/gas-law-scenario') {
+        return (
+            <ProtectedRoute>
+                <Routes>
+                    <Route path="/GasLawScenario" element={<GasLawScenario />} />
+                    <Route path="/gas-law-scenario" element={<GasLawScenario />} />
                 </Routes>
             </ProtectedRoute>
         );
