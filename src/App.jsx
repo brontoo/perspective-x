@@ -122,16 +122,11 @@ function AppRoutes() {
                     </LayoutWrapper>
                 } />
                 <Route path="*" element={<PageNotFound />} />
-                <Route path="/GasLawScenario" element={
+                {location.pathname === '/GasLawScenario' || location.pathname === '/gas-law-scenario' ? (
                     <ProtectedRoute>
                         <GasLawScenario />
                     </ProtectedRoute>
-                } />
-                <Route path="/gas-law-scenario" element={
-                    <ProtectedRoute>
-                        <GasLawScenario />
-                    </ProtectedRoute>
-                } />
+                ) : null}
             </Routes>
         </ProtectedRoute>
     );
