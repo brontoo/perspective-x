@@ -63,6 +63,9 @@ function AppRoutes() {
         return <ScenarioPlayer />;
     }
 
+    if (location.pathname === '/GasLawScenario' || location.pathname === '/gas-law-scenario') {
+        return <GasLawScenario />;
+    }
 
     if (isPublicPath) {
         return (
