@@ -32,3 +32,4 @@ dist-ssr
 .env*.local
 collection-claude-code-source-code/
 everything-claude-code/
+.aider*
