@@ -86,7 +86,23 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
                 border={border}
                 text={text}
                 className="mb-8"
-            />
+            >
+                <div className="flex gap-2 mt-4">
+                    {['briefing', 'data', 'decision'].map((s) => (
+                        <button
+                            key={s}
+                            onClick={() => isTeacher && setStage(s)}
+                            className={`text-xs px-3 py-1 rounded-full border ${
+                                stage === s 
+                                    ? `${border} ${text} bg-slate-800/70` 
+                                    : 'border-slate-700 text-slate-400'
+                            } ${isTeacher ? 'cursor-pointer' : 'cursor-default'}`}
+                        >
+                            {s.charAt(0).toUpperCase() + s.slice(1)}
+                        </button>
+                    ))}
+                </div>
+            </ScenarioStageHeader>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
@@ -169,14 +185,25 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
                                 <p className={`text-base ${text} font-medium`}>Select the best option below:</p>
                             </div>
 
-                                <ScenarioThinkTimer
-                                    show={showThinkTimer}
-                                    time={thinkTime}
-                                    icon={Timer}
-                                    label="Critical Thinking Phase"
-                                    tone="amber"
-                                    className="mb-6"
-                                />
+                                {showThinkTimer && (
+                                    <ScenarioThinkTimer
+                                        show={showThinkTimer}
+                                        time={thinkTime}
+                                        icon={Timer}
+                                        label="Critical Thinking Phase"
+                                        tone="amber"
+                                        className="mb-6"
+                                    >
+                                        {isTeacher && (
+                                            <button 
+                                                onClick={() => setShowThinkTimer(false)}
+                                                className="ml-2 text-xs text-amber-300 hover:text-amber-100"
+                                            >
+                                                Skip
+                                            </button>
+                                        )}
+                                    </ScenarioThinkTimer>
+                                )}
 
                             <div className="space-y-4">
                                 {scene.options.map((option) => (

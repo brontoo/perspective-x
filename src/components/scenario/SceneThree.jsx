@@ -114,7 +114,7 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
                         </div>
 
                         {/* Analysis Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
                             <div className={`p-4 rounded-xl border ${border} bg-slate-800/40 relative overflow-hidden group`}>
                                 <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                                 <div className="flex items-start gap-3">
