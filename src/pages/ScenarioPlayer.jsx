@@ -513,14 +513,17 @@ export default function ScenarioPlayer() {
                                 )}
 
                                 {currentScene === PHASE.SCENE1 && (
-                                    <SceneOne
-                                        scene={scenario.scenes[0]}
-                                        scenarioId={scenarioId}
-                                        scenarioTitle={scenario.title}
-                                        theme={theme}
-                                        onComplete={(r) => handleSceneComplete(1, r)}
-                                        isTeacher={isTeacher}
-                                    />
+                                    <>
+                                        {console.log('Rendering SceneOne')}
+                                        <SceneOne
+                                            scene={scenario.scenes[0]}
+                                            scenarioId={scenarioId}
+                                            scenarioTitle={scenario.title}
+                                            theme={theme}
+                                            onComplete={(r) => handleSceneComplete(1, r)}
+                                            isTeacher={isTeacher}
+                                        />
+                                    </>
                                 )}
 
                                 {currentScene === PHASE.SCENE2 && (

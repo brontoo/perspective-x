@@ -72,7 +72,7 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
             >
                 <div className={`relative overflow-hidden rounded-3xl border ${border} bg-slate-950/80 backdrop-blur-md shadow-2xl mb-8`}>
                     {/* Scanning Line */}
-                    <div className="absolute inset-x-0 h-px bg-teal-500/10 animate-scan pointer-events-none" />
+                    <div className="absolute inset-x-0 h-px bg-teal-500/10 animate-scan pointer-events-none z-0" />
                     
                     <div className="p-8 relative">
                         {/* HUD Corners */}

@@ -26,12 +26,18 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
             return undefined;
         }
 
+        // Skip briefing in teacher preview mode
+        if (isTeacher) {
+            setStage('data');
+            return;
+        }
+
         const timer = setTimeout(() => {
             setStage('data');
         }, 5000);
 
         return () => clearTimeout(timer);
-    }, [stage]);
+    }, [stage, isTeacher]);
 
     useEffect(() => {
         if (stage !== 'decision' || !showThinkTimer || thinkTime <= 0) {
