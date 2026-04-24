@@ -1,6 +1,5 @@
 import RoleHub from '@/pages/RoleHub';
 import ScenarioPlayer from '@/pages/ScenarioPlayer';
-import GasLawScenario from '@/pages/GasLawScenario';
 import LeaderboardPage from './pages/LeaderboardPage';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -64,7 +63,7 @@ function AppRoutes() {
     }
 
     if (location.pathname === '/GasLawScenario' || location.pathname === '/gas-law-scenario') {
-        return <GasLawScenario />;
+        return <Navigate to="/ScenarioPlayer?scenario=gas-laws" replace />;
     }
 
     if (isPublicPath) {
