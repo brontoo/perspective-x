@@ -538,16 +538,22 @@ export default function ScenarioPlayer() {
                                 )}
 
                                 {currentScene === PHASE.SCENE3 && (
-                                    <SceneThree
-                                        scene={scenario.scenes[2]}
-                                        scenarioId={scenarioId}
-                                        previousDecision={responses.scene2?.consequence}
-                                        scenarioTitle={scenario.title}
-                                        scenarioAvatar={scenario.character?.avatar}
-                                        theme={theme}
-                                        onComplete={handleScene3Complete}
-                                        isTeacher={isTeacher}
-                                    />
+                                    <>
+                                        {console.log('Passing to SceneThree:', {
+                                            scene: scenario.scenes[2],
+                                            previousDecision: responses.scene2?.consequence
+                                        })}
+                                        <SceneThree
+                                            scene={scenario.scenes[2]}
+                                            scenarioId={scenarioId}
+                                            previousDecision={responses.scene2?.consequence}
+                                            scenarioTitle={scenario.title}
+                                            scenarioAvatar={scenario.character?.avatar}
+                                            theme={theme}
+                                            onComplete={handleScene3Complete}
+                                            isTeacher={isTeacher}
+                                        />
+                                    </>
                                 )}
 
                                 {currentScene === PHASE.IMPACT && (() => {

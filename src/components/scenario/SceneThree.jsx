@@ -8,12 +8,19 @@ import { toMetricRows } from './scenarioHelpers';
 import useTypewriter from './useTypewriter';
 
 export default function SceneThree({ scene, scenarioId, previousDecision, scenarioTitle: _scenarioTitle, scenarioAvatar, onComplete, isTeacher = false, theme = {} }) {
+    console.log('SceneThree props:', { scene, previousDecision });
     const consequenceEntries = Object.entries(scene?.consequences || {});
+    console.log('Consequence entries:', consequenceEntries);
     const fallbackConsequenceKey = consequenceEntries[0]?.[0] || null;
     const resolvedConsequenceKey = previousDecision && scene?.consequences?.[previousDecision]
         ? previousDecision
         : fallbackConsequenceKey;
     const consequence = resolvedConsequenceKey ? scene?.consequences?.[resolvedConsequenceKey] : null;
+    console.log('Resolved consequence:', { 
+        resolvedConsequenceKey,
+        consequence,
+        newData: consequence?.newData 
+    });
     const [followUpAnswer, setFollowUpAnswer] = useState('');
     const displayedOutcome = useTypewriter(consequence?.outcome || '');
 
@@ -24,6 +31,7 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
     const metricRows = scene.data?.table?.rows?.length
         ? scene.data.table.rows
         : toMetricRows(consequence?.newData);
+    console.log('Metric rows:', metricRows);
 
     const sceneThreeDataTable = metricRows.length
         ? {
@@ -115,6 +123,14 @@ export default function SceneThree({ scene, scenarioId, previousDecision, scenar
 
                         {/* Analysis Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+                            {!sceneThreeDataTable && !consequence?.newData && (
+                                <div className="col-span-2 p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-300">
+                                    <p>No data available for analysis. This may be a configuration issue.</p>
+                                    {isTeacher && (
+                                        <p className="text-xs mt-2">Check scenario data in admin panel.</p>
+                                    )}
+                                </div>
+                            )}
                             <div className={`p-4 rounded-xl border ${border} bg-slate-800/40 relative overflow-hidden group`}>
                                 <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                                 <div className="flex items-start gap-3">
