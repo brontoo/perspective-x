@@ -931,7 +931,7 @@ export default function ScenarioVisual({ scenarioId, sceneIndex, showData, avata
                         : <FallbackVisual avatar={avatar} scenarioId={scenarioId} sceneIndex={sceneIndex} />}
                 </motion.div>
 
-                {(dataTable || hasEnhancedLayout) && (
+                {dataTable && (
                     <motion.div
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}

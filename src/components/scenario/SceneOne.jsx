@@ -92,11 +92,12 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
                         <button
                             key={s}
                             onClick={() => isTeacher && setStage(s)}
+                            disabled={!isTeacher}
                             className={`text-xs px-3 py-1 rounded-full border ${
-                                stage === s 
-                                    ? `${border} ${text} bg-slate-800/70` 
+                                stage === s
+                                    ? `${border} ${text} bg-slate-800/70`
                                     : 'border-slate-700 text-slate-400'
-                            } ${isTeacher ? 'cursor-pointer' : 'cursor-default'}`}
+                            } ${isTeacher ? 'cursor-pointer' : 'cursor-not-allowed opacity-40'}`}
                         >
                             {s.charAt(0).toUpperCase() + s.slice(1)}
                         </button>
@@ -107,13 +108,12 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
                     <Card className={`overflow-hidden border ${border} bg-slate-900/50 backdrop-blur-sm shadow-2xl ${theme.glow}`}>
-                        <div className="relative aspect-video">
+                        <div className="bg-slate-900/50 rounded-t-2xl border-b border-white/5 overflow-hidden flex items-center justify-center h-48">
                             <ScenarioVisual
                                 scenarioId={scenarioId}
                                 sceneIndex={0}
                                 avatar={scene.avatar}
                                 title={scene.title}
-                                subtitle={stage === 'data' ? 'Use the evidence below before making your decision.' : null}
                             />
                         </div>
                         <div className="p-8">
@@ -237,13 +237,6 @@ export default function SceneOne({ scene, scenarioId, scenarioTitle: _scenarioTi
                                         text={text}
                                         className="p-8"
                                     />
-
-                                    <div className={`p-5 rounded-xl border ${selectedOption.correct
-                                        ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200'
-                                        : 'border-amber-500/40 bg-amber-500/10 text-amber-200'
-                                    }`}>
-                                        <p className="text-base leading-relaxed">{selectedOption.feedback}</p>
-                                    </div>
                                 </motion.div>
                             )}
                         </>

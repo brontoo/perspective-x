@@ -1,12 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { Trophy, Star, ArrowRight, Home, CheckCircle2, XCircle, Award } from 'lucide-react';
+import { Trophy, Star, ArrowRight, Home, CheckCircle2, XCircle, Award, RefreshCw, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
-export default function ScenarioComplete({ scenario, responses, role, onShowCertificate, theme = {} }) {
+export default function ScenarioComplete({ scenario, responses, role, onShowCertificate, onRetry, attemptCount = 1, theme = {} }) {
     const passed = responses.exitTicket?.passed ?? responses.passed;
     const exitQuestionCount = scenario.exitTicket?.questions?.length || scenario.exitTicket?.mcqs?.length || 2;
 
@@ -14,14 +13,6 @@ export default function ScenarioComplete({ scenario, responses, role, onShowCert
     const border = theme.border || 'border-teal-500/30';
     const text = theme.text || 'text-teal-400';
 
-    React.useEffect(() => {
-        if (passed) {
-            const duration = 3000;
-            const end = Date.now() + duration;
-            const frame = () => { if (Date.now() < end) requestAnimationFrame(frame); };
-            frame();
-        }
-    }, [passed]);
 
     return (
         <motion.div
@@ -44,8 +35,15 @@ export default function ScenarioComplete({ scenario, responses, role, onShowCert
                         </div>
                     </div>
                 ) : (
-                    <div className="w-32 h-32 mx-auto rounded-3xl bg-slate-800/50 border border-slate-700 flex items-center justify-center text-7xl">
-                        📋
+                    <div className="relative w-32 h-32 mx-auto">
+                        <div className="w-32 h-32 rounded-3xl bg-slate-800/50 border border-slate-700 flex items-center justify-center text-7xl opacity-25 select-none">
+                            {scenario.badgeIcon}
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-2xl bg-slate-900/95 border border-slate-600 flex items-center justify-center shadow-xl">
+                                <Lock className="w-6 h-6 text-slate-400" />
+                            </div>
+                        </div>
                     </div>
                 )}
             </motion.div>
@@ -89,6 +87,12 @@ export default function ScenarioComplete({ scenario, responses, role, onShowCert
             ) : (
                 <>
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+                        {attemptCount > 1 && (
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 mb-3">
+                                <RefreshCw className="w-3 h-3 text-slate-400" />
+                                <span className="text-slate-400 text-xs">Attempt {attemptCount}</span>
+                            </div>
+                        )}
                         <h1 className="text-4xl font-bold text-white mb-2">Almost There!</h1>
                         <p className="text-xl text-slate-400 mb-8">Review and try again to earn your badge</p>
                     </motion.div>
@@ -98,9 +102,19 @@ export default function ScenarioComplete({ scenario, responses, role, onShowCert
                             <XCircle className="w-6 h-6 text-amber-400" />
                             <span className="text-amber-400 font-semibold">Keep Practicing</span>
                         </div>
-                        <p className="text-slate-400">
+                        <p className="text-slate-400 mb-6">
                             You need to score at least 70% on the exit ticket and complete the reflection to unlock the next scenario.
                         </p>
+                        {onRetry && (
+                            <Button
+                                onClick={onRetry}
+                                size="lg"
+                                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-90 text-white font-semibold"
+                            >
+                                <RefreshCw className="w-5 h-5 mr-2" />
+                                Try Again
+                            </Button>
+                        )}
                     </Card>
                 </>
             )}
@@ -190,7 +204,7 @@ export default function ScenarioComplete({ scenario, responses, role, onShowCert
                 transition={{ delay: passed ? 1.2 : 0.8 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center">
 
-                <Link to={createPageUrl('RoleHub') + `?role=${role?.id}`}>
+                <Link to={`/role-hub?role=${role?.id || ''}`}>
                     <Button variant="outline" size="lg"
                         className={`border ${border} ${text} hover:bg-slate-800 w-full sm:w-auto`}>
                         <ArrowRight className="w-5 h-5 mr-2" />
@@ -198,7 +212,7 @@ export default function ScenarioComplete({ scenario, responses, role, onShowCert
                     </Button>
                 </Link>
 
-                <Link to={createPageUrl('Dashboard')}>
+                <Link to="/Dashboard">
                     <Button size="lg"
                         className={`bg-gradient-to-r ${accent} hover:opacity-90 text-white w-full sm:w-auto`}>
                         <Home className="w-5 h-5 mr-2" />

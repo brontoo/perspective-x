@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import ScenarioVisual from './ScenarioVisual';
+import { SCENARIOS } from '../scenarios/scenarioData';
 import { UAE_VIDEO_CONTENT, UAE_SCENARIOS } from '../scenarios/uaeScenarioData';
 
 // Legacy data removed.
@@ -15,6 +16,88 @@ import { UAE_VIDEO_CONTENT, UAE_SCENARIOS } from '../scenarios/uaeScenarioData';
 
 
 const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+const DEFAULT_SCENE_DURATION = 5500;
+
+const toDataPoints = (table) => {
+    if (!table || !Array.isArray(table.rows)) return [];
+    return table.rows.slice(0, 4).map((row) => ({
+        label: String(row?.[0] ?? 'Metric'),
+        value: String(row?.[1] ?? '-'),
+        status: 'info',
+        benchmark: row?.[2] ? String(row[2]) : undefined,
+    }));
+};
+
+export const buildFallbackVideoContent = (scenarioId) => {
+    const baseScenario = SCENARIOS?.[scenarioId];
+    if (!baseScenario) return null;
+
+    const uaeScenario = UAE_SCENARIOS?.[scenarioId];
+    const sceneOne = baseScenario.scenes?.[0];
+    const sceneTwo = baseScenario.scenes?.[1];
+    const sceneThree = baseScenario.scenes?.[2];
+    const sceneOneTable = sceneOne?.data?.table;
+    const optionsPreview = (sceneTwo?.options || [])
+        .slice(0, 2)
+        .map((opt) => opt?.text)
+        .filter(Boolean)
+        .join(' or ');
+
+    const scenes = [
+        {
+            visual: `Mission briefing: ${baseScenario.title}`,
+            narration: baseScenario.context || `Welcome to ${baseScenario.title}.`,
+            duration: DEFAULT_SCENE_DURATION,
+        },
+        {
+            visual: sceneOne?.title || 'Scientific situation analysis',
+            narration: sceneOne?.narrative || baseScenario.context || 'Review the available evidence and scientific context.',
+            duration: DEFAULT_SCENE_DURATION,
+            showData: Boolean(sceneOneTable),
+            dataPoints: toDataPoints(sceneOneTable),
+            dataTable: sceneOneTable || undefined,
+        },
+        {
+            visual: sceneTwo?.title || 'Decision preparation',
+            narration: sceneTwo?.question
+                ? `Your decision point is approaching. ${sceneTwo.question}`
+                : (optionsPreview
+                    ? `Prepare to choose between scientifically grounded options such as ${optionsPreview}.`
+                    : 'Prepare to make an evidence-based decision and justify your reasoning.'),
+            duration: DEFAULT_SCENE_DURATION,
+        },
+        {
+            visual: sceneThree?.title || 'Impact and reflection',
+            narration: sceneThree?.followUpQuestion
+                ? `Your choice leads to consequences. Reflect on this: ${sceneThree.followUpQuestion}`
+                : 'Your choice will create measurable consequences. Be ready to evaluate impact and reflect on your reasoning.',
+            duration: DEFAULT_SCENE_DURATION,
+        },
+    ];
+
+    return {
+        title: uaeScenario?.title || baseScenario.title,
+        titleAr: uaeScenario?.titleAr,
+        character: uaeScenario?.character || baseScenario.character || null,
+        scenes,
+    };
+};
+
+const normalizeScenes = (rawScenes) => {
+    if (!Array.isArray(rawScenes)) return [];
+
+    return rawScenes
+        .filter(Boolean)
+        .map((scene, idx) => ({
+            visual: scene.visual || `Scenario briefing ${idx + 1}`,
+            narration: scene.narration || 'Please review this part of the briefing before continuing.',
+            duration: Number.isFinite(scene.duration) && scene.duration > 0 ? scene.duration : DEFAULT_SCENE_DURATION,
+            showData: Boolean(scene.showData || scene.dataTable || (Array.isArray(scene.dataPoints) && scene.dataPoints.length > 0)),
+            dataPoints: Array.isArray(scene.dataPoints) ? scene.dataPoints : [],
+            dataTable: scene.dataTable,
+        }));
+};
 
 const inferCharacterGender = (character) => {
     const explicitGender = character?.gender?.toLowerCase();
@@ -75,8 +158,8 @@ export default function CinematicVideoIntro({
     isTeacher = false,
     videoState = 'idle',
 }) {
-    const content = UAE_VIDEO_CONTENT[scenarioId];
-    const character = UAE_SCENARIOS[scenarioId]?.character;
+    const content = UAE_VIDEO_CONTENT[scenarioId] || buildFallbackVideoContent(scenarioId);
+    const character = content?.character || UAE_SCENARIOS[scenarioId]?.character;
 
     const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
     const [playbackState, setPlaybackState] = useState('idle');
@@ -103,7 +186,7 @@ export default function CinematicVideoIntro({
         onComplete?.();
     }, [onComplete]);
 
-    const scenes = content?.scenes || [];
+    const scenes = normalizeScenes(content?.scenes);
     const currentScene = scenes[currentSceneIndex];
     const totalScenes = scenes.length;
     const isLastScene = currentSceneIndex === totalScenes - 1;

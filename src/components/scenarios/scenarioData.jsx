@@ -74,6 +74,16 @@ export const ROLES = {
         scenarios: ['unstable_slope']
     },
 
+    process_safety_engineer: {
+        id: 'process_safety_engineer',
+        title: 'Process & Safety Engineer',
+        icon: '🧯',
+        color: 'blue',
+        description: 'Apply gas laws to predict pressure and volume changes in industrial and aviation operations',
+        difficulty: 'On-Level',
+        scenarios: ['gas_boyle_adnoc', 'gas_charles_aviation', 'gas_gaylussac_cylinder']
+    },
+
 };
 
 export const SCENARIOS = {
@@ -239,12 +249,15 @@ export const SCENARIOS = {
                 title: 'Identifying the Crisis',
                 narrative: 'Alarms blare across the facility. The main reactor vessel shows temperature rising from 80°C to 120°C in just 5 minutes. The reaction should plateau at 90°C.',
                 data: {
-                    type: 'graph_and_readings',
-                    readings: [
-                        { time: '0 min', temp: '80°C', pressure: 'Normal' },
-                        { time: '2 min', temp: '95°C', pressure: 'Elevated' },
-                        { time: '5 min', temp: '120°C', pressure: 'Critical' }
-                    ],
+                    type: 'table_and_graph',
+                    table: {
+                        headers: ['Time', 'Temperature', 'Pressure Status'],
+                        rows: [
+                            ['0 min', '80°C', 'Normal'],
+                            ['2 min', '95°C', 'Elevated'],
+                            ['5 min', '120°C', 'Critical (ALERT)']
+                        ]
+                    },
                     graphDescription: 'Temperature curve showing exponential rise instead of expected plateau'
                 },
                 question: 'What is the most likely cause of this runaway reaction?',
@@ -522,7 +535,15 @@ export const SCENARIOS = {
                         { genotype: 'AA', phenotype: 'Unaffected (not carrier)', probability: '25%' },
                         { genotype: 'Aa', phenotype: 'Carrier (unaffected)', probability: '50%' },
                         { genotype: 'aa', phenotype: 'Affected', probability: '25%' }
-                    ]
+                    ],
+                    table: {
+                        headers: ['Genotype', 'Phenotype', 'Probability'],
+                        rows: [
+                            ['AA', 'Unaffected (not carrier)', '25%'],
+                            ['Aa', 'Carrier (unaffected)', '50%'],
+                            ['aa', 'Affected', '25%']
+                        ]
+                    }
                 },
                 question: 'What is the probability that their child will be affected by this condition?',
                 options: [
@@ -660,7 +681,17 @@ export const SCENARIOS = {
                         { condition: 'After caffeine intake', result: '0.13s' },
                         { condition: 'After high-carb meal', result: '0.17s' },
                         { condition: 'During high stress', result: '0.19s' }
-                    ]
+                    ],
+                    table: {
+                        headers: ['Condition', 'Reaction Time', 'vs Baseline (0.14s)'],
+                        rows: [
+                            ['8 hours sleep', '0.15s', '+0.01s'],
+                            ['5 hours sleep', '0.21s', '+0.07s ⚠️'],
+                            ['Caffeine intake', '0.13s', '-0.01s'],
+                            ['High-carb meal', '0.17s', '+0.03s'],
+                            ['High stress', '0.19s', '+0.05s']
+                        ]
+                    }
                 },
                 question: 'Which factor shows the most significant negative impact on reaction time?',
                 options: [
@@ -798,7 +829,17 @@ export const SCENARIOS = {
                         { feature: 'Crack width', finding: '5-10 cm, extending 50 meters' },
                         { feature: 'Water seepage', finding: 'Visible at base of slope' }
                     ],
-                    riskNote: 'Historical records show a landslide in this area 40 years ago'
+                    riskNote: 'Historical records show a landslide in this area 40 years ago',
+                    table: {
+                        headers: ['Feature', 'Field Observation'],
+                        rows: [
+                            ['Soil type', 'Clay-rich, low permeability'],
+                            ['Slope angle', '35° (threshold: 25°) ⚠️'],
+                            ['Vegetation', 'Recently cleared for construction'],
+                            ['Crack width', '5-10 cm, extending 50 m'],
+                            ['Water seepage', 'Visible at base of slope']
+                        ]
+                    }
                 },
                 question: 'Which combination of factors creates the highest landslide risk?',
                 options: [
@@ -935,7 +976,17 @@ export const SCENARIOS = {
                         { species: 'Lake salamander (endangered)', status: 'Critical - breeding sites covered' },
                         { species: 'Water birds', status: 'Declining - food sources reduced' },
                         { species: 'Algae', status: 'Dying - blocked sunlight' }
-                    ]
+                    ],
+                    table: {
+                        headers: ['Species / Indicator', 'Status'],
+                        rows: [
+                            ['Hyacinth coverage', 'Month 1: 5% → Month 3: 20% → Projected: 80%'],
+                            ['Native carp', 'Population -40%'],
+                            ['Lake salamander (endangered)', 'Critical — breeding sites covered'],
+                            ['Water birds', 'Declining — food sources reduced'],
+                            ['Algae', 'Dying — sunlight blocked']
+                        ]
+                    }
                 },
                 question: 'Why is the water hyacinth particularly damaging to this ecosystem?',
                 options: [
@@ -1075,7 +1126,18 @@ export const SCENARIOS = {
                         { type: 'Nuclear', output: '8,000 MW', status: 'Steady' },
                         { type: 'Solar', output: '2,000 MW', status: 'Declining (evening)' },
                         { type: 'Wind', output: '0 MW', status: 'No wind' }
-                    ]
+                    ],
+                    table: {
+                        headers: ['Source', 'Output', 'Status'],
+                        rows: [
+                            ['Natural Gas', '20,000 MW', 'Maximum'],
+                            ['Coal', '12,000 MW', 'Maximum'],
+                            ['Nuclear', '8,000 MW', 'Steady'],
+                            ['Solar', '2,000 MW', 'Declining (evening)'],
+                            ['Wind', '0 MW', 'No wind'],
+                            ['Total Supply', '42,000 MW', 'Demand: 45,000 MW ⚠️ Deficit: 3,000 MW']
+                        ]
+                    }
                 },
                 question: 'What is the primary cause of this grid crisis?',
                 options: [
@@ -1214,7 +1276,17 @@ export const SCENARIOS = {
                         { area: 'Air leaks (drafts)', percentage: '10%', method: 'Convection' }
                     ],
                     currentBill: '$45,000/year',
-                    buildingAge: '120 years'
+                    buildingAge: '120 years',
+                    table: {
+                        headers: ['Area', 'Heat Loss', 'Transfer Method'],
+                        rows: [
+                            ['Windows (single-pane)', '35% ⚠️ Highest', 'Conduction + Radiation'],
+                            ['Roof', '25%', 'Conduction + Convection'],
+                            ['Walls', '20%', 'Conduction'],
+                            ['Floors', '10%', 'Conduction'],
+                            ['Air leaks (drafts)', '10%', 'Convection']
+                        ]
+                    }
                 },
                 question: 'Which area should be the primary focus for reducing heat loss?',
                 options: [
@@ -1823,10 +1895,10 @@ export const SCENARIOS = {
                 },
                 question: 'When volume decreases in a sealed gas system, what happens to pressure?',
                 options: [
-                    { id: 'A', text: 'Pressure decreases', correct: false, feedback: 'For Boyle\'s law, pressure and volume are inversely related.' },
-                    { id: 'B', text: 'Pressure increases', correct: true, feedback: 'Correct. Decreasing volume raises collision frequency and pressure.' },
-                    { id: 'C', text: 'Pressure stays constant', correct: false, feedback: 'Pressure changes when volume changes in a closed system.' },
-                    { id: 'D', text: 'Pressure becomes zero', correct: false, feedback: 'Pressure does not become zero from compression.' }
+                    { id: 'A', text: 'Pressure decreases', correct: false, feedback: 'Boyle\'s law shows an inverse relationship — as volume decreases, pressure increases.' },
+                    { id: 'B', text: 'Pressure increases', correct: true, feedback: 'Correct. Compressing the gas into a smaller volume forces molecules closer, raising pressure.' },
+                    { id: 'C', text: 'Pressure stays constant', correct: false, feedback: 'Pressure only stays constant if volume stays constant.' },
+                    { id: 'D', text: 'Pressure becomes zero', correct: false, feedback: 'Pressure cannot reach zero in a sealed, compressed gas system.' }
                 ],
                 learningObjective: 'Explain Boyle\'s inverse pressure-volume relationship'
             },
@@ -1964,10 +2036,10 @@ export const SCENARIOS = {
                 },
                 question: 'At constant pressure, increasing temperature causes gas volume to:',
                 options: [
-                    { id: 'A', text: 'Decrease', correct: false, feedback: 'Charles\'s law shows a direct, not inverse, relationship.' },
-                    { id: 'B', text: 'Increase', correct: true, feedback: 'Correct. Volume rises as absolute temperature rises.' },
+                    { id: 'A', text: 'Decrease', correct: false, feedback: 'Charles\'s law shows a direct relationship — volume increases with temperature, not decreases.' },
+                    { id: 'B', text: 'Increase', correct: true, feedback: 'Correct. Volume rises proportionally with absolute temperature at constant pressure.' },
                     { id: 'C', text: 'Stay constant', correct: false, feedback: 'Volume changes when temperature changes at constant pressure.' },
-                    { id: 'D', text: 'Disappear', correct: false, feedback: 'Gas volume does not disappear due to heating.' }
+                    { id: 'D', text: 'Disappear', correct: false, feedback: 'Gas volume does not disappear due to heating — it expands.' }
                 ],
                 learningObjective: 'Explain the direct temperature-volume relationship'
             },
@@ -2105,10 +2177,10 @@ export const SCENARIOS = {
                 },
                 question: 'In a sealed container, increasing temperature causes pressure to:',
                 options: [
-                    { id: 'A', text: 'Decrease', correct: false, feedback: 'Pressure and temperature are directly related in this condition.' },
-                    { id: 'B', text: 'Increase', correct: true, feedback: 'Correct. Gay-Lussac\'s law predicts pressure increase with temperature.' },
+                    { id: 'A', text: 'Decrease', correct: false, feedback: 'Pressure and temperature are directly related in a sealed container — pressure increases, not decreases.' },
+                    { id: 'B', text: 'Increase', correct: true, feedback: 'Correct. Gay-Lussac\'s law predicts that pressure rises proportionally with absolute temperature.' },
                     { id: 'C', text: 'Remain unchanged', correct: false, feedback: 'Pressure changes with temperature in a fixed-volume container.' },
-                    { id: 'D', text: 'Become zero', correct: false, feedback: 'Pressure cannot drop to zero due to heating.' }
+                    { id: 'D', text: 'Become zero', correct: false, feedback: 'Pressure cannot drop to zero due to heating in a sealed system.' }
                 ],
                 learningObjective: 'Interpret pressure-temperature behavior in sealed systems'
             },
@@ -2237,7 +2309,18 @@ export const SCENARIOS = {
                     consumption: '0.84 kg O₂/person/day',
                     waterAvailable: '200 kg (potential O₂ source)',
                     failedSystem: 'Electrolysis unit - electrode degradation',
-                    distanceToEarth: '6 months (no resupply possible)'
+                    distanceToEarth: '6 months (no resupply possible)',
+                    table: {
+                        headers: ['Parameter', 'Value'],
+                        rows: [
+                            ['Crew size', '4 persons'],
+                            ['Oxygen backup', '72 hours at normal consumption ⚠️'],
+                            ['O₂ consumption', '0.84 kg / person / day'],
+                            ['Water available', '200 kg (potential O₂ source)'],
+                            ['Failed system', 'Electrolysis unit — electrode degradation'],
+                            ['Distance to Earth', '6 months (no resupply possible)']
+                        ]
+                    }
                 },
                 question: 'What is the fundamental chemistry behind the normal oxygen generation system?',
                 options: [

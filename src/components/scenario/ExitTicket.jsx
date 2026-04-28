@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  CheckCircle2, 
-  XCircle, 
-  BookOpen, 
-  Award, 
+import {
+  CheckCircle2,
+  XCircle,
+  BookOpen,
+  Award,
   BarChart2,
   ClipboardList,
   MessageSquare,
-  Star
+  Star,
+  AlertTriangle,
+  Lightbulb,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScenarioResponseCard } from './ScenarioPrimitives';
 import { normalizeExitTicketQuestions } from './scenarioHelpers';
 
-export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, theme = {}, isTeacher = false }) {
+export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, theme = {}, isTeacher = false, missionResult = null }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [reflection, setReflection] = useState('');
@@ -101,38 +103,33 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
         <h2 className="text-2xl font-bold text-white mb-6">{question.prompt}</h2>
 
         <div className="space-y-3">
-          {question.options.map((option) => (
-            <motion.button
-              key={option.id}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              onClick={() => handleAnswer(option.id, option.correct)}
-              className={`w-full text-left p-4 rounded-xl border transition-all ${
-                answers.some(a => a.questionId === currentQuestion && a.option === option.id)
-                  ? option.correct
-                    ? 'bg-emerald-500/10 border-emerald-500/50'
-                    : 'bg-red-500/10 border-red-500/50'
-                  : 'bg-slate-900/50 border-slate-700 hover:bg-slate-800/30'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                  answers.some(a => a.questionId === currentQuestion && a.option === option.id)
-                    ? option.correct
-                      ? 'bg-emerald-500 text-white'
-                      : 'bg-red-500 text-white'
-                    : 'bg-slate-800 text-slate-400'
-                }`}>
-                  {answers.some(a => a.questionId === currentQuestion && a.option === option.id)
-                    ? option.correct
+          {question.options.map((option) => {
+            const isSelected = answers.some(a => a.questionId === currentQuestion && a.option === option.id);
+            return (
+              <motion.button
+                key={option.id}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => handleAnswer(option.id, option.correct)}
+                className={`w-full text-left p-4 rounded-xl border transition-all ${
+                  isSelected
+                    ? 'bg-slate-800/80 border-slate-500'
+                    : 'bg-slate-900/50 border-slate-700 hover:bg-slate-800/30'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                    isSelected ? 'bg-slate-600 text-white' : 'bg-slate-800 text-slate-400'
+                  }`}>
+                    {isSelected
                       ? <CheckCircle2 className="w-5 h-5" />
-                      : <XCircle className="w-5 h-5" />
-                    : String.fromCharCode(65 + question.options.indexOf(option))}
+                      : String.fromCharCode(65 + question.options.indexOf(option))}
+                  </div>
+                  <p className="text-white">{option.text}</p>
                 </div>
-                <p className="text-white">{option.text}</p>
-              </div>
-            </motion.button>
-          ))}
+              </motion.button>
+            );
+          })}
         </div>
       </motion.div>
     );
@@ -253,6 +250,13 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
     </motion.div>
   );
 
+  // Adaptive header based on mission decision outcome
+  const headerConfig = missionResult === null
+    ? { icon: ClipboardList, title: 'Scenario Reflection', sub: null }
+    : missionResult.isSuccess
+      ? { icon: CheckCircle2, title: 'Consolidate Your Understanding', sub: 'Your decision showed good scientific reasoning — now test your knowledge.' }
+      : { icon: AlertTriangle, title: 'Review Before You Retry', sub: 'Your decision had unintended consequences. The questions below will help you understand why.' };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -260,10 +264,34 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
       className="max-w-3xl mx-auto p-6"
     >
       <Card className={`border ${border} bg-slate-900/50 p-8`}>
-        <div className="flex items-center gap-3 mb-8">
-          <ClipboardList className={`w-6 h-6 ${text}`} />
-          <h1 className="text-2xl font-bold text-white">Scenario Reflection</h1>
+        <div className="flex items-start gap-3 mb-6">
+          <headerConfig.icon className={`w-6 h-6 mt-0.5 flex-shrink-0 ${missionResult?.isSuccess ? 'text-emerald-400' : missionResult ? 'text-amber-400' : text}`} />
+          <div>
+            <h1 className="text-2xl font-bold text-white">{headerConfig.title}</h1>
+            {headerConfig.sub && (
+              <p className={`text-sm mt-1 ${missionResult?.isSuccess ? 'text-emerald-400/80' : 'text-amber-400/80'}`}>
+                {headerConfig.sub}
+              </p>
+            )}
+          </div>
         </div>
+
+        {/* Key concept reminder — shown on failure before the MCQs */}
+        {missionResult && !missionResult.isSuccess && missionResult.impactText && !showResults && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 p-4 rounded-xl border border-amber-500/30 bg-amber-500/10"
+          >
+            <div className="flex items-start gap-3">
+              <Lightbulb className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">What to consider as you answer</p>
+                <p className="text-amber-200/90 text-sm leading-relaxed">{missionResult.impactText}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {questions.length === 0 && (
           <p className="text-slate-400">No exit ticket questions are configured for this scenario.</p>

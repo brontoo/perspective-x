@@ -12,12 +12,12 @@ import CinematicVideoIntro from '@/components/scenario/CinematicVideoIntro';
 import ScenarioIntro from '@/components/scenario/ScenarioIntro';
 import SceneOne from '@/components/scenario/SceneOne';
 import SceneTwo from '@/components/scenario/SceneTwo';
-import SceneThree from '@/components/scenario/SceneThree';
 import DecisionImpact from '@/components/scenario/DecisionImpact';
 import ExitTicket from '@/components/scenario/ExitTicket';
 import ScenarioComplete from '@/components/scenario/ScenarioComplete';
 import CompletionCertificate from '@/components/scenario/CompletionCertificate';
 import { normalizeRoleThemeKey } from '@/components/scenario/scenarioHelpers';
+import { evaluateScenarioOutcome } from '@/components/scenario/scenarioAnswerKey';
 
 // ── Role theme config ──────────────────────────────────────────
 const ROLE_THEMES = {
@@ -101,6 +101,16 @@ const ROLE_THEMES = {
         alert: '⚡ Grid Alert — High Demand Active',
         alertColor: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300',
     },
+    processsafetyengineer: {
+        bg: 'from-cyan-950 via-slate-950 to-blue-950',
+        accent: 'from-cyan-500 to-blue-500',
+        border: 'border-cyan-500/30',
+        text: 'text-cyan-400',
+        glow: 'shadow-cyan-500/20',
+        location: '📍 ADNOC Gas Operations — Abu Dhabi, UAE',
+        alert: '🧯 Pressure Alert — Engineering Review Required',
+        alertColor: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-300',
+    },
 };
 
 const DEFAULT_THEME = {
@@ -114,16 +124,19 @@ const DEFAULT_THEME = {
     alertColor: '',
 };
 
-const PHASE = {
-    TITLE: -2,
-    VIDEO: -1,
-    INTRO: 0,
-    SCENE1: 1,
-    SCENE2: 2,
-    SCENE3: 3,
-    IMPACT: 4,
-    EXIT: 5,
-    COMPLETE: 6,
+// ── Finite phase machine ───────────────────────────────────────
+// 'title' auto-advances (fullscreen cinematic, no header)
+// All phases after 'title' render inside the header/main layout
+const PHASE_SEQUENCE = ['video', 'intro', 'scene1', 'scene2', 'impact', 'exit', 'complete'];
+
+const PHASE_PROGRESS = {
+    video:    5,
+    intro:    15,
+    scene1:   30,
+    scene2:   55,
+    impact:   70,
+    exit:     85,
+    complete: 100,
 };
 
 export default function ScenarioPlayer() {
@@ -131,25 +144,29 @@ export default function ScenarioPlayer() {
     const params = new URLSearchParams(window.location.search);
     const scenarioId = params.get('scenario');
 
-    const [currentScene, setCurrentScene] = useState(PHASE.TITLE);
+    // ── Core flow state ────────────────────────────────────────
+    const [phase, setPhase] = useState('title');
     const [responses, setResponses] = useState({});
     const [scenarioResult, setScenarioResult] = useState(null);
+
+    // ── Auth / profile state ───────────────────────────────────
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
     const [isTeacher, setIsTeacher] = useState(false);
-    const [showCertificate, setShowCertificate] = useState(false);
     const [profileName, setProfileName] = useState(null);
+
+    // ── UI state ───────────────────────────────────────────────
+    const [showCertificate, setShowCertificate] = useState(false);
+    const [attemptCount, setAttemptCount] = useState(1);
+
+    // ── Video state (prevents double-fire) ────────────────────
+    const videoCompletedRef = useRef(false);
     const [videoState, setVideoState] = useState('idle');
 
-    const videoCompletedRef = useRef(false);
-    const currentSceneRef = useRef(currentScene);
     const mainRef = useRef(null);
     const loadedOnceRef = useRef(false);
 
-    useEffect(() => {
-        currentSceneRef.current = currentScene;
-    }, [currentScene]);
-
+    // Scroll to top on every phase change
     useLayoutEffect(() => {
         const id = requestAnimationFrame(() => {
             if (mainRef.current) {
@@ -158,43 +175,17 @@ export default function ScenarioPlayer() {
                 window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
             }
         });
-
         return () => cancelAnimationFrame(id);
-    }, [currentScene]);
+    }, [phase]);
 
+    // ── Scenario / role / theme lookup ─────────────────────────
     const baseScenario = SCENARIOS[scenarioId];
     const uaeScenario = UAE_SCENARIOS?.[scenarioId];
     const scenario = baseScenario ? { ...baseScenario, ...(uaeScenario || {}) } : null;
-    const role = Object.values(ROLES).find(r => r.scenarios.includes(scenarioId));
+    const role = Object.values(ROLES).find((r) => r.scenarios.includes(scenarioId));
     const theme = ROLE_THEMES[normalizeRoleThemeKey(role?.id)] || DEFAULT_THEME;
 
-    const advanceFrom = useCallback((expectedPhase, nextPhase) => {
-        setCurrentScene(prev => {
-            return prev === expectedPhase ? nextPhase : prev;
-        });
-    }, []);
-
-    const handleTitleComplete = useCallback(() => {
-        advanceFrom(PHASE.TITLE, PHASE.VIDEO);
-    }, [advanceFrom]);
-
-    const handleVideoComplete = useCallback(() => {
-        if (videoCompletedRef.current || currentSceneRef.current !== PHASE.VIDEO) {
-            return;
-        }
-        videoCompletedRef.current = true;
-        setVideoState('completed');
-        advanceFrom(PHASE.VIDEO, PHASE.INTRO);
-    }, [advanceFrom]);
-
-    const handleStartScenario = useCallback(() => {
-        if (currentSceneRef.current !== PHASE.INTRO) {
-            return;
-        }
-
-        advanceFrom(PHASE.INTRO, PHASE.SCENE1);
-    }, [advanceFrom]);
-
+    // ── Auth + profile loading ─────────────────────────────────
     useEffect(() => {
         let cancelled = false;
 
@@ -222,84 +213,68 @@ export default function ScenarioPlayer() {
 
                 if (cancelled) return;
 
-                // Check URL params first
-                const params = new URLSearchParams(window.location.search);
-                const isPreview = params.get('preview') === 'true';
+                const urlParams = new URLSearchParams(window.location.search);
+                const isPreview = urlParams.get('preview') === 'true';
+                setIsTeacher((profile?.role === 'teacher') || isPreview);
 
-                const isTeacherRole = profile?.role === 'teacher';
-                setIsTeacher(isTeacherRole || isPreview);
-
-                // Only reset phase state on FIRST load — never re-reset
-                // if the user has already progressed past TITLE
                 if (!loadedOnceRef.current) {
                     loadedOnceRef.current = true;
                     videoCompletedRef.current = false;
                     setVideoState('idle');
-                    setCurrentScene(PHASE.TITLE);
+                    setPhase('title');
                 }
 
                 setProfileName(profile?.full_name || profile?.name || null);
             } catch (e) {
-                console.error('Error loading data:', e);
+                console.error('Error loading scenario data:', e);
             } finally {
                 if (!cancelled) setLoading(false);
             }
         };
 
         loadData();
-
         return () => { cancelled = true; };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scenarioId]);
 
-    const handleSceneComplete = (sceneNum, response) => {
-        setResponses(prev => ({ ...prev, [`scene${sceneNum}`]: response }));
-        setCurrentScene(prev => prev + 1);
-    };
+    // ── Phase transition handlers ──────────────────────────────
 
-    // After Scene 3 reveals consequence → go to IMPACT page
-    const handleScene3Complete = (response) => {
-        setResponses(prev => ({ ...prev, scene3: response }));
-        setCurrentScene(PHASE.IMPACT);
-    };
+    const handleTitleComplete = useCallback(() => {
+        setPhase('video');
+    }, []);
 
-    // Impact page actions
-    const handleImpactContinueToExit = () => setCurrentScene(PHASE.EXIT);
+    const handleVideoComplete = useCallback(() => {
+        if (videoCompletedRef.current) return;
+        videoCompletedRef.current = true;
+        setVideoState('completed');
+        setPhase('intro');
+    }, []);
 
-    const handleImpactRetryScene1 = () => {
-        setResponses(prev => ({ ...prev, scene1: undefined, scene2: undefined, scene3: undefined }));
-        setCurrentScene(PHASE.SCENE1);
-    };
+    const handleIntroStart = useCallback(() => {
+        setPhase('scene1');
+    }, []);
 
-    const handleImpactReplayVideo = () => {
-        videoCompletedRef.current = false;
-        setVideoState('idle');
-        setResponses(prev => ({ ...prev, scene1: undefined, scene2: undefined, scene3: undefined }));
-        setCurrentScene(PHASE.VIDEO);
-    };
+    const handleScene1Complete = useCallback((data) => {
+        setResponses((prev) => ({ ...prev, scene1: data }));
+        setPhase('scene2');
+    }, []);
 
-    const handleGoBack = () => {
-        if (!isTeacher) return;
-        if (currentScene > PHASE.INTRO) {
-            setCurrentScene(prev => prev - 1);
-        }
-    };
+    const handleScene2Complete = useCallback((data) => {
+        setResponses((prev) => ({ ...prev, scene2: data }));
+        setPhase('impact');
+    }, []);
 
-    const handleGoForward = () => {
-        if (!isTeacher) return;
-        if (currentScene < PHASE.COMPLETE) {
-            setCurrentScene(prev => prev + 1);
-        }
-    };
+    // Called only on SUCCESS path inside DecisionImpact
+    const handleImpactComplete = useCallback((scene3Data) => {
+        setResponses((prev) => ({ ...prev, scene3: scene3Data }));
+        setPhase('exit');
+    }, []);
 
     const handleExitTicketComplete = async (exitTicketData) => {
         const passed = Boolean(exitTicketData?.passed ?? (exitTicketData?.score >= 70));
         const result = {
             ...responses,
-            exitTicket: {
-                ...exitTicketData,
-                passed,
-            },
+            exitTicket: { ...exitTicketData, passed },
             passed,
         };
 
@@ -341,11 +316,50 @@ export default function ScenarioPlayer() {
             }
         }
 
-        setCurrentScene(PHASE.COMPLETE);
+        setPhase('complete');
     };
 
-    const handleShowCertificate = () => setShowCertificate(true);
+    // Retry: back to Scene 1 (keeps video played, resets decisions)
+    const handleRetry = useCallback(() => {
+        setAttemptCount((prev) => prev + 1);
+        setResponses((prev) => ({
+            ...prev,
+            scene1: undefined,
+            scene2: undefined,
+            scene3: undefined,
+            exitTicket: undefined,
+            passed: undefined,
+        }));
+        setScenarioResult(null);
+        setPhase('scene1');
+    }, []);
 
+    // Rewatch: back to video intro, resets all decisions
+    const handleRewatch = useCallback(() => {
+        videoCompletedRef.current = false;
+        setVideoState('idle');
+        setAttemptCount((prev) => prev + 1);
+        setResponses({});
+        setScenarioResult(null);
+        setPhase('video');
+    }, []);
+
+    // ── Teacher navigation ─────────────────────────────────────
+    const phaseIndex = PHASE_SEQUENCE.indexOf(phase);
+
+    const handleGoBack = () => {
+        if (!isTeacher || phaseIndex <= 0) return;
+        setPhase(PHASE_SEQUENCE[phaseIndex - 1]);
+    };
+
+    const handleGoForward = () => {
+        if (!isTeacher || phaseIndex >= PHASE_SEQUENCE.length - 1) return;
+        setPhase(PHASE_SEQUENCE[phaseIndex + 1]);
+    };
+
+    const getProgressPercentage = () => PHASE_PROGRESS[phase] ?? 0;
+
+    // ── Early returns ──────────────────────────────────────────
     if (!scenario) {
         return (
             <div className="min-h-screen bg-slate-950 flex items-center justify-center">
@@ -365,10 +379,10 @@ export default function ScenarioPlayer() {
         );
     }
 
-    const getProgressPercentage = () => Math.max(0, Math.min(100, ((currentScene + 2) / 8) * 100));
-
+    // ── Render ─────────────────────────────────────────────────
     return (
         <div className={`min-h-screen bg-gradient-to-br ${theme.bg} relative`}>
+            {/* Subtle grid texture */}
             <div
                 className="absolute inset-0 opacity-[0.03] pointer-events-none"
                 style={{
@@ -377,8 +391,9 @@ export default function ScenarioPlayer() {
                 }}
             />
 
+            {/* ── TITLE phase: fullscreen overlay, no header ── */}
             <AnimatePresence>
-                {currentScene === PHASE.TITLE && (
+                {phase === 'title' && (
                     <CinematicTitle
                         title={scenario.title}
                         subtitle={scenario.context?.substring(0, 100) + '...'}
@@ -388,12 +403,10 @@ export default function ScenarioPlayer() {
                 )}
             </AnimatePresence>
 
-            {currentScene > PHASE.TITLE && (
+            {/* ── All subsequent phases: header + main layout ── */}
+            {phase !== 'title' && (
                 <>
-                    {/* ── Header ── */}
                     <header className="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800">
-
-                        {/* Location + Alert Banner */}
                         {theme.alert && (
                             <div className={`border-b ${theme.alertColor} px-6 py-2 flex items-center justify-between text-xs font-semibold`}>
                                 <span className="flex items-center gap-2">
@@ -434,7 +447,7 @@ export default function ScenarioPlayer() {
                                 </Button>
                             </div>
 
-                            {/* Progress Bar */}
+                            {/* Progress bar */}
                             <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                                 <motion.div
                                     className={`h-full bg-gradient-to-r ${theme.accent}`}
@@ -447,28 +460,27 @@ export default function ScenarioPlayer() {
                             {isTeacher && (
                                 <div className="mt-2 flex items-center justify-between">
                                     <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
-                                        👁️ Teacher Preview Mode - Full Access
+                                        👁️ Teacher Preview Mode — Full Access
                                     </Badge>
-
                                     <div className="flex items-center gap-2">
                                         <Button
                                             variant="outline"
                                             size="sm"
                                             onClick={handleGoBack}
-                                            disabled={currentScene <= PHASE.INTRO}
+                                            disabled={phaseIndex <= 0}
                                             className="h-8 border-purple-500/30 text-purple-400 hover:bg-purple-500/10 text-xs gap-1"
                                         >
                                             <SkipBack className="w-3 h-3" />
-                                            Previous Scene
+                                            Previous
                                         </Button>
                                         <Button
                                             variant="outline"
                                             size="sm"
                                             onClick={handleGoForward}
-                                            disabled={currentScene >= PHASE.COMPLETE}
+                                            disabled={phaseIndex >= PHASE_SEQUENCE.length - 1}
                                             className="h-8 border-purple-500/30 text-purple-400 hover:bg-purple-500/10 text-xs gap-1"
                                         >
-                                            Next Scene
+                                            Next
                                             <SkipForward className="w-3 h-3" />
                                         </Button>
                                     </div>
@@ -480,134 +492,93 @@ export default function ScenarioPlayer() {
                     <main ref={mainRef} className="max-w-6xl mx-auto px-6 py-8 relative z-10">
                         <AnimatePresence mode="wait">
                             <motion.div
-                                key={`phase-${currentScene}`}
+                                key={phase}
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -8 }}
                                 transition={{ duration: 0.2 }}
                             >
-                                {currentScene === PHASE.VIDEO && videoState !== 'completed' && (
-                                    <motion.div
-                                        key="video-intro"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                    >
-                                        <CinematicVideoIntro
-                                            scenarioId={scenarioId}
-                                            isTeacher={isTeacher}
-                                            videoState={videoState}
-                                            onComplete={handleVideoComplete}
-                                        />
-                                    </motion.div>
-                                )}
+                                {/* ─── FLOW CONTROLLER ────────────────────────────────────── */}
 
-
-                                {currentScene === PHASE.INTRO && (
-                                    <ScenarioIntro
-                                        scenario={scenario}
-                                        theme={theme}
-                                        onStart={handleStartScenario}
+                                {phase === 'video' && (
+                                    <CinematicVideoIntro
+                                        scenarioId={scenarioId}
                                         isTeacher={isTeacher}
+                                        videoState={videoState}
+                                        onComplete={handleVideoComplete}
                                     />
                                 )}
 
-                                {currentScene === PHASE.SCENE1 && (
-                                    <>
-                                        {console.log('Rendering SceneOne')}
-                                        <SceneOne
-                                            scene={scenario.scenes[0]}
-                                            scenarioId={scenarioId}
-                                            scenarioTitle={scenario.title}
-                                            theme={theme}
-                                            onComplete={(r) => handleSceneComplete(1, r)}
-                                            isTeacher={isTeacher}
-                                        />
-                                    </>
+                                {phase === 'intro' && (
+                                    <ScenarioIntro
+                                        scenario={scenario}
+                                        onStart={handleIntroStart}
+                                        isTeacher={isTeacher}
+                                        theme={theme}
+                                    />
                                 )}
 
-                                {currentScene === PHASE.SCENE2 && (
+                                {phase === 'scene1' && (
+                                    <SceneOne
+                                        scene={scenario.scenes[0]}
+                                        scenarioId={scenarioId}
+                                        scenarioTitle={scenario.title}
+                                        onComplete={handleScene1Complete}
+                                        isTeacher={isTeacher}
+                                        theme={theme}
+                                    />
+                                )}
+
+                                {phase === 'scene2' && (
                                     <SceneTwo
                                         scene={scenario.scenes[1]}
                                         scenarioId={scenarioId}
                                         scenarioTitle={scenario.title}
-                                        theme={theme}
-                                        onComplete={(r) => handleSceneComplete(2, r)}
+                                        onComplete={handleScene2Complete}
                                         isTeacher={isTeacher}
+                                        theme={theme}
                                     />
                                 )}
 
-                                {currentScene === PHASE.SCENE3 && (
-                                    <>
-                                        {console.log('Passing to SceneThree:', {
-                                            scene: scenario.scenes[2],
-                                            previousDecision: responses.scene2?.consequence
-                                        })}
-                                        <SceneThree
-                                            scene={scenario.scenes[2]}
-                                            scenarioId={scenarioId}
-                                            previousDecision={responses.scene2?.consequence}
-                                            scenarioTitle={scenario.title}
-                                            scenarioAvatar={scenario.character?.avatar}
-                                            theme={theme}
-                                            onComplete={handleScene3Complete}
-                                            isTeacher={isTeacher}
-                                        />
-                                    </>
+                                {phase === 'impact' && (
+                                    <DecisionImpact
+                                        scenario={scenario}
+                                        scenarioId={scenarioId}
+                                        consequenceKey={responses.scene2?.consequence}
+                                        theme={theme}
+                                        isTeacher={isTeacher}
+                                        onComplete={handleImpactComplete}
+                                        onRetry={handleRetry}
+                                        onRewatch={handleRewatch}
+                                    />
                                 )}
 
-                                {currentScene === PHASE.IMPACT && (() => {
-                                    const consequenceKey = responses.scene2?.consequence;
-                                    const sceneOne = scenario.scenes[0];
-                                    const sceneTwo = scenario.scenes[1];
-                                    const scene3 = scenario.scenes[2];
-                                    const decisionOption = sceneTwo?.options?.find((option) => option.id === responses.scene2?.selectedOption) || null;
-                                    const baselineData = Object.fromEntries(
-                                        (sceneOne?.data?.table?.rows || []).map(([label, value]) => [label, value])
-                                    );
-                                    const rawConsequence = scene3?.consequences?.[consequenceKey]
-                                        || scene3?.consequences?.[Object.keys(scene3?.consequences || {})[0]];
-                                    const consequence = rawConsequence
-                                        ? { ...rawConsequence, key: consequenceKey }
-                                        : { key: consequenceKey };
-                                    return (
-                                        <DecisionImpact
-                                            scenario={scene3}
-                                            studentChoice={consequenceKey}
-                                            consequence={consequence}
-                                            decisionOption={decisionOption}
-                                            baselineData={baselineData}
-                                            scenarioId={scenarioId}
-                                            onContinueToExit={handleImpactContinueToExit}
-                                            onRetryScene1={handleImpactRetryScene1}
-                                            onReplayVideo={handleImpactReplayVideo}
-                                            isTeacher={isTeacher}
-                                            theme={theme}
-                                        />
-                                    );
-                                })()}
-
-                                {currentScene === PHASE.EXIT && (
+                                {phase === 'exit' && (
                                     <ExitTicket
                                         exitTicket={scenario.exitTicket}
                                         scenarioTitle={scenario.title}
                                         theme={theme}
                                         onComplete={handleExitTicketComplete}
                                         isTeacher={isTeacher}
+                                        missionResult={
+                                            responses.scene2?.consequence
+                                                ? evaluateScenarioOutcome(scenarioId, responses.scene2.consequence)
+                                                : null
+                                        }
                                     />
                                 )}
 
-                                {currentScene === PHASE.COMPLETE && (
+                                {phase === 'complete' && (
                                     <ScenarioComplete
                                         scenario={scenario}
                                         responses={scenarioResult || responses}
                                         role={role}
                                         theme={theme}
-                                        onShowCertificate={handleShowCertificate}
+                                        onShowCertificate={() => setShowCertificate(true)}
+                                        onRetry={handleRetry}
+                                        attemptCount={attemptCount}
                                     />
                                 )}
-
-
                             </motion.div>
                         </AnimatePresence>
                     </main>

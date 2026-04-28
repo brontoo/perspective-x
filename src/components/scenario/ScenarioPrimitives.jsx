@@ -19,7 +19,7 @@ const TIMER_TONES = {
     },
 };
 
-export function ScenarioStageHeader({ sceneNumber, title, subtitle, border, text, align = 'center', className = '' }) {
+export function ScenarioStageHeader({ sceneNumber, title, subtitle, border, text, align = 'center', className = '', children }) {
     const alignment = align === 'left' ? 'text-left' : 'text-center';
     const justify = align === 'left' ? 'justify-start' : 'justify-center';
 
@@ -31,6 +31,7 @@ export function ScenarioStageHeader({ sceneNumber, title, subtitle, border, text
                 {title && <span className="text-slate-300">{title}</span>}
             </div>
             {subtitle && <h2 className="text-2xl font-bold text-white">{subtitle}</h2>}
+            {children}
         </div>
     );
 }
