@@ -1,0 +1,837 @@
+/* ════════════════════════════════════════════════════════════════════════
+   LIQUID GLASS DESIGN SYSTEM — Perspective X
+   Complete token + utility + animation foundation
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. CSS Custom Properties ─────────────────────────────────────────── */
+:root {
+  /* Ambient background (light) */
+  --lx-bg-from:   #e8f2f9;
+  --lx-bg-mid:    #eeedf7;
+  --lx-bg-to:     #f5f0f8;
+
+  /* Glass surface values */
+  --lx-glass:              rgba(255, 255, 255, 0.62);
+  --lx-glass-hover:        rgba(255, 255, 255, 0.78);
+  --lx-glass-border:       rgba(255, 255, 255, 0.85);
+  --lx-glass-border-sub:   rgba(255, 255, 255, 0.50);
+  --lx-glass-inset:        rgba(255, 255, 255, 0.30);
+  --lx-glass-shine:        linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 60%);
+
+  /* Dark glass surface (HUD/scenario panels in dark context) */
+  --lx-dark-glass:         rgba(15, 23, 42, 0.65);
+  --lx-dark-glass-hover:   rgba(20, 32, 56, 0.78);
+  --lx-dark-glass-border:  rgba(255, 255, 255, 0.12);
+  --lx-dark-glass-border-accent: rgba(6, 182, 212, 0.30);
+
+  /* Text */
+  --lx-text:        #1a2441;
+  --lx-text-sub:    #445168;
+  --lx-text-muted:  #6b7c96;
+  --lx-text-inv:    #f0f4f8;
+
+  /* Accent — cyan/teal primary */
+  --lx-accent:      #06b6d4;
+  --lx-accent-r:    6;
+  --lx-accent-g:    182;
+  --lx-accent-b:    212;
+  --lx-accent-soft: rgba(6, 182, 212, 0.12);
+  --lx-accent-glow: rgba(6, 182, 212, 0.28);
+
+  /* Semantic status */
+  --lx-success:     #10b981;
+  --lx-success-soft: rgba(16, 185, 129, 0.12);
+  --lx-warning:     #f59e0b;
+  --lx-warning-soft: rgba(245, 158, 11, 0.12);
+  --lx-danger:      #ef4444;
+  --lx-danger-soft:  rgba(239, 68, 68, 0.12);
+  --lx-info:        #3b82f6;
+
+  /* Blur levels */
+  --lx-blur:    blur(24px) saturate(185%);
+  --lx-blur-sm: blur(14px) saturate(165%);
+  --lx-blur-lg: blur(32px) saturate(200%);
+
+  /* Radius */
+  --lx-r-card:  16px;
+  --lx-r-panel: 10px;
+  --lx-r-btn:   10px;
+  --lx-r-input: 10px;
+  --lx-r-chip:  6px;
+  --lx-r-full:  9999px;
+
+  /* Shadows */
+  --lx-shadow:        0 8px 32px rgba(0,0,0,0.20),
+                      inset 0 1px 0 rgba(255,255,255,0.70);
+  --lx-shadow-hover:  0 16px 48px rgba(0,0,0,0.28),
+                      inset 0 1px 0 rgba(255,255,255,0.90);
+  --lx-shadow-glow:   0 0 0 1px rgba(6,182,212,0.30),
+                      0 8px 32px -4px rgba(6,182,212,0.38);
+  --lx-shadow-dark:   0 4px 24px -4px rgba(0,0,0,0.55),
+                      inset 0 1px 0 rgba(255,255,255,0.07);
+  --lx-shadow-dark-hover: 0 12px 40px -8px rgba(0,0,0,0.70),
+                      inset 0 1px 0 rgba(255,255,255,0.11);
+
+  /* Motion */
+  --lx-dur:      280ms;
+  --lx-dur-fast: 160ms;
+  --lx-dur-slow: 500ms;
+  --lx-ease:     cubic-bezier(0.34, 1.56, 0.64, 1);
+  --lx-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --lx-ease-std: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── 1b. Dark-mode overrides ──────────────────────────────────────────── */
+.dark {
+  --lx-bg-from:   #070c16;
+  --lx-bg-mid:    #09101f;
+  --lx-bg-to:     #070c18;
+
+  --lx-glass:              rgba(15, 23, 42, 0.65);
+  --lx-glass-hover:        rgba(20, 32, 56, 0.78);
+  --lx-glass-border:       rgba(255, 255, 255, 0.11);
+  --lx-glass-border-sub:   rgba(255, 255, 255, 0.06);
+  --lx-glass-inset:        rgba(255, 255, 255, 0.04);
+  --lx-glass-shine:        linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%);
+
+  --lx-text:        #e2e8f0;
+  --lx-text-sub:    #94a3b8;
+  --lx-text-muted:  #64748b;
+
+  --lx-accent:      #22d3ee;
+  --lx-accent-r:    34;
+  --lx-accent-g:    211;
+  --lx-accent-b:    238;
+  --lx-accent-soft: rgba(6, 182, 212, 0.14);
+  --lx-accent-glow: rgba(6, 182, 212, 0.35);
+
+  --lx-success:      #34d399;
+  --lx-warning:      #fbbf24;
+  --lx-danger:       #f87171;
+
+  --lx-shadow:        0 8px 32px rgba(0,0,0,0.55),
+                      inset 0 1px 0 rgba(255,255,255,0.06);
+  --lx-shadow-hover:  0 16px 48px rgba(0,0,0,0.70),
+                      inset 0  1px 0 rgba(255,255,255,0.10);
+  --lx-shadow-glow:   0 0 0 1px rgba(6,182,212,0.40),
+                      0 8px 32px -4px rgba(6,182,212,0.45);
+}
+
+/* ── 2. Global ambient background ────────────────────────────────────── */
+.lx-bg-ambient {
+  background: linear-gradient(135deg, var(--lx-bg-from) 0%, var(--lx-bg-mid) 45%, var(--lx-bg-to) 100%);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Floating orb blobs — overlay applied inside pages as needed */
+.lx-bg-orbs::before,
+.lx-bg-orbs::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.lx-bg-orbs::before {
+  width: 700px; height: 700px;
+  top: -220px; left: -120px;
+  background: radial-gradient(circle, rgba(6,182,212,0.13) 0%, transparent 70%);
+  animation: lx-blob-drift 18s ease-in-out infinite;
+}
+
+.lx-bg-orbs::after {
+  width: 600px; height: 600px;
+  bottom: -180px; right: -120px;
+  background: radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%);
+  animation: lx-blob-drift 24s ease-in-out infinite reverse;
+}
+
+/* ── 3. Glass Surfaces ────────────────────────────────────────────────── */
+
+/* Standard glass card */
+.glass-card {
+  background: var(--lx-glass);
+  backdrop-filter: var(--lx-blur);
+  -webkit-backdrop-filter: var(--lx-blur);
+  border: 1px solid var(--lx-glass-border);
+  border-radius: var(--lx-r-card);
+  box-shadow: var(--lx-shadow);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--lx-dur) var(--lx-ease-out),
+              box-shadow var(--lx-dur) var(--lx-ease-out),
+              border-color var(--lx-dur) var(--lx-ease-std);
+}
+
+/* Glass-shine inner glint */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--lx-glass-shine);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+/* Hover shine sweep */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 60%, transparent 70%);
+  transform: translateX(-110%);
+  transition: transform 0.65s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.glass-card > * { position: relative; z-index: 1; }
+
+.glass-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--lx-shadow-hover);
+}
+
+.glass-card:hover::after { transform: translateX(110%); }
+
+.glass-card--glow:hover {
+  box-shadow: var(--lx-shadow-hover), var(--lx-shadow-glow);
+  border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.35);
+}
+
+/* Dark glass surface (always-dark HUD panels) */
+.glass-dark {
+  background: var(--lx-dark-glass);
+  backdrop-filter: var(--lx-blur);
+  -webkit-backdrop-filter: var(--lx-blur);
+  border: 1px solid var(--lx-dark-glass-border);
+  border-radius: var(--lx-r-panel);
+  box-shadow: var(--lx-shadow-dark);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow var(--lx-dur) var(--lx-ease-std);
+}
+
+.glass-dark:hover {
+  box-shadow: var(--lx-shadow-dark-hover);
+}
+
+/* Thin panel (scenario sidebars, HUDs) */
+.glass-panel {
+  background: var(--lx-glass);
+  backdrop-filter: var(--lx-blur-sm);
+  -webkit-backdrop-filter: var(--lx-blur-sm);
+  border: 1px solid var(--lx-glass-border-sub);
+  border-radius: var(--lx-r-panel);
+  box-shadow: var(--lx-shadow);
+}
+
+/* ── 4. Navigation/Header Glass ──────────────────────────────────────── */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.80);
+  box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+}
+
+.dark .glass-nav {
+  background: rgba(10, 16, 32, 0.80);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 1px 12px rgba(0,0,0,0.3);
+}
+
+.glass-nav-dark {
+  background: rgba(10, 16, 32, 0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 1px 20px rgba(0,0,0,0.35);
+}
+
+/* Footer-like translucent surface for sections under the hero */
+.lx-footer-surface {
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-top: 1px solid var(--lx-glass-border-sub);
+  box-shadow: var(--lx-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.dark .lx-footer-surface {
+  background: rgba(10, 16, 32, 0.62);
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.lx-footer-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--lx-glass-shine);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.lx-footer-surface > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 5. Buttons ───────────────────────────────────────────────────────── */
+.liquid-btn {
+  position: relative;
+  overflow: hidden;
+  background: var(--lx-glass);
+  backdrop-filter: var(--lx-blur-sm);
+  -webkit-backdrop-filter: var(--lx-blur-sm);
+  border: 1px solid var(--lx-glass-border);
+  border-radius: var(--lx-r-btn);
+  box-shadow: var(--lx-shadow);
+  color: var(--lx-text);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: transform var(--lx-dur) var(--lx-ease),
+              box-shadow var(--lx-dur) var(--lx-ease-out),
+              border-color var(--lx-dur) ease;
+}
+
+/* Ripple sheen on hover */
+.liquid-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity var(--lx-dur) ease;
+  pointer-events: none;
+}
+
+.liquid-btn:hover { transform: translateY(-1px); box-shadow: var(--lx-shadow-hover); }
+.liquid-btn:hover::before { opacity: 1; }
+.liquid-btn:active { transform: scale(0.98) translateY(0); }
+
+.liquid-btn-accent {
+  background: linear-gradient(135deg,
+    rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.85),
+    rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.65)
+  );
+  border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.55);
+  color: #fff;
+  box-shadow: var(--lx-shadow), var(--lx-shadow-glow);
+}
+
+.liquid-btn-accent:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg,
+    rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.95),
+    rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.80)
+  );
+  box-shadow: var(--lx-shadow-hover), var(--lx-shadow-glow);
+}
+
+.liquid-btn-ghost {
+  background: transparent;
+  border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.35);
+  color: var(--lx-accent);
+  box-shadow: none;
+}
+
+.liquid-btn-ghost:hover {
+  background: var(--lx-accent-soft);
+  border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.55);
+}
+
+/* ── 6. Inputs / Forms ────────────────────────────────────────────────── */
+.glass-input {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: var(--lx-blur-sm);
+  -webkit-backdrop-filter: var(--lx-blur-sm);
+  border: 1px solid var(--lx-glass-border-sub);
+  border-radius: var(--lx-r-input);
+  color: var(--lx-text);
+  transition: border-color var(--lx-dur) ease, box-shadow var(--lx-dur) ease;
+}
+
+.glass-input:focus {
+  border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.55);
+  box-shadow: 0 0 0 3px rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.12);
+  outline: none;
+}
+
+.glass-input::placeholder { color: var(--lx-text-muted); }
+
+/* Dark field (forms on dark backgrounds) */
+.glass-input-dark {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: var(--lx-blur-sm);
+  -webkit-backdrop-filter: var(--lx-blur-sm);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--lx-r-input);
+  color: #e2e8f0;
+  transition: border-color var(--lx-dur) ease, box-shadow var(--lx-dur) ease;
+}
+
+.glass-input-dark::placeholder { color: #475569; }
+.glass-input-dark:focus {
+  border-color: rgba(6, 182, 212, 0.55);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.14);
+  outline: none;
+}
+
+/* ── 7. Badges / Chips / Tags ─────────────────────────────────────────── */
+.glass-badge {
+  background: var(--lx-glass);
+  backdrop-filter: var(--lx-blur-sm);
+  -webkit-backdrop-filter: var(--lx-blur-sm);
+  border: 1px solid var(--lx-glass-border-sub);
+  border-radius: var(--lx-r-chip);
+  font-size: 0.6875rem;
+  font-family: 'Space Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  padding: 0.2rem 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.glass-badge-accent {
+  background: var(--lx-accent-soft);
+  border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.35);
+  color: var(--lx-accent);
+}
+
+.glass-badge-success {
+  background: var(--lx-success-soft);
+  border-color: rgba(16,185,129,0.35);
+  color: var(--lx-success);
+}
+
+.glass-badge-warning {
+  background: var(--lx-warning-soft);
+  border-color: rgba(245,158,11,0.35);
+  color: var(--lx-warning);
+}
+
+.glass-badge-danger {
+  background: var(--lx-danger-soft);
+  border-color: rgba(239,68,68,0.35);
+  color: var(--lx-danger);
+}
+
+/* ── 8. Data Table ────────────────────────────────────────────────────── */
+.glass-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.glass-table thead tr {
+  background: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.07);
+  border-bottom: 1px solid rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.18);
+}
+
+.glass-table thead th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.625rem;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lx-accent);
+  font-weight: 600;
+}
+
+.glass-table tbody tr {
+  border-bottom: 1px solid var(--lx-glass-border-sub);
+  transition: background var(--lx-dur-fast) ease;
+}
+
+.glass-table tbody tr:hover {
+  background: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.04);
+}
+
+.glass-table tbody td {
+  padding: 0.65rem 1rem;
+  font-size: 0.8125rem;
+}
+
+/* ── 9. Skeleton Loader ───────────────────────────────────────────────── */
+.glass-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--lx-glass-border-sub) 25%,
+    var(--lx-glass-inset) 50%,
+    var(--lx-glass-border-sub) 75%
+  );
+  background-size: 200% 100%;
+  animation: lx-skeleton-wave 1.5s ease-in-out infinite;
+  border-radius: var(--lx-r-chip);
+}
+
+/* ── 10. Modal Overlay ────────────────────────────────────────────────── */
+.glass-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(10, 16, 32, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.glass-modal {
+  background: var(--lx-glass);
+  backdrop-filter: var(--lx-blur-lg);
+  -webkit-backdrop-filter: var(--lx-blur-lg);
+  border: 1px solid var(--lx-glass-border);
+  border-radius: var(--lx-r-card);
+  box-shadow: var(--lx-shadow-hover), 0 0 0 1px rgba(255,255,255,0.12);
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--lx-glass-shine);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── 11. Tabs ─────────────────────────────────────────────────────────── */
+.glass-tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--lx-glass);
+  backdrop-filter: var(--lx-blur-sm);
+  -webkit-backdrop-filter: var(--lx-blur-sm);
+  border: 1px solid var(--lx-glass-border-sub);
+  border-radius: var(--lx-r-full);
+}
+
+.glass-tab {
+  flex: 1;
+  padding: 0.45rem 1rem;
+  border-radius: var(--lx-r-full);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--lx-text-muted);
+  cursor: pointer;
+  transition: all var(--lx-dur) var(--lx-ease-out);
+  border: 1px solid transparent;
+  background: none;
+}
+
+.glass-tab.active,
+.glass-tab[data-state="active"] {
+  background: var(--lx-glass-hover);
+  border-color: var(--lx-glass-border);
+  color: var(--lx-text);
+  box-shadow: var(--lx-shadow);
+}
+
+.glass-tab:not(.active):hover {
+  color: var(--lx-text);
+  background: rgba(255,255,255,0.25);
+}
+
+/* ── 12. HUD Panel (scenario-specific dark glass) ─────────────────────── */
+.hud-panel {
+  background: rgba(15, 23, 42, 0.70);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(6, 182, 212, 0.22);
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4),
+              inset 0 1px 0 rgba(255,255,255,0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.hud-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.875rem;
+  border-bottom: 1px solid rgba(6, 182, 212, 0.15);
+  background: rgba(6, 182, 212, 0.06);
+}
+
+/* ── 13. Progress / Stepper ───────────────────────────────────────────── */
+.glass-progress {
+  height: 6px;
+  background: var(--lx-glass-border-sub);
+  border-radius: var(--lx-r-full);
+  overflow: hidden;
+}
+
+.glass-progress-bar {
+  height: 100%;
+  background: linear-gradient(to right,
+    rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.75),
+    rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 1)
+  );
+  border-radius: var(--lx-r-full);
+  transition: width var(--lx-dur-slow) var(--lx-ease-out);
+  box-shadow: 0 0 8px rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.4);
+}
+
+/* ── 14. Toast / Notification ─────────────────────────────────────────── */
+.glass-toast {
+  background: var(--lx-glass);
+  backdrop-filter: var(--lx-blur);
+  -webkit-backdrop-filter: var(--lx-blur);
+  border: 1px solid var(--lx-glass-border);
+  border-radius: 12px;
+  box-shadow: var(--lx-shadow-hover);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 380px;
+  animation: lx-slide-up 0.3s var(--lx-ease) forwards;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   15. LIQUID ANIMATIONS — All 12
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* 1. Liquid Float — cards, floating elements */
+@keyframes lx-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-8px) rotate(0.5deg); }
+  66%       { transform: translateY(-4px) rotate(-0.5deg); }
+}
+
+/* 2. Liquid Shimmer — glass surfaces, loading */
+@keyframes lx-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* 3. Glass Ripple — button press, click feedback */
+@keyframes lx-ripple {
+  0%   { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* 4. Soft Pulse — status indicators, glowing elements */
+@keyframes lx-soft-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0px rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.3); }
+  50%       { opacity: 0.7; box-shadow: 0 0 0 8px rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0); }
+}
+
+/* 5. Border Flow — animated gradient borders */
+@keyframes lx-border-flow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 6. Glow Sweep — light beam across a surface */
+@keyframes lx-glow-sweep {
+  0%   { transform: translateX(-120%); opacity: 0; }
+  20%  { opacity: 0.6; }
+  80%  { opacity: 0.6; }
+  100% { transform: translateX(120%); opacity: 0; }
+}
+
+/* 7. Scan Line — vertical sweep */
+@keyframes lx-scan {
+  0%   { top: -2%; }
+  100% { top: 102%; }
+}
+
+/* 8. Blob Drift — ambient background orbs */
+@keyframes lx-blob-drift {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  33%  { transform: translate(30px, -20px) scale(1.05); }
+  66%  { transform: translate(-20px, 30px) scale(0.95); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+/* 9. Magnetic Hover — subtle magnetic attraction effect */
+@keyframes lx-magnetic {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(2px, -1px); }
+  75%  { transform: translate(-2px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* 10. Card Lift — card rising on focus/interaction */
+@keyframes lx-card-lift {
+  0%   { transform: translateY(0) scale(1); box-shadow: var(--lx-shadow); }
+  100% { transform: translateY(-6px) scale(1.01); box-shadow: var(--lx-shadow-hover); }
+}
+
+/* 11. Tab Underline — liquid motion indicator */
+@keyframes lx-tab-line {
+  0%   { transform: scaleX(0) translateX(-50%); opacity: 0; }
+  100% { transform: scaleX(1) translateX(0%); opacity: 1; }
+}
+
+/* 12. Skeleton Wave — loading placeholder */
+@keyframes lx-skeleton-wave {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Slide up entrance (toast, panel reveal) */
+@keyframes lx-slide-up {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* Fade in scale */
+@keyframes lx-scale-in {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ── Animation Utility Classes ───────────────────────────────────────── */
+.anim-float        { animation: lx-float 6s ease-in-out infinite; }
+.anim-float-slow   { animation: lx-float 9s ease-in-out infinite; }
+.anim-pulse        { animation: lx-soft-pulse 2s ease-in-out infinite; }
+.anim-scan         { animation: lx-scan 3s linear infinite; }
+.anim-blob         { animation: lx-blob-drift 16s ease-in-out infinite; }
+.anim-slide-up     { animation: lx-slide-up 0.35s var(--lx-ease) both; }
+.anim-scale-in     { animation: lx-scale-in 0.3s var(--lx-ease) both; }
+.anim-shimmer {
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: lx-shimmer 2s linear infinite;
+}
+
+/* Border flow animated gradient */
+.anim-border-flow {
+  background: linear-gradient(60deg,
+    rgba(6,182,212,0.5), rgba(139,92,246,0.5), rgba(16,185,129,0.5),
+    rgba(6,182,212,0.5)) border-box;
+  background-size: 300% 300%;
+  animation: lx-border-flow 4s ease infinite;
+}
+
+/* Glow sweep overlay (use as ::after on parent) */
+.anim-glow-sweep::after {
+  content: '';
+  position: absolute;
+  inset-y: 0;
+  width: 60%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  animation: lx-glow-sweep 3s var(--lx-ease-out) infinite;
+  pointer-events: none;
+}
+
+/* ── Reduced Motion Overrides ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .anim-float, .anim-float-slow,
+  .anim-blob, .anim-scan, .anim-shimmer,
+  .anim-pulse, .anim-glow-sweep::after {
+    animation: none !important;
+  }
+
+  .glass-card, .liquid-btn, .glass-tab {
+    transition: none !important;
+  }
+
+  .lx-bg-orbs::before, .lx-bg-orbs::after {
+    animation: none !important;
+  }
+}
+
+/* ── 16. Scrollbar Styling ────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.25) transparent;
+}
+
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.22);
+  border-radius: 3px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.4);
+}
+
+/* ── 17. Theme Transition ─────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: var(--lx-dur-fast);
+  transition-timing-function: var(--lx-ease-std);
+}
+
+/* Exception: don't bleed transition onto animated elements */
+.anim-float *, .anim-blob *, .anim-scan { transition: none; }
+
+/* ── 18. Utility Helpers ──────────────────────────────────────────────── */
+
+/* Typography scale */
+.lx-hero-title {
+  font-size: clamp(48px, 7vw, 120px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.lx-section-title {
+  font-size: clamp(28px, 3.5vw, 52px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.lx-card-title {
+  font-size: clamp(16px, 2vw, 22px);
+  line-height: 1.3;
+}
+
+.lx-body {
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.65;
+}
+
+.lx-text-gradient {
+  background: linear-gradient(135deg,
+    rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 1) 0%,
+    #06b6d4 40%,
+    #14b8a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.lx-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--lx-glass-border), transparent);
+  border: none;
+  margin: 0;
+}
+
+.lx-hud-label {
+  font-size: 0.5625rem;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lx-text-muted);
+}

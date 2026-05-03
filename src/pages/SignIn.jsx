@@ -100,7 +100,7 @@ export default function SignIn() {
 
     // ── UI ──
     return (
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+        <div className="dark min-h-screen lx-bg-ambient flex items-center justify-center px-4">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -111,25 +111,22 @@ export default function SignIn() {
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-teal-500/30">
                         <GraduationCap className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-2xl font-black text-white">Perspective X</h1>
-                    <p className="text-slate-400 text-sm mt-1">
+                    <h1 className="text-2xl font-black text-[var(--lx-text)]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Perspective X</h1>
+                    <p className="text-[var(--lx-text-muted)] text-sm mt-1">
                         {mode === 'signin' ? 'Welcome back — sign in to continue' : 'Create your account to get started'}
                     </p>
                 </div>
 
                 {/* Card */}
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div className="glass-card p-6">
 
                     {/* Toggle */}
-                    <div className="flex gap-1 bg-slate-800 rounded-xl p-1 mb-6">
+                    <div className="glass-tabs mb-6">
                         {['signin', 'signup'].map(m => (
                             <button
                                 key={m}
                                 onClick={() => { setMode(m); setError(''); setSuccess(''); }}
-                                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${mode === m
-                                        ? 'bg-teal-500 text-white shadow-md'
-                                        : 'text-slate-400 hover:text-white'
-                                    }`}
+                                className={`glass-tab flex-1 py-2 text-sm font-semibold transition-all ${mode === m ? 'active' : ''}`}
                             >
                                 {m === 'signin' ? 'Sign In' : 'Sign Up'}
                             </button>
@@ -141,14 +138,14 @@ export default function SignIn() {
                         {/* Full Name — signup only */}
                         {mode === 'signup' && (
                             <div>
-                                <label className="text-slate-400 text-sm mb-1 block">Full Name</label>
+                                <label className="text-[var(--lx-text-muted)] text-sm mb-1 block">Full Name</label>
                                 <input
                                     type="text"
                                     value={fullName}
                                     onChange={e => setFullName(e.target.value)}
                                     placeholder="Your full name"
                                     required
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500 transition"
+                                    className="glass-input-dark w-full"
                                 />
                             </div>
                         )}
@@ -156,7 +153,7 @@ export default function SignIn() {
                         {/* Role — signup only */}
                         {mode === 'signup' && (
                             <div>
-                                <label className="text-slate-400 text-sm mb-1 block">I am a...</label>
+                                <label className="text-[var(--lx-text-muted)] text-sm mb-1 block">I am a...</label>
                                 <div className="grid grid-cols-2 gap-3">
                                     {[
                                         { value: 'student', label: 'Student', icon: BookOpen },
@@ -166,10 +163,11 @@ export default function SignIn() {
                                             key={value}
                                             type="button"
                                             onClick={() => setRole(value)}
-                                            className={`flex items-center gap-2 p-3 rounded-xl border text-sm font-semibold transition-all ${role === value
-                                                    ? 'bg-teal-500/20 border-teal-500/60 text-teal-400'
-                                                    : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-600'
+                                            className={`flex items-center gap-2 p-3 text-sm font-semibold transition-all ${role === value
+                                                    ? 'glass-card border border-[var(--lx-accent)] text-[var(--lx-accent)]'
+                                                    : 'glass-panel border border-[var(--lx-glass-border-sub)] text-[var(--lx-text-muted)] hover:border-[var(--lx-accent)]/40'
                                                 }`}
+                                            style={{ borderRadius: 'var(--lx-r-btn)' }}
                                         >
                                             <Icon className="w-4 h-4" />
                                             {label}
@@ -181,20 +179,20 @@ export default function SignIn() {
 
                         {/* Email */}
                         <div>
-                            <label className="text-slate-400 text-sm mb-1 block">Email</label>
+                            <label className="text-[var(--lx-text-muted)] text-sm mb-1 block">Email</label>
                             <input
                                 type="email"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                                 placeholder="your@email.com"
                                 required
-                                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500 transition"
+                                className="glass-input-dark w-full"
                             />
                         </div>
 
                         {/* Password */}
                         <div>
-                            <label className="text-slate-400 text-sm mb-1 block">Password</label>
+                            <label className="text-[var(--lx-text-muted)] text-sm mb-1 block">Password</label>
                             <input
                                 type="password"
                                 value={password}
@@ -202,20 +200,20 @@ export default function SignIn() {
                                 placeholder="••••••••"
                                 required
                                 minLength={6}
-                                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500 transition"
+                                className="glass-input-dark w-full"
                             />
                         </div>
 
                         {/* Error */}
                         {error && (
-                            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                            <div className="glass-badge glass-badge-danger p-3 w-full text-sm block">
                                 {error}
                             </div>
                         )}
 
                         {/* Success */}
                         {success && (
-                            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm">
+                            <div className="glass-badge glass-badge-success p-3 w-full text-sm block">
                                 {success}
                             </div>
                         )}
@@ -224,7 +222,8 @@ export default function SignIn() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-black font-bold py-3 rounded-xl transition disabled:opacity-50 shadow-lg shadow-teal-500/20"
+                            className="liquid-btn-accent w-full font-bold py-3 disabled:opacity-50"
+                            style={{ borderRadius: 'var(--lx-r-btn)' }}
                         >
                             {loading
                                 ? '...'
@@ -234,7 +233,7 @@ export default function SignIn() {
 
                         {/* Terms */}
                         {mode === 'signup' && (
-                            <p className="text-xs text-slate-500 text-center">
+                            <p className="text-xs text-[var(--lx-text-muted)] text-center">
                                 By signing up, you agree to our Terms of Service
                             </p>
                         )}

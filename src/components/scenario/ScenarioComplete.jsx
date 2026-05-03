@@ -1,225 +1,358 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Trophy, Star, ArrowRight, Home, CheckCircle2, XCircle, Award, RefreshCw, Lock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import {
+    Trophy, Star, ArrowRight, Home, CheckCircle2, XCircle,
+    Award, RefreshCw, Lock, ShieldCheck, Key,
+} from 'lucide-react';
 
-export default function ScenarioComplete({ scenario, responses, role, onShowCertificate, onRetry, attemptCount = 1, theme = {} }) {
+/* ── Shared sub-components ─────────────────────────────────────────── */
+
+function HUDCorners({ size = 'w-6 h-6', color = 'border-cyan-400' }) {
+    return (
+        <>
+            <span className={`absolute top-0 left-0 ${size} border-t-2 border-l-2 ${color}`} />
+            <span className={`absolute top-0 right-0 ${size} border-t-2 border-r-2 ${color}`} />
+            <span className={`absolute bottom-0 left-0 ${size} border-b-2 border-l-2 ${color}`} />
+            <span className={`absolute bottom-0 right-0 ${size} border-b-2 border-r-2 ${color}`} />
+        </>
+    );
+}
+
+function BlueprintGrid() {
+    return (
+        <div className="absolute inset-0 pointer-events-none opacity-[0.04]">
+            <svg width="100%" height="100%">
+                <defs>
+                    <pattern id="sc-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                        <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#06b6d4" strokeWidth="0.5" />
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#sc-grid)" />
+            </svg>
+        </div>
+    );
+}
+
+function MetricRow({ label, value, passed }) {
+    return (
+        <div className="glass-card flex items-center justify-between px-4 py-3">
+            <span className="text-[11px] font-mono text-[var(--lx-text-sub)]">{label}</span>
+            <span className={`text-[11px] font-mono font-bold ${passed ? 'text-[var(--lx-success)]' : 'text-[var(--lx-warning)]'}`}>
+                {value}
+            </span>
+        </div>
+    );
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════════════════════════════ */
+export default function ScenarioComplete({
+    scenario,
+    responses,
+    role,
+    onShowCertificate,
+    onRetry,
+    attemptCount = 1,
+    theme = {},
+}) {
     const passed = responses.exitTicket?.passed ?? responses.passed;
-    const exitQuestionCount = scenario.exitTicket?.questions?.length || scenario.exitTicket?.mcqs?.length || 2;
+    const exitQuestionCount =
+        scenario.exitTicket?.questions?.length || scenario.exitTicket?.mcqs?.length || 2;
 
-    const accent = theme.accent || 'from-teal-500 to-emerald-500';
-    const border = theme.border || 'border-teal-500/30';
-    const text = theme.text || 'text-teal-400';
-
+    const exitScore = Math.round(Number(responses.exitTicket?.score) || 0);
+    const correctCount = exitScore === 100
+        ? exitQuestionCount
+        : Math.round((exitScore / 100) * exitQuestionCount);
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-2xl mx-auto px-6 text-center"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="max-w-2xl mx-auto"
         >
-            {/* Badge Celebration */}
-            <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', bounce: 0.5, delay: 0.2 }}
-                className="mb-8"
-            >
-                {passed ? (
-                    <div className={`w-32 h-32 mx-auto rounded-3xl bg-gradient-to-br ${accent} p-1 shadow-2xl`}
-                        style={{ boxShadow: '0 0 60px rgba(255,255,255,0.1)' }}>
-                        <div className="w-full h-full rounded-3xl bg-slate-950 flex items-center justify-center text-7xl">
-                            {scenario.badgeIcon}
-                        </div>
+            <div className="glass-card relative overflow-hidden">
+                <BlueprintGrid />
+                <HUDCorners />
+
+                {/* Top status bar */}
+                <div className={`flex items-center justify-between px-6 py-2.5 ${passed ? 'bg-emerald-800' : 'bg-[var(--lx-dark-glass)]'}`}>
+                    <div className="flex items-center gap-2.5">
+                        <motion.div
+                            className={`w-2 h-2 rounded-full ${passed ? 'bg-emerald-400' : 'bg-amber-400'}`}
+                            animate={{ opacity: [1, 0.3, 1] }}
+                            transition={{ duration: 0.9, repeat: Infinity }}
+                        />
+                        <span className={`text-[10px] font-mono tracking-widest uppercase select-none ${passed ? 'text-emerald-400' : 'text-amber-400'}`}>
+                            {passed ? 'CHAMBER_CLEARED :: MISSION_COMPLETE' : 'ACCESS_DENIED :: RETRY_AVAILABLE'}
+                        </span>
                     </div>
-                ) : (
-                    <div className="relative w-32 h-32 mx-auto">
-                        <div className="w-32 h-32 rounded-3xl bg-slate-800/50 border border-slate-700 flex items-center justify-center text-7xl opacity-25 select-none">
-                            {scenario.badgeIcon}
-                        </div>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-12 h-12 rounded-2xl bg-slate-900/95 border border-slate-600 flex items-center justify-center shadow-xl">
-                                <Lock className="w-6 h-6 text-slate-400" />
-                            </div>
-                        </div>
+                    <div className={`text-[9px] font-mono tracking-widest select-none ${passed ? 'text-emerald-600' : 'text-[var(--lx-text-muted)]'}`}>
+                        {passed ? 'STATUS: AUTHORIZED' : `ATTEMPT: ${attemptCount}`}
                     </div>
-                )}
-            </motion.div>
+                </div>
 
-            {/* Status */}
-            {passed ? (
-                <>
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                        <h1 className="text-4xl font-bold text-white mb-2">Scenario Complete!</h1>
-                        <p className="text-xl text-emerald-400 mb-8">You've earned a new badge</p>
-                    </motion.div>
+                <div className="relative z-10 p-8">
 
-                    {/* Badge Card */}
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-                        <Card className={`bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/30 p-6 mb-8`}>
-                            <div className="flex items-center justify-center gap-3 mb-4">
-                                <Trophy className="w-6 h-6 text-amber-400" />
-                                <span className="text-amber-400 font-semibold">Badge Earned</span>
+                    {/* ── PASSED state ── */}
+                    {passed ? (
+                        <>
+                            {/* Badge + headline */}
+                            <div className="flex flex-col items-center text-center mb-8">
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ type: 'spring', bounce: 0.5, delay: 0.2 }}
+                                    className="relative mb-6"
+                                >
+                                    {/* Pulse rings */}
+                                    <div className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping" style={{ animationDuration: '2s' }} />
+                                    <div className="absolute inset-[-6px] rounded-full bg-emerald-400/10" />
+
+                                    <div
+                                        className="relative w-24 h-24 border-2 border-[var(--lx-success)] bg-[var(--lx-success-soft)] flex items-center justify-center text-5xl shadow-lg"
+                                        style={{ borderRadius: '12px' }}
+                                    >
+                                        {scenario.badgeIcon}
+                                    </div>
+                                </motion.div>
+
+                                <motion.div
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                >
+                                    <div className="flex items-center justify-center gap-2 mb-3">
+                                        <span className="w-1 h-1 rounded-full bg-emerald-400" />
+                                        <span className="text-[9px] font-mono text-[var(--lx-success)] tracking-widest uppercase">KEY_ACQUIRED</span>
+                                        <span className="w-1 h-1 rounded-full bg-emerald-400" />
+                                    </div>
+                                    <h1
+                                        className="text-3xl font-bold text-[var(--lx-text)] mb-2"
+                                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                                    >
+                                        Chamber Cleared
+                                    </h1>
+                                    <p className="text-[var(--lx-success)] font-mono text-sm">MISSION_COMPLETE — Escape Authorized</p>
+                                </motion.div>
                             </div>
-                            <h2 className="text-2xl font-bold text-white mb-2">{scenario.badge}</h2>
-                            <p className="text-slate-400">
-                                You demonstrated understanding of {scenario.scienceFocus[0].toLowerCase()} and made reasoned decisions.
-                            </p>
-                        </Card>
-                    </motion.div>
 
-                    {/* Skills Gained */}
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.8 }} className="mb-8">
-                        <h3 className="text-lg font-semibold text-white mb-4">Skills Improved</h3>
-                        <div className="flex justify-center gap-4 flex-wrap">
-                            {['Data Analysis', 'Critical Thinking', 'Problem Solving'].map((skill) => (
-                                <div key={skill} className={`flex items-center gap-2 px-4 py-2 rounded-full border ${border} bg-slate-900/50`}>
-                                    <Star className={`w-4 h-4 ${text}`} />
-                                    <span className={`${text} text-sm`}>{skill} +10</span>
-                                </div>
-                            ))}
-                        </div>
-                    </motion.div>
-                </>
-            ) : (
-                <>
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                        {attemptCount > 1 && (
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 mb-3">
-                                <RefreshCw className="w-3 h-3 text-slate-400" />
-                                <span className="text-slate-400 text-xs">Attempt {attemptCount}</span>
-                            </div>
-                        )}
-                        <h1 className="text-4xl font-bold text-white mb-2">Almost There!</h1>
-                        <p className="text-xl text-slate-400 mb-8">Review and try again to earn your badge</p>
-                    </motion.div>
-
-                    <Card className="bg-slate-900/50 border-slate-800 p-6 mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                            <XCircle className="w-6 h-6 text-amber-400" />
-                            <span className="text-amber-400 font-semibold">Keep Practicing</span>
-                        </div>
-                        <p className="text-slate-400 mb-6">
-                            You need to score at least 70% on the exit ticket and complete the reflection to unlock the next scenario.
-                        </p>
-                        {onRetry && (
-                            <Button
-                                onClick={onRetry}
-                                size="lg"
-                                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-90 text-white font-semibold"
+                            {/* Badge earned card */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 12 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.55 }}
+                                className="border border-[var(--lx-warning)]/30 bg-[var(--lx-warning-soft)] px-5 py-4 mb-5"
+                                style={{ borderRadius: '4px' }}
                             >
-                                <RefreshCw className="w-5 h-5 mr-2" />
-                                Try Again
-                            </Button>
-                        )}
-                    </Card>
-                </>
-            )}
+                                <div className="flex items-center gap-2.5 mb-2">
+                                    <Trophy className="w-4 h-4 text-[var(--lx-warning)] shrink-0" />
+                                    <span className="text-[10px] font-mono text-[var(--lx-warning)] tracking-widest uppercase font-bold">Badge Earned</span>
+                                </div>
+                                <p
+                                    className="text-[var(--lx-text)] font-bold text-base"
+                                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                                >
+                                    {scenario.badge}
+                                </p>
+                                <p className="text-[var(--lx-text-muted)] text-xs mt-1">
+                                    You demonstrated understanding of {scenario.scienceFocus[0].toLowerCase()} and made reasoned decisions.
+                                </p>
+                            </motion.div>
 
-            {/* Exit Ticket Summary */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: passed ? 1 : 0.6 }}>
-                <Card className={`bg-slate-900/50 border ${border} p-6 mb-8 text-left`}>
-                    <h3 className={`text-lg font-semibold text-white mb-4 flex items-center gap-2`}>
-                        <CheckCircle2 className={`w-5 h-5 ${text}`} />
-                        Exit Ticket Results
-                    </h3>
-                    <div className="space-y-3">
+                            {/* Skills */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.7 }}
+                                className="flex flex-wrap gap-2 mb-6"
+                            >
+                                {['Data Analysis', 'Critical Thinking', 'Problem Solving'].map((skill) => (
+                                    <span
+                                        key={skill}
+                                        className="glass-badge-accent flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1"
+                                        style={{ borderRadius: '2px' }}
+                                    >
+                                        <Star className="w-3 h-3 shrink-0" />
+                                        {skill} +10
+                                    </span>
+                                ))}
+                            </motion.div>
+                        </>
+                    ) : (
+                        /* ── FAILED state ── */
+                        <>
+                            <div className="flex flex-col items-center text-center mb-8">
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ type: 'spring', bounce: 0.4, delay: 0.2 }}
+                                    className="relative w-24 h-24 mb-5"
+                                >
+                                    <div
+                                        className="w-full h-full border border-[var(--lx-glass-border-sub)] bg-[var(--lx-glass)] flex items-center justify-center text-5xl opacity-30 select-none"
+                                        style={{ borderRadius: '12px' }}
+                                    >
+                                        {scenario.badgeIcon}
+                                    </div>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div
+                                            className="w-10 h-10 glass-panel border border-[var(--lx-warning)]/40 flex items-center justify-center shadow-md"
+                                            style={{ borderRadius: '8px' }}
+                                        >
+                                            <Lock className="w-5 h-5 text-amber-500" />
+                                        </div>
+                                    </div>
+                                </motion.div>
 
-                        {/* 1. Concept Questions */}
-                        <div className={`flex items-center justify-between p-3 rounded-xl border ${Number(responses.exitTicket?.score) === 100
-                                ? border : 'border-slate-800'
-                            } bg-slate-800/40`}>
-                            <span className="text-slate-400">Concept Questions</span>
-                            <span className={`font-semibold ${Number(responses.exitTicket?.score) === 100
-                                    ? text : 'text-amber-400'
-                                }`}>
-                                {Number(responses.exitTicket?.score) === 100
-                                    ? exitQuestionCount
-                                    : Math.round((Number(responses.exitTicket?.score) || 0) / 100 * exitQuestionCount)
-                                }/{exitQuestionCount} correct
-                            </span>
-                        </div>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                >
+                                    {attemptCount > 1 && (
+                                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 glass-panel border border-[var(--lx-glass-border-sub)] mb-3" style={{ borderRadius: '2px' }}>
+                                            <RefreshCw className="w-3 h-3 text-[var(--lx-text-muted)]" />
+                                            <span className="text-[10px] font-mono text-[var(--lx-text-muted)]">ATTEMPT_{attemptCount}</span>
+                                        </div>
+                                    )}
+                                    <h1
+                                        className="text-3xl font-bold text-[var(--lx-text)] mb-2"
+                                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                                    >
+                                        Almost Escaped
+                                    </h1>
+                                    <p className="text-[var(--lx-warning)] font-mono text-sm">CHAMBER_LOCKED — Score ≥ 70% to unlock</p>
+                                </motion.div>
+                            </div>
 
-                        {/* 2. Questions Accuracy */}
-                        <div className={`flex items-center justify-between p-3 rounded-xl border ${responses.exitTicket?.score >= 70
-                            ? border : 'border-slate-800'
-                            } bg-slate-800/40`}>
-                            <span className="text-slate-400">Questions Accuracy</span>
-                            <span className={`font-semibold ${responses.exitTicket?.score >= 70
-                                ? text : 'text-amber-400'
-                                }`}>
-                                {Math.round(Number(responses.exitTicket?.score) || 0)}%
-                            </span>
-                        </div>
+                            {/* Retry card */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.55 }}
+                                className="border border-[var(--lx-warning)]/30 bg-[var(--lx-warning-soft)] px-5 py-4 mb-6"
+                                style={{ borderRadius: '4px' }}
+                            >
+                                <div className="flex items-center gap-2.5 mb-2">
+                                    <XCircle className="w-4 h-4 text-[var(--lx-warning)] shrink-0" />
+                                    <span className="text-[10px] font-mono text-[var(--lx-warning)] tracking-widest uppercase font-bold">Keep Practicing</span>
+                                </div>
+                                <p className="text-[var(--lx-text-sub)] text-xs mb-4 leading-relaxed">
+                                    Score at least 70% on the exit ticket and complete all reflections to unlock the next scenario.
+                                </p>
+                                {onRetry && (
+                                    <motion.button
+                                        whileHover={{ scale: 1.01 }}
+                                        whileTap={{ scale: 0.99 }}
+                                        onClick={onRetry}
+                                        className="liquid-btn-accent w-full flex items-center justify-center gap-2 py-3 text-[11px] font-mono font-bold tracking-widest uppercase"
+                                        style={{ borderRadius: '4px' }}
+                                    >
+                                        <RefreshCw className="w-4 h-4" />
+                                        RETRY_MISSION
+                                    </motion.button>
+                                )}
+                            </motion.div>
+                        </>
+                    )}
 
-                        {/* 3. Reflection */}
-                        <div className={`flex items-center justify-between p-3 rounded-xl border ${responses.exitTicket?.reflection?.length >= 10
-                            ? border : 'border-slate-800'
-                            } bg-slate-800/40`}>
-                            <span className="text-slate-400">Reflection</span>
-                            <span className={`font-semibold ${responses.exitTicket?.reflection?.length >= 10
-                                ? text : 'text-amber-400'
-                                }`}>
-                                {responses.exitTicket?.reflection?.length >= 10 ? 'Completed' : 'Incomplete'}
-                            </span>
-                        </div>
-
-                        {/* 4. Transfer Question */}
-                        <div className={`flex items-center justify-between p-3 rounded-xl border ${responses.exitTicket?.transfer_answer?.length >= 10
-                            ? border : 'border-slate-800'
-                            } bg-slate-800/40`}>
-                            <span className="text-slate-400">Transfer Question</span>
-                            <span className={`font-semibold ${responses.exitTicket?.transfer_answer?.length >= 10
-                                ? text : 'text-amber-400'
-                                }`}>
-                                {responses.exitTicket?.transfer_answer?.length >= 10 ? 'Completed' : 'Incomplete'}
-                            </span>
-                        </div>
-
-                    </div>
-                </Card>
-            </motion.div>
-
-            {/* Certificate Button */}
-            {passed && onShowCertificate && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 }} className="mb-8">
-                    <Button
-                        onClick={onShowCertificate}
-                        size="lg"
-                        className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:opacity-90 text-black font-semibold"
+                    {/* ── Exit ticket results ── */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: passed ? 0.85 : 0.65 }}
+                        className="mb-6"
                     >
-                        <Award className="w-5 h-5 mr-2" />
-                        View & Download Certificate
-                    </Button>
-                </motion.div>
-            )}
+                        <div className="flex items-center gap-3 mb-3">
+                            <div className="h-px flex-1 bg-[var(--lx-glass-border-sub)]" />
+                            <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-widest uppercase px-2 select-none">
+                                EXIT_TICKET_RESULTS
+                            </span>
+                            <div className="h-px flex-1 bg-[var(--lx-glass-border-sub)]" />
+                        </div>
 
-            {/* Actions */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: passed ? 1.2 : 0.8 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <div className="space-y-2">
+                            <MetricRow
+                                label="Concept Questions"
+                                value={`${correctCount}/${exitQuestionCount} correct`}
+                                passed={exitScore === 100}
+                            />
+                            <MetricRow
+                                label="Questions Accuracy"
+                                value={`${exitScore}%`}
+                                passed={exitScore >= 70}
+                            />
+                            <MetricRow
+                                label="Reflection"
+                                value={responses.exitTicket?.reflection?.length >= 10 ? 'Completed' : 'Incomplete'}
+                                passed={responses.exitTicket?.reflection?.length >= 10}
+                            />
+                            <MetricRow
+                                label="Transfer Question"
+                                value={responses.exitTicket?.transfer_answer?.length >= 10 ? 'Completed' : 'Incomplete'}
+                                passed={responses.exitTicket?.transfer_answer?.length >= 10}
+                            />
+                        </div>
+                    </motion.div>
 
-                <Link to={`/role-hub?role=${role?.id || ''}`}>
-                    <Button variant="outline" size="lg"
-                        className={`border ${border} ${text} hover:bg-slate-800 w-full sm:w-auto`}>
-                        <ArrowRight className="w-5 h-5 mr-2" />
-                        Continue to Next Scenario
-                    </Button>
-                </Link>
+                    {/* ── Certificate button ── */}
+                    {passed && onShowCertificate && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 1 }}
+                            className="mb-5"
+                        >
+                            <motion.button
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.99 }}
+                                onClick={onShowCertificate}
+                                className="liquid-btn-accent w-full flex items-center justify-center gap-2.5 py-3.5 text-[11px] font-mono font-bold tracking-widest uppercase relative overflow-hidden group"
+                                style={{ borderRadius: '4px' }}
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
+                                <Award className="w-4 h-4 shrink-0" />
+                                VIEW_EXIT_AUTHORIZATION_CERTIFICATE
+                            </motion.button>
+                        </motion.div>
+                    )}
 
-                <Link to="/Dashboard">
-                    <Button size="lg"
-                        className={`bg-gradient-to-r ${accent} hover:opacity-90 text-white w-full sm:w-auto`}>
-                        <Home className="w-5 h-5 mr-2" />
-                        View Dashboard
-                    </Button>
-                </Link>
-            </motion.div>
+                    {/* ── Navigation actions ── */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: passed ? 1.15 : 0.85 }}
+                        className="flex flex-col sm:flex-row gap-3"
+                    >
+                        <Link to={`/role-hub?role=${role?.id || ''}`} className="flex-1">
+                            <motion.button
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.99 }}
+                                className="liquid-btn-ghost w-full flex items-center justify-center gap-2 py-3 text-[11px] font-mono font-bold tracking-widest uppercase"
+                                style={{ borderRadius: '4px' }}
+                            >
+                                <ArrowRight className="w-3.5 h-3.5" />
+                                NEXT_SCENARIO
+                            </motion.button>
+                        </Link>
+
+                        <Link to="/Dashboard" className="flex-1">
+                            <motion.button
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.99 }}
+                                className="hud-panel w-full flex items-center justify-center gap-2 border border-[var(--lx-glass-border-sub)] text-[var(--lx-text)] py-3 text-[11px] font-mono font-bold tracking-widest uppercase transition-colors"
+                                style={{ borderRadius: '4px' }}
+                            >
+                                <Home className="w-3.5 h-3.5" />
+                                DASHBOARD
+                            </motion.button>
+                        </Link>
+                    </motion.div>
+                </div>
+            </div>
         </motion.div>
     );
 }

@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { 
+import {
   CheckCircle, 
   AlertCircle,
   Zap,
@@ -43,7 +40,7 @@ export default function DecisionQuestion({ scenario, onDecisionMade, theme }) {
     onDecisionMade({
       choice: selectedOption.id,
       justification: justification,
-      isCorrect: selectedOption.correct
+      consequence: selectedOption.consequence
     });
   };
 
@@ -57,17 +54,17 @@ export default function DecisionQuestion({ scenario, onDecisionMade, theme }) {
       {/* Question Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className={`p-2 rounded-lg bg-slate-800 ${theme.text}`}>
-            <AlertCircle className="w-5 h-5" />
+          <div className="p-2 hud-panel border border-[var(--lx-glass-border-sub)]" style={{ borderRadius: '8px' }}>
+            <AlertCircle className="w-5 h-5 text-[var(--lx-accent)]" />
           </div>
-          <h3 className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--lx-accent)]">
             Decision Point
           </h3>
         </div>
         <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
           {scenario.question}
         </h2>
-        <p className="text-slate-400 text-lg">
+        <p className="text-[var(--lx-text-muted)] text-lg">
           Analyze the options and select the most scientifically sound approach:
         </p>
       </div>
@@ -83,18 +80,19 @@ export default function DecisionQuestion({ scenario, onDecisionMade, theme }) {
               disabled={isSubmitted}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className={`text-left p-6 rounded-xl border transition-all ${
+              className={`text-left p-6 hud-panel border transition-all ${
                 selectedOption?.id === option.id
-                  ? `border-2 ${theme.border} bg-slate-800/50 shadow-lg ${theme.glow}`
-                  : 'border-slate-700 bg-slate-900/50 hover:bg-slate-800/30'
+                  ? 'border-[var(--lx-accent)] shadow-[var(--lx-shadow-glow)]'
+                  : 'border-[var(--lx-glass-border-sub)] hover:border-[var(--lx-accent)]/50'
               } ${isSubmitted ? 'opacity-50 cursor-not-allowed' : ''}`}
+              style={{ borderRadius: '12px' }}
             >
               <div className="flex items-start gap-4">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl font-bold ${
-                  selectedOption?.id === option.id 
-                    ? `bg-gradient-to-br ${theme.accent} text-white`
-                    : 'bg-slate-800 text-slate-400'
-                }`}>
+                <div className={`w-10 h-10 flex items-center justify-center text-xl font-bold shrink-0 ${
+                  selectedOption?.id === option.id
+                    ? 'bg-[var(--lx-accent)] text-white'
+                    : 'bg-[var(--lx-dark-glass)] text-[var(--lx-text-muted)]'
+                }`} style={{ borderRadius: '8px' }}>
                   {optionLetter}
                 </div>
                 <div className="flex-1">
@@ -103,9 +101,9 @@ export default function DecisionQuestion({ scenario, onDecisionMade, theme }) {
                   </h3>
                   <div className="flex flex-wrap gap-2 mt-3">
                     {option.tags?.map((tag) => (
-                      <span 
-                        key={tag} 
-                        className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-800/50 border border-slate-700 flex items-center gap-1"
+                      <span
+                        key={tag}
+                        className="glass-badge flex items-center gap-1 px-2.5 py-1 text-xs font-medium"
                       >
                         {OPTION_ICONS[tag.toLowerCase()] || <CheckCircle className="w-3 h-3" />}
                         {tag}
@@ -129,40 +127,39 @@ export default function DecisionQuestion({ scenario, onDecisionMade, theme }) {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            <Card className={`border ${theme.border} bg-slate-900/50 p-8`}>
+            <div className="hud-panel border border-[var(--lx-glass-border-sub)] p-8" style={{ borderRadius: '12px' }}>
               <div className="flex items-center gap-3 mb-6">
-                <div className={`p-2 rounded-lg bg-slate-800 ${theme.text}`}>
-                  <CheckCircle className="w-5 h-5" />
+                <div className="p-2 bg-[var(--lx-dark-glass)] border border-[var(--lx-glass-border-sub)]" style={{ borderRadius: '8px' }}>
+                  <CheckCircle className="w-5 h-5 text-[var(--lx-accent)]" />
                 </div>
-                <h3 className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--lx-accent)]">
                   Scientific Reasoning
                 </h3>
               </div>
-              
-              <p className="text-slate-300 text-lg mb-6">
+
+              <p className="text-[var(--lx-text-inv)] text-lg mb-6">
                 I chose Option {String.fromCharCode(65 + scenario.options.findIndex(o => o.id === selectedOption.id))} because...
               </p>
-              
-              <Textarea
+
+              <textarea
                 value={justification}
                 onChange={(e) => setJustification(e.target.value)}
                 placeholder="Explain your scientific reasoning (minimum 15 characters)..."
-                className="bg-slate-950/50 border-slate-700 text-white min-h-[120px] text-base"
+                className="glass-input-dark w-full min-h-[120px] text-base resize-none"
                 disabled={isSubmitted}
               />
-            </Card>
+            </div>
 
-            <Button
+            <button
               onClick={handleSubmit}
               disabled={!selectedOption || justification.length < 15}
-              size="lg"
-              className={`w-full bg-gradient-to-r ${theme.accent} shadow-lg`}
+              className={`w-full liquid-btn-accent py-3.5 text-sm font-bold tracking-widest uppercase ${(!selectedOption || justification.length < 15) ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isSubmitted ? 'Decision Submitted' : 'Submit Decision'}
-            </Button>
+            </button>
 
             {selectedOption && justification.length < 15 && (
-              <p className="text-amber-500/80 text-sm text-center">
+              <p className="text-[var(--lx-warning)] text-sm text-center">
                 Please provide a more detailed justification (minimum 15 characters required)
               </p>
             )}

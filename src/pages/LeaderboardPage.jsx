@@ -7,7 +7,7 @@ import { supabase } from '../lib/supabaseClient';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const LEVEL_CONFIG = {
-  Explorer: { icon: '🔭', color: 'text-slate-400', bg: 'bg-slate-500/20', border: 'border-slate-500/40', min: 0 },
+  Explorer: { icon: '🔭', color: 'text-[var(--lx-text-muted)]', bg: 'bg-[var(--lx-glass)]', border: 'border-[var(--lx-glass-border-sub)]', min: 0 },
   Analyst: { icon: '🔬', color: 'text-blue-400', bg: 'bg-blue-500/20', border: 'border-blue-500/40', min: 100 },
   Scientist: { icon: '⚗️', color: 'text-teal-400', bg: 'bg-teal-500/20', border: 'border-teal-500/40', min: 250 },
   Expert: { icon: '🏆', color: 'text-amber-400', bg: 'bg-amber-500/20', border: 'border-amber-500/40', min: 500 },
@@ -54,16 +54,16 @@ function LevelProgress({ points, level }) {
   const pct = Math.min(100, ((points - current.min) / (current.max - current.min)) * 100);
   return (
     <div className="w-full">
-      <div className="flex justify-between text-xs text-slate-500 mb-1">
+      <div className="flex justify-between text-xs text-[var(--lx-text-muted)] mb-1">
         <span>{points} pts</span>
         <span>{next?.min} pts → {next?.name}</span>
       </div>
-      <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+      <div className="glass-progress h-1.5 rounded-full overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="h-full bg-gradient-to-r from-teal-500 to-cyan-400 rounded-full"
+          className="glass-progress-bar h-full rounded-full"
         />
       </div>
     </div>
@@ -105,8 +105,8 @@ function PodiumCard({ entry, position }) {
       {/* Podium Base */}
       <div className={`w-24 ${heights[position]} bg-gradient-to-b ${cfg.bg} border ${cfg.border} rounded-t-lg flex flex-col items-center justify-center gap-1 shadow-lg`}>
         <div className="text-xl font-black text-white">#{entry.rank}</div>
-        <div className="text-sm font-bold text-amber-300">{entry.total_points}</div>
-        <div className="text-xs text-slate-400">points</div>
+        <div className="text-sm font-bold text-[var(--lx-warning)]">{entry.total_points}</div>
+        <div className="text-xs text-[var(--lx-text-muted)]">points</div>
       </div>
     </motion.div>
   );
@@ -123,13 +123,13 @@ function LeaderboardRow({ entry, isCurrentUser, index }) {
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.04 }}
       className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${isCurrentUser
-        ? 'bg-teal-500/10 border-teal-500/40 shadow-lg shadow-teal-500/10'
-        : 'bg-slate-800/40 border-slate-700/40 hover:bg-slate-800/60'
+        ? 'glass-card border-[var(--lx-accent)]/40 shadow-[var(--lx-shadow-glow)]'
+        : 'glass-card border-[var(--lx-glass-border-sub)] hover:border-[var(--lx-glass-border)]'
         }`}
     >
       {/* Rank */}
       <div className="w-8 text-center flex-shrink-0">
-        <span className={`text-sm font-bold ${entry.rank <= 3 ? 'text-amber-400' : 'text-slate-500'}`}>
+        <span className={`text-sm font-bold ${entry.rank <= 3 ? 'text-[var(--lx-warning)]' : 'text-[var(--lx-text-muted)]'}`}>
           {entry.rank <= 3 ? ['🥇', '🥈', '🥉'][entry.rank - 1] : `#${entry.rank}`}
         </span>
       </div>
@@ -142,11 +142,11 @@ function LeaderboardRow({ entry, isCurrentUser, index }) {
       {/* Name + Level */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={`text-sm font-semibold truncate ${isCurrentUser ? 'text-teal-300' : 'text-white'}`}>
+          <span className={`text-sm font-semibold truncate ${isCurrentUser ? 'text-[var(--lx-accent)]' : 'text-[var(--lx-text)]'}`}>
             {entry.full_name}
           </span>
           {isCurrentUser && (
-            <span className="text-xs bg-teal-500/20 text-teal-400 border border-teal-500/30 px-1.5 py-0.5 rounded-full">
+            <span className="glass-badge text-xs px-1.5 py-0.5">
               You
             </span>
           )}
@@ -158,20 +158,20 @@ function LeaderboardRow({ entry, isCurrentUser, index }) {
 
       {/* Scenarios */}
       <div className="text-center hidden sm:block flex-shrink-0">
-        <div className="text-sm font-bold text-white">{entry.scenarios_completed}</div>
-        <div className="text-xs text-slate-500">scenarios</div>
+        <div className="text-sm font-bold text-[var(--lx-text)]">{entry.scenarios_completed}</div>
+        <div className="text-xs text-[var(--lx-text-muted)]">scenarios</div>
       </div>
 
       {/* Badges */}
       <div className="text-center hidden sm:block flex-shrink-0">
-        <div className="text-sm font-bold text-white">{entry.badges_count}</div>
-        <div className="text-xs text-slate-500">badges</div>
+        <div className="text-sm font-bold text-[var(--lx-text)]">{entry.badges_count}</div>
+        <div className="text-xs text-[var(--lx-text-muted)]">badges</div>
       </div>
 
       {/* Points */}
       <div className="text-right flex-shrink-0">
-        <div className="text-sm font-black text-amber-400">{entry.total_points}</div>
-        <div className="text-xs text-slate-500">points</div>
+        <div className="text-sm font-black text-[var(--lx-warning)]">{entry.total_points}</div>
+        <div className="text-xs text-[var(--lx-text-muted)]">points</div>
       </div>
     </motion.div>
   );
@@ -254,28 +254,28 @@ export default function LeaderboardPage() {
   const isTeacher = currentUserRole === 'teacher';
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="dark min-h-screen lx-bg-ambient">
       <div className="max-w-2xl mx-auto px-4 py-8">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate(-1)}
-            className="text-slate-400 hover:text-white transition text-sm flex items-center gap-1"
+            className="text-[var(--lx-text-sub)] hover:text-[var(--lx-text)] transition text-sm flex items-center gap-1"
           >
             ← Back
           </button>
           <div className="text-center">
             <div className="text-4xl mb-1">🏆</div>
-            <h1 className="text-2xl font-black text-white">Leaderboard</h1>
-            <p className="text-slate-400 text-xs mt-1">Top scientists in Perspective X</p>
+            <h1 className="text-2xl font-black text-[var(--lx-text)]">Leaderboard</h1>
+            <p className="text-[var(--lx-text-sub)] text-xs mt-1">Top scientists in Perspective X</p>
           </div>
           <div className="w-12" />
         </div>
 
         {/* ← جديد: بانر المدرس */}
         {isTeacher && (
-          <div className="mb-6 p-3 rounded-xl bg-purple-500/10 border border-purple-500/30 text-center">
+          <div className="mb-6 glass-card border border-purple-500/20 p-3 text-center">
             <span className="text-purple-400 text-sm font-semibold">
               👨‍🏫 You are viewing the student leaderboard as a teacher
             </span>
@@ -283,19 +283,18 @@ export default function LeaderboardPage() {
         )}
 
         {/* Filter Tabs */}
-        <div className="flex gap-2 justify-center mb-8">
-          {filters.map(f => (
-            <button
-              key={f.key}
-              onClick={() => setFilter(f.key)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${filter === f.key
-                ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
-                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-                }`}
-            >
-              {f.label}
-            </button>
-          ))}
+        <div className="flex justify-center mb-8">
+          <div className="glass-tabs p-1 flex gap-1">
+            {filters.map(f => (
+              <button
+                key={f.key}
+                onClick={() => setFilter(f.key)}
+                className={`glass-tab px-4 py-2 text-sm font-semibold transition-all ${filter === f.key ? 'active' : ''}`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Loading */}
@@ -304,13 +303,13 @@ export default function LeaderboardPage() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full"
+              className="w-8 h-8 border-2 border-[var(--lx-accent)] border-t-transparent rounded-full"
             />
           </div>
         ) : data.length === 0 ? (
-          <div className="text-center py-20 text-slate-500">
+          <div className="text-center py-20 text-[var(--lx-text-muted)]">
             <div className="text-5xl mb-4">🏅</div>
-            <p className="text-lg font-semibold text-slate-400">No students yet</p>
+            <p className="text-lg font-semibold text-[var(--lx-text-sub)]">No students yet</p>
             <p className="text-sm mt-1">Complete scenarios to appear on the leaderboard</p>
           </div>
         ) : (
@@ -327,17 +326,17 @@ export default function LeaderboardPage() {
             {/* Your Position — للطلاب فقط وإذا لم يكونوا في Top 3 */}
             {!isTeacher && userRank && userRank.rank > 3 && (
               <div className="mb-6">
-                <div className="text-xs text-teal-400 font-semibold mb-2 px-1 uppercase tracking-wide">
+                <div className="text-xs text-[var(--lx-accent)] font-semibold mb-2 px-1 uppercase tracking-wide">
                   📍 Your Position
                 </div>
-                <div className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/30">
+                <div className="glass-card border border-[var(--lx-accent)]/30 p-4">
                   <div className="flex items-center gap-4 mb-3">
                     <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${getAvatarColor(userRank.full_name)} flex items-center justify-center flex-shrink-0`}>
                       <span className="text-white font-bold">{getInitials(userRank.full_name)}</span>
                     </div>
                     <div className="flex-1">
-                      <div className="text-white font-bold">{userRank.full_name}</div>
-                      <div className="text-teal-400 text-sm">
+                      <div className="text-[var(--lx-text)] font-bold">{userRank.full_name}</div>
+                      <div className="text-[var(--lx-accent)] text-sm">
                         Rank #{userRank.rank} · {userRank.total_points} points
                       </div>
                     </div>
@@ -349,7 +348,7 @@ export default function LeaderboardPage() {
 
             {/* Full List */}
             <div className="space-y-2">
-              <div className="text-xs text-slate-500 font-semibold px-1 mb-3 uppercase tracking-wide">
+              <div className="text-xs text-[var(--lx-text-muted)] font-semibold px-1 mb-3 uppercase tracking-wide">
                 All Students
               </div>
               <AnimatePresence>

@@ -156,8 +156,11 @@ export default function Dashboard() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
+            <div className="dark min-h-screen lx-bg-ambient flex items-center justify-center">
+                <div className="glass-card p-5 flex items-center gap-3">
+                    <Loader2 className="w-5 h-5 text-[var(--lx-accent)] animate-spin" />
+                    <span className="text-[11px] font-mono text-[var(--lx-text-muted)] tracking-widest">LOADING_DASHBOARD...</span>
+                </div>
             </div>
         );
     }
@@ -193,9 +196,9 @@ export default function Dashboard() {
 
 
     return (
-        <div className="min-h-screen bg-slate-950">
+        <div className="dark min-h-screen lx-bg-ambient">
             {/* Header */}
-            <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/70 border-b border-slate-800">
+            <header className="sticky top-0 z-50 glass-nav-dark">
                 <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center">
@@ -261,7 +264,7 @@ export default function Dashboard() {
 
                 {/* Hero Progress Banner */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                    className="relative bg-gradient-to-br from-teal-500/10 via-slate-900/50 to-emerald-500/10 border border-teal-500/20 rounded-2xl p-8 mb-8 overflow-hidden">
+                    className="glass-card relative p-8 mb-8 overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
                     <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
                         <div className="flex items-center gap-4">
@@ -282,12 +285,12 @@ export default function Dashboard() {
                                 <span className="text-slate-400 text-sm">Overall Progress</span>
                                 <span className="text-white font-bold text-lg">{overallPercentage}%</span>
                             </div>
-                            <div className="h-4 bg-slate-800 rounded-full overflow-hidden">
+                            <div className="glass-progress" style={{ height: '16px' }}>
                                 <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${overallPercentage}%` }}
                                     transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
-                                    className="h-full bg-gradient-to-r from-teal-500 to-emerald-400 rounded-full relative">
+                                    className="glass-progress-bar bg-gradient-to-r from-teal-500 to-emerald-400 relative">
                                     {overallPercentage > 5 && (
                                         <div className="absolute right-2 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full opacity-80" />
                                     )}
@@ -316,7 +319,7 @@ export default function Dashboard() {
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
                     className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     {stats.map((stat, i) => (
-                        <div key={i} className={`bg-gradient-to-br ${stat.from} ${stat.to} border ${stat.border} rounded-xl p-5`}>
+                        <div key={i} className="glass-card p-5">
                             <div className="flex items-center gap-3">
                                 <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center`}>
                                     <stat.Icon className={`w-5 h-5 ${stat.text}`} />
@@ -331,12 +334,10 @@ export default function Dashboard() {
                 </motion.div>
 
                 {/* Tabs */}
-                <div className="flex gap-1 bg-slate-900 border border-slate-800 rounded-xl p-1 w-fit mb-8 overflow-x-auto">
+                <div className="glass-tabs w-fit mb-8 overflow-x-auto">
                     {tabs.map(tab => (
                         <button key={tab.key} onClick={() => setActiveTab(tab.key)}
-                            className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap ${activeTab === tab.key
-                                ? 'bg-teal-500/20 text-teal-400'
-                                : 'text-slate-400 hover:text-white'}`}>
+                            className={`glass-tab relative flex items-center gap-2 px-4 py-2 text-sm font-medium whitespace-nowrap ${activeTab === tab.key ? 'active' : ''}`}>
                             <tab.icon className="w-4 h-4" />
                             {tab.label}
                             {tab.badge > 0 && (
@@ -349,7 +350,7 @@ export default function Dashboard() {
                 {/* Overview Tab */}
                 {activeTab === 'overview' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-                        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                        <div className="glass-card p-6">
                             <h2 className="text-xl font-bold text-white mb-6">Role Progress</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {Object.values(ROLES).map((role) => {
@@ -358,7 +359,7 @@ export default function Dashboard() {
                                     const percentage = Math.round((completed / role.scenarios.length) * 100);
                                     return (
                                         <button key={role.id} onClick={() => navigate(`/RoleHub?role=${role.id}`)}
-                                            className="bg-slate-800/50 border border-slate-700 hover:border-teal-500/30 rounded-xl p-5 text-left transition-all group w-full">
+                                            className="glass-card hover:shadow-[var(--lx-shadow-glow)] p-5 text-left transition-all group w-full">
                                             <div className="flex items-center justify-between mb-3">
                                                 <div className="flex items-center gap-3">
                                                     <span className="text-2xl">{role.icon}</span>
@@ -407,7 +408,7 @@ export default function Dashboard() {
                             </div>
                         </div>
 
-                        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                        <div className="glass-card p-6">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-xl font-bold text-white">Top Skills</h2>
                                 <button onClick={() => setActiveTab('skills')}
@@ -443,7 +444,7 @@ export default function Dashboard() {
                 {/* Skills Tab */}
                 {activeTab === 'skills' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                        className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                        className="glass-card p-6">
                         <h2 className="text-xl font-bold text-white mb-6">Skills Mastered</h2>
                         <div className="grid gap-6">
                             {Object.entries(SKILLS).map(([key, skill]) => {

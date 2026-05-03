@@ -222,8 +222,11 @@ export default function TeacherDashboard() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
+            <div className="dark min-h-screen lx-bg-ambient flex items-center justify-center">
+                <div className="glass-card p-5 flex items-center gap-3">
+                    <Loader2 className="w-5 h-5 text-[var(--lx-accent)] animate-spin" />
+                    <span className="text-[11px] font-mono text-[var(--lx-text-muted)] tracking-widest">LOADING...</span>
+                </div>
             </div>
         );
     }
@@ -292,9 +295,9 @@ export default function TeacherDashboard() {
 
 
     return (
-        <div className="min-h-screen bg-slate-950">
+        <div className="dark min-h-screen lx-bg-ambient">
             {/* Header */}
-            <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-slate-800">
+            <header className="glass-nav-dark sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
@@ -344,14 +347,14 @@ export default function TeacherDashboard() {
                 {/* Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                     {stats.map((stat, i) => (
-                        <div key={i} className={`bg-gradient-to-br ${stat.from} ${stat.to} border ${stat.border} rounded-xl p-6`}>
+                        <div key={i} className="glass-card p-6">
                             <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-xl ${stat.bg} flex items-center justify-center`}>
-                                    <stat.Icon className={`w-6 h-6 ${stat.text}`} />
+                                <div className="w-12 h-12 glass-panel border border-[var(--lx-glass-border-sub)] flex items-center justify-center" style={{ borderRadius: '12px' }}>
+                                    <stat.Icon className="w-6 h-6 text-[var(--lx-accent)]" />
                                 </div>
                                 <div>
-                                    <p className="text-slate-400 text-sm">{stat.label}</p>
-                                    <p className="text-2xl font-bold text-white">{stat.value}</p>
+                                    <p className="text-[var(--lx-text-muted)] text-sm">{stat.label}</p>
+                                    <p className="text-2xl font-bold text-[var(--lx-text)]">{stat.value}</p>
                                 </div>
                             </div>
                         </div>
@@ -364,18 +367,16 @@ export default function TeacherDashboard() {
                         <div /> {/* spacer */}
                         <button
                             onClick={exportCSV}
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-teal-500/30 text-teal-400 hover:bg-teal-500/10 transition text-sm font-medium"
+                            className="liquid-btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
                         >
                             📤 Export CSV
                         </button>
                     </div>
 
-                    <div className="flex gap-1 bg-slate-900 border border-slate-800 rounded-xl p-1 w-fit">
+                    <div className="glass-tabs p-1 w-fit">
                         {tabs.map(tab => (
                             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${activeTab === tab.key
-                                    ? 'bg-teal-500/20 text-teal-400'
-                                    : 'text-slate-400 hover:text-white'}`}>
+                                className={`glass-tab flex items-center gap-2 px-4 py-2 text-sm font-medium transition ${activeTab === tab.key ? 'active' : ''}`}>
                                 <tab.Icon className="w-4 h-4" />
                                 {tab.label}
                             </button>
@@ -384,7 +385,7 @@ export default function TeacherDashboard() {
 
                     {/* ── Scenarios Tab ── */}
                     {activeTab === 'scenarios' && (
-                        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                        <div className="glass-card p-6">
                             <h2 className="text-xl font-bold text-white mb-6">Scenario Settings</h2>
                             <div className="space-y-4">
                                 {Object.entries(SCENARIOS).map(([id, scenario]) => {
@@ -392,7 +393,7 @@ export default function TeacherDashboard() {
                                     const difficulty = settings.difficulty_override || 'on-level';
                                     return (
                                         <motion.div key={id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                                            className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
+                                            className="glass-card p-4">
                                             <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                                                 <div className="flex-1">
                                                     <div className="flex items-center gap-3 mb-2">
@@ -418,7 +419,7 @@ export default function TeacherDashboard() {
                                                         <span className="text-slate-500 text-sm">Level:</span>
                                                         <select value={difficulty}
                                                             onChange={e => updateScenarioSetting(id, 'difficulty_override', e.target.value)}
-                                                            className="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-white text-sm">
+                                                            className="glass-input-dark text-sm px-2 py-1.5">
                                                             <option value="beginner">Beginner</option>
                                                             <option value="on-level">On-Level</option>
                                                             <option value="high-achievers">High Achievers</option>
@@ -449,7 +450,7 @@ export default function TeacherDashboard() {
 
                     {/* ── Students Tab ── */}
                     {activeTab === 'students' && (
-                        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                        <div className="glass-card p-6">
                             <h2 className="text-xl font-bold text-white mb-2">Student Progress</h2>
                             <p className="text-slate-500 text-sm mb-6">{students.length} student{students.length !== 1 ? 's' : ''} registered</p>
 
@@ -473,7 +474,7 @@ export default function TeacherDashboard() {
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: index * 0.05 }}
-                                                className="rounded-xl bg-slate-800/50 border border-slate-700 overflow-hidden">
+                                                className="glass-card overflow-hidden">
 
                                                 <div className="p-4 flex items-center gap-4 cursor-pointer hover:bg-slate-700/30 transition"
                                                     onClick={() => setExpandedStudent(isExpanded ? null : student.id)}>
@@ -505,7 +506,7 @@ export default function TeacherDashboard() {
                                                 </div>
 
                                                 <div className="px-4 pb-3">
-                                                    <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                                    <div className="glass-progress h-1.5 rounded-full overflow-hidden">
                                                         <div className={`h-full rounded-full transition-all duration-500 ${percentage >= 70 ? 'bg-gradient-to-r from-emerald-500 to-teal-500' :
                                                             percentage >= 30 ? 'bg-gradient-to-r from-amber-500 to-yellow-500' :
                                                                 'bg-slate-600'}`}
@@ -517,7 +518,7 @@ export default function TeacherDashboard() {
                                                     <motion.div
                                                         initial={{ opacity: 0, height: 0 }}
                                                         animate={{ opacity: 1, height: 'auto' }}
-                                                        className="border-t border-slate-700 p-4 bg-slate-900/50">
+                                                        className="glass-panel border-t border-[var(--lx-glass-border-sub)] p-4">
                                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                             <div>
                                                                 <h4 className="text-slate-400 text-sm font-semibold mb-3 flex items-center gap-2">
@@ -532,7 +533,7 @@ export default function TeacherDashboard() {
                                                                                     <span className="text-slate-400 text-xs">{skill.icon} {skill.name}</span>
                                                                                     <span className={`text-xs font-semibold ${val >= 70 ? 'text-emerald-400' : val >= 40 ? 'text-amber-400' : 'text-slate-500'}`}>{val}%</span>
                                                                                 </div>
-                                                                                <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                                                                <div className="glass-progress h-1.5 rounded-full overflow-hidden">
                                                                                     <div className={`h-full rounded-full ${val >= 70 ? 'bg-emerald-500' : val >= 40 ? 'bg-amber-500' : 'bg-slate-600'}`}
                                                                                         style={{ width: `${val}%` }} />
                                                                                 </div>
@@ -646,7 +647,7 @@ export default function TeacherDashboard() {
                     )}{/* ── Feedback Tab ── */}
                     {activeTab === 'feedback' && (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                            <div className="glass-card p-6">
                                 <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                                     <Send className="w-5 h-5 text-teal-400" /> Send Feedback
                                 </h2>
@@ -655,7 +656,7 @@ export default function TeacherDashboard() {
                                         <label className="text-slate-400 text-sm mb-1 block">Student</label>
                                         <select value={feedbackForm.student_email}
                                             onChange={e => setFeedbackForm({ ...feedbackForm, student_email: e.target.value })}
-                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500">
+                                            className="glass-input-dark w-full">
                                             <option value="">Select a student...</option>
                                             {students.map(s => (
                                                 <option key={s.id} value={s.email}>
@@ -668,7 +669,7 @@ export default function TeacherDashboard() {
                                         <label className="text-slate-400 text-sm mb-1 block">Type</label>
                                         <select value={feedbackForm.type}
                                             onChange={e => setFeedbackForm({ ...feedbackForm, type: e.target.value })}
-                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500">
+                                            className="glass-input-dark w-full">
                                             <option value="general">💬 General</option>
                                             <option value="praise">🌟 Praise</option>
                                             <option value="improvement">💡 Needs Improvement</option>
@@ -688,7 +689,7 @@ export default function TeacherDashboard() {
                                             ].map((t, i) => (
                                                 <button key={i}
                                                     onClick={() => setFeedbackForm(f => ({ ...f, message: t.text }))}
-                                                    className="text-xs px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:text-white hover:border-teal-500/50 transition">
+                                                    className="glass-badge text-xs px-3 py-1.5 hover:border-[var(--lx-accent)]/50 transition cursor-pointer">
                                                     {t.label}
                                                 </button>
                                             ))}
@@ -699,7 +700,7 @@ export default function TeacherDashboard() {
                                         <label className="text-slate-400 text-sm mb-1 block">Scenario (optional)</label>
                                         <select value={feedbackForm.scenario_id}
                                             onChange={e => setFeedbackForm({ ...feedbackForm, scenario_id: e.target.value })}
-                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500">
+                                            className="glass-input-dark w-full">
                                             <option value="">All Scenarios</option>
                                             {Object.entries(SCENARIOS).map(([id, s]) => (
                                                 <option key={id} value={id}>{s.title}</option>
@@ -711,18 +712,18 @@ export default function TeacherDashboard() {
                                         <textarea rows={4} placeholder="Write your feedback here..."
                                             value={feedbackForm.message}
                                             onChange={e => setFeedbackForm({ ...feedbackForm, message: e.target.value })}
-                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition resize-none" />
+                                            className="glass-input-dark w-full resize-none" />
                                     </div>
                                     <button onClick={sendFeedback}
                                         disabled={sendingFeedback || !feedbackForm.student_email || !feedbackForm.message}
-                                        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-black font-bold py-3 rounded-xl transition disabled:opacity-50">
+                                        className="liquid-btn-accent w-full flex items-center justify-center gap-2 font-bold py-3 disabled:opacity-50">
                                         {sendingFeedback ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                                         Send Feedback
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                            <div className="glass-card p-6">
                                 <div className="flex items-center justify-between mb-6">
                                     <h2 className="text-xl font-bold text-white flex items-center gap-2">
                                         <MessageSquare className="w-5 h-5 text-purple-400" />
@@ -732,7 +733,7 @@ export default function TeacherDashboard() {
                                     <select
                                         value={feedbackFilter}
                                         onChange={e => setFeedbackFilter(e.target.value)}
-                                        className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-400 text-xs focus:outline-none focus:border-teal-500">
+                                        className="glass-input-dark text-xs px-3 py-1.5">
                                         <option value="all">All Types</option>
                                         <option value="praise">🌟 Praise</option>
                                         <option value="improvement">💡 Improvement</option>
@@ -747,7 +748,7 @@ export default function TeacherDashboard() {
                                     placeholder="Search feedback..."
                                     value={feedbackSearch}
                                     onChange={e => setFeedbackSearch(e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-teal-500 mb-4 transition"
+                                    className="glass-input-dark w-full mb-4"
                                 />
 
                                 <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
@@ -777,7 +778,7 @@ export default function TeacherDashboard() {
                                                     general: 'text-slate-400 bg-slate-700/30 border-slate-600/30',
                                                 }[fb.type] || 'text-slate-400 bg-slate-700/30 border-slate-600/30';
                                                 return (
-                                                    <div key={fb.id} className="p-4 rounded-xl bg-slate-800/50 border border-slate-700 group">
+                                                    <div key={fb.id} className="glass-card p-4 group">
                                                         <div className="flex items-start justify-between gap-2 mb-2">
                                                             <div>
                                                                 <p className="text-white text-sm font-medium">{fb.student_email}</p>
@@ -835,15 +836,15 @@ export default function TeacherDashboard() {
                                         color: 'amber'
                                     },
                                 ].map((card, i) => (
-                                    <div key={i} className={`bg-${card.color}-500/10 border border-${card.color}-500/30 rounded-xl p-4 text-center`}>
-                                        <p className={`text-${card.color}-400 text-2xl font-bold`}>{card.value}</p>
-                                        <p className="text-slate-500 text-xs mt-1">{card.label}</p>
+                                    <div key={i} className="glass-card p-4 text-center">
+                                        <p className="text-[var(--lx-accent)] text-2xl font-bold">{card.value}</p>
+                                        <p className="text-[var(--lx-text-muted)] text-xs mt-1">{card.label}</p>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Bar Chart — Completions per Scenario */}
-                            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                            <div className="glass-card p-6">
                                 <h3 className="text-white font-bold mb-6 flex items-center gap-2">
                                     <BarChart3 className="w-5 h-5 text-teal-400" />
                                     Completions & Avg Score per Scenario
@@ -866,7 +867,7 @@ export default function TeacherDashboard() {
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                                 {/* Bar Chart — Student Performance */}
-                                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                                <div className="glass-card p-6">
                                     <h3 className="text-white font-bold mb-6 flex items-center gap-2">
                                         <Users className="w-5 h-5 text-purple-400" />
                                         Student Performance
@@ -891,7 +892,7 @@ export default function TeacherDashboard() {
                                 </div>
 
                                 {/* Pie Chart — Pass vs Fail */}
-                                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                                <div className="glass-card p-6">
                                     <h3 className="text-white font-bold mb-6 flex items-center gap-2">
                                         <Target className="w-5 h-5 text-emerald-400" />
                                         Pass vs Fail Rate

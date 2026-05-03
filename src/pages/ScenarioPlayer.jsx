@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
@@ -16,113 +16,12 @@ import DecisionImpact from '@/components/scenario/DecisionImpact';
 import ExitTicket from '@/components/scenario/ExitTicket';
 import ScenarioComplete from '@/components/scenario/ScenarioComplete';
 import CompletionCertificate from '@/components/scenario/CompletionCertificate';
+import MissionHUD from '@/components/scenario/MissionHUD';
 import { normalizeRoleThemeKey } from '@/components/scenario/scenarioHelpers';
 import { evaluateScenarioOutcome } from '@/components/scenario/scenarioAnswerKey';
-
-// ── Role theme config ──────────────────────────────────────────
-const ROLE_THEMES = {
-    fertilizerengineer: {
-        bg: 'from-amber-950 via-slate-950 to-orange-950',
-        accent: 'from-amber-500 to-orange-500',
-        border: 'border-amber-500/30',
-        text: 'text-amber-400',
-        glow: 'shadow-amber-500/20',
-        location: '📍 ADNOC Distribution — Abu Dhabi, UAE',
-        alert: '⛽ Holiday Weekend — High Demand Alert',
-        alertColor: 'bg-amber-500/10 border-amber-500/30 text-amber-300',
-    },
-    environmentalscientist: {
-        bg: 'from-emerald-950 via-slate-950 to-teal-950',
-        accent: 'from-emerald-500 to-teal-500',
-        border: 'border-emerald-500/30',
-        text: 'text-emerald-400',
-        glow: 'shadow-emerald-500/20',
-        location: '📍 Environmental Monitoring Station — UAE',
-        alert: '🌿 Ecosystem Alert — Urgent Assessment',
-        alertColor: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300',
-    },
-    biomedicalresearcher: {
-        bg: 'from-purple-950 via-slate-950 to-pink-950',
-        accent: 'from-purple-500 to-pink-500',
-        border: 'border-purple-500/30',
-        text: 'text-purple-400',
-        glow: 'shadow-purple-500/20',
-        location: '📍 Biomedical Research Lab — UAE University',
-        alert: '🧬 Research Priority — Critical Case',
-        alertColor: 'bg-purple-500/10 border-purple-500/30 text-purple-300',
-    },
-    spacemissionchemist: {
-        bg: 'from-blue-950 via-slate-950 to-indigo-950',
-        accent: 'from-blue-500 to-indigo-500',
-        border: 'border-blue-500/30',
-        text: 'text-blue-400',
-        glow: 'shadow-blue-500/20',
-        location: '📍 Space Mission Control — Deep Space',
-        alert: '🚀 Mission Critical — Crew Safety Alert',
-        alertColor: 'bg-blue-500/10 border-blue-500/30 text-blue-300',
-    },
-    industrialchemist: {
-        bg: 'from-red-950 via-slate-950 to-rose-950',
-        accent: 'from-red-500 to-rose-500',
-        border: 'border-red-500/30',
-        text: 'text-red-400',
-        glow: 'shadow-red-500/20',
-        location: '📍 Chemical Manufacturing Plant — UAE',
-        alert: '⚠️ Safety Alert — Immediate Action Required',
-        alertColor: 'bg-red-500/10 border-red-500/30 text-red-300',
-    },
-    geologist: {
-        bg: 'from-orange-950 via-slate-950 to-amber-950',
-        accent: 'from-orange-500 to-amber-500',
-        border: 'border-orange-500/30',
-        text: 'text-orange-400',
-        glow: 'shadow-orange-500/20',
-        location: '📍 Geological Survey Site — UAE',
-        alert: '🪨 Hazard Alert — Site Assessment Active',
-        alertColor: 'bg-orange-500/10 border-orange-500/30 text-orange-300',
-    },
-    pharmaceuticalscientist: {
-        bg: 'from-teal-950 via-slate-950 to-cyan-950',
-        accent: 'from-teal-500 to-cyan-500',
-        border: 'border-teal-500/30',
-        text: 'text-teal-400',
-        glow: 'shadow-teal-500/20',
-        location: '📍 Pharmaceutical Lab — UAE',
-        alert: '💊 Production Alert — Quality Control',
-        alertColor: 'bg-teal-500/10 border-teal-500/30 text-teal-300',
-    },
-    energyengineer: {
-        bg: 'from-yellow-950 via-slate-950 to-amber-950',
-        accent: 'from-yellow-500 to-amber-500',
-        border: 'border-yellow-500/30',
-        text: 'text-yellow-400',
-        glow: 'shadow-yellow-500/20',
-        location: '📍 Energy Grid Control — UAE',
-        alert: '⚡ Grid Alert — High Demand Active',
-        alertColor: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300',
-    },
-    processsafetyengineer: {
-        bg: 'from-cyan-950 via-slate-950 to-blue-950',
-        accent: 'from-cyan-500 to-blue-500',
-        border: 'border-cyan-500/30',
-        text: 'text-cyan-400',
-        glow: 'shadow-cyan-500/20',
-        location: '📍 ADNOC Gas Operations — Abu Dhabi, UAE',
-        alert: '🧯 Pressure Alert — Engineering Review Required',
-        alertColor: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-300',
-    },
-};
-
-const DEFAULT_THEME = {
-    bg: 'from-slate-900 via-slate-950 to-slate-900',
-    accent: 'from-teal-500 to-emerald-500',
-    border: 'border-teal-500/30',
-    text: 'text-teal-400',
-    glow: 'shadow-teal-500/20',
-    location: '📍 Science Lab',
-    alert: null,
-    alertColor: '',
-};
+import { ROLE_THEMES, DEFAULT_THEME } from '@/lib/roleThemes';
+import { useScenarioAudio } from '@/hooks/useScenarioAudio';
+import { t as motionT } from '@/lib/motionPresets';
 
 // ── Finite phase machine ───────────────────────────────────────
 // 'title' auto-advances (fullscreen cinematic, no header)
@@ -178,12 +77,38 @@ export default function ScenarioPlayer() {
         return () => cancelAnimationFrame(id);
     }, [phase]);
 
+    // Audio feedback on phase transitions
+    useEffect(() => {
+        if (phase === 'title' || phase === 'video') return;
+        if (phase === 'complete') {
+            // Delay until after the component mounts
+            const id = setTimeout(playChamberUnlock, 600);
+            return () => clearTimeout(id);
+        }
+        if (phase === 'impact') {
+            // Will be overridden by DecisionImpact success/failure result
+            return;
+        }
+        playPhaseTransition();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phase]);
+
     // ── Scenario / role / theme lookup ─────────────────────────
     const baseScenario = SCENARIOS[scenarioId];
     const uaeScenario = UAE_SCENARIOS?.[scenarioId];
     const scenario = baseScenario ? { ...baseScenario, ...(uaeScenario || {}) } : null;
-    const role = Object.values(ROLES).find((r) => r.scenarios.includes(scenarioId));
-    const theme = ROLE_THEMES[normalizeRoleThemeKey(role?.id)] || DEFAULT_THEME;
+    const role = useMemo(
+        () => Object.values(ROLES).find((r) => r.scenarios.includes(scenarioId)),
+        [scenarioId]
+    );
+    const theme = useMemo(
+        () => ROLE_THEMES[normalizeRoleThemeKey(role?.id)] || DEFAULT_THEME,
+        [role?.id]
+    );
+
+    // ── Audio ──────────────────────────────────────────────────
+    const { playPhaseTransition, playChamberUnlock, playWarningAlarm, playBeep } =
+        useScenarioAudio();
 
     // ── Auth + profile loading ─────────────────────────────────
     useEffect(() => {
@@ -362,9 +287,9 @@ export default function ScenarioPlayer() {
     // ── Early returns ──────────────────────────────────────────
     if (!scenario) {
         return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <div className="text-center">
-                    <p className="text-slate-400 mb-4">Scenario not found</p>
+            <div className="dark min-h-screen lx-bg-ambient flex items-center justify-center">
+                <div className="hud-panel p-8 text-center">
+                    <p className="text-[var(--lx-text-muted)] mb-4 font-mono text-sm">Scenario not found</p>
                     <Button onClick={() => navigate('/')}>Return Home</Button>
                 </div>
             </div>
@@ -373,15 +298,18 @@ export default function ScenarioPlayer() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
+            <div className="dark min-h-screen lx-bg-ambient flex items-center justify-center">
+                <div className="hud-panel p-5 flex items-center gap-3">
+                    <Loader2 className="w-5 h-5 text-cyan-500 animate-spin" />
+                    <span className="text-[11px] font-mono text-[var(--lx-text-muted)] tracking-widest">LOADING...</span>
+                </div>
             </div>
         );
     }
 
     // ── Render ─────────────────────────────────────────────────
     return (
-        <div className={`min-h-screen bg-gradient-to-br ${theme.bg} relative`}>
+        <div className={`min-h-screen relative ${phase === 'intro' ? 'lx-bg-ambient' : `bg-gradient-to-br ${theme.bg}`}`}>
             {/* Subtle grid texture */}
             <div
                 className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -403,10 +331,22 @@ export default function ScenarioPlayer() {
                 )}
             </AnimatePresence>
 
+            {/* ── VIDEO phase: fullscreen cinematic, no header ── */}
+            <AnimatePresence>
+                {phase === 'video' && (
+                    <CinematicVideoIntro
+                        scenarioId={scenarioId}
+                        isTeacher={isTeacher}
+                        videoState={videoState}
+                        onComplete={handleVideoComplete}
+                    />
+                )}
+            </AnimatePresence>
+
             {/* ── All subsequent phases: header + main layout ── */}
-            {phase !== 'title' && (
+            {phase !== 'title' && phase !== 'video' && (
                 <>
-                    <header className="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800">
+                    <header className="sticky top-0 z-40 glass-nav-dark">
                         {theme.alert && (
                             <div className={`border-b ${theme.alertColor} px-6 py-2 flex items-center justify-between text-xs font-semibold`}>
                                 <span className="flex items-center gap-2">
@@ -441,16 +381,16 @@ export default function ScenarioPlayer() {
                                             ? navigate('/TeacherDashboard')
                                             : navigate(`/role-hub?role=${role?.id || ''}`)
                                     }
-                                    className="text-slate-400 hover:text-white"
+                                    className="text-[var(--lx-text-muted)] hover:text-white"
                                 >
                                     <X className="w-5 h-5" />
                                 </Button>
                             </div>
 
                             {/* Progress bar */}
-                            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div className="glass-progress">
                                 <motion.div
-                                    className={`h-full bg-gradient-to-r ${theme.accent}`}
+                                    className={`glass-progress-bar bg-gradient-to-r ${theme.accent}`}
                                     initial={{ width: 0 }}
                                     animate={{ width: `${getProgressPercentage()}%` }}
                                     transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -496,18 +436,9 @@ export default function ScenarioPlayer() {
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -8 }}
-                                transition={{ duration: 0.2 }}
+                                transition={motionT.phase}
                             >
                                 {/* ─── FLOW CONTROLLER ────────────────────────────────────── */}
-
-                                {phase === 'video' && (
-                                    <CinematicVideoIntro
-                                        scenarioId={scenarioId}
-                                        isTeacher={isTeacher}
-                                        videoState={videoState}
-                                        onComplete={handleVideoComplete}
-                                    />
-                                )}
 
                                 {phase === 'intro' && (
                                     <ScenarioIntro
@@ -595,6 +526,16 @@ export default function ScenarioPlayer() {
                     onClose={() => setShowCertificate(false)}
                 />
             )}
+
+            {/* ── Persistent mission HUD — visible across all phases except title ── */}
+            <MissionHUD
+                scenario={scenario}
+                scenarioId={scenarioId}
+                phase={phase}
+                progressPct={getProgressPercentage()}
+                hudColor={theme.hudColor}
+                roleTitle={role?.title || scenario?.character?.title || scenario?.role}
+            />
         </div>
     );
 }

@@ -1,8 +1,6 @@
-
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Download } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Download, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
@@ -12,7 +10,7 @@ export default function CompletionCertificate({
     percentage,
     completionDate,
     badgeIcon,
-    onClose
+    onClose,
 }) {
     const certificateRef = useRef(null);
 
@@ -21,16 +19,15 @@ export default function CompletionCertificate({
             scale: 2,
             useCORS: true,
             allowTaint: true,
-            backgroundColor: '#0f172a',
+            backgroundColor: '#0ea5e9',
             onclone: (clonedDoc) => {
-                // استبدال كل bg-clip-text بلون ثابت في النسخة المحولة
-                clonedDoc.querySelectorAll('[data-export-color]').forEach(el => {
+                clonedDoc.querySelectorAll('[data-export-color]').forEach((el) => {
                     el.style.backgroundImage = 'none';
                     el.style.webkitBackgroundClip = 'unset';
                     el.style.webkitTextFillColor = el.getAttribute('data-export-color');
                     el.style.color = el.getAttribute('data-export-color');
                 });
-            }
+            },
         });
     };
 
@@ -60,9 +57,12 @@ export default function CompletionCertificate({
         }
     };
 
-    const formattedDate = new Date(completionDate).toLocaleDateString('en-US', {
-        year: 'numeric', month: 'long', day: 'numeric'
-    });
+    const formattedDateShort = new Date(completionDate)
+        .toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+        .toUpperCase();
+
+    const agentName = (studentName || 'Student Name').toUpperCase();
+    const missionName = (scenarioTitle || 'Classified Mission').toUpperCase();
 
     return (
         <motion.div
@@ -71,137 +71,182 @@ export default function CompletionCertificate({
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-auto"
         >
             <div className="max-w-4xl w-full">
-                {/* Certificate */}
+
+                {/* Certificate canvas */}
                 <div
                     ref={certificateRef}
                     style={{
                         aspectRatio: '1.414/1',
-                        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-                        borderRadius: '24px',
+                        background: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 40%, #0284c7 70%, #0369a1 100%)',
+                        borderRadius: '16px',
                         overflow: 'hidden',
                         position: 'relative',
-                        fontFamily: 'Arial, sans-serif'
+                        fontFamily: "'Space Grotesk', Arial, sans-serif",
                     }}
                 >
-                    {/* Background pattern */}
-                    <div style={{ position: 'absolute', inset: 0, opacity: 0.08 }}>
+                    {/* Circuit pattern */}
+                    <div style={{ position: 'absolute', inset: 0, opacity: 0.07 }}>
                         <svg width="100%" height="100%">
                             <defs>
-                                <pattern id="circuit" width="100" height="100" patternUnits="userSpaceOnUse">
-                                    <circle cx="50" cy="50" r="1" fill="#14b8a6" />
-                                    <path d="M50 0 L50 45 M50 55 L50 100 M0 50 L45 50 M55 50 L100 50"
-                                        stroke="#14b8a6" strokeWidth="0.5" fill="none" />
-                                    <circle cx="50" cy="50" r="8" stroke="#14b8a6" strokeWidth="0.5" fill="none" />
+                                <pattern id="cert-circuit" width="80" height="80" patternUnits="userSpaceOnUse">
+                                    <circle cx="40" cy="40" r="1.5" fill="#ffffff" />
+                                    <path
+                                        d="M40 0 L40 34 M40 46 L40 80 M0 40 L34 40 M46 40 L80 40"
+                                        stroke="#ffffff" strokeWidth="0.5" fill="none"
+                                    />
+                                    <circle cx="40" cy="40" r="10" stroke="#ffffff" strokeWidth="0.5" fill="none" />
+                                    <circle cx="40" cy="40" r="20" stroke="#ffffff" strokeWidth="0.25" fill="none" />
                                 </pattern>
                             </defs>
-                            <rect width="100%" height="100%" fill="url(#circuit)" />
+                            <rect width="100%" height="100%" fill="url(#cert-circuit)" />
                         </svg>
                     </div>
 
-                    {/* Borders */}
-                    <div style={{ position: 'absolute', inset: '16px', border: '2px solid rgba(20,184,166,0.3)', borderRadius: '16px' }} />
-                    <div style={{ position: 'absolute', inset: '24px', border: '1px solid rgba(168,85,247,0.2)', borderRadius: '12px' }} />
+                    {/* HUD corner brackets */}
+                    <div style={{ position: 'absolute', top: 20, left: 20, width: 32, height: 32, borderTop: '3px solid rgba(255,255,255,0.55)', borderLeft: '3px solid rgba(255,255,255,0.55)' }} />
+                    <div style={{ position: 'absolute', top: 20, right: 20, width: 32, height: 32, borderTop: '3px solid rgba(255,255,255,0.55)', borderRight: '3px solid rgba(255,255,255,0.55)' }} />
+                    <div style={{ position: 'absolute', bottom: 20, left: 20, width: 32, height: 32, borderBottom: '3px solid rgba(255,255,255,0.55)', borderLeft: '3px solid rgba(255,255,255,0.55)' }} />
+                    <div style={{ position: 'absolute', bottom: 20, right: 20, width: 32, height: 32, borderBottom: '3px solid rgba(255,255,255,0.55)', borderRight: '3px solid rgba(255,255,255,0.55)' }} />
 
-                    {/* Glow orbs */}
-                    <div style={{ position: 'absolute', top: '25%', left: '25%', width: '256px', height: '256px', borderRadius: '50%', background: 'rgba(20,184,166,0.08)', filter: 'blur(60px)' }} />
-                    <div style={{ position: 'absolute', bottom: '25%', right: '25%', width: '192px', height: '192px', borderRadius: '50%', background: 'rgba(168,85,247,0.08)', filter: 'blur(60px)' }} />
+                    {/* Top-left logo */}
+                    <div style={{ position: 'absolute', top: 22, left: 60, display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div style={{ width: 22, height: 22, background: 'rgba(255,255,255,0.9)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 900, color: '#0284c7' }}>
+                            X
+                        </div>
+                        <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, fontWeight: 700, letterSpacing: 1 }}>
+                            Perspective X
+                        </span>
+                    </div>
 
-                    {/* Content */}
-                    <div style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px', textAlign: 'center' }}>
+                    {/* Date badge — top right */}
+                    <div style={{ position: 'absolute', top: 22, right: 60, background: 'rgba(251,191,36,0.95)', borderRadius: 4, padding: '4px 10px' }}>
+                        <span style={{ color: '#78350f', fontSize: 11, fontWeight: 800, letterSpacing: 1, fontFamily: 'monospace' }}>
+                            {formattedDateShort}
+                        </span>
+                    </div>
 
-                        {/* Header */}
-                        <div style={{ marginBottom: '20px', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 20px', borderRadius: '999px', background: 'rgba(20,184,166,0.15)', border: '1px solid rgba(20,184,166,0.3)' }}>
-                            <span style={{ color: '#2dd4bf', fontSize: '14px', fontWeight: '700', letterSpacing: '2px' }}>
-                                🏅 CERTIFICATE OF COMPLETION
+                    {/* Main content */}
+                    <div style={{
+                        position: 'relative',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '60px 48px 44px',
+                        textAlign: 'center',
+                        gap: 10,
+                    }}>
+
+                        {/* Title */}
+                        <h1
+                            data-export-color="#e0f2fe"
+                            style={{ fontSize: 28, fontWeight: 900, color: '#e0f2fe', letterSpacing: 2, textShadow: '0 0 20px rgba(255,255,255,0.25)', marginBottom: 0 }}
+                        >
+                            Exit Authorization Certificate
+                        </h1>
+
+                        {/* Central badge emblem */}
+                        <div style={{ position: 'relative', margin: '4px 0' }}>
+                            {/* Outer rings */}
+                            <div style={{ position: 'absolute', inset: -20, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.15)' }} />
+                            <div style={{ position: 'absolute', inset: -10, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.22)' }} />
+
+                            <div style={{
+                                width: 110, height: 110, borderRadius: '50%',
+                                background: 'linear-gradient(135deg, #0c4a6e 0%, #075985 50%, #0369a1 100%)',
+                                border: '3px solid rgba(255,255,255,0.45)',
+                                display: 'flex', flexDirection: 'column',
+                                alignItems: 'center', justifyContent: 'center',
+                                boxShadow: '0 0 28px rgba(0,0,0,0.3), 0 0 50px rgba(255,255,255,0.08)',
+                            }}>
+                                <span style={{ fontSize: 34, lineHeight: 1 }}>{badgeIcon || '🗝️'}</span>
+                                <span style={{ fontSize: 8, fontWeight: 900, color: 'rgba(255,255,255,0.85)', letterSpacing: 0.5, marginTop: 4 }}>ROOM CLEARED</span>
+                            </div>
+                        </div>
+
+                        {/* ACCESS GRANTED banner */}
+                        <div style={{
+                            background: 'rgba(255,255,255,0.14)',
+                            border: '2px solid rgba(255,255,255,0.38)',
+                            borderRadius: 4,
+                            padding: '5px 22px',
+                        }}>
+                            <span
+                                data-export-color="#ffffff"
+                                style={{ fontSize: 18, fontWeight: 900, color: '#ffffff', letterSpacing: 4, textShadow: '0 0 10px rgba(255,255,255,0.45)' }}
+                            >
+                                ACCESS GRANTED
                             </span>
                         </div>
 
-                        {/* Logo */}
-                        <div
-                            data-export-color="#2dd4bf"
-                            style={{ fontSize: '32px', fontWeight: '900', marginBottom: '16px', color: '#2dd4bf' }}
-                        >
-                            Perspective X
-                        </div>
-
-                        {/* Sub text */}
-                        <p style={{ color: '#94a3b8', fontSize: '16px', marginBottom: '12px' }}>
-                            This certifies that
-                        </p>
-
-                        {/* Student Name */}
-                        <h2
-                            data-export-color="#ffffff"
-                            style={{ fontSize: '38px', fontWeight: '800', color: '#ffffff', marginBottom: '12px', letterSpacing: '1px' }}
-                        >
-                            {studentName || 'Student Name'}
-                        </h2>
-
-                        <p style={{ color: '#94a3b8', fontSize: '16px', marginBottom: '20px' }}>
-                            has successfully completed the scientific scenario
-                        </p>
-
-                        {/* Scenario badge */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', padding: '16px 32px', borderRadius: '16px', background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
-                            <span style={{ fontSize: '40px' }}>{badgeIcon || '🏆'}</span>
-                            <h3
-                                data-export-color="#2dd4bf"
-                                style={{ fontSize: '24px', fontWeight: '700', color: '#2dd4bf' }}
-                            >
-                                {scenarioTitle}
-                            </h3>
-                        </div>
-
-                        {/* Score & Date */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '48px', marginBottom: '32px' }}>
-                            <div style={{ textAlign: 'center' }}>
-                                <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '4px' }}>Achievement Score</p>
-                                <div
-                                    data-export-color="#2dd4bf"
-                                    style={{ fontSize: '48px', fontWeight: '900', color: '#2dd4bf' }}
-                                >
-                                    {percentage}%
+                        {/* Scenario + score row */}
+                        <div style={{ display: 'flex', gap: 36, alignItems: 'center' }}>
+                            <div style={{ textAlign: 'left' }}>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.55)', letterSpacing: 2, fontFamily: 'monospace', marginBottom: 2 }}>
+                                    SCENARIO COMPLETED:
+                                </div>
+                                <div data-export-color="#bae6fd" style={{ fontSize: 12, fontWeight: 700, color: '#bae6fd', letterSpacing: 1 }}>
+                                    {missionName}
                                 </div>
                             </div>
-                            <div style={{ width: '1px', height: '64px', background: '#334155' }} />
-                            <div style={{ textAlign: 'center' }}>
-                                <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '4px' }}>Completion Date</p>
-                                <p style={{ fontSize: '20px', color: '#ffffff', fontWeight: '600' }}>{formattedDate}</p>
+                            <div style={{ width: 1, height: 32, background: 'rgba(255,255,255,0.2)' }} />
+                            <div style={{ textAlign: 'left' }}>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.55)', letterSpacing: 2, fontFamily: 'monospace', marginBottom: 2 }}>
+                                    SCORE ACHIEVED:
+                                </div>
+                                <div data-export-color="#fde68a" style={{ fontSize: 12, fontWeight: 700, color: '#fde68a', letterSpacing: 1 }}>
+                                    {percentage}% VERIFIED
+                                </div>
                             </div>
                         </div>
 
-                        {/* Signature */}
-                        <div style={{ borderTop: '1px solid rgba(51,65,85,0.5)', paddingTop: '16px', width: '100%', maxWidth: '320px', textAlign: 'center' }}>
-                            <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '4px' }}>Portal Developer</p>
-                            <p
-                                data-export-color="#2dd4bf"
-                                style={{ fontSize: '20px', fontWeight: '600', color: '#2dd4bf', fontStyle: 'italic' }}
-                            >
-                                Riham Saleh
-                            </p>
-                        </div>
+                        {/* Agent name */}
+                        <h2
+                            data-export-color="#ffffff"
+                            style={{ fontSize: 34, fontWeight: 900, color: '#ffffff', letterSpacing: 4, textShadow: '0 0 18px rgba(255,255,255,0.35)', lineHeight: 1.1 }}
+                        >
+                            AGENT {agentName}
+                        </h2>
 
-                        {/* Verified */}
-                        <div style={{ position: 'absolute', bottom: '16px', right: '32px', display: 'flex', alignItems: 'center', gap: '6px', color: '#475569', fontSize: '12px' }}>
-                            <span>✓</span>
-                            <span>Verified Achievement</span>
+                        {/* Footer */}
+                        <div style={{ borderTop: '1px solid rgba(255,255,255,0.18)', paddingTop: 10, width: '100%', marginTop: 2 }}>
+                            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 10, letterSpacing: 1 }}>
+                                Issued by Perspective X Scientific Learning Platform. Valid for immediate departure.
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                {/* Buttons */}
+                {/* Action buttons */}
                 <div className="flex items-center justify-center gap-4 mt-6">
-                    <Button onClick={downloadPNG} className="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600">
-                        <Download className="w-4 h-4 mr-2" />
-                        Download PNG
-                    </Button>
-                    <Button onClick={downloadPDF} variant="outline" className="border-teal-500/50 text-teal-400 hover:bg-teal-500/10">
-                        <Download className="w-4 h-4 mr-2" />
-                        Download PDF
-                    </Button>
-                    <Button onClick={onClose} variant="ghost" className="text-slate-400 hover:text-white">
-                        Close
-                    </Button>
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={downloadPNG}
+                        className="liquid-btn-accent flex items-center gap-2 px-5 py-2.5 text-[11px] font-mono font-bold tracking-widest uppercase"
+                    >
+                        <Download className="w-3.5 h-3.5" />
+                        DOWNLOAD_PNG
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={downloadPDF}
+                        className="liquid-btn flex items-center gap-2 px-5 py-2.5 text-[11px] font-mono font-bold tracking-widest uppercase"
+                    >
+                        <Download className="w-3.5 h-3.5" />
+                        DOWNLOAD_PDF
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={onClose}
+                        className="liquid-btn-ghost flex items-center gap-2 px-4 py-2.5 text-[11px] font-mono font-bold tracking-widest uppercase"
+                    >
+                        <X className="w-3.5 h-3.5" />
+                        CLOSE
+                    </motion.button>
                 </div>
             </div>
         </motion.div>

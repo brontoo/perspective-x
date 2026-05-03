@@ -196,24 +196,27 @@ export default function ProfileSettings() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
+            <div className="dark min-h-screen lx-bg-ambient flex items-center justify-center">
+                <div className="glass-card p-6 flex items-center gap-3">
+                    <Loader2 className="w-6 h-6 text-[var(--lx-accent)] animate-spin" />
+                    <span className="text-xs font-mono text-[var(--lx-text-muted)] tracking-widest">LOADING PROFILE...</span>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-slate-950">
+        <div className="dark min-h-screen lx-bg-ambient">
             {/* Header */}
-            <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/70 border-b border-slate-800">
+            <header className="glass-nav-dark sticky top-0 z-50">
                 <div className="max-w-2xl mx-auto px-6 py-4 flex items-center gap-4">
                     <button onClick={() => navigate(-1)}
-                        className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition">
+                        className="p-2 text-[var(--lx-text-sub)] hover:text-[var(--lx-text)] rounded-lg glass-panel transition">
                         <ArrowLeft className="w-5 h-5" />
                     </button>
                     <div>
-                        <h1 className="text-xl font-bold text-white">Account Settings</h1>
-                        <p className="text-xs text-slate-500">{user?.email}</p>
+                        <h1 className="text-xl font-bold text-[var(--lx-text)]">Account Settings</h1>
+                        <p className="text-xs text-[var(--lx-text-muted)]">{user?.email}</p>
                     </div>
                 </div>
             </header>
@@ -222,9 +225,9 @@ export default function ProfileSettings() {
 
                 {/* ── Avatar Section ── */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                    className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
-                    <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                        <Camera className="w-5 h-5 text-teal-400" /> Profile Picture
+                    className="glass-card p-6">
+                    <h2 className="text-lg font-bold text-[var(--lx-text)] mb-6 flex items-center gap-2">
+                        <Camera className="w-5 h-5 text-[var(--lx-accent)]" /> Profile Picture
                     </h2>
 
                     <div className="flex items-center gap-6">
@@ -248,7 +251,7 @@ export default function ProfileSettings() {
                         </div>
 
                         <div className="flex-1">
-                            <p className="text-slate-400 text-sm mb-3">
+                            <p className="text-[var(--lx-text-sub)] text-sm mb-3">
                                 Upload a profile picture. Max size: 2MB.
                             </p>
                             <input
@@ -261,12 +264,12 @@ export default function ProfileSettings() {
                             <button
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={uploadingAvatar}
-                                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-teal-500/30 text-teal-400 hover:bg-teal-500/10 text-sm transition disabled:opacity-50">
+                                className="liquid-btn-ghost flex items-center gap-2 px-4 py-2 text-sm disabled:opacity-50">
                                 <Camera className="w-4 h-4" />
                                 {uploadingAvatar ? 'Uploading...' : 'Choose Photo'}
                             </button>
                             {avatarError && (
-                                <p className="text-red-400 text-xs mt-2">{avatarError}</p>
+                                <p className="text-[var(--lx-danger)] text-xs mt-2">{avatarError}</p>
                             )}
                         </div>
                     </div>
@@ -274,30 +277,30 @@ export default function ProfileSettings() {
 
                 {/* ── Name Section ── */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                    className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
-                    <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                        <User className="w-5 h-5 text-purple-400" /> Full Name
+                    className="glass-card p-6">
+                    <h2 className="text-lg font-bold text-[var(--lx-text)] mb-6 flex items-center gap-2">
+                        <User className="w-5 h-5 text-[var(--lx-accent)]" /> Full Name
                     </h2>
 
                     <div className="space-y-4">
                         <div>
-                            <label className="text-slate-400 text-sm mb-1 block">Display Name</label>
+                            <label className="text-[var(--lx-text-sub)] text-sm mb-1 block">Display Name</label>
                             <input
                                 type="text"
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
-                                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition"
+                                className="glass-input-dark w-full"
                                 placeholder="Your full name"
                             />
                         </div>
 
                         {nameSuccess && (
-                            <div className="flex items-center gap-2 text-emerald-400 text-sm bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2">
+                            <div className="flex items-center gap-2 text-[var(--lx-success)] text-sm glass-card border border-[var(--lx-success)]/20 px-4 py-2">
                                 <CheckCircle2 className="w-4 h-4" /> {nameSuccess}
                             </div>
                         )}
                         {nameError && (
-                            <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">
+                            <div className="flex items-center gap-2 text-[var(--lx-danger)] text-sm glass-card border border-[var(--lx-danger)]/20 px-4 py-2">
                                 <AlertTriangle className="w-4 h-4" /> {nameError}
                             </div>
                         )}
@@ -305,7 +308,7 @@ export default function ProfileSettings() {
                         <button
                             onClick={handleSaveName}
                             disabled={savingName || !fullName.trim()}
-                            className="flex items-center gap-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-black font-bold px-6 py-2.5 rounded-xl transition disabled:opacity-50 text-sm">
+                            className="liquid-btn-accent flex items-center gap-2 px-6 py-2.5 text-sm font-bold disabled:opacity-50">
                             {savingName ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                             Save Name
                         </button>
@@ -314,26 +317,26 @@ export default function ProfileSettings() {
 
                 {/* ── Password Section ── */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                    className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
-                    <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                        <Lock className="w-5 h-5 text-amber-400" /> Change Password
+                    className="glass-card p-6">
+                    <h2 className="text-lg font-bold text-[var(--lx-text)] mb-6 flex items-center gap-2">
+                        <Lock className="w-5 h-5 text-[var(--lx-warning)]" /> Change Password
                     </h2>
 
                     <div className="space-y-4">
                         {/* Current Password */}
                         <div>
-                            <label className="text-slate-400 text-sm mb-1 block">Current Password</label>
+                            <label className="text-[var(--lx-text-sub)] text-sm mb-1 block">Current Password</label>
                             <div className="relative">
                                 <input
                                     type={showCurrentPw ? 'text' : 'password'}
                                     value={currentPassword}
                                     onChange={(e) => setCurrentPassword(e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition pr-12"
+                                    className="glass-input-dark w-full pr-12"
                                     placeholder="••••••••"
                                 />
                                 <button type="button"
                                     onClick={() => setShowCurrentPw(!showCurrentPw)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition">
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition">
                                     {showCurrentPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
@@ -341,18 +344,18 @@ export default function ProfileSettings() {
 
                         {/* New Password */}
                         <div>
-                            <label className="text-slate-400 text-sm mb-1 block">New Password</label>
+                            <label className="text-[var(--lx-text-sub)] text-sm mb-1 block">New Password</label>
                             <div className="relative">
                                 <input
                                     type={showNewPw ? 'text' : 'password'}
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition pr-12"
+                                    className="glass-input-dark w-full pr-12"
                                     placeholder="Min 6 characters"
                                 />
                                 <button type="button"
                                     onClick={() => setShowNewPw(!showNewPw)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition">
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition">
                                     {showNewPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
@@ -360,23 +363,23 @@ export default function ProfileSettings() {
 
                         {/* Confirm Password */}
                         <div>
-                            <label className="text-slate-400 text-sm mb-1 block">Confirm New Password</label>
+                            <label className="text-[var(--lx-text-sub)] text-sm mb-1 block">Confirm New Password</label>
                             <input
                                 type="password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition"
+                                className="glass-input-dark w-full"
                                 placeholder="••••••••"
                             />
                         </div>
 
                         {passwordSuccess && (
-                            <div className="flex items-center gap-2 text-emerald-400 text-sm bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2">
+                            <div className="flex items-center gap-2 text-[var(--lx-success)] text-sm glass-card border border-[var(--lx-success)]/20 px-4 py-2">
                                 <CheckCircle2 className="w-4 h-4" /> {passwordSuccess}
                             </div>
                         )}
                         {passwordError && (
-                            <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">
+                            <div className="flex items-center gap-2 text-[var(--lx-danger)] text-sm glass-card border border-[var(--lx-danger)]/20 px-4 py-2">
                                 <AlertTriangle className="w-4 h-4" /> {passwordError}
                             </div>
                         )}
@@ -384,7 +387,7 @@ export default function ProfileSettings() {
                         <button
                             onClick={handleChangePassword}
                             disabled={savingPassword || !currentPassword || !newPassword || !confirmPassword}
-                            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-bold px-6 py-2.5 rounded-xl transition disabled:opacity-50 text-sm">
+                            className="liquid-btn-accent flex items-center gap-2 px-6 py-2.5 text-sm font-bold disabled:opacity-50">
                             {savingPassword ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
                             Update Password
                         </button>
@@ -393,18 +396,18 @@ export default function ProfileSettings() {
 
                 {/* ── Delete Account Section ── */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                    className="bg-red-950/20 border border-red-500/20 rounded-2xl p-6">
-                    <h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                        <Trash2 className="w-5 h-5 text-red-400" /> Delete Account
+                    className="glass-card border border-red-500/20 p-6">
+                    <h2 className="text-lg font-bold text-[var(--lx-text)] mb-2 flex items-center gap-2">
+                        <Trash2 className="w-5 h-5 text-[var(--lx-danger)]" /> Delete Account
                     </h2>
-                    <p className="text-slate-500 text-sm mb-6">
+                    <p className="text-[var(--lx-text-muted)] text-sm mb-6">
                         This will permanently delete your account and all your progress. This action cannot be undone.
                     </p>
 
                     {!showDeleteConfirm ? (
                         <button
                             onClick={() => setShowDeleteConfirm(true)}
-                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 text-sm transition">
+                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/30 text-[var(--lx-danger)] hover:bg-red-500/10 text-sm transition">
                             <Trash2 className="w-4 h-4" />
                             Delete My Account
                         </button>
@@ -413,12 +416,12 @@ export default function ProfileSettings() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             className="space-y-4">
-                            <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 rounded-xl p-4">
-                                <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                            <div className="flex items-start gap-3 glass-card border border-red-500/20 p-4">
+                                <AlertTriangle className="w-5 h-5 text-[var(--lx-danger)] flex-shrink-0 mt-0.5" />
                                 <div>
-                                    <p className="text-red-300 text-sm font-semibold">Are you absolutely sure?</p>
-                                    <p className="text-red-400/70 text-xs mt-1">
-                                        Type <span className="font-bold text-red-300">DELETE</span> to confirm.
+                                    <p className="text-[var(--lx-danger)] text-sm font-semibold">Are you absolutely sure?</p>
+                                    <p className="text-[var(--lx-danger)]/70 text-xs mt-1">
+                                        Type <span className="font-bold text-[var(--lx-danger)]">DELETE</span> to confirm.
                                     </p>
                                 </div>
                             </div>
@@ -426,7 +429,8 @@ export default function ProfileSettings() {
                                 type="text"
                                 value={deleteInput}
                                 onChange={(e) => setDeleteInput(e.target.value)}
-                                className="w-full bg-slate-800 border border-red-500/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition"
+                                className="glass-input-dark w-full"
+                                style={{ borderColor: 'rgba(239,68,68,0.3)' }}
                                 placeholder='Type "DELETE" to confirm'
                             />
                             <div className="flex gap-3">
@@ -439,7 +443,7 @@ export default function ProfileSettings() {
                                 </button>
                                 <button
                                     onClick={() => { setShowDeleteConfirm(false); setDeleteInput(''); }}
-                                    className="px-6 py-2.5 rounded-xl border border-slate-700 text-slate-400 hover:text-white text-sm transition">
+                                    className="liquid-btn-ghost px-6 py-2.5 text-sm">
                                     Cancel
                                 </button>
                             </div>
