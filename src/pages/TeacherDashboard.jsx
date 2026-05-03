@@ -222,7 +222,7 @@ export default function TeacherDashboard() {
 
     if (loading) {
         return (
-            <div className="dark min-h-screen lx-bg-ambient flex items-center justify-center">
+            <div className="min-h-screen lx-bg-ambient flex items-center justify-center" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                 <div className="glass-card p-5 flex items-center gap-3">
                     <Loader2 className="w-5 h-5 text-[var(--lx-accent)] animate-spin" />
                     <span className="text-[11px] font-mono text-[var(--lx-text-muted)] tracking-widest">LOADING...</span>
@@ -295,17 +295,17 @@ export default function TeacherDashboard() {
 
 
     return (
-        <div className="dark min-h-screen lx-bg-ambient">
+        <div className="min-h-screen lx-bg-ambient" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             {/* Header */}
-            <header className="glass-nav-dark sticky top-0 z-50">
+            <header className="glass-nav sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                            <GraduationCap className="w-5 h-5 text-white" />
+                            <GraduationCap className="w-5 h-5 text-[var(--lx-text)]" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-white">Teacher Dashboard</h1>
-                            <p className="text-sm text-slate-400">Welcome, {profile?.full_name || 'Teacher'}</p>
+                            <h1 className="text-xl font-bold text-[var(--lx-text)]">Teacher Dashboard</h1>
+                            <p className="text-sm text-[var(--lx-text-muted)]">Welcome, {profile?.full_name || 'Teacher'}</p>
                         </div>
                     </div>
 
@@ -321,21 +321,21 @@ export default function TeacherDashboard() {
                         {/* ⚙️ Account Settings */}
                         <button
                             onClick={() => navigate('/ProfileSettings')}
-                            className="flex items-center gap-1.5 text-slate-400 hover:text-white transition text-sm px-3 py-2 rounded-lg hover:bg-slate-800">
+                            className="flex items-center gap-1.5 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition text-sm px-3 py-2 rounded-lg hover:bg-[var(--lx-accent-soft)]">
                             <UserCircle className="w-4 h-4" />
                             <span className="hidden sm:block">Account</span>
                         </button>
 
                         {/* 🏠 Home */}
                         <button onClick={() => navigate('/')}
-                            className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-white transition rounded-lg hover:bg-slate-800 text-sm">
+                            className="flex items-center gap-2 px-3 py-2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition rounded-lg hover:bg-[var(--lx-accent-soft)] text-sm">
                             <Home className="w-4 h-4" />
                             <span className="hidden sm:block">Home</span>
                         </button>
 
                         {/* 🚪 Sign Out */}
                         <button onClick={handleLogout}
-                            className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-white transition rounded-lg hover:bg-slate-800 text-sm">
+                            className="flex items-center gap-2 px-3 py-2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition rounded-lg hover:bg-[var(--lx-accent-soft)] text-sm">
                             <LogOut className="w-4 h-4" />
                             <span className="hidden sm:block">Sign Out</span>
                         </button>
@@ -386,7 +386,7 @@ export default function TeacherDashboard() {
                     {/* ── Scenarios Tab ── */}
                     {activeTab === 'scenarios' && (
                         <div className="glass-card p-6">
-                            <h2 className="text-xl font-bold text-white mb-6">Scenario Settings</h2>
+                            <h2 className="text-xl font-bold text-[var(--lx-text)] mb-6">Scenario Settings</h2>
                             <div className="space-y-4">
                                 {Object.entries(SCENARIOS).map(([id, scenario]) => {
                                     const settings = scenarioSettings[id] || {};
@@ -399,8 +399,8 @@ export default function TeacherDashboard() {
                                                     <div className="flex items-center gap-3 mb-2">
                                                         <span className="text-2xl">{scenario.badgeIcon}</span>
                                                         <div>
-                                                            <h3 className="text-white font-semibold">{scenario.title}</h3>
-                                                            <p className="text-slate-500 text-sm">{scenario.strand} • {scenario.estimatedTime} min</p>
+                                                            <h3 className="text-[var(--lx-text)] font-semibold">{scenario.title}</h3>
+                                                            <p className="text-[var(--lx-text-muted)] text-sm">{scenario.strand} • {scenario.estimatedTime} min</p>
                                                         </div>
                                                     </div>
                                                     <span className={`text-xs px-2 py-1 rounded-full border font-medium ${difficulty === 'beginner' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
@@ -416,17 +416,17 @@ export default function TeacherDashboard() {
                                                         <Eye className="w-4 h-4" /> Preview
                                                     </button>
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-slate-500 text-sm">Level:</span>
+                                                        <span className="text-[var(--lx-text-muted)] text-sm">Level:</span>
                                                         <select value={difficulty}
                                                             onChange={e => updateScenarioSetting(id, 'difficulty_override', e.target.value)}
-                                                            className="glass-input-dark text-sm px-2 py-1.5">
+                                                            className="glass-input text-sm px-2 py-1.5">
                                                             <option value="beginner">Beginner</option>
                                                             <option value="on-level">On-Level</option>
                                                             <option value="high-achievers">High Achievers</option>
                                                         </select>
                                                     </div>
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-slate-500 text-sm">Mandatory:</span>
+                                                        <span className="text-[var(--lx-text-muted)] text-sm">Mandatory:</span>
                                                         <button onClick={() => updateScenarioSetting(id, 'is_mandatory', !settings.is_mandatory)}
                                                             className={`w-10 h-6 rounded-full transition-colors ${settings.is_mandatory ? 'bg-teal-500' : 'bg-slate-600'}`}>
                                                             <span className={`block w-4 h-4 bg-white rounded-full mx-1 transition-transform ${settings.is_mandatory ? 'translate-x-4' : 'translate-x-0'}`} />
@@ -451,11 +451,11 @@ export default function TeacherDashboard() {
                     {/* ── Students Tab ── */}
                     {activeTab === 'students' && (
                         <div className="glass-card p-6">
-                            <h2 className="text-xl font-bold text-white mb-2">Student Progress</h2>
-                            <p className="text-slate-500 text-sm mb-6">{students.length} student{students.length !== 1 ? 's' : ''} registered</p>
+                            <h2 className="text-xl font-bold text-[var(--lx-text)] mb-2">Student Progress</h2>
+                            <p className="text-[var(--lx-text-muted)] text-sm mb-6">{students.length} student{students.length !== 1 ? 's' : ''} registered</p>
 
                             {students.length === 0 ? (
-                                <div className="text-center py-12 text-slate-500">
+                                <div className="text-center py-12 text-[var(--lx-text-muted)]">
                                     <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
                                     <p>No students registered yet</p>
                                 </div>
@@ -478,12 +478,12 @@ export default function TeacherDashboard() {
 
                                                 <div className="p-4 flex items-center gap-4 cursor-pointer hover:bg-slate-700/30 transition"
                                                     onClick={() => setExpandedStudent(isExpanded ? null : student.id)}>
-                                                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                                                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-[var(--lx-text)] font-bold text-lg flex-shrink-0">
                                                         {studentName[0].toUpperCase()}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
-                                                        <p className="text-white font-semibold truncate">{studentName}</p>
-                                                        <p className="text-slate-500 text-xs truncate">{student.email}</p>
+                                                        <p className="text-[var(--lx-text)] font-semibold truncate">{studentName}</p>
+                                                        <p className="text-[var(--lx-text-muted)] text-xs truncate">{student.email}</p>
                                                     </div>
                                                     <div className="hidden sm:flex items-center gap-3">
                                                         <div className="flex items-center gap-1.5 bg-teal-500/10 border border-teal-500/20 rounded-lg px-3 py-1.5">
@@ -496,11 +496,11 @@ export default function TeacherDashboard() {
                                                         </div>
                                                         <div className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${percentage >= 70 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                                                             percentage >= 30 ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                                                                'bg-slate-700/50 text-slate-400 border-slate-600/30'}`}>
+                                                                'bg-slate-700/50 text-[var(--lx-text-muted)] border-slate-600/30'}`}>
                                                             {percentage}%
                                                         </div>
                                                     </div>
-                                                    <div className="text-slate-500">
+                                                    <div className="text-[var(--lx-text-muted)]">
                                                         {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                                                     </div>
                                                 </div>
@@ -521,7 +521,7 @@ export default function TeacherDashboard() {
                                                         className="glass-panel border-t border-[var(--lx-glass-border-sub)] p-4">
                                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                             <div>
-                                                                <h4 className="text-slate-400 text-sm font-semibold mb-3 flex items-center gap-2">
+                                                                <h4 className="text-[var(--lx-text-muted)] text-sm font-semibold mb-3 flex items-center gap-2">
                                                                     <Brain className="w-4 h-4" /> Skills
                                                                 </h4>
                                                                 <div className="space-y-2">
@@ -530,8 +530,8 @@ export default function TeacherDashboard() {
                                                                         return (
                                                                             <div key={key}>
                                                                                 <div className="flex justify-between mb-1">
-                                                                                    <span className="text-slate-400 text-xs">{skill.icon} {skill.name}</span>
-                                                                                    <span className={`text-xs font-semibold ${val >= 70 ? 'text-emerald-400' : val >= 40 ? 'text-amber-400' : 'text-slate-500'}`}>{val}%</span>
+                                                                                    <span className="text-[var(--lx-text-muted)] text-xs">{skill.icon} {skill.name}</span>
+                                                                                    <span className={`text-xs font-semibold ${val >= 70 ? 'text-emerald-400' : val >= 40 ? 'text-amber-400' : 'text-[var(--lx-text-muted)]'}`}>{val}%</span>
                                                                                 </div>
                                                                                 <div className="glass-progress h-1.5 rounded-full overflow-hidden">
                                                                                     <div className={`h-full rounded-full ${val >= 70 ? 'bg-emerald-500' : val >= 40 ? 'bg-amber-500' : 'bg-slate-600'}`}
@@ -545,11 +545,11 @@ export default function TeacherDashboard() {
 
                                                             <div className="space-y-4">
                                                                 <div>
-                                                                    <h4 className="text-slate-400 text-sm font-semibold mb-3 flex items-center gap-2">
+                                                                    <h4 className="text-[var(--lx-text-muted)] text-sm font-semibold mb-3 flex items-center gap-2">
                                                                         <CheckCircle2 className="w-4 h-4" /> Completed Scenarios
                                                                     </h4>
                                                                     {completedCount === 0 ? (
-                                                                        <p className="text-slate-600 text-xs">No scenarios completed yet</p>
+                                                                        <p className="text-[var(--lx-text-muted)] text-xs">No scenarios completed yet</p>
                                                                     ) : (
                                                                         <div className="flex flex-wrap gap-2">
                                                                             {(progress?.completed_scenarios || []).map(sid => (
@@ -562,11 +562,11 @@ export default function TeacherDashboard() {
                                                                 </div>
 
                                                                 <div>
-                                                                    <h4 className="text-slate-400 text-sm font-semibold mb-3 flex items-center gap-2">
+                                                                    <h4 className="text-[var(--lx-text-muted)] text-sm font-semibold mb-3 flex items-center gap-2">
                                                                         <Trophy className="w-4 h-4" /> Badges
                                                                     </h4>
                                                                     {badges === 0 ? (
-                                                                        <p className="text-slate-600 text-xs">No badges earned yet</p>
+                                                                        <p className="text-[var(--lx-text-muted)] text-xs">No badges earned yet</p>
                                                                     ) : (
                                                                         <div className="flex flex-wrap gap-2">
                                                                             {(progress?.badges || []).map(b => (
@@ -578,14 +578,14 @@ export default function TeacherDashboard() {
                                                                     )}
                                                                 </div>
                                                                 <div>
-                                                                    <h4 className="text-slate-400 text-sm font-semibold mb-3 flex items-center gap-2">
+                                                                    <h4 className="text-[var(--lx-text-muted)] text-sm font-semibold mb-3 flex items-center gap-2">
                                                                         <Target className="w-4 h-4" /> Scores
                                                                     </h4>
                                                                     <div className="space-y-1">
                                                                         {(progress?.rows || []).map(row => (
-                                                                            <div key={row.id} className="flex justify-between items-center group/item hover:bg-slate-800/80 p-1 rounded-lg transition-colors">
+                                                                            <div key={row.id} className="flex justify-between items-center group/item hover:bg-[var(--lx-glass-border-sub)]/80 p-1 rounded-lg transition-colors">
                                                                                 <div className="flex items-center gap-2 overflow-hidden">
-                                                                                    <span className="text-slate-400 text-xs truncate max-w-[120px]">
+                                                                                    <span className="text-[var(--lx-text-muted)] text-xs truncate max-w-[120px]">
                                                                                         {SCENARIOS[row.scenario_id]?.title || row.scenario_id}
                                                                                     </span>
                                                                                     <button
@@ -648,15 +648,15 @@ export default function TeacherDashboard() {
                     {activeTab === 'feedback' && (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <div className="glass-card p-6">
-                                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                <h2 className="text-xl font-bold text-[var(--lx-text)] mb-6 flex items-center gap-2">
                                     <Send className="w-5 h-5 text-teal-400" /> Send Feedback
                                 </h2>
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="text-slate-400 text-sm mb-1 block">Student</label>
+                                        <label className="text-[var(--lx-text-muted)] text-sm mb-1 block">Student</label>
                                         <select value={feedbackForm.student_email}
                                             onChange={e => setFeedbackForm({ ...feedbackForm, student_email: e.target.value })}
-                                            className="glass-input-dark w-full">
+                                            className="glass-input w-full">
                                             <option value="">Select a student...</option>
                                             {students.map(s => (
                                                 <option key={s.id} value={s.email}>
@@ -666,10 +666,10 @@ export default function TeacherDashboard() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="text-slate-400 text-sm mb-1 block">Type</label>
+                                        <label className="text-[var(--lx-text-muted)] text-sm mb-1 block">Type</label>
                                         <select value={feedbackForm.type}
                                             onChange={e => setFeedbackForm({ ...feedbackForm, type: e.target.value })}
-                                            className="glass-input-dark w-full">
+                                            className="glass-input w-full">
                                             <option value="general">💬 General</option>
                                             <option value="praise">🌟 Praise</option>
                                             <option value="improvement">💡 Needs Improvement</option>
@@ -679,7 +679,7 @@ export default function TeacherDashboard() {
 
                                     {/* Quick Reply Templates */}
                                     <div>
-                                        <label className="text-slate-400 text-sm mb-2 block">Quick Templates</label>
+                                        <label className="text-[var(--lx-text-muted)] text-sm mb-2 block">Quick Templates</label>
                                         <div className="flex flex-wrap gap-2">
                                             {[
                                                 { label: '🌟 Great job!', text: 'Great job on completing this scenario! Your answers showed excellent understanding.' },
@@ -697,10 +697,10 @@ export default function TeacherDashboard() {
                                     </div>
 
                                     <div>
-                                        <label className="text-slate-400 text-sm mb-1 block">Scenario (optional)</label>
+                                        <label className="text-[var(--lx-text-muted)] text-sm mb-1 block">Scenario (optional)</label>
                                         <select value={feedbackForm.scenario_id}
                                             onChange={e => setFeedbackForm({ ...feedbackForm, scenario_id: e.target.value })}
-                                            className="glass-input-dark w-full">
+                                            className="glass-input w-full">
                                             <option value="">All Scenarios</option>
                                             {Object.entries(SCENARIOS).map(([id, s]) => (
                                                 <option key={id} value={id}>{s.title}</option>
@@ -708,11 +708,11 @@ export default function TeacherDashboard() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="text-slate-400 text-sm mb-1 block">Message</label>
+                                        <label className="text-[var(--lx-text-muted)] text-sm mb-1 block">Message</label>
                                         <textarea rows={4} placeholder="Write your feedback here..."
                                             value={feedbackForm.message}
                                             onChange={e => setFeedbackForm({ ...feedbackForm, message: e.target.value })}
-                                            className="glass-input-dark w-full resize-none" />
+                                            className="glass-input w-full resize-none" />
                                     </div>
                                     <button onClick={sendFeedback}
                                         disabled={sendingFeedback || !feedbackForm.student_email || !feedbackForm.message}
@@ -725,7 +725,7 @@ export default function TeacherDashboard() {
 
                             <div className="glass-card p-6">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                    <h2 className="text-xl font-bold text-[var(--lx-text)] flex items-center gap-2">
                                         <MessageSquare className="w-5 h-5 text-purple-400" />
                                         Sent Feedback ({feedbacks.length})
                                     </h2>
@@ -733,7 +733,7 @@ export default function TeacherDashboard() {
                                     <select
                                         value={feedbackFilter}
                                         onChange={e => setFeedbackFilter(e.target.value)}
-                                        className="glass-input-dark text-xs px-3 py-1.5">
+                                        className="glass-input text-xs px-3 py-1.5">
                                         <option value="all">All Types</option>
                                         <option value="praise">🌟 Praise</option>
                                         <option value="improvement">💡 Improvement</option>
@@ -748,7 +748,7 @@ export default function TeacherDashboard() {
                                     placeholder="Search feedback..."
                                     value={feedbackSearch}
                                     onChange={e => setFeedbackSearch(e.target.value)}
-                                    className="glass-input-dark w-full mb-4"
+                                    className="glass-input w-full mb-4"
                                 />
 
                                 <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
@@ -759,7 +759,7 @@ export default function TeacherDashboard() {
                                                 fb.student_email?.toLowerCase().includes(feedbackSearch.toLowerCase()))
                                         )
                                         .length === 0 ? (
-                                        <div className="text-center py-12 text-slate-500">
+                                        <div className="text-center py-12 text-[var(--lx-text-muted)]">
                                             <MessageSquare className="w-10 h-10 mx-auto mb-3 opacity-30" />
                                             <p className="text-sm">No feedback found</p>
                                         </div>
@@ -775,25 +775,25 @@ export default function TeacherDashboard() {
                                                     praise: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
                                                     improvement: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
                                                     assignment: 'text-blue-400 bg-blue-500/10 border-blue-500/30',
-                                                    general: 'text-slate-400 bg-slate-700/30 border-slate-600/30',
-                                                }[fb.type] || 'text-slate-400 bg-slate-700/30 border-slate-600/30';
+                                                    general: 'text-[var(--lx-text-muted)] bg-slate-700/30 border-slate-600/30',
+                                                }[fb.type] || 'text-[var(--lx-text-muted)] bg-slate-700/30 border-slate-600/30';
                                                 return (
                                                     <div key={fb.id} className="glass-card p-4 group">
                                                         <div className="flex items-start justify-between gap-2 mb-2">
                                                             <div>
-                                                                <p className="text-white text-sm font-medium">{fb.student_email}</p>
+                                                                <p className="text-[var(--lx-text)] text-sm font-medium">{fb.student_email}</p>
                                                                 <span className={`text-xs px-2 py-0.5 rounded-full border ${typeColor} capitalize`}>{fb.type}</span>
                                                             </div>
                                                             <button onClick={() => deleteFeedback(fb.id)}
-                                                                className="opacity-0 group-hover:opacity-100 text-slate-600 hover:text-red-400 transition-all">
+                                                                className="opacity-0 group-hover:opacity-100 text-[var(--lx-text-muted)] hover:text-red-400 transition-all">
                                                                 <Trash2 className="w-4 h-4" />
                                                             </button>
                                                         </div>
-                                                        <p className="text-slate-400 text-sm mt-2 leading-relaxed">{fb.message}</p>
+                                                        <p className="text-[var(--lx-text-muted)] text-sm mt-2 leading-relaxed">{fb.message}</p>
                                                         {fb.scenario_id && (
-                                                            <p className="text-slate-600 text-xs mt-2">Re: {SCENARIOS[fb.scenario_id]?.title || fb.scenario_id}</p>
+                                                            <p className="text-[var(--lx-text-muted)] text-xs mt-2">Re: {SCENARIOS[fb.scenario_id]?.title || fb.scenario_id}</p>
                                                         )}
-                                                        <p className="text-slate-700 text-xs mt-1">
+                                                        <p className="text-[var(--lx-text-muted)] text-xs mt-1">
                                                             {fb.created_at ? new Date(fb.created_at).toLocaleDateString() : ''}
                                                         </p>
                                                     </div>
@@ -845,7 +845,7 @@ export default function TeacherDashboard() {
 
                             {/* Bar Chart — Completions per Scenario */}
                             <div className="glass-card p-6">
-                                <h3 className="text-white font-bold mb-6 flex items-center gap-2">
+                                <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
                                     <BarChart3 className="w-5 h-5 text-teal-400" />
                                     Completions & Avg Score per Scenario
                                 </h3>
@@ -868,12 +868,12 @@ export default function TeacherDashboard() {
 
                                 {/* Bar Chart — Student Performance */}
                                 <div className="glass-card p-6">
-                                    <h3 className="text-white font-bold mb-6 flex items-center gap-2">
+                                    <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
                                         <Users className="w-5 h-5 text-purple-400" />
                                         Student Performance
                                     </h3>
                                     {studentPerformanceData.length === 0 ? (
-                                        <div className="flex items-center justify-center h-48 text-slate-500 text-sm">No student data yet</div>
+                                        <div className="flex items-center justify-center h-48 text-[var(--lx-text-muted)] text-sm">No student data yet</div>
                                     ) : (
                                         <ResponsiveContainer width="100%" height={220}>
                                             <BarChart data={studentPerformanceData}>
@@ -893,12 +893,12 @@ export default function TeacherDashboard() {
 
                                 {/* Pie Chart — Pass vs Fail */}
                                 <div className="glass-card p-6">
-                                    <h3 className="text-white font-bold mb-6 flex items-center gap-2">
+                                    <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
                                         <Target className="w-5 h-5 text-emerald-400" />
                                         Pass vs Fail Rate
                                     </h3>
                                     {passFailData[0].value + passFailData[1].value === 0 ? (
-                                        <div className="flex items-center justify-center h-48 text-slate-500 text-sm">No attempts yet</div>
+                                        <div className="flex items-center justify-center h-48 text-[var(--lx-text-muted)] text-sm">No attempts yet</div>
                                     ) : (
                                         <ResponsiveContainer width="100%" height={220}>
                                             <PieChart>

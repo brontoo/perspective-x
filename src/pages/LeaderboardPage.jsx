@@ -254,8 +254,8 @@ export default function LeaderboardPage() {
   const isTeacher = currentUserRole === 'teacher';
 
   return (
-    <div className="dark min-h-screen lx-bg-ambient">
-      <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="min-h-screen lx-bg-ambient lx-bg-orbs" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+      <div className="max-w-2xl mx-auto px-4 py-8 relative z-10">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

@@ -156,7 +156,7 @@ export default function Dashboard() {
 
     if (loading) {
         return (
-            <div className="dark min-h-screen lx-bg-ambient flex items-center justify-center">
+            <div className="min-h-screen lx-bg-ambient flex items-center justify-center" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                 <div className="glass-card p-5 flex items-center gap-3">
                     <Loader2 className="w-5 h-5 text-[var(--lx-accent)] animate-spin" />
                     <span className="text-[11px] font-mono text-[var(--lx-text-muted)] tracking-widest">LOADING_DASHBOARD...</span>
@@ -187,7 +187,7 @@ export default function Dashboard() {
         if (overallPercentage >= 80) return { label: 'Expert', color: 'text-emerald-400', bg: 'bg-emerald-500/20 border-emerald-500/30' };
         if (overallPercentage >= 50) return { label: 'Advanced', color: 'text-teal-400', bg: 'bg-teal-500/20 border-teal-500/30' };
         if (overallPercentage >= 20) return { label: 'Intermediate', color: 'text-amber-400', bg: 'bg-amber-500/20 border-amber-500/30' };
-        return { label: 'Beginner', color: 'text-slate-400', bg: 'bg-slate-700/50 border-slate-600/30' };
+        return { label: 'Beginner', color: 'text-[var(--lx-text-muted)]', bg: 'bg-slate-700/50 border-slate-600/30' };
     };
     const level = getLevel();
 
@@ -196,19 +196,19 @@ export default function Dashboard() {
 
 
     return (
-        <div className="dark min-h-screen lx-bg-ambient">
+        <div className="min-h-screen lx-bg-ambient" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             {/* Header */}
-            <header className="sticky top-0 z-50 glass-nav-dark">
+            <header className="sticky top-0 z-50 glass-nav">
                 <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center">
-                            <BarChart3 className="w-5 h-5 text-white" />
+                            <BarChart3 className="w-5 h-5 text-[var(--lx-text)]" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-white">Student Dashboard</h1>
+                            <h1 className="text-xl font-bold text-[var(--lx-text)]">Student Dashboard</h1>
                             <div className="flex items-center gap-2 mt-0.5">
                                 <div className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-                                <span className="text-slate-400 text-xs">Welcome,</span>
+                                <span className="text-[var(--lx-text-muted)] text-xs">Welcome,</span>
                                 <span className="text-teal-300 text-xs font-bold tracking-wide">
                                     {displayName}
                                 </span>
@@ -220,7 +220,7 @@ export default function Dashboard() {
                         {/* 🔔 Feedback Bell */}
                         <button
                             onClick={() => setActiveTab('feedback')}
-                            className="relative p-2 text-slate-400 hover:text-white transition rounded-lg hover:bg-slate-800">
+                            className="relative p-2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition rounded-lg hover:bg-[var(--lx-accent-soft)]">
                             <Bell className="w-5 h-5" />
                             {unreadCount > 0 && (
                                 <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
@@ -238,21 +238,21 @@ export default function Dashboard() {
                         {/* ⚙️ Settings */}
                         <button
                             onClick={() => navigate('/ProfileSettings')}
-                            className="flex items-center gap-1.5 text-slate-400 hover:text-white transition text-sm px-3 py-2 rounded-lg hover:bg-slate-800">
+                            className="flex items-center gap-1.5 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition text-sm px-3 py-2 rounded-lg hover:bg-[var(--lx-accent-soft)]">
                             <Settings className="w-4 h-4" />
                             <span className="hidden sm:block">Settings</span>
                         </button>
 
                         {/* 🏠 Home */}
                         <button onClick={() => navigate('/')}
-                            className="flex items-center gap-2 text-slate-400 hover:text-white transition text-sm px-3 py-2 rounded-lg hover:bg-slate-800">
+                            className="flex items-center gap-2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition text-sm px-3 py-2 rounded-lg hover:bg-[var(--lx-accent-soft)]">
                             <ArrowLeft className="w-4 h-4" />
                             <span className="hidden sm:block">Home</span>
                         </button>
 
                         {/* 🚪 Sign Out */}
                         <button onClick={handleLogout}
-                            className="flex items-center gap-2 text-slate-400 hover:text-white transition text-sm px-3 py-2 rounded-lg hover:bg-slate-800">
+                            className="flex items-center gap-2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition text-sm px-3 py-2 rounded-lg hover:bg-[var(--lx-accent-soft)]">
                             <LogOut className="w-4 h-4" />
                             <span className="hidden sm:block">Sign Out</span>
                         </button>
@@ -268,12 +268,12 @@ export default function Dashboard() {
                     <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
                     <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
                         <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-2xl font-black text-white shadow-lg shadow-teal-500/30">
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-2xl font-black text-[var(--lx-text)] shadow-lg shadow-teal-500/30">
                                 {displayName[0]?.toUpperCase()}
                             </div>
                             <div>
-                                <p className="text-slate-400 text-sm">Welcome back,</p>
-                                <p className="text-white font-bold text-xl">{displayName}</p>
+                                <p className="text-[var(--lx-text-muted)] text-sm">Welcome back,</p>
+                                <p className="text-[var(--lx-text)] font-bold text-xl">{displayName}</p>
                                 <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold ${level.bg} ${level.color}`}>
                                     {level.label}
                                 </span>
@@ -282,8 +282,8 @@ export default function Dashboard() {
 
                         <div className="flex-1">
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-slate-400 text-sm">Overall Progress</span>
-                                <span className="text-white font-bold text-lg">{overallPercentage}%</span>
+                                <span className="text-[var(--lx-text-muted)] text-sm">Overall Progress</span>
+                                <span className="text-[var(--lx-text)] font-bold text-lg">{overallPercentage}%</span>
                             </div>
                             <div className="glass-progress" style={{ height: '16px' }}>
                                 <motion.div
@@ -297,19 +297,19 @@ export default function Dashboard() {
                                 </motion.div>
                             </div>
                             <div className="flex justify-between mt-1">
-                                <span className="text-slate-600 text-xs">{completedScenarios} completed</span>
-                                <span className="text-slate-600 text-xs">{totalScenarios - completedScenarios} remaining</span>
+                                <span className="text-[var(--lx-text-muted)] text-xs">{completedScenarios} completed</span>
+                                <span className="text-[var(--lx-text-muted)] text-xs">{totalScenarios - completedScenarios} remaining</span>
                             </div>
                         </div>
 
                         <div className="flex gap-4">
                             <div className="text-center">
                                 <p className="text-2xl font-black text-amber-400">{earnedBadges}</p>
-                                <p className="text-slate-500 text-xs">Badges</p>
+                                <p className="text-[var(--lx-text-muted)] text-xs">Badges</p>
                             </div>
                             <div className="text-center">
                                 <p className="text-2xl font-black text-purple-400">{progress?.decision_history?.length || 0}</p>
-                                <p className="text-slate-500 text-xs">Decisions</p>
+                                <p className="text-[var(--lx-text-muted)] text-xs">Decisions</p>
                             </div>
                         </div>
                     </div>
@@ -325,8 +325,8 @@ export default function Dashboard() {
                                     <stat.Icon className={`w-5 h-5 ${stat.text}`} />
                                 </div>
                                 <div>
-                                    <p className="text-slate-400 text-xs">{stat.label}</p>
-                                    <p className="text-xl font-bold text-white">{stat.value}</p>
+                                    <p className="text-[var(--lx-text-muted)] text-xs">{stat.label}</p>
+                                    <p className="text-xl font-bold text-[var(--lx-text)]">{stat.value}</p>
                                 </div>
                             </div>
                         </div>
@@ -351,7 +351,7 @@ export default function Dashboard() {
                 {activeTab === 'overview' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
                         <div className="glass-card p-6">
-                            <h2 className="text-xl font-bold text-white mb-6">Role Progress</h2>
+                            <h2 className="text-xl font-bold text-[var(--lx-text)] mb-6">Role Progress</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {Object.values(ROLES).map((role) => {
                                     const completed = progress?.completed_scenarios?.filter(s =>
@@ -364,11 +364,11 @@ export default function Dashboard() {
                                                 <div className="flex items-center gap-3">
                                                     <span className="text-2xl">{role.icon}</span>
                                                     <div>
-                                                        <h3 className="text-white font-semibold text-sm">{role.title}</h3>
-                                                        <p className="text-slate-500 text-xs">{completed}/{role.scenarios.length} done</p>
+                                                        <h3 className="text-[var(--lx-text)] font-semibold text-sm">{role.title}</h3>
+                                                        <p className="text-[var(--lx-text-muted)] text-xs">{completed}/{role.scenarios.length} done</p>
                                                     </div>
                                                 </div>
-                                                <span className={`text-sm font-bold ${percentage === 100 ? 'text-emerald-400' : 'text-slate-400'}`}>
+                                                <span className={`text-sm font-bold ${percentage === 100 ? 'text-emerald-400' : 'text-[var(--lx-text-muted)]'}`}>
                                                     {percentage}%
                                                 </span>
                                             </div>
@@ -410,7 +410,7 @@ export default function Dashboard() {
 
                         <div className="glass-card p-6">
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold text-white">Top Skills</h2>
+                                <h2 className="text-xl font-bold text-[var(--lx-text)]">Top Skills</h2>
                                 <button onClick={() => setActiveTab('skills')}
                                     className="text-teal-400 text-sm hover:text-teal-300 transition flex items-center gap-1">
                                     View all <ChevronRight className="w-4 h-4" />
@@ -423,10 +423,10 @@ export default function Dashboard() {
                                     return (
                                         <div key={key}>
                                             <div className="flex justify-between mb-1">
-                                                <span className="text-slate-300 text-sm">{skill.icon} {skill.name}</span>
-                                                <span className="text-slate-400 text-sm font-semibold">{value}%</span>
+                                                <span className="text-[var(--lx-text-sub)] text-sm">{skill.icon} {skill.name}</span>
+                                                <span className="text-[var(--lx-text-muted)] text-sm font-semibold">{value}%</span>
                                             </div>
-                                            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                                            <div className="h-2 bg-[var(--lx-glass-border-sub)] rounded-full overflow-hidden">
                                                 <motion.div
                                                     initial={{ width: 0 }}
                                                     animate={{ width: `${value}%` }}
@@ -445,11 +445,11 @@ export default function Dashboard() {
                 {activeTab === 'skills' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                         className="glass-card p-6">
-                        <h2 className="text-xl font-bold text-white mb-6">Skills Mastered</h2>
+                        <h2 className="text-xl font-bold text-[var(--lx-text)] mb-6">Skills Mastered</h2>
                         <div className="grid gap-6">
                             {Object.entries(SKILLS).map(([key, skill]) => {
                                 const value = progress?.skills?.[key] || 0;
-                                const color = value >= 80 ? 'text-emerald-400' : value >= 50 ? 'text-teal-400' : value >= 20 ? 'text-amber-400' : 'text-slate-500';
+                                const color = value >= 80 ? 'text-emerald-400' : value >= 50 ? 'text-teal-400' : value >= 20 ? 'text-amber-400' : 'text-[var(--lx-text-muted)]';
                                 const barColor = value >= 80 ? 'bg-emerald-500' : value >= 50 ? 'bg-teal-500' : value >= 20 ? 'bg-amber-500' : 'bg-slate-600';
                                 return (
                                     <div key={key}>
@@ -457,13 +457,13 @@ export default function Dashboard() {
                                             <div className="flex items-center gap-3">
                                                 <span className="text-2xl">{skill.icon}</span>
                                                 <div>
-                                                    <p className="text-white font-medium">{skill.name}</p>
-                                                    <p className="text-slate-500 text-sm">{skill.description}</p>
+                                                    <p className="text-[var(--lx-text)] font-medium">{skill.name}</p>
+                                                    <p className="text-[var(--lx-text-muted)] text-sm">{skill.description}</p>
                                                 </div>
                                             </div>
                                             <span className={`text-lg font-bold ${color}`}>{value}%</span>
                                         </div>
-                                        <div className="h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                                        <div className="h-2.5 bg-[var(--lx-glass-border-sub)] rounded-full overflow-hidden">
                                             <motion.div
                                                 initial={{ width: 0 }}
                                                 animate={{ width: `${value}%` }}
@@ -488,16 +488,16 @@ export default function Dashboard() {
                                         whileHover={earned ? { scale: 1.05 } : {}}
                                         className={`rounded-xl p-6 text-center border transition-all ${earned
                                             ? 'bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/30 shadow-lg shadow-amber-500/10'
-                                            : 'bg-slate-900/50 border-slate-800 opacity-40'}`}>
+                                            : 'glass-card border-[var(--lx-glass-border-sub)] opacity-60'}`}>
                                         <div className={`text-4xl mb-3 ${earned ? '' : 'grayscale'}`}>{badge.icon}</div>
-                                        <p className={`text-sm font-medium ${earned ? 'text-white' : 'text-slate-500'}`}>{badgeName}</p>
+                                        <p className={`text-sm font-medium ${earned ? 'text-[var(--lx-text)]' : 'text-[var(--lx-text-muted)]'}`}>{badgeName}</p>
                                         {earned ? (
                                             <div className="mt-2 flex items-center justify-center gap-1">
                                                 <Star className="w-3 h-3 text-amber-400" />
                                                 <span className="text-xs text-amber-400">Earned</span>
                                             </div>
                                         ) : (
-                                            <p className="text-slate-600 text-xs mt-1">Locked</p>
+                                            <p className="text-[var(--lx-text-muted)] text-xs mt-1">Locked</p>
                                         )}
                                     </motion.div>
                                 );
@@ -510,7 +510,7 @@ export default function Dashboard() {
                 {activeTab === 'feedback' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                            <h2 className="text-xl font-bold text-[var(--lx-text)] flex items-center gap-2">
                                 <MessageSquare className="w-5 h-5 text-purple-400" />
                                 Teacher Feedback
                                 {unreadCount > 0 && (
@@ -520,17 +520,17 @@ export default function Dashboard() {
                                 )}
                             </h2>
                             {feedbacks.length > 0 && (
-                                <div className="flex items-center gap-1 text-slate-500 text-xs">
+                                <div className="flex items-center gap-1 text-[var(--lx-text-muted)] text-xs">
                                     <CheckCheck className="w-4 h-4" />
                                     {feedbacks.length} message{feedbacks.length !== 1 ? 's' : ''}
                                 </div>
                             )}
                         </div>
                         {feedbacks.length === 0 ? (
-                            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-12 text-center">
-                                <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                                <p className="text-slate-400 text-sm">No feedback from your teacher yet.</p>
-                                <p className="text-slate-600 text-xs mt-1">Feedback will appear here once your teacher reviews your work.</p>
+                            <div className="glass-card rounded-xl p-12 text-center">
+                                <MessageSquare className="w-12 h-12 text-[var(--lx-text-muted)] mx-auto mb-3" />
+                                <p className="text-[var(--lx-text-muted)] text-sm">No feedback from your teacher yet.</p>
+                                <p className="text-[var(--lx-text-muted)] text-xs mt-1">Feedback will appear here once your teacher reviews your work.</p>
                             </div>
                         ) : (
                             <div className="grid gap-4">
@@ -540,8 +540,8 @@ export default function Dashboard() {
                                         praise: 'border-emerald-500/30 bg-emerald-500/5',
                                         improvement: 'border-amber-500/30 bg-amber-500/5',
                                         assignment: 'border-blue-500/30 bg-blue-500/5',
-                                        general: 'border-slate-700 bg-slate-900/50',
-                                    }[fb.type] || 'border-slate-700 bg-slate-900/50';
+                                        general: 'border-[var(--lx-glass-border-sub)] bg-[var(--lx-glass)]',
+                                    }[fb.type] || 'border-[var(--lx-glass-border-sub)] bg-[var(--lx-glass)]';
                                     const typeIcon = { praise: '🌟', improvement: '💡', assignment: '📋', general: '💬' }[fb.type] || '💬';
                                     return (
                                         <motion.div key={fb.id}
@@ -555,16 +555,16 @@ export default function Dashboard() {
                                                 <span className="text-2xl">{typeIcon}</span>
                                                 <div className="flex-1">
                                                     <div className="flex items-center gap-2 mb-1">
-                                                        <p className="text-white font-medium text-sm">{fb.teacher_name || 'Teacher'}</p>
-                                                        <span className="text-slate-600 text-xs">•</span>
-                                                        <span className="text-slate-500 text-xs capitalize">{fb.type}</span>
-                                                        <span className="text-slate-600 text-xs">•</span>
-                                                        <span className="text-slate-600 text-xs">{new Date(fb.created_at).toLocaleDateString()}</span>
+                                                        <p className="text-[var(--lx-text)] font-medium text-sm">{fb.teacher_name || 'Teacher'}</p>
+                                                        <span className="text-[var(--lx-text-muted)] text-xs">•</span>
+                                                        <span className="text-[var(--lx-text-muted)] text-xs capitalize">{fb.type}</span>
+                                                        <span className="text-[var(--lx-text-muted)] text-xs">•</span>
+                                                        <span className="text-[var(--lx-text-muted)] text-xs">{new Date(fb.created_at).toLocaleDateString()}</span>
                                                     </div>
                                                     {fb.scenario_id && (
-                                                        <p className="text-slate-500 text-xs mb-2">📚 Re: {SCENARIOS[fb.scenario_id]?.title || fb.scenario_id}</p>
+                                                        <p className="text-[var(--lx-text-muted)] text-xs mb-2">📚 Re: {SCENARIOS[fb.scenario_id]?.title || fb.scenario_id}</p>
                                                     )}
-                                                    <p className="text-slate-300 text-sm leading-relaxed">{fb.message}</p>
+                                                    <p className="text-[var(--lx-text-sub)] text-sm leading-relaxed">{fb.message}</p>
                                                 </div>
                                             </div>
                                         </motion.div>
@@ -585,23 +585,23 @@ export default function Dashboard() {
                             const percentage = Math.round((completed / role.scenarios.length) * 100);
                             return (
                                 <button key={role.id} onClick={() => navigate(`/RoleHub?role=${role.id}`)}
-                                    className="bg-slate-900/50 border border-slate-800 hover:border-teal-500/30 rounded-xl p-6 text-left transition-all group w-full">
+                                    className="glass-card border border-[var(--lx-glass-border-sub)] hover:border-teal-500/30 rounded-xl p-6 text-left transition-all group w-full">
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="flex items-center gap-3">
                                             <span className="text-3xl">{role.icon}</span>
                                             <div>
-                                                <h3 className="text-white font-semibold">{role.title}</h3>
-                                                <p className="text-slate-500 text-sm">{completed}/{role.scenarios.length} scenarios</p>
+                                                <h3 className="text-[var(--lx-text)] font-semibold">{role.title}</h3>
+                                                <p className="text-[var(--lx-text-muted)] text-sm">{completed}/{role.scenarios.length} scenarios</p>
                                             </div>
                                         </div>
-                                        <ChevronRight className="w-5 h-5 text-slate-600 group-hover:text-teal-400 transition-colors" />
+                                        <ChevronRight className="w-5 h-5 text-[var(--lx-text-muted)] group-hover:text-teal-400 transition-colors" />
                                     </div>
-                                    <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                                    <div className="h-2 bg-[var(--lx-glass-border-sub)] rounded-full overflow-hidden">
                                         <div className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all"
                                             style={{ width: `${percentage}%` }} />
                                     </div>
                                     <div className="flex justify-between mt-2">
-                                        <span className="text-slate-600 text-xs">{percentage}% complete</span>
+                                        <span className="text-[var(--lx-text-muted)] text-xs">{percentage}% complete</span>
                                         {percentage === 100 && (
                                             <div className="flex items-center gap-1 text-emerald-400">
                                                 <Zap className="w-3 h-3" />

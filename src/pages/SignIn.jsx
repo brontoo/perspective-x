@@ -100,7 +100,7 @@ export default function SignIn() {
 
     // ── UI ──
     return (
-        <div className="dark min-h-screen lx-bg-ambient flex items-center justify-center px-4">
+        <div className="min-h-screen lx-bg-ambient flex items-center justify-center px-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -145,7 +145,7 @@ export default function SignIn() {
                                     onChange={e => setFullName(e.target.value)}
                                     placeholder="Your full name"
                                     required
-                                    className="glass-input-dark w-full"
+                                    className="glass-input w-full"
                                 />
                             </div>
                         )}
@@ -186,7 +186,7 @@ export default function SignIn() {
                                 onChange={e => setEmail(e.target.value)}
                                 placeholder="your@email.com"
                                 required
-                                className="glass-input-dark w-full"
+                                className="glass-input w-full"
                             />
                         </div>
 
@@ -200,7 +200,7 @@ export default function SignIn() {
                                 placeholder="••••••••"
                                 required
                                 minLength={6}
-                                className="glass-input-dark w-full"
+                                className="glass-input w-full"
                             />
                         </div>
 

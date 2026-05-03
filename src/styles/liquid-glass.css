@@ -247,11 +247,11 @@
 }
 
 .glass-nav-dark {
-  background: rgba(10, 16, 32, 0.85);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 1px 20px rgba(0,0,0,0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.80);
+  box-shadow: 0 1px 12px rgba(0,0,0,0.06);
 }
 
 /* Footer-like translucent surface for sections under the hero */
@@ -373,19 +373,19 @@
 
 /* Dark field (forms on dark backgrounds) */
 .glass-input-dark {
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: var(--lx-blur-sm);
   -webkit-backdrop-filter: var(--lx-blur-sm);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid var(--lx-glass-border-sub);
   border-radius: var(--lx-r-input);
-  color: #e2e8f0;
+  color: var(--lx-text);
   transition: border-color var(--lx-dur) ease, box-shadow var(--lx-dur) ease;
 }
 
-.glass-input-dark::placeholder { color: #475569; }
+.glass-input-dark::placeholder { color: var(--lx-text-muted); }
 .glass-input-dark:focus {
-  border-color: rgba(6, 182, 212, 0.55);
-  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.14);
+  border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.55);
+  box-shadow: 0 0 0 3px rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.12);
   outline: none;
 }
 
