@@ -159,6 +159,7 @@ const BETTER_THINKING_TIPS = {
   },
   gas_gaylussac_cylinder: {
     too_high: "Recall that Gay-Lussac's Law is a direct relationship. Increasing temperature from 300 K to 450 K (a 1.5x increase) raises pressure by 1.5x (150 kPa to 225 kPa)."
+  }
 };
 
 // Comprehensive misconceptions database mapping scenarios to their choice-specific misconceptions
