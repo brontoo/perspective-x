@@ -65,6 +65,12 @@ export default function StudentAnswersModal({ isOpen, onClose, attempts = [], st
                                     <p className="text-white whitespace-pre-wrap">{answers.scene2.justification || answers.scene2.reasoning}</p>
                                 </div>
                             )}
+                            {answers.scene2.formativeFeedback && (
+                                <div className="mt-2.5 p-3 rounded-lg border border-cyan-800 bg-cyan-900/10">
+                                    <p className="text-cyan-400 text-xs font-semibold">Formative Feedback Given:</p>
+                                    <p className="text-slate-300 text-xs italic mt-0.5">"{answers.scene2.formativeFeedback}"</p>
+                                </div>
+                            )}
                             {answers.scene2.consequence && (
                                 <div>
                                     <p className="text-slate-400 text-xs">Result:</p>

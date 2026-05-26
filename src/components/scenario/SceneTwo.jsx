@@ -239,10 +239,142 @@ function HintSystem({ scenarioId, scene, hintCount, setHintCount }) {
     );
 }
 
+export function generateFormativeFeedback(scenarioId, evidenceText = '', meansText = '', choiceText = '', riskText = '') {
+    const combined = `${evidenceText} ${meansText} ${choiceText} ${riskText}`.toLowerCase();
+    
+    if (combined.trim().length < 10) {
+        return "Good start. Please write a more detailed explanation referencing specific observations and scientific principles.";
+    }
+
+    const rules = {
+        water_contamination: {
+            keywords: ['nitrate', 'limit', '50', '55', 'ppm'],
+            noKeywords: "Good start. Try referencing the specific contaminant (nitrates) you identified in the data logs.",
+            partialKeywords: "Great job mentioning nitrates! You should also compare the measured value (55 ppm) directly to the safe drinking limit (50 ppm) to reinforce your justification.",
+            full: "Excellent reasoning! You have successfully linked the nitrate measurements and the safe limits to support your decision."
+        },
+        reaction_gone_wrong: {
+            keywords: ['temp', 'exothermic', 'cooling', '120', 'spik'],
+            noKeywords: "Nice start. Try to reference the specific temperature readings or the speed of the thermal rise in your response.",
+            partialKeywords: "Good observation on the temperature rise! To make your justification stronger, explain how the cooling system failure or the exothermic nature of the reaction plays a role.",
+            full: "Clear and scientifically sound reasoning! You've connected the temperature spike and cooling failure perfectly."
+        },
+        acid_rain: {
+            keywords: ['ph', 'acid', 'so2', 'sulfur', '4.2'],
+            noKeywords: "Good attempt. Try to reference the measured pH levels or sulfur dioxide (SO₂) concentrations from the forest logs.",
+            partialKeywords: "You identified the acidic elements. Now make sure to compare these readings (like pH 4.2) to normal rainwater to explain the forest damage.",
+            full: "Perfect! Your reasoning successfully utilizes the pH data and chemical indicators."
+        },
+        mutation_dilemma: {
+            keywords: ['percent', '25', 'probability', 'carrier', 'aa', 'chance'],
+            noKeywords: "Good start. Try to reference the specific inheritance probability (like 25% or 1 in 4) from the Punnett Square to justify your counseling.",
+            partialKeywords: "You noted the inheritance odds. Also explain what it means for the parents to be heterozygous carriers (Aa) to complete your thought.",
+            full: "Great! You used the genetic probabilities and carrier details to justify your counseling option."
+        },
+        reaction_time: {
+            keywords: ['sleep', '0.21', 'baseline', '0.14', 'delay'],
+            noKeywords: "Nice beginning. Try comparing the sleep-deprived reaction time (0.21s) to the sprinter's baseline (0.14s) to show the exact delay.",
+            partialKeywords: "You noted the metrics. Make sure to explain how sleep deprivation causes a larger delay compared to the other conditions.",
+            full: "Excellent! You've accurately analyzed the reaction time data against the baseline."
+        },
+        unstable_slope: {
+            keywords: ['clay', 'rain', 'water', 'slope', 'heavy'],
+            noKeywords: "Good start. Try to reference the specific soil type (clay) and how it behaves when saturated with heavy rain.",
+            partialKeywords: "You mentioned the clay soil. Now connect it to the recent heavy rainfall and water pressure to explain the landslide risk.",
+            full: "Great reasoning! You connected soil properties and rainfall factors to explain the slope instability."
+        },
+        invasive_species: {
+            keywords: ['oxygen', 'sunlight', 'hyacinth', 'weed', 'depl'],
+            noKeywords: "Nice beginning. Make sure to explain how the floating weeds block sunlight and deplete dissolved oxygen levels in the lake.",
+            partialKeywords: "You noted the oxygen depletion. Try describing the wider impact of this depletion on native fish and the aquatic food web.",
+            full: "Excellent! You've captured the ecological impact and oxygen dynamics of the invasive species."
+        },
+        power_grid: {
+            keywords: ['capacity', 'demand', 'deficit', 'mw', '18', '15'],
+            noKeywords: "Good start. Try to reference the grid's total capacity (15,000 MW) vs the peak demand (18,000 MW) to explain the overload.",
+            partialKeywords: "You listed the power numbers. Explain how this 3,000 MW deficit affects grid frequency and safety thresholds.",
+            full: "Perfect! Your reasoning clearly lays out the power deficit and frequency risks."
+        },
+        heat_loss: {
+            keywords: ['window', 'conduction', '35', 'percent', 'insul'],
+            noKeywords: "Nice attempt. Reference the specific building area with the highest conduction heat loss (windows, at 35%) to support your upgrade.",
+            partialKeywords: "You noted the windows. Explain how upgrading them reduces heat transfer via conduction to finish your explanation.",
+            full: "Clear and logical! You've correctly identified the windows as the primary source of conductive heat loss."
+        },
+        oxygen_failure: {
+            keywords: ['electrolysis', 'crew', 'kg', '3.36', '72', 'hours'],
+            noKeywords: "Good start. Try to reference the failed electrolysis system and the daily oxygen requirement of the 4 crew members (3.36 kg).",
+            partialKeywords: "You noted the crew's requirements. Try to compare it to the 72-hour timeline of the backup oxygen supply to highlight the urgency.",
+            full: "Perfect! You've accurately calculated the oxygen deficit and the urgency of the repair."
+        },
+        aspirin_production: {
+            keywords: ['purity', '99', '94', 'standard', 'limit'],
+            noKeywords: "Nice attempt. Try to reference the batch purity level (94%) vs the required medical standard (99%).",
+            partialKeywords: "You noted the purity levels. Explain why prioritizing patient safety is critical over the delivery volume.",
+            full: "Great choice and reasoning! You balanced regulatory safety standards and product quality perfectly."
+        },
+        fuelproduction: {
+            keywords: ['methane', 'hydrogen', 'ratio', '2000', '1000', 'mole'],
+            noKeywords: "Good start. Try to check the molar ratio or how much methane (2,000 kg) is needed to yield the target hydrogen (1,000 kg).",
+            partialKeywords: "You noted the weights. Make sure to justify your answer by showing the mole calculations or limiting reactant concept.",
+            full: "Excellent! You've correctly justified your yield targets using stoichiometry."
+        },
+        aspirin_percent_yield: {
+            keywords: ['yield', '135', '180', '75', 'percent', 'efficiency'],
+            noKeywords: "Nice start. Try to calculate the percent yield (actual yield 135g / theoretical yield 180g) which is 75%.",
+            partialKeywords: "You found 75% yield. Connect this to the efficiency of the reaction process and quality control.",
+            full: "Great! You used the percent yield calculations to support your process review."
+        },
+        gas_boyle_adnoc: {
+            keywords: ['pressure', 'volume', 'boyle', 'double', '200', 'inverse'],
+            noKeywords: "Good start. Reference Boyle's Law (inverse relationship) to show how compressing the volume to 2.0 L affects the pressure.",
+            partialKeywords: "You mentioned Boyle's Law. Show that halving the volume (from 4.0 L to 2.0 L) doubles the pressure to 200 kPa.",
+            full: "Clear and accurate! You've correctly applied Boyle's Law to justify the pressure change."
+        },
+        gas_charles_aviation: {
+            keywords: ['charles', 'temperature', 'volume', 'double', '6.0', 'direct'],
+            noKeywords: "Nice start. Refer to Charles's Law (direct relationship) to explain how doubling the temperature affects gas volume.",
+            partialKeywords: "You mentioned Charles's Law. Show how doubling the temperature (to 600 K) doubles the volume of the gas to 6.0 L.",
+            full: "Excellent! You've accurately explained the direct relationship in Charles's Law."
+        },
+        gas_gaylussac_cylinder: {
+            keywords: ['lussac', 'temperature', 'pressure', 'direct', '225', '1.5'],
+            noKeywords: "Good attempt. Reference Gay-Lussac's Law (direct relationship) to explain how heating the rigid cylinder affects pressure.",
+            partialKeywords: "You mentioned Gay-Lussac's Law. Show how a 1.5x increase in temperature (to 450 K) increases the pressure to 225 kPa.",
+            full: "Perfect reasoning! You've correctly linked temperature and pressure in a fixed volume."
+        }
+    };
+
+    const rule = rules[scenarioId];
+    if (!rule) {
+        const hasNumbers = /\d+/.test(combined);
+        const hasEvidence = /evidence|show|measure|data/i.test(combined);
+        if (!hasEvidence) {
+            return "Good start. Try to reference specific data, observations, or measurements from the logs to make your explanation more scientific.";
+        }
+        if (!hasNumbers) {
+            return "Good start. Try to reference specific numerical values, boundaries, or quantities from the evidence table to support your reasoning.";
+        }
+        return "Nice reasoning! You have successfully linked evidence terms and measurements to justify your choice.";
+    }
+
+    const matches = rule.keywords.filter(keyword => combined.includes(keyword));
+    const matchRatio = matches.length / rule.keywords.length;
+
+    if (matchRatio === 0) {
+        return rule.noKeywords;
+    } else if (matchRatio < 0.8) {
+        return rule.partialKeywords;
+    } else {
+        return rule.full;
+    }
+}
+
 export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [hintCount, setHintCount] = useState(0);
     const [showConfirm, setShowConfirm] = useState(false);
+    const [formativeFeedback, setFormativeFeedback] = useState('');
     
     // Structured Reasoning Scaffold States
     const [evidenceText, setEvidenceText] = useState('');
@@ -261,15 +393,31 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
             `- One possible risk is: ${riskText.trim()}`
         ].join('\n');
 
+        let feedback = '';
+        try {
+            feedback = generateFormativeFeedback(scenarioId, evidenceText, meansText, choiceText, riskText);
+        } catch (e) {
+            console.error('Error generating feedback:', e);
+        }
+
         onComplete({
             selectedOption: selectedOption.id,
             consequence: selectedOption.consequence,
             justification: combinedJustification,
             hintsUsed: hintCount,
+            formativeFeedback: feedback
         });
     };
 
     const handleContinue = () => {
+        let feedback = '';
+        try {
+            feedback = generateFormativeFeedback(scenarioId, evidenceText, meansText, choiceText, riskText);
+        } catch (e) {
+            console.error('Error generating feedback:', e);
+        }
+        setFormativeFeedback(feedback);
+
         if (isTeacher) {
             handleConfirmSubmit();
         } else {
@@ -284,6 +432,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
             consequence: defaultOption.consequence,
             justification: '- My evidence is: Teacher preview skip\n- This means: Skip\n- My choice is: Skip\n- One possible risk is: Skip',
             hintsUsed: 0,
+            formativeFeedback: 'Teacher preview skip'
         });
     };
 
@@ -660,6 +809,19 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                     <span className="text-sm font-semibold text-slate-700">3. Are you ready to see the result?</span>
                                 </div>
                             </div>
+
+                            {/* Formative Feedback Card */}
+                            {formativeFeedback && (
+                                <div className="p-4 rounded-xl border border-cyan-100 bg-cyan-50/50 space-y-1.5 shadow-inner">
+                                    <div className="flex items-center gap-1.5 text-[9px] font-mono text-cyan-800 font-bold uppercase tracking-wider">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                                        Formative Review
+                                    </div>
+                                    <p className="text-xs text-slate-700 font-semibold leading-relaxed">
+                                        “{formativeFeedback}”
+                                    </p>
+                                </div>
+                            )}
 
                             {/* Buttons */}
                             <div className="flex flex-col sm:flex-row gap-3 pt-2">
