@@ -172,6 +172,9 @@ export default function TeacherDashboard() {
     });
     const [sendingFeedback, setSendingFeedback] = useState(false);
     const [expandedPreviews, setExpandedPreviews] = useState({});
+    const [selectedDebateScenario, setSelectedDebateScenario] = useState(Object.keys(SCENARIOS)[0] || '');
+    const [selectedDebateScene, setSelectedDebateScene] = useState(1);
+    const [isDebateFullscreen, setIsDebateFullscreen] = useState(false);
 
     useEffect(() => { loadData(); }, []);
 
@@ -639,6 +642,7 @@ export default function TeacherDashboard() {
         { key: 'scenarios', label: 'Manage Scenarios', Icon: Settings },
         { key: 'students', label: 'Student Progress', Icon: Users },
         { key: 'feedback', label: 'Feedback', Icon: MessageSquare },
+        { key: 'debate', label: 'Class Debate', Icon: Presentation },
     ];
     // ── Analytics Data ──
     const scenarioCompletionData = Object.entries(SCENARIOS).map(([id, scenario]) => {
@@ -1615,6 +1619,65 @@ export default function TeacherDashboard() {
                             </div>
                         </div>
                     )}
+
+                    {/* ── Class Debate Tab ── */}
+                    {activeTab === 'debate' && (
+                        <div className="space-y-6">
+                            <div className="glass-card p-6">
+                                <div className="border-b border-slate-100 pb-4 mb-6">
+                                    <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                        <Presentation className="w-5 h-5 text-purple-500" />
+                                        Class Debate Mode
+                                    </h2>
+                                    <p className="text-slate-500 text-sm mt-1">
+                                        Facilitate scientific debates by displaying anonymous choice distributions and key reasoning themes.
+                                    </p>
+                                </div>
+
+                                {/* Scenario + Scene selectors */}
+                                <div className="flex flex-wrap items-end gap-4 mb-6">
+                                    <div>
+                                        <label className="text-slate-600 text-xs font-semibold block mb-1">Scenario</label>
+                                        <select
+                                            value={selectedDebateScenario}
+                                            onChange={e => setSelectedDebateScenario(e.target.value)}
+                                            className="glass-input text-sm px-3 py-2"
+                                        >
+                                            {Object.entries(SCENARIOS).map(([id, s]) => (
+                                                <option key={id} value={id}>{s.title}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="text-slate-600 text-xs font-semibold block mb-1">Scene</label>
+                                        <select
+                                            value={selectedDebateScene}
+                                            onChange={e => setSelectedDebateScene(Number(e.target.value))}
+                                            className="glass-input text-sm px-3 py-2"
+                                        >
+                                            {(SCENARIOS[selectedDebateScenario]?.scenes || []).map((scene, idx) => (
+                                                <option key={idx} value={idx + 1}>Scene {idx + 1}: {scene.title}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="flex-1" />
+                                    <button
+                                        onClick={() => setIsDebateFullscreen(true)}
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-bold hover:bg-purple-700 transition shadow-sm"
+                                    >
+                                        <Maximize2 className="w-4 h-4" />
+                                        Present Fullscreen
+                                    </button>
+                                </div>
+
+                                <DebateView
+                                    scenarioId={selectedDebateScenario}
+                                    sceneId={selectedDebateScene}
+                                    studentProgress={studentProgress}
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </main>
             {/* Student Answers Modal */}
@@ -1627,6 +1690,356 @@ export default function TeacherDashboard() {
                 attempts={selectedStudentForAnswers?.attempts || []}
                 studentName={selectedStudentForAnswers?.name}
             />
+            <DebatePresentationOverlay
+                isOpen={isDebateFullscreen}
+                onClose={() => setIsDebateFullscreen(false)}
+                scenarioId={selectedDebateScenario}
+                sceneId={selectedDebateScene}
+                studentProgress={studentProgress}
+            />
+        </div>
+    );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Helper: extract reasoning themes from student justifications
+// ─────────────────────────────────────────────────────────────
+const DEBATE_THEMES = [
+    { name: 'Safety & Risk',        icon: '⚠️', keywords: ['safe', 'risk', 'danger', 'hazard', 'protect', 'harm', 'injury', 'threat', 'toxin', 'toxic'] },
+    { name: 'Scientific Evidence',  icon: '🔬', keywords: ['data', 'evidence', 'study', 'research', 'test', 'experiment', 'measurement', 'reading', 'analysis', 'result'] },
+    { name: 'Environmental Impact', icon: '🌿', keywords: ['environment', 'ecosystem', 'nature', 'species', 'habitat', 'pollution', 'contamination', 'ecology', 'biodiversity', 'soil'] },
+    { name: 'Cost & Efficiency',    icon: '💰', keywords: ['cost', 'cheap', 'expensive', 'efficient', 'afford', 'budget', 'economic', 'resource', 'yield', 'output'] },
+    { name: 'Ethical Reasoning',    icon: '⚖️', keywords: ['ethic', 'moral', 'fair', 'right', 'responsib', 'justice', 'value', 'equity', 'community', 'patient'] },
+    { name: 'Chemical/Physical',    icon: '⚗️', keywords: ['chemical', 'reaction', 'compound', 'element', 'molecule', 'acid', 'base', 'ph', 'concentration', 'temperature', 'pressure'] },
+    { name: 'Long-term Planning',   icon: '📅', keywords: ['long-term', 'future', 'sustainable', 'permanent', 'lasting', 'prevention', 'decades', 'monitor'] },
+];
+
+function getThemesForScene(scenarioId, justifications) {
+    if (!justifications || justifications.length === 0) return [];
+    const found = [];
+    DEBATE_THEMES.forEach(theme => {
+        const matches = justifications.filter(j =>
+            theme.keywords.some(kw => j.toLowerCase().includes(kw))
+        );
+        if (matches.length > 0) {
+            found.push({ ...theme, count: matches.length, matches: matches.slice(0, 3) });
+        }
+    });
+    return found.sort((a, b) => b.count - a.count).slice(0, 5);
+}
+
+// ─────────────────────────────────────────────────────────────
+// DebateView — inline panel shown inside the Class Debate tab
+// ─────────────────────────────────────────────────────────────
+function DebateView({ scenarioId, sceneId, studentProgress }) {
+    const selectedScenario = SCENARIOS[scenarioId];
+    const scene = selectedScenario?.scenes?.[sceneId - 1];
+
+    if (!scene) return (
+        <div className="text-center py-16 text-slate-500 text-sm">Select a scenario and scene to begin.</div>
+    );
+
+    const options = scene.options || [];
+    const attempts = studentProgress.filter(p => p.scenario_id === scenarioId && p.answers);
+    const totalAttempts = attempts.length;
+
+    const counts = {};
+    options.forEach(o => { counts[o.id] = 0; });
+    const justificationList = [];
+
+    attempts.forEach(attempt => {
+        const sceneAns = attempt.answers[`scene${sceneId}`];
+        if (sceneAns) {
+            const choice = sceneAns.selectedOption || sceneAns.decision_id;
+            if (choice) {
+                const matchedOption = options.find(o =>
+                    o.id.toUpperCase() === choice.toUpperCase() ||
+                    o.text.toLowerCase() === choice.toLowerCase()
+                );
+                if (matchedOption) {
+                    counts[matchedOption.id]++;
+                } else {
+                    const firstChar = choice.trim()[0]?.toUpperCase();
+                    if (firstChar && counts[firstChar] !== undefined) counts[firstChar]++;
+                }
+            }
+            const reason = sceneAns.justification || sceneAns.reasoning;
+            if (reason && reason.trim()) justificationList.push(reason.trim());
+        }
+    });
+
+    const themes = getThemesForScene(scenarioId, justificationList);
+
+    return (
+        <div className="space-y-6">
+            {/* Scene Header */}
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+                <div className="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">
+                    <Presentation className="w-3.5 h-3.5" />
+                    Scene {sceneId} — {scene.title}
+                </div>
+                <p className="text-slate-900 font-extrabold text-lg leading-snug">{scene.question}</p>
+            </div>
+
+            {/* Suggested Prompt */}
+            <div className="border border-purple-200 bg-purple-50 p-4 rounded-xl flex items-center gap-3">
+                <span className="text-2xl shrink-0">💬</span>
+                <div>
+                    <span className="text-[10px] font-mono text-purple-600 uppercase tracking-widest font-bold block">Suggested Discussion Prompt</span>
+                    <p className="text-purple-900 text-base font-extrabold">"Which choice is most scientifically justified?"</p>
+                </div>
+            </div>
+
+            {/* Choice Distribution + Reasoning Themes */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Left: Choice Distribution */}
+                <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-xl space-y-4">
+                    <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
+                        📊 Class Choice Distribution
+                        <span className="ml-auto text-xs font-mono text-slate-500">{totalAttempts} submission{totalAttempts !== 1 ? 's' : ''}</span>
+                    </h3>
+                    {totalAttempts === 0 ? (
+                        <div className="text-center py-10 text-slate-500 text-xs">No submissions yet for this scenario.</div>
+                    ) : (
+                        <div className="space-y-4">
+                            {options.map(opt => {
+                                const count = counts[opt.id] || 0;
+                                const pct = totalAttempts > 0 ? Math.round((count / totalAttempts) * 100) : 0;
+                                return (
+                                    <div key={opt.id} className="space-y-1.5">
+                                        <div className="flex justify-between text-xs font-bold">
+                                            <span className="text-slate-800 truncate max-w-[75%] font-semibold">Option {opt.id}: {opt.text}</span>
+                                            <span className="text-teal-600 font-mono font-bold shrink-0 ml-2">{pct}% ({count})</span>
+                                        </div>
+                                        <div className="h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner">
+                                            <div
+                                                className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-500"
+                                                style={{ width: `${pct}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+
+                {/* Right: Reasoning Themes */}
+                <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-xl space-y-4">
+                    <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
+                        🧠 Key Reasoning Themes
+                    </h3>
+                    {themes.length === 0 ? (
+                        <div className="text-center py-12 text-slate-500 text-xs font-medium">
+                            No student justifications analyzed yet, or justifications are too short.
+                        </div>
+                    ) : (
+                        <div className="space-y-3 max-h-[320px] overflow-y-auto pr-1">
+                            {themes.map((theme, i) => (
+                                <div key={i} className="bg-slate-50 border border-slate-200 p-4 rounded-lg space-y-2">
+                                    <div className="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
+                                        <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                            <span>{theme.icon}</span> {theme.name}
+                                        </span>
+                                        <span className="text-[10px] font-mono bg-purple-100 border border-purple-200 text-purple-700 px-2 py-0.5 rounded font-bold">
+                                            {theme.count} student{theme.count > 1 ? 's' : ''}
+                                        </span>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        {theme.matches.map((quote, qIdx) => (
+                                            <p key={qIdx} className="text-[11px] text-slate-700 italic pl-2.5 border-l-2 border-purple-400 leading-relaxed font-medium">
+                                                "{quote.length > 100 ? quote.slice(0, 100) + '...' : quote}"
+                                            </p>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* All Justifications */}
+            <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-xl space-y-4">
+                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
+                    📋 All Student Reasoning (Anonymous)
+                </h3>
+                {justificationList.length === 0 ? (
+                    <div className="text-center py-10 text-slate-500 text-xs font-medium">
+                        No submissions recorded for this scenario yet.
+                    </div>
+                ) : (
+                    <div className="space-y-2.5 max-h-[250px] overflow-y-auto pr-1">
+                        {justificationList
+                            .filter(j => !j.toLowerCase().includes('skipped') && !j.toLowerCase().includes('skip'))
+                            .map((reason, idx) => (
+                                <div key={idx} className="bg-slate-50 border border-slate-200 p-3.5 rounded-lg text-xs leading-relaxed text-slate-800 font-semibold shadow-sm">
+                                    {reason}
+                                </div>
+                            ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+// ─────────────────────────────────────────────────────────────
+// DebatePresentationOverlay — fullscreen classroom projector view
+// ─────────────────────────────────────────────────────────────
+function DebatePresentationOverlay({ isOpen, onClose, scenarioId, sceneId, studentProgress }) {
+    if (!isOpen) return null;
+
+    const selectedScenario = SCENARIOS[scenarioId];
+    const scene = selectedScenario?.scenes?.[sceneId - 1];
+    if (!scene) return null;
+
+    const options = scene.options || [];
+    const attempts = studentProgress.filter(p => p.scenario_id === scenarioId && p.answers);
+    const totalAttempts = attempts.length;
+
+    const counts = {};
+    options.forEach(o => { counts[o.id] = 0; });
+    const justificationList = [];
+
+    attempts.forEach(attempt => {
+        const sceneAns = attempt.answers[`scene${sceneId}`];
+        if (sceneAns) {
+            const choice = sceneAns.selectedOption || sceneAns.decision_id;
+            if (choice) {
+                const matchedOption = options.find(o =>
+                    o.id.toUpperCase() === choice.toUpperCase() ||
+                    o.text.toLowerCase() === choice.toLowerCase()
+                );
+                if (matchedOption) {
+                    counts[matchedOption.id]++;
+                } else {
+                    const firstChar = choice.trim()[0]?.toUpperCase();
+                    if (firstChar && counts[firstChar] !== undefined) counts[firstChar]++;
+                }
+            }
+            const reason = sceneAns.justification || sceneAns.reasoning;
+            if (reason && reason.trim()) justificationList.push(reason.trim());
+        }
+    });
+
+    const themes = getThemesForScene(scenarioId, justificationList);
+
+    return (
+        <div
+            className="fixed inset-0 z-[200] flex flex-col"
+            style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #f8fafc 50%, #f0fdf4 100%)' }}
+        >
+            {/* Overlay Header */}
+            <div className="flex items-center justify-between px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center">
+                        <Presentation className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                        <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Class Debate Mode — Projector View</p>
+                        <h2 className="text-xl font-extrabold text-slate-900">{selectedScenario?.title}</h2>
+                    </div>
+                </div>
+                <button
+                    onClick={onClose}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-semibold transition"
+                >
+                    <Minimize2 className="w-4 h-4" /> Exit Fullscreen
+                </button>
+            </div>
+
+            {/* Main Projector Content */}
+            <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+                {/* Scene Question */}
+                <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Scene {sceneId} — {scene.title}</p>
+                    <p className="text-2xl font-extrabold text-slate-900 leading-snug">{scene.question}</p>
+                </div>
+
+                {/* Prompt */}
+                <div className="border-2 border-purple-300 bg-purple-50 p-5 rounded-2xl flex items-center gap-4">
+                    <span className="text-3xl shrink-0">💬</span>
+                    <div>
+                        <span className="text-[10px] font-mono text-purple-600 uppercase tracking-widest font-bold block">Discussion Prompt</span>
+                        <p className="text-purple-900 text-xl font-extrabold mt-1">"Which choice is most scientifically justified?"</p>
+                    </div>
+                </div>
+
+                {/* Choice Distribution */}
+                <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 className="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        📊 Class Choice Distribution
+                        <span className="ml-auto text-sm font-mono text-slate-500">{totalAttempts} submission{totalAttempts !== 1 ? 's' : ''}</span>
+                    </h3>
+                    {totalAttempts === 0 ? (
+                        <div className="text-center py-8 text-slate-500 text-sm">No submissions yet for this scenario.</div>
+                    ) : (
+                        <div className="space-y-5">
+                            {options.map(opt => {
+                                const count = counts[opt.id] || 0;
+                                const pct = totalAttempts > 0 ? Math.round((count / totalAttempts) * 100) : 0;
+                                return (
+                                    <div key={opt.id} className="space-y-2">
+                                        <div className="flex justify-between font-bold text-sm">
+                                            <span className="text-slate-800 truncate max-w-[80%]">Option {opt.id}: {opt.text}</span>
+                                            <span className="text-teal-600 font-mono shrink-0 ml-4">{pct}% <span className="text-slate-500 font-normal">({count} votes)</span></span>
+                                        </div>
+                                        <div className="h-5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+                                            <div
+                                                className="h-full bg-gradient-to-r from-teal-500 to-cyan-400 rounded-full transition-all duration-700"
+                                                style={{ width: `${pct}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+
+                {/* Reasoning Themes */}
+                {themes.length > 0 && (
+                    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <h3 className="text-base font-bold text-slate-800 mb-4">🧠 Key Reasoning Themes</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {themes.map((theme, i) => (
+                                <div key={i} className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                                            <span className="text-lg">{theme.icon}</span> {theme.name}
+                                        </span>
+                                        <span className="text-xs font-mono bg-purple-100 border border-purple-200 text-purple-700 px-2 py-0.5 rounded font-bold">
+                                            {theme.count}
+                                        </span>
+                                    </div>
+                                    {theme.matches[0] && (
+                                        <p className="text-xs text-slate-600 italic border-l-2 border-purple-400 pl-2.5 leading-relaxed">
+                                            "{theme.matches[0].length > 80 ? theme.matches[0].slice(0, 80) + '...' : theme.matches[0]}"
+                                        </p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Anonymous Justifications */}
+                {justificationList.length > 0 && (
+                    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <h3 className="text-base font-bold text-slate-800 mb-4">📋 Student Reasoning (Anonymous)</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-1">
+                            {justificationList
+                                .filter(j => !j.toLowerCase().includes('skipped') && !j.toLowerCase().includes('skip'))
+                                .map((reason, idx) => (
+                                    <div key={idx} className="bg-slate-50 border border-slate-200 p-3.5 rounded-lg text-sm leading-relaxed text-slate-800 font-semibold shadow-sm">
+                                        {reason}
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
