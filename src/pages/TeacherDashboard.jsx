@@ -165,15 +165,12 @@ export default function TeacherDashboard() {
     const [students, setStudents] = useState([]);
     const [studentProgress, setStudentProgress] = useState([]);
     const [feedbacks, setFeedbacks] = useState([]);
-    const [activeTab, setActiveTab] = useState('scenarios');
+    const [activeTab, setActiveTab] = useState('overview');
     const [expandedStudent, setExpandedStudent] = useState(null);
     const [feedbackForm, setFeedbackForm] = useState({
         student_email: '', message: '', type: 'general', scenario_id: ''
     });
     const [sendingFeedback, setSendingFeedback] = useState(false);
-    const [selectedDebateScenario, setSelectedDebateScenario] = useState(Object.keys(SCENARIOS)[0] || '');
-    const [selectedDebateScene, setSelectedDebateScene] = useState(1);
-    const [isDebateFullscreen, setIsDebateFullscreen] = useState(false);
     const [expandedPreviews, setExpandedPreviews] = useState({});
 
     useEffect(() => { loadData(); }, []);
@@ -633,16 +630,15 @@ export default function TeacherDashboard() {
     const stats = [
         { label: 'Students', value: students.length, Icon: Users, from: 'from-purple-500/10', to: 'to-pink-500/10', border: 'border-purple-500/30', bg: 'bg-purple-500/20', text: 'text-purple-400' },
         { label: 'Scenarios', value: totalScenarios, Icon: BookOpen, from: 'from-teal-500/10', to: 'to-emerald-500/10', border: 'border-teal-500/30', bg: 'bg-teal-500/20', text: 'text-teal-400' },
-        { label: 'Completions', value: studentsWithProgress.length, Icon: CheckCircle2, from: 'from-amber-500/10', to: 'to-orange-500/10', border: 'border-amber-500/30', bg: 'bg-amber-500/20', text: 'text-amber-400' },
-        { label: 'Avg Progress', value: `${avgProgress}%`, Icon: Target, from: 'from-blue-500/10', to: 'to-cyan-500/10', border: 'border-blue-500/30', bg: 'bg-blue-500/20', text: 'text-blue-400' },
+        { label: 'Completed Missions', value: studentsWithProgress.length, Icon: CheckCircle2, from: 'from-amber-500/10', to: 'to-orange-500/10', border: 'border-amber-500/30', bg: 'bg-amber-500/20', text: 'text-amber-400' },
+        { label: 'Average Progress', value: `${avgProgress}%`, Icon: Target, from: 'from-blue-500/10', to: 'to-cyan-500/10', border: 'border-blue-500/30', bg: 'bg-blue-500/20', text: 'text-blue-400' },
     ];
 
     const tabs = [
+        { key: 'overview', label: 'Class Overview', Icon: BarChart3 },
         { key: 'scenarios', label: 'Manage Scenarios', Icon: Settings },
         { key: 'students', label: 'Student Progress', Icon: Users },
         { key: 'feedback', label: 'Feedback', Icon: MessageSquare },
-        { key: 'debate', label: 'Class Debate', Icon: Presentation },
-        { key: 'analytics', label: 'Analytics', Icon: BarChart3 },
     ];
     // ── Analytics Data ──
     const scenarioCompletionData = Object.entries(SCENARIOS).map(([id, scenario]) => {
@@ -755,7 +751,7 @@ export default function TeacherDashboard() {
                             onClick={exportCSV}
                             className="liquid-btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
                         >
-                            📤 Export CSV
+                            Export CSV
                         </button>
                     </div>
 
@@ -772,7 +768,7 @@ export default function TeacherDashboard() {
                     {/* ── Scenarios Tab ── */}
                     {activeTab === 'scenarios' && (
                         <div className="glass-card p-6">
-                            <h2 className="text-xl font-bold text-[var(--lx-text)] mb-6">Scenario Settings</h2>
+                            <h2 className="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-2">Scenario Controls</h2>
                             <div className="space-y-4">
                                 {Object.entries(SCENARIOS).map(([id, scenario]) => {
                                     const settings = scenarioSettings[id] || {};
@@ -944,7 +940,7 @@ export default function TeacherDashboard() {
                     {/* ── Students Tab ── */}
                     {activeTab === 'students' && (
                         <div className="glass-card p-6">
-                            <h2 className="text-xl font-bold text-[var(--lx-text)] mb-2">Student Progress</h2>
+                            <h2 className="text-xl font-bold text-slate-800 mb-2">Student Progress</h2>
                             <p className="text-[var(--lx-text-muted)] text-sm mb-6">{students.length} student{students.length !== 1 ? 's' : ''} registered</p>
 
                             {students.length === 0 ? (
@@ -1159,7 +1155,7 @@ export default function TeacherDashboard() {
                                                                         }}
                                                                         className="flex items-center justify-center gap-2 text-xs px-3 py-2 rounded-lg border border-purple-500/30 text-purple-400 hover:bg-purple-500/10 transition">
                                                                         <MessageSquare className="w-3.5 h-3.5" />
-                                                                        Send Feedback to {studentName}
+                                                                        Send Feedback
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -1174,9 +1170,11 @@ export default function TeacherDashboard() {
                         </div>
                     )}{/* ── Feedback Tab ── */}
                     {activeTab === 'feedback' && (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="space-y-6">
+                            <h2 className="text-xl font-bold text-slate-800 mb-2 border-b border-slate-100 pb-2">Teacher Feedback</h2>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <div className="glass-card p-6">
-                                <h2 className="text-xl font-bold text-[var(--lx-text)] mb-6 flex items-center gap-2">
+                                <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
                                     <Send className="w-5 h-5 text-teal-400" /> Send Feedback
                                 </h2>
                                 <div className="space-y-4">
@@ -1253,7 +1251,7 @@ export default function TeacherDashboard() {
 
                             <div className="glass-card p-6">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-xl font-bold text-[var(--lx-text)] flex items-center gap-2">
+                                    <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                                         <MessageSquare className="w-5 h-5 text-purple-400" />
                                         Sent Feedback ({feedbacks.filter(fb => fb.type !== 'difficulty_override').length})
                                     </h2>
@@ -1333,327 +1331,287 @@ export default function TeacherDashboard() {
                                 </div>
                             </div>
                         </div>
+                    </div>
                     )}
 
-                    {/* ── Class Debate Tab ── */}
-                    {activeTab === 'debate' && (
-                        <div className="glass-card p-6 space-y-6">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[var(--lx-glass-border-sub)] pb-6">
-                                <div>
-                                    <h2 className="text-xl font-bold text-[var(--lx-text)] flex items-center gap-2">
-                                        <Presentation className="w-5 h-5 text-purple-400" /> Class Debate Mode
-                                    </h2>
-                                    <p className="text-slate-700 text-sm mt-1 font-medium">
-                                        Facilitate scientific debates by displaying anonymous choice distributions and key reasoning themes.
-                                    </p>
-                                </div>
-                                <div className="flex flex-wrap items-center gap-3">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[var(--lx-text-muted)] text-sm">Scenario:</span>
-                                        <select
-                                            value={selectedDebateScenario}
-                                            onChange={e => {
-                                                setSelectedDebateScenario(e.target.value);
-                                                setSelectedDebateScene(1);
-                                            }}
-                                            className="glass-input text-sm px-3 py-1.5 min-w-[200px]"
-                                        >
-                                            {Object.entries(SCENARIOS).map(([id, s]) => (
-                                                <option key={id} value={id}>{s.title}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[var(--lx-text-muted)] text-sm">Scene:</span>
-                                        <select
-                                            value={selectedDebateScene}
-                                            onChange={e => setSelectedDebateScene(Number(e.target.value))}
-                                            className="glass-input text-sm px-3 py-1.5"
-                                        >
-                                            <option value={1}>Scene 1 (Identification)</option>
-                                            <option value={2}>Scene 2 (Decision)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <DebateView
-                                scenarioId={selectedDebateScenario}
-                                sceneId={selectedDebateScene}
-                                studentProgress={studentProgress}
-                                onStartFullscreen={() => setIsDebateFullscreen(true)}
-                            />
-                        </div>
-                    )}
-
-                    {/* ── Analytics Tab ── */}
-                    {activeTab === 'analytics' && (
-                        <div className="space-y-6">
-
-                            {/* Summary Cards */}
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                                {[
-                                    { label: 'Total Attempts', value: studentProgress.filter(p => p.scenario_id).length, color: 'teal' },
-                                    {
-                                        label: 'Pass Rate',
-                                        value: `${studentProgress.filter(p => p.scenario_id).length > 0
-                                            ? Math.round(studentProgress.filter(p => (p.score || 0) >= 80 && p.scenario_id).length
-                                                / studentProgress.filter(p => p.scenario_id).length * 100)
-                                            : 0}%`,
-                                        color: 'emerald'
-                                    },
-                                    {
-                                        label: 'Avg Score',
-                                        value: `${studentProgress.filter(p => p.scenario_id).length > 0
-                                            ? Math.round(studentProgress.filter(p => p.scenario_id)
-                                                .reduce((a, b) => a + (b.score || 0), 0)
-                                                / studentProgress.filter(p => p.scenario_id).length)
-                                            : 0}%`,
-                                        color: 'purple'
-                                    },
-                                    {
-                                        label: 'Active Students',
-                                        value: [...new Set(studentProgress.filter(p => p.scenario_id).map(p => p.student_id))].length,
-                                        color: 'amber'
-                                    },
-                                ].map((card, i) => (
-                                    <div key={i} className="glass-card p-4 text-center">
-                                        <p className="text-[var(--lx-accent)] text-2xl font-bold">{card.value}</p>
-                                        <p className="text-[var(--lx-text-muted)] text-xs mt-1">{card.label}</p>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* 💡 Teacher Learning Insights */}
-                            <div className="glass-card p-6 border-slate-200 bg-white shadow-sm space-y-6 rounded-2xl">
-                                <div className="border-b border-slate-100 pb-4">
-                                    <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                                        💡 Teacher Learning Insights
-                                    </h3>
-                                    <p className="text-slate-505 text-xs mt-1">
-                                        Automatically calculated pedagogical insights based on student choice decisions and reasoning justifications.
-                                    </p>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    {/* Class Insight Card */}
-                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
-                                        <div className="flex items-center gap-2 text-cyan-600 font-bold text-xs uppercase tracking-wider font-mono">
-                                            <Brain className="w-4.5 h-4.5" />
-                                            Class Progress
+                    {/* ── Class Overview Tab ── */}
+                    {activeTab === 'overview' && (
+                        <div className="space-y-8">
+                            {/* Class Summary */}
+                            <div className="space-y-4">
+                                <h3 className="text-base font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
+                                    Class Summary
+                                </h3>
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                    {[
+                                        { label: 'Total Attempts', value: studentProgress.filter(p => p.scenario_id).length },
+                                        {
+                                            label: 'Pass Rate',
+                                            value: `${studentProgress.filter(p => p.scenario_id).length > 0
+                                                ? Math.round(studentProgress.filter(p => (p.score || 0) >= 80 && p.scenario_id).length
+                                                    / studentProgress.filter(p => p.scenario_id).length * 100)
+                                                : 0}%`
+                                        },
+                                        {
+                                            label: 'Avg Score',
+                                            value: `${studentProgress.filter(p => p.scenario_id).length > 0
+                                                ? Math.round(studentProgress.filter(p => p.scenario_id)
+                                                    .reduce((a, b) => a + (b.score || 0), 0)
+                                                    / studentProgress.filter(p => p.scenario_id).length)
+                                                : 0}%`
+                                        },
+                                        {
+                                            label: 'Active Students',
+                                            value: [...new Set(studentProgress.filter(p => p.scenario_id).map(p => p.student_id))].length
+                                        },
+                                    ].map((card, i) => (
+                                        <div key={i} className="glass-card p-4 text-center border-slate-200 bg-white shadow-sm">
+                                            <p className="text-[var(--lx-accent)] text-2xl font-bold">{card.value}</p>
+                                            <p className="text-slate-600 text-xs mt-1 font-semibold">{card.label}</p>
                                         </div>
-                                        <p className="text-slate-800 text-sm leading-relaxed font-semibold">
-                                            {learningInsights.classInsight}
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Class Insights */}
+                            <div className="space-y-4 pt-2">
+                                <h3 className="text-base font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
+                                    Class Insights
+                                </h3>
+                                <div className="glass-card p-6 border-slate-200 bg-white shadow-sm space-y-6 rounded-2xl">
+                                    <div className="border-b border-slate-100 pb-4">
+                                        <h3 className="text-lg font-bold text-slate-850 flex items-center gap-2">
+                                            💡 Classroom Insights
+                                        </h3>
+                                        <p className="text-slate-500 text-xs mt-1">
+                                            Automatically calculated pedagogical insights based on student choice decisions and reasoning justifications.
                                         </p>
                                     </div>
 
-                                    {/* Misconception Alert Card */}
-                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
-                                        <div className="flex items-center gap-2 text-amber-600 font-bold text-xs uppercase tracking-wider font-mono">
-                                            <AlertTriangle className="w-4.5 h-4.5" />
-                                            Misconception Alert
-                                        </div>
-                                        {learningInsights.misconceptions.length === 0 ? (
-                                            <p className="text-slate-600 text-xs italic">
-                                                No class-wide misconceptions detected so far.
-                                            </p>
-                                        ) : (
-                                            <div className="space-y-3">
-                                                {learningInsights.misconceptions.map((m, idx) => (
-                                                    <div key={idx} className="text-xs space-y-1">
-                                                        <div className="flex justify-between font-bold text-slate-850">
-                                                            <span className="truncate max-w-[80%] font-semibold">{m.scenarioTitle} ({m.optionLetter})</span>
-                                                            <span className="text-amber-600 shrink-0 font-mono font-bold">{m.count} student{m.count > 1 ? 's' : ''}</span>
-                                                        </div>
-                                                        <p className="text-slate-550 italic">"{m.thought}"</p>
-                                                        <p className="text-slate-700 font-bold">💡 {m.correction}</p>
-                                                    </div>
-                                                ))}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        {/* Class Insight Card */}
+                                        <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                                            <div className="flex items-center gap-2 text-cyan-600 font-bold text-xs uppercase tracking-wider font-mono">
+                                                <Brain className="w-4.5 h-4.5" />
+                                                Class Progress
                                             </div>
-                                        )}
+                                            <p className="text-slate-800 text-sm leading-relaxed font-semibold">
+                                                {learningInsights.classInsight}
+                                            </p>
+                                        </div>
+
+                                        {/* Misconception Alert Card */}
+                                        <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                                            <div className="flex items-center gap-2 text-amber-600 font-bold text-xs uppercase tracking-wider font-mono">
+                                                <AlertTriangle className="w-4.5 h-4.5" />
+                                                Misconception Alert
+                                            </div>
+                                            {learningInsights.misconceptions.length === 0 ? (
+                                                <p className="text-slate-600 text-xs italic">
+                                                    No class-wide misconceptions detected so far.
+                                                </p>
+                                            ) : (
+                                                <div className="space-y-3">
+                                                    {learningInsights.misconceptions.map((m, idx) => (
+                                                        <div key={idx} className="text-xs space-y-1">
+                                                            <div className="flex justify-between font-bold text-slate-850">
+                                                                <span className="truncate max-w-[80%] font-semibold">{m.scenarioTitle} ({m.optionLetter})</span>
+                                                                <span className="text-amber-600 shrink-0 font-mono font-bold">{m.count} student{m.count > 1 ? 's' : ''}</span>
+                                                            </div>
+                                                            <p className="text-slate-550 italic">"{m.thought}"</p>
+                                                            <p className="text-slate-700 font-bold">💡 {m.correction}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Recommended Action Card */}
+                                        <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                                            <div className="flex items-center gap-2 text-purple-600 font-bold text-xs uppercase tracking-wider font-mono">
+                                                <Target className="w-4.5 h-4.5" />
+                                                Recommended Action
+                                            </div>
+                                            <p className="text-slate-800 text-sm leading-relaxed font-semibold">
+                                                {learningInsights.recommendedAction}
+                                            </p>
+                                        </div>
                                     </div>
 
-                                    {/* Recommended Action Card */}
-                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
-                                        <div className="flex items-center gap-2 text-purple-600 font-bold text-xs uppercase tracking-wider font-mono">
-                                            <Target className="w-4.5 h-4.5" />
-                                            Recommended Action
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                                        {/* Students Needing Support */}
+                                        <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-4">
+                                            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                                                <span className="text-xs font-bold text-slate-850 flex items-center gap-1.5 uppercase font-mono tracking-wider">
+                                                    ⚠️ Students Needing Support
+                                                </span>
+                                                <span className="text-[10px] font-mono font-bold bg-amber-100 border border-amber-200 text-amber-700 px-2 py-0.5 rounded">
+                                                    {learningInsights.needingSupport.length} flagged
+                                                </span>
+                                            </div>
+                                            {learningInsights.needingSupport.length === 0 ? (
+                                                <p className="text-slate-500 text-xs italic">
+                                                    All students are performing well above thresholds!
+                                                </p>
+                                            ) : (
+                                                <div className="space-y-3">
+                                                    {learningInsights.needingSupport.map((student, sIdx) => (
+                                                        <div key={sIdx} className="flex justify-between items-center gap-4 text-xs">
+                                                            <div>
+                                                                <p className="font-bold text-slate-800">{student.name}</p>
+                                                                <p className="text-[10px] text-slate-500">{student.email}</p>
+                                                            </div>
+                                                            <div className="flex flex-wrap gap-1 justify-end max-w-[60%] font-semibold">
+                                                                {student.reasons.map((r, rIdx) => (
+                                                                    <span key={rIdx} className="bg-amber-100 border border-amber-200 text-amber-700 px-1.5 py-0.5 rounded text-[9px] font-bold">
+                                                                        {r}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
-                                        <p className="text-slate-800 text-sm leading-relaxed font-semibold">
-                                            {learningInsights.recommendedAction}
-                                        </p>
+
+                                        {/* Strong Performers */}
+                                        <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-4">
+                                            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                                                <span className="text-xs font-bold text-slate-850 flex items-center gap-1.5 uppercase font-mono tracking-wider">
+                                                    ⭐ Strong Performers
+                                                </span>
+                                                <span className="text-[10px] font-mono font-bold bg-teal-100 border border-teal-200 text-teal-700 px-2 py-0.5 rounded">
+                                                    {learningInsights.strongPerformers.length} student{learningInsights.strongPerformers.length !== 1 ? 's' : ''}
+                                                </span>
+                                            </div>
+                                            {learningInsights.strongPerformers.length === 0 ? (
+                                                <p className="text-slate-500 text-xs italic">
+                                                    Complete scenarios to identify top class performers.
+                                                </p>
+                                            ) : (
+                                                <div className="space-y-3">
+                                                    {learningInsights.strongPerformers.map((student, sIdx) => (
+                                                        <div key={sIdx} className="flex justify-between items-center gap-4 text-xs">
+                                                            <div>
+                                                                <p className="font-bold text-slate-800">{student.name}</p>
+                                                                <p className="text-[10px] text-slate-500">{student.email}</p>
+                                                            </div>
+                                                            <div className="flex flex-wrap gap-1 justify-end max-w-[60%] font-semibold">
+                                                                {student.reasons.map((r, rIdx) => (
+                                                                    <span key={rIdx} className="bg-teal-100 border border-teal-200 text-teal-700 px-1.5 py-0.5 rounded text-[9px] font-bold">
+                                                                        {r}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-                                    {/* Students Needing Support */}
-                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-4">
-                                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                                            <span className="text-xs font-bold text-slate-850 flex items-center gap-1.5 uppercase font-mono tracking-wider">
-                                                ⚠️ Students Needing Support
-                                            </span>
-                                            <span className="text-[10px] font-mono font-bold bg-amber-100 border border-amber-200 text-amber-700 px-2 py-0.5 rounded">
-                                                {learningInsights.needingSupport.length} flagged
-                                            </span>
-                                        </div>
-                                        {learningInsights.needingSupport.length === 0 ? (
-                                            <p className="text-slate-500 text-xs italic">
-                                                All students are performing well above thresholds!
-                                            </p>
-                                        ) : (
-                                            <div className="space-y-3">
-                                                {learningInsights.needingSupport.map((student, sIdx) => (
-                                                    <div key={sIdx} className="flex justify-between items-center gap-4 text-xs">
-                                                        <div>
-                                                            <p className="font-bold text-slate-800">{student.name}</p>
-                                                            <p className="text-[10px] text-slate-500">{student.email}</p>
-                                                        </div>
-                                                        <div className="flex flex-wrap gap-1 justify-end max-w-[60%] font-semibold">
-                                                            {student.reasons.map((r, rIdx) => (
-                                                                <span key={rIdx} className="bg-amber-100 border border-amber-200 text-amber-700 px-1.5 py-0.5 rounded text-[9px] font-bold">
-                                                                    {r}
-                                                                </span>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Strong Performers */}
-                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-4">
-                                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                                            <span className="text-xs font-bold text-slate-850 flex items-center gap-1.5 uppercase font-mono tracking-wider">
-                                                ⭐ Strong Performers
-                                            </span>
-                                            <span className="text-[10px] font-mono font-bold bg-teal-100 border border-teal-200 text-teal-700 px-2 py-0.5 rounded">
-                                                {learningInsights.strongPerformers.length} student{learningInsights.strongPerformers.length !== 1 ? 's' : ''}
-                                            </span>
-                                        </div>
-                                        {learningInsights.strongPerformers.length === 0 ? (
-                                            <p className="text-slate-500 text-xs italic">
-                                                Complete scenarios to identify top class performers.
-                                            </p>
-                                        ) : (
-                                            <div className="space-y-3">
-                                                {learningInsights.strongPerformers.map((student, sIdx) => (
-                                                    <div key={sIdx} className="flex justify-between items-center gap-4 text-xs">
-                                                        <div>
-                                                            <p className="font-bold text-slate-800">{student.name}</p>
-                                                            <p className="text-[10px] text-slate-500">{student.email}</p>
-                                                        </div>
-                                                        <div className="flex flex-wrap gap-1 justify-end max-w-[60%] font-semibold">
-                                                            {student.reasons.map((r, rIdx) => (
-                                                                <span key={rIdx} className="bg-teal-100 border border-teal-200 text-teal-700 px-1.5 py-0.5 rounded text-[9px] font-bold">
-                                                                    {r}
-                                                                </span>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
                             </div>
 
-                            {/* Bar Chart — Completions per Scenario */}
-                            <div className="glass-card p-6">
-                                <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
-                                    <BarChart3 className="w-5 h-5 text-teal-400" />
-                                    Completions & Avg Score per Scenario
+                            {/* Skill Analytics */}
+                            <div className="space-y-4 pt-2">
+                                <h3 className="text-base font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
+                                    Skill Analytics
                                 </h3>
-                                <ResponsiveContainer width="100%" height={280}>
-                                    <BarChart data={scenarioCompletionData} margin={{ top: 5, right: 20, left: 0, bottom: 60 }}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                                        <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11 }}
-                                            angle={-35} textAnchor="end" interval={0} />
-                                        <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
-                                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
-                                            labelStyle={{ color: '#fff' }} itemStyle={{ color: '#94a3b8' }} />
-                                        <Legend wrapperStyle={{ color: '#94a3b8', paddingTop: '20px' }} />
-                                        <Bar dataKey="completions" fill="#14b8a6" name="Completions" radius={[4, 4, 0, 0]} />
-                                        <Bar dataKey="avgScore" fill="#8b5cf6" name="Avg Score %" radius={[4, 4, 0, 0]} />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
-
-                            {/* Bar Chart — Class Skill Distribution */}
-                            <div className="glass-card p-6">
-                                <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
-                                    <Brain className="w-5 h-5 text-emerald-400" />
-                                    Class Skill Distribution (Average Mastery %)
-                                </h3>
-                                <ResponsiveContainer width="100%" height={280}>
-                                    <BarChart data={classSkillsData} margin={{ top: 5, right: 20, left: 0, bottom: 20 }}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                                        <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11 }} />
-                                        <YAxis tick={{ fill: '#64748b', fontSize: 11 }} domain={[0, 100]} />
-                                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
-                                            labelStyle={{ color: '#fff' }} itemStyle={{ color: '#94a3b8' }} />
-                                        <Bar dataKey="score" name="Average Mastery %" radius={[4, 4, 0, 0]}>
-                                            {classSkillsData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={BAR_COLORS[index % BAR_COLORS.length]} />
-                                            ))}
-                                        </Bar>
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
-
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-                                {/* Bar Chart — Student Performance */}
-                                <div className="glass-card p-6">
-                                    <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
-                                        <Users className="w-5 h-5 text-purple-400" />
-                                        Student Performance
-                                    </h3>
-                                    {studentPerformanceData.length === 0 ? (
-                                        <div className="flex items-center justify-center h-48 text-[var(--lx-text-muted)] text-sm">No student data yet</div>
-                                    ) : (
-                                        <ResponsiveContainer width="100%" height={220}>
-                                            <BarChart data={studentPerformanceData}>
-                                                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                                                <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11 }} />
-                                                <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
-                                                <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
-                                                    labelStyle={{ color: '#fff' }} itemStyle={{ color: '#94a3b8' }} />
-                                                <Legend wrapperStyle={{ color: '#94a3b8' }} />
-                                                <Bar dataKey="scenarios" fill="#14b8a6" name="Scenarios Done" radius={[4, 4, 0, 0]} />
-                                                <Bar dataKey="passed" fill="#10b981" name="Passed" radius={[4, 4, 0, 0]} />
-                                                <Bar dataKey="avgScore" fill="#8b5cf6" name="Avg Score %" radius={[4, 4, 0, 0]} />
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {/* completions chart */}
+                                    <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-2xl">
+                                        <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
+                                            <BarChart3 className="w-5 h-5 text-teal-550" />
+                                            Completions & Avg Score per Scenario
+                                        </h3>
+                                        <ResponsiveContainer width="100%" height={280}>
+                                            <BarChart data={scenarioCompletionData} margin={{ top: 5, right: 20, left: 0, bottom: 60 }}>
+                                                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                                                <XAxis dataKey="name" tick={{ fill: '#475569', fontSize: 11 }}
+                                                    angle={-35} textAnchor="end" interval={0} />
+                                                <YAxis tick={{ fill: '#475569', fontSize: 11 }} />
+                                                <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                                                    labelStyle={{ color: '#1e293b', fontWeight: 'bold' }} itemStyle={{ color: '#475569' }} />
+                                                <Legend wrapperStyle={{ color: '#475569', paddingTop: '20px' }} />
+                                                <Bar dataKey="completions" fill="#0d9488" name="Completions" radius={[4, 4, 0, 0]} />
+                                                <Bar dataKey="avgScore" fill="#7c3aed" name="Avg Score %" radius={[4, 4, 0, 0]} />
                                             </BarChart>
                                         </ResponsiveContainer>
-                                    )}
-                                </div>
+                                    </div>
 
-                                {/* Pie Chart — Pass vs Fail */}
-                                <div className="glass-card p-6">
-                                    <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
-                                        <Target className="w-5 h-5 text-emerald-400" />
-                                        Pass vs Fail Rate
-                                    </h3>
-                                    {passFailData[0].value + passFailData[1].value === 0 ? (
-                                        <div className="flex items-center justify-center h-48 text-[var(--lx-text-muted)] text-sm">No attempts yet</div>
-                                    ) : (
-                                        <ResponsiveContainer width="100%" height={220}>
-                                            <PieChart>
-                                                <Pie data={passFailData} cx="50%" cy="50%"
-                                                    innerRadius={60} outerRadius={90}
-                                                    paddingAngle={4} dataKey="value">
-                                                    {passFailData.map((_, i) => (
-                                                        <Cell key={i} fill={PIE_COLORS[i]} />
+                                    {/* skill distribution chart */}
+                                    <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-2xl">
+                                        <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
+                                            <Brain className="w-5 h-5 text-emerald-550" />
+                                            Class Skill Distribution (Average Mastery %)
+                                        </h3>
+                                        <ResponsiveContainer width="100%" height={280}>
+                                            <BarChart data={classSkillsData} margin={{ top: 5, right: 20, left: 0, bottom: 20 }}>
+                                                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                                                <XAxis dataKey="name" tick={{ fill: '#475569', fontSize: 11 }} />
+                                                <YAxis tick={{ fill: '#475569', fontSize: 11 }} domain={[0, 100]} />
+                                                <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                                                    labelStyle={{ color: '#1e293b', fontWeight: 'bold' }} itemStyle={{ color: '#475569' }} />
+                                                <Bar dataKey="score" name="Average Mastery %" radius={[4, 4, 0, 0]}>
+                                                    {classSkillsData.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={BAR_COLORS[index % BAR_COLORS.length]} />
                                                     ))}
-                                                </Pie>
-                                                <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
-                                                    itemStyle={{ color: '#94a3b8' }} />
-                                                <Legend wrapperStyle={{ color: '#94a3b8' }} />
-                                            </PieChart>
+                                                </Bar>
+                                            </BarChart>
                                         </ResponsiveContainer>
-                                    )}
-                                </div>
+                                    </div>
 
+                                    {/* student performance chart */}
+                                    <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-2xl">
+                                        <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
+                                            <Users className="w-5 h-5 text-purple-550" />
+                                            Student Performance
+                                        </h3>
+                                        {studentPerformanceData.length === 0 ? (
+                                            <div className="flex items-center justify-center h-48 text-[var(--lx-text-muted)] text-sm">No student data yet</div>
+                                        ) : (
+                                            <ResponsiveContainer width="100%" height={220}>
+                                                <BarChart data={studentPerformanceData}>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                                                    <XAxis dataKey="name" tick={{ fill: '#475569', fontSize: 11 }} />
+                                                    <YAxis tick={{ fill: '#475569', fontSize: 11 }} />
+                                                    <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                                                        labelStyle={{ color: '#1e293b', fontWeight: 'bold' }} itemStyle={{ color: '#475569' }} />
+                                                    <Legend wrapperStyle={{ color: '#475569' }} />
+                                                    <Bar dataKey="scenarios" fill="#0d9488" name="Scenarios Done" radius={[4, 4, 0, 0]} />
+                                                    <Bar dataKey="passed" fill="#059669" name="Passed" radius={[4, 4, 0, 0]} />
+                                                    <Bar dataKey="avgScore" fill="#7c3aed" name="Avg Score %" radius={[4, 4, 0, 0]} />
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        )}
+                                    </div>
+
+                                    {/* pass vs fail chart */}
+                                    <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-2xl">
+                                        <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
+                                            <Target className="w-5 h-5 text-emerald-555" />
+                                            Pass vs Fail Rate
+                                        </h3>
+                                        {passFailData[0].value + passFailData[1].value === 0 ? (
+                                            <div className="flex items-center justify-center h-48 text-[var(--lx-text-muted)] text-sm">No attempts yet</div>
+                                        ) : (
+                                            <ResponsiveContainer width="100%" height={220}>
+                                                <PieChart>
+                                                    <Pie data={passFailData} cx="50%" cy="50%"
+                                                        innerRadius={60} outerRadius={90}
+                                                        paddingAngle={4} dataKey="value">
+                                                        {passFailData.map((_, i) => (
+                                                            <Cell key={i} fill={PIE_COLORS[i]} />
+                                                        ))}
+                                                    </Pie>
+                                                    <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                                                        itemStyle={{ color: '#475569' }} />
+                                                    <Legend wrapperStyle={{ color: '#475569' }} />
+                                                </PieChart>
+                                            </ResponsiveContainer>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -1669,401 +1627,6 @@ export default function TeacherDashboard() {
                 attempts={selectedStudentForAnswers?.attempts || []}
                 studentName={selectedStudentForAnswers?.name}
             />
-
-            {/* Class Debate Presentation overlay */}
-            <DebatePresentationOverlay
-                isOpen={isDebateFullscreen}
-                onClose={() => setIsDebateFullscreen(false)}
-                scenarioId={selectedDebateScenario}
-                sceneId={selectedDebateScene}
-                studentProgress={studentProgress}
-            />
-        </div>
-    );
-}
-
-// ── Debate Helper Functions & Subcomponents ──
-
-const getThemesForScene = (scenarioId, justifications) => {
-    const themes = [
-        {
-            name: 'Data & Evidence Analysis',
-            icon: '📊',
-            keywords: ['ppm', 'data', 'table', 'measured', 'limit', 'value', 'graph', 'concentration', 'level', 'chloride', 'nitrate', 'scale', 'mg/l'],
-            count: 0,
-            matches: []
-        },
-        {
-            name: 'Scientific & Concept Application',
-            icon: '🧠',
-            keywords: ['law', 'ratio', 'chemical', 'reaction', 'equation', 'mole', 'mass', 'solubility', 'principle', 'boyle', 'charles', 'temperature', 'pressure'],
-            count: 0,
-            matches: []
-        },
-        {
-            name: 'Risk Assessment & Safety',
-            icon: '⚠️',
-            keywords: ['risk', 'safe', 'hazard', 'health', 'danger', 'harm', 'limit', 'exceed', 'infant', 'consequence', 'safety', 'warning'],
-            count: 0,
-            matches: []
-        },
-        {
-            name: 'Social, Ethical & Economic Impact',
-            icon: '💼',
-            keywords: ['cost', 'treatment', 'shut', 'factory', 'economic', 'recommend', 'action', 'plant', 'job', 'loss', 'balance', 'ethics'],
-            count: 0,
-            matches: []
-        }
-    ];
-
-    justifications.forEach(text => {
-        if (!text || text.toLowerCase().includes('skipped') || text.toLowerCase().includes('skip')) return;
-        const lower = text.toLowerCase();
-        themes.forEach(t => {
-            if (t.keywords.some(kw => lower.includes(kw))) {
-                t.count++;
-                if (t.matches.length < 3) {
-                    t.matches.push(text);
-                }
-            }
-        });
-    });
-
-    return themes.filter(t => t.count > 0);
-};
-
-function DebateView({ scenarioId, sceneId, studentProgress, onStartFullscreen }) {
-    const selectedScenario = SCENARIOS[scenarioId];
-    const scene = selectedScenario?.scenes?.[sceneId - 1];
-
-    if (!scene) {
-        return (
-            <div className="text-center py-12 text-slate-500 bg-slate-50 border border-slate-200 rounded-xl">
-                <p className="font-semibold text-sm">No decision scene configuration found for Scene {sceneId}.</p>
-            </div>
-        );
-    }
-
-    const options = scene.options || [];
-    const attempts = studentProgress.filter(p => p.scenario_id === scenarioId && p.answers);
-    const totalAttempts = attempts.length;
-
-    // Count choices
-    const counts = {};
-    options.forEach(o => { counts[o.id] = 0; });
-
-    const justificationList = [];
-
-    attempts.forEach(attempt => {
-        const sceneAns = attempt.answers[`scene${sceneId}`];
-        if (sceneAns) {
-            const choice = sceneAns.selectedOption || sceneAns.decision_id;
-            if (choice) {
-                const matchedOption = options.find(o => 
-                    o.id.toUpperCase() === choice.toUpperCase() || 
-                    o.text.toLowerCase() === choice.toLowerCase()
-                );
-                if (matchedOption) {
-                    counts[matchedOption.id]++;
-                } else {
-                    const cleanChoice = choice.trim();
-                    if (cleanChoice.length > 0) {
-                        const firstChar = cleanChoice[0].toUpperCase();
-                        if (counts[firstChar] !== undefined) {
-                            counts[firstChar]++;
-                        }
-                    }
-                }
-            }
-
-            const reason = sceneAns.justification || sceneAns.reasoning;
-            if (reason && reason.trim()) {
-                justificationList.push(reason.trim());
-            }
-        }
-    });
-
-    const themes = getThemesForScene(scenarioId, justificationList);
-
-    return (
-        <div className="space-y-6">
-            {/* Header controls & stats */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50 p-5 border border-slate-200 rounded-xl shadow-sm">
-                <div>
-                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block font-bold">Active Debate Scene</span>
-                    <span className="text-slate-900 font-extrabold text-lg">{scene.title}</span>
-                </div>
-                <div className="flex items-center gap-5">
-                    <div className="text-right">
-                        <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block font-bold">Total Submissions</span>
-                        <span className="text-teal-600 font-black text-xl">{totalAttempts} students</span>
-                    </div>
-                    <button
-                        onClick={onStartFullscreen}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer animate-pulse"
-                    >
-                        <Maximize2 className="w-3.5 h-3.5" />
-                        Present Mode
-                    </button>
-                </div>
-            </div>
-
-            {/* Question Summary */}
-            <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl">
-                <span className="text-[10px] font-mono text-purple-600 uppercase tracking-widest font-bold block mb-1">Debate Prompt Question</span>
-                <p className="text-slate-900 font-extrabold text-lg leading-snug">{scene.question}</p>
-            </div>
-
-            {/* Prompt Alert */}
-            <div className="border border-purple-200 bg-purple-50 p-4.5 rounded-xl flex items-center gap-3 shadow-sm">
-                <span className="text-2xl shrink-0">💬</span>
-                <div>
-                    <span className="text-[10px] font-mono text-purple-600 uppercase tracking-widest font-bold block">Suggested Discussion Prompt</span>
-                    <p className="text-purple-900 text-base font-extrabold">“Which choice is most scientifically justified?”</p>
-                </div>
-            </div>
-
-            {/* Option distribution list & themes */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Left Panel: Choice Distribution */}
-                <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-xl space-y-4">
-                    <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
-                        📊 Class Choice Distribution
-                    </h3>
-                    <div className="space-y-4">
-                        {options.map((opt) => {
-                            const count = counts[opt.id] || 0;
-                            const pct = totalAttempts > 0 ? Math.round((count / totalAttempts) * 100) : 0;
-                            return (
-                                <div key={opt.id} className="space-y-1.5">
-                                    <div className="flex justify-between text-xs font-bold">
-                                        <span className="text-slate-850 truncate max-w-[80%] font-semibold">
-                                            Option {opt.id}: {opt.text}
-                                        </span>
-                                        <span className="text-teal-600 font-mono font-bold">{pct}% ({count} votes)</span>
-                                    </div>
-                                    <div className="h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner">
-                                        <div
-                                            className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-500"
-                                            style={{ width: `${pct}%` }}
-                                        />
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                {/* Right Panel: Themes & Reasoning */}
-                <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-xl space-y-4">
-                    <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
-                        🧠 Key Reasoning Themes
-                    </h3>
-                    {themes.length === 0 ? (
-                        <div className="text-center py-12 text-slate-500 text-xs font-medium">
-                            No student justifications analyzed yet, or justifications are too short.
-                        </div>
-                    ) : (
-                        <div className="space-y-3 max-h-[320px] overflow-y-auto pr-1">
-                            {themes.map((theme, i) => (
-                                <div key={i} className="bg-slate-50 border border-slate-200 p-4 rounded-lg space-y-2">
-                                    <div className="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
-                                        <span className="text-xs font-bold text-slate-850 flex items-center gap-1.5">
-                                            <span>{theme.icon}</span> {theme.name}
-                                        </span>
-                                        <span className="text-[10px] font-mono bg-purple-100 border border-purple-200 text-purple-700 px-2 py-0.5 rounded font-bold">
-                                            {theme.count} student{theme.count > 1 ? 's' : ''}
-                                        </span>
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        {theme.matches.map((quote, qIdx) => (
-                                            <p key={qIdx} className="text-[11px] text-slate-700 italic pl-2.5 border-l-2 border-purple-400 leading-relaxed font-medium">
-                                                "{quote.length > 100 ? quote.slice(0, 100) + '...' : quote}"
-                                            </p>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* General Justifications List */}
-            <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-xl space-y-4">
-                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
-                    📋 All Student Reasoning (Anonymous)
-                </h3>
-                {justificationList.length === 0 ? (
-                    <div className="text-center py-10 text-slate-500 text-xs font-medium">
-                        No submissions recorded for this scenario yet.
-                    </div>
-                ) : (
-                    <div className="space-y-2.5 max-h-[250px] overflow-y-auto pr-1">
-                        {justificationList
-                            .filter(j => !j.toLowerCase().includes('skipped') && !j.toLowerCase().includes('skip'))
-                            .map((reason, idx) => (
-                                <div key={idx} className="bg-slate-50 border border-slate-200 p-3.5 rounded-lg text-xs leading-relaxed text-slate-800 font-semibold shadow-sm">
-                                    {reason}
-                                </div>
-                            ))}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-}
-
-function DebatePresentationOverlay({ isOpen, onClose, scenarioId, sceneId, studentProgress }) {
-    if (!isOpen) return null;
-
-    const selectedScenario = SCENARIOS[scenarioId];
-    const scene = selectedScenario?.scenes?.[sceneId - 1];
-
-    if (!scene) return null;
-
-    const options = scene.options || [];
-    const attempts = studentProgress.filter(p => p.scenario_id === scenarioId && p.answers);
-    const totalAttempts = attempts.length;
-
-    // Count choices
-    const counts = {};
-    options.forEach(o => { counts[o.id] = 0; });
-
-    const justificationList = [];
-
-    attempts.forEach(attempt => {
-        const sceneAns = attempt.answers[`scene${sceneId}`];
-        if (sceneAns) {
-            const choice = sceneAns.selectedOption || sceneAns.decision_id;
-            if (choice) {
-                const matchedOption = options.find(o => 
-                    o.id.toUpperCase() === choice.toUpperCase() || 
-                    o.text.toLowerCase() === choice.toLowerCase()
-                );
-                if (matchedOption) {
-                    counts[matchedOption.id]++;
-                } else {
-                    const cleanChoice = choice.trim();
-                    if (cleanChoice.length > 0) {
-                        const firstChar = cleanChoice[0].toUpperCase();
-                        if (counts[firstChar] !== undefined) {
-                            counts[firstChar]++;
-                        }
-                    }
-                }
-            }
-
-            const reason = sceneAns.justification || sceneAns.reasoning;
-            if (reason && reason.trim()) {
-                justificationList.push(reason.trim());
-            }
-        }
-    });
-
-    const themes = getThemesForScene(scenarioId, justificationList);
-
-    return (
-        <div className="fixed inset-0 z-50 bg-[#060913] text-white flex flex-col overflow-y-auto font-sans p-6 md:p-10 select-none">
-            {/* Ambient Background Glows */}
-            <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
-
-            {/* Header */}
-            <div className="relative z-10 flex items-center justify-between border-b border-slate-800 pb-5 mb-8">
-                <div className="flex items-center gap-3">
-                    <span className="text-3xl">📢</span>
-                    <div>
-                        <span className="text-xs font-mono text-purple-400 uppercase tracking-widest block font-bold">Class Debate Hub</span>
-                        <h1 className="text-2xl font-black text-white">{selectedScenario.title}</h1>
-                    </div>
-                </div>
-                <button
-                    onClick={onClose}
-                    className="flex items-center gap-2 px-4 py-2 border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition text-sm font-semibold cursor-pointer animate-pulse"
-                >
-                    <Minimize2 className="w-4 h-4" />
-                    Exit Presentation
-                </button>
-            </div>
-
-            {/* Main Content Grid */}
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1">
-                {/* Left Panel: Question and Prompt (5 cols) */}
-                <div className="lg:col-span-5 space-y-6 flex flex-col justify-center">
-                    <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
-                        <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest font-bold block">Scenario Challenge</span>
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug">{scene.question}</h2>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-purple-950 to-indigo-950 border border-purple-500/40 p-6 rounded-2xl space-y-3 shadow-lg shadow-purple-500/5">
-                        <span className="text-xs font-mono text-purple-400 uppercase tracking-widest font-bold block">Suggested Debate Question</span>
-                        <p className="text-xl font-bold text-white">“Which choice is most scientifically justified?”</p>
-                    </div>
-
-                    <div className="text-center md:text-left text-slate-400 font-mono text-xs font-semibold">
-                        📊 Current Submissions: <span className="text-teal-400 font-bold">{totalAttempts} students</span> (Anonymous Results)
-                    </div>
-                </div>
-
-                {/* Right Panel: Data Presentation (7 cols) */}
-                <div className="lg:col-span-7 flex flex-col justify-center gap-6">
-                    {/* Class Choices */}
-                    <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl space-y-6 shadow-xl">
-                        <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-3">
-                            📊 Choice Distribution
-                        </h3>
-                        <div className="space-y-6">
-                            {options.map((opt) => {
-                                const count = counts[opt.id] || 0;
-                                const pct = totalAttempts > 0 ? Math.round((count / totalAttempts) * 100) : 0;
-                                return (
-                                    <div key={opt.id} className="space-y-2">
-                                        <div className="flex justify-between items-start text-sm font-semibold">
-                                            <span className="text-slate-100 pr-4 leading-snug max-w-[85%] font-bold">
-                                                Option {opt.id}: {opt.text}
-                                            </span>
-                                            <span className="text-teal-300 font-mono text-base font-bold">{pct}%</span>
-                                        </div>
-                                        <div className="h-4 bg-slate-950 rounded-full overflow-hidden border border-slate-800 shadow-inner">
-                                            <div
-                                                className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(20,184,166,0.5)]"
-                                                style={{ width: `${pct}%` }}
-                                            />
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Reasoning Snippets */}
-                    {themes.length > 0 && (
-                        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-                            <h3 className="text-md font-bold text-white">
-                                🧠 Key Scientific Reasoning Themes
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {themes.slice(0, 2).map((t, idx) => (
-                                    <div key={idx} className="bg-slate-950 border border-slate-900/60 p-4 rounded-xl space-y-2">
-                                        <div className="flex items-center justify-between border-b border-slate-900 pb-1.5">
-                                            <span className="text-xs font-bold text-slate-200 flex items-center gap-1">
-                                                {t.icon} {t.name}
-                                            </span>
-                                            <span className="text-[9px] font-mono text-purple-300 font-bold bg-purple-900/30 px-1.5 py-0.5 rounded">{t.count} mentions</span>
-                                        </div>
-                                        {t.matches.slice(0, 1).map((quote, qIdx) => (
-                                            <p key={qIdx} className="text-[11px] text-slate-300 font-medium italic leading-relaxed">
-                                                "{quote.length > 120 ? quote.slice(0, 120) + '...' : quote}"
-                                            </p>
-                                        ))}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
         </div>
     );
 }
