@@ -234,6 +234,24 @@ export default function TeacherDashboard() {
         window.location.href = '/SignIn';
     };
 
+    const classSkillsData = React.useMemo(() => {
+        return Object.keys(SKILLS).map(skillKey => {
+            let total = 0;
+            let count = 0;
+            students.forEach(student => {
+                const progressObj = getStudentProgress(student.id);
+                if (progressObj && progressObj.completed_scenarios?.length > 0) {
+                    total += (progressObj.skills?.[skillKey] || 0);
+                    count++;
+                }
+            });
+            return {
+                name: SKILLS[skillKey]?.name || skillKey,
+                score: count > 0 ? Math.round(total / count) : 0
+            };
+        });
+    }, [students, studentProgress]);
+
     if (loading) {
         return (
             <div className="min-h-screen lx-bg-ambient flex items-center justify-center">
@@ -288,24 +306,6 @@ export default function TeacherDashboard() {
     });
 
     const BAR_COLORS = ['#14b8a6', '#06b6d4', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#ec4899', '#f43f5e'];
-
-    const classSkillsData = React.useMemo(() => {
-        return Object.keys(SKILLS).map(skillKey => {
-            let total = 0;
-            let count = 0;
-            students.forEach(student => {
-                const progressObj = getStudentProgress(student.id);
-                if (progressObj && progressObj.completed_scenarios?.length > 0) {
-                    total += (progressObj.skills?.[skillKey] || 0);
-                    count++;
-                }
-            });
-            return {
-                name: SKILLS[skillKey]?.name || skillKey,
-                score: count > 0 ? Math.round(total / count) : 0
-            };
-        });
-    }, [students, studentProgress]);
 
     const studentPerformanceData = students.map(student => {
         const rows = studentProgress.filter(p => p.student_id === student.id && p.scenario_id);
