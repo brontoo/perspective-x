@@ -11,8 +11,37 @@ export default function CompletionCertificate({
     completionDate,
     badgeIcon,
     badge,
+    badgeLevel,
     onClose,
 }) {
+    const certLevelMeta = {
+        Bronze: {
+            color: '#d97706',
+            bgColor: 'rgba(217, 119, 6, 0.12)',
+            borderColor: 'rgba(217, 119, 6, 0.35)',
+            glow: '0 0 8px rgba(217, 119, 6, 0.15)'
+        },
+        Silver: {
+            color: '#cbd5e1',
+            bgColor: 'rgba(203, 213, 225, 0.12)',
+            borderColor: 'rgba(203, 213, 225, 0.35)',
+            glow: '0 0 8px rgba(203, 213, 225, 0.15)'
+        },
+        Gold: {
+            color: '#fbbf24',
+            bgColor: 'rgba(251, 191, 36, 0.12)',
+            borderColor: 'rgba(251, 191, 36, 0.35)',
+            glow: '0 0 12px rgba(251, 191, 36, 0.25)'
+        },
+        Platinum: {
+            color: '#22d3ee',
+            bgColor: 'rgba(34, 211, 238, 0.12)',
+            borderColor: 'rgba(34, 211, 238, 0.35)',
+            glow: '0 0 16px rgba(34, 211, 238, 0.35)'
+        }
+    };
+
+    const levelMeta = badgeLevel ? certLevelMeta[badgeLevel] : null;
     const certificateRef = useRef(null);
 
     const captureCanvas = async () => {
@@ -247,17 +276,41 @@ export default function CompletionCertificate({
                         {/* Certificate Badge and Seal */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
                             <div style={{
-                                width: 44, height: 44, borderRadius: '50%',
-                                background: 'rgba(20, 184, 166, 0.1)',
-                                border: '2px solid #14b8a6',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                width: 44,
+                                height: 44,
+                                borderRadius: '50%',
+                                background: levelMeta ? levelMeta.bgColor : 'rgba(20, 184, 166, 0.1)',
+                                border: `2px solid ${levelMeta ? levelMeta.color : '#14b8a6'}`,
+                                boxShadow: levelMeta ? levelMeta.glow : 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                                 fontSize: 22
                             }}>
                                 {badgeIcon || '🏆'}
                             </div>
                             <div style={{ textAlign: 'left' }}>
                                 <span style={{ fontSize: 9, fontWeight: 800, color: '#94a3b8', display: 'block', textTransform: 'uppercase', fontFamily: 'system-ui, -apple-system, sans-serif' }}>Badge Earned</span>
-                                <span style={{ fontSize: 13, fontWeight: 800, color: 'white', display: 'block', fontFamily: 'system-ui, -apple-system, sans-serif' }}>{badgeName}</span>
+                                <span style={{ fontSize: 13, fontWeight: 800, color: 'white', display: 'block', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+                                    {badgeLevel ? `${badgeLevel} ${badgeName}` : badgeName}
+                                </span>
+                                {badgeLevel && levelMeta && (
+                                    <span style={{
+                                        fontSize: 8,
+                                        fontWeight: 800,
+                                        color: levelMeta.color,
+                                        background: levelMeta.bgColor,
+                                        border: `1px solid ${levelMeta.borderColor}`,
+                                        padding: '1px 6px',
+                                        borderRadius: 4,
+                                        display: 'inline-block',
+                                        marginTop: 2,
+                                        textTransform: 'uppercase',
+                                        fontFamily: 'monospace'
+                                    }}>
+                                        {badgeLevel} Level
+                                    </span>
+                                )}
                             </div>
                         </div>
 

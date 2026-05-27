@@ -18,7 +18,7 @@ import ReflectionPrompt from '@/components/scenario/ReflectionPrompt';
 import ExitTicket from '@/components/scenario/ExitTicket';
 import ScenarioComplete from '@/components/scenario/ScenarioComplete';
 import CompletionCertificate from '@/components/scenario/CompletionCertificate';
-import { normalizeRoleThemeKey } from '@/components/scenario/scenarioHelpers';
+import { normalizeRoleThemeKey, getBadgeLevel } from '@/components/scenario/scenarioHelpers';
 import { evaluateScenarioOutcome } from '@/components/scenario/scenarioAnswerKey';
 import { ROLE_THEMES, DEFAULT_THEME } from '@/lib/roleThemes';
 import { useScenarioAudio } from '@/hooks/useScenarioAudio';
@@ -728,17 +728,28 @@ export default function ScenarioPlayer() {
                 </>
             )}
 
-            {showCertificate && (
-                <CompletionCertificate
-                    studentName={profileName || user?.user_metadata?.full_name || user?.email?.split('@')[0]}
-                    scenarioTitle={scenario.title}
-                    percentage={scenarioResult?.exitTicket?.score ?? responses?.exitTicket?.score ?? 85}
-                    completionDate={new Date().toISOString()}
-                    badgeIcon={scenario.badgeIcon}
-                    badge={scenario.badge}
-                    onClose={() => setShowCertificate(false)}
-                />
-            )}
+            {showCertificate && (() => {
+                const percentage = scenarioResult?.exitTicket?.score ?? responses?.exitTicket?.score ?? 85;
+                const activeResponses = scenarioResult || responses;
+                const levelName = getBadgeLevel(
+                    percentage,
+                    activeResponses.scene2?.consequence,
+                    activeResponses.scene2?.justification,
+                    scenario.id
+                );
+                return (
+                    <CompletionCertificate
+                        studentName={profileName || user?.user_metadata?.full_name || user?.email?.split('@')[0]}
+                        scenarioTitle={scenario.title}
+                        percentage={percentage}
+                        completionDate={new Date().toISOString()}
+                        badgeIcon={scenario.badgeIcon}
+                        badge={scenario.badge}
+                        badgeLevel={levelName}
+                        onClose={() => setShowCertificate(false)}
+                    />
+                );
+            })()}
 
             {/* Floating Notebook Toggle Button */}
             {phase !== 'title' && phase !== 'video' && phase !== 'intro' && phase !== 'recap' && phase !== 'briefing' && (

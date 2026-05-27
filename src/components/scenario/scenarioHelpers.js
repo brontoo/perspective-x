@@ -35,6 +35,7 @@ export function toMetricMap(rawData) {
 }
 
 import { ADDITIONAL_QUESTIONS } from '../scenarios/additionalQuestions';
+import { evaluateScenarioOutcome } from './scenarioAnswerKey';
 
 export function normalizeExitTicketQuestions(exitTicket, scenarioId) {
     let baseQuestions = [];
@@ -64,3 +65,45 @@ export function normalizeExitTicketQuestions(exitTicket, scenarioId) {
 
     return baseQuestions;
 }
+
+export function getBadgeLevel(score, consequence, justification, scenarioId) {
+    const numericScore = Number(score) || 0;
+
+    // Platinum: Excellent performance (score = 100)
+    if (numericScore === 100) {
+        return 'Platinum';
+    }
+
+    // Gold: Correct choice (isSuccess is true) + strong reasoning
+    const cleanJust = (justification || '')
+        .replace(/- My evidence is:/g, '')
+        .replace(/- This means:/g, '')
+        .replace(/- My choice is:/g, '')
+        .replace(/- One possible risk is:/g, '')
+        .replace(/I chose this option because scientifically\.\.\./g, '')
+        .replace(/This method generates oxygen through the chemical reaction\.\.\./g, '')
+        .trim();
+
+    const outcome = evaluateScenarioOutcome(scenarioId, consequence);
+    const isCorrectChoice = outcome?.isSuccess === true;
+    const hasStrongReasoning = cleanJust.length >= 60;
+
+    if (numericScore >= 80 && isCorrectChoice && hasStrongReasoning) {
+        return 'Gold';
+    }
+
+    // Silver: Passed with 80% or higher
+    if (numericScore >= 80) {
+        return 'Silver';
+    }
+
+    // Bronze: Completed mission
+    return 'Bronze';
+}
+
+export const BADGE_LEVELS = {
+    Bronze: { label: 'Bronze', color: 'text-amber-700 bg-amber-500/10 border-amber-500/20', badgeColor: 'bg-amber-600' },
+    Silver: { label: 'Silver', color: 'text-slate-400 bg-slate-500/10 border-slate-500/20', badgeColor: 'bg-slate-400' },
+    Gold: { label: 'Gold', color: 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20', badgeColor: 'bg-yellow-500' },
+    Platinum: { label: 'Platinum', color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20', badgeColor: 'bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.2)]' }
+};

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import { ROLES, SCENARIOS, BADGES, SKILLS } from '@/components/scenarios/scenarioData';
+import { getBadgeLevel, BADGE_LEVELS } from '@/components/scenario/scenarioHelpers';
 import {
     ArrowLeft, Trophy, Target, BarChart3, Clock,
     ChevronRight, Star, Zap, BookOpen, Loader2,
@@ -53,13 +54,35 @@ export default function Dashboard() {
                     )
                 ];
 
-                const badges = [
+                // Calculate all finished scenarios for badges (including Bronze for score < 80)
+                const finishedScenarios = [
                     ...new Set(
-                        completedScenarios
-                            .map(id => SCENARIOS[id]?.badge)
-                            .filter(Boolean)
+                        progressRows
+                            .filter(r => r.scenario_id !== null)
+                            .map(r => r.scenario_id)
                     )
                 ];
+
+                const badgesMap = {};
+                const badges = [];
+
+                finishedScenarios.forEach(id => {
+                    const latestRow = progressRows.find(r => r.scenario_id === id);
+                    const scenarioData = SCENARIOS[id];
+                    if (latestRow && scenarioData && scenarioData.badge) {
+                        const ans = typeof latestRow.answers === 'string'
+                            ? JSON.parse(latestRow.answers)
+                            : latestRow.answers || {};
+                        const levelName = getBadgeLevel(
+                            latestRow.score || 0,
+                            ans.scene2?.consequence,
+                            ans.scene2?.justification,
+                            id
+                        );
+                        badgesMap[scenarioData.badge] = levelName;
+                        badges.push(scenarioData.badge);
+                    }
+                });
 
                 const skillsMap = {};
                 const skillKeys = Object.keys(SKILLS);
@@ -124,6 +147,7 @@ export default function Dashboard() {
                 setProgress({
                     completed_scenarios: completedScenarios,
                     badges: [...new Set(badges)],
+                    badgesMap: badgesMap,
                     decision_history: allDecisions,          // ✅ real array
                     total_time_spent: totalTime,             // ✅ real time
                     skills: skillsMap
@@ -571,18 +595,27 @@ export default function Dashboard() {
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                             {Object.entries(BADGES).map(([badgeName, badge]) => {
                                 const earned = progress?.badges?.includes(badgeName);
+                                const levelName = earned ? (progress?.badgesMap?.[badgeName] || 'Bronze') : null;
+                                const levelMeta = levelName ? (BADGE_LEVELS[levelName] || BADGE_LEVELS.Bronze) : null;
+                                
+                                let cardStyle = 'glass-card border-[var(--lx-glass-border-sub)] opacity-60';
+                                if (earned && levelName) {
+                                    if (levelName === 'Platinum') cardStyle = 'bg-gradient-to-br from-cyan-500/10 to-indigo-500/10 border-cyan-400/30 shadow-lg shadow-cyan-500/5 hover:scale-[1.02]';
+                                    else if (levelName === 'Gold') cardStyle = 'bg-gradient-to-br from-yellow-500/10 to-amber-500/10 border-yellow-500/30 shadow-lg shadow-yellow-500/5 hover:scale-[1.02]';
+                                    else if (levelName === 'Silver') cardStyle = 'bg-gradient-to-br from-slate-450/10 to-slate-500/10 border-slate-400/30 shadow-md hover:scale-[1.02]';
+                                    else cardStyle = 'bg-gradient-to-br from-amber-700/10 to-amber-800/10 border-amber-700/20 hover:scale-[1.02]';
+                                }
+
                                 return (
                                     <motion.div key={badgeName}
-                                        whileHover={earned ? { scale: 1.05 } : {}}
-                                        className={`rounded-xl p-6 text-center border transition-all ${earned
-                                            ? 'bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/30 shadow-lg shadow-amber-500/10'
-                                            : 'glass-card border-[var(--lx-glass-border-sub)] opacity-60'}`}>
+                                        className={`rounded-xl p-6 text-center border transition-all ${cardStyle}`}>
                                         <div className={`text-4xl mb-3 ${earned ? '' : 'grayscale'}`}>{badge.icon}</div>
                                         <p className={`text-sm font-medium ${earned ? 'text-[var(--lx-text)]' : 'text-[var(--lx-text-muted)]'}`}>{badgeName}</p>
-                                        {earned ? (
-                                            <div className="mt-2 flex items-center justify-center gap-1">
-                                                <Star className="w-3 h-3 text-amber-400" />
-                                                <span className="text-xs text-amber-400">Earned</span>
+                                        {earned && levelName && levelMeta ? (
+                                            <div className="mt-2.5 flex items-center justify-center">
+                                                <span className={`text-[9px] px-2 py-0.5 rounded border font-mono font-bold uppercase tracking-wider ${levelMeta.color}`}>
+                                                    {levelName}
+                                                </span>
                                             </div>
                                         ) : (
                                             <p className="text-[var(--lx-text-muted)] text-xs mt-1">Locked</p>

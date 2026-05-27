@@ -5,6 +5,7 @@ import {
     Award, RefreshCw, ArrowLeft, Notebook, ChevronDown, ChevronUp, 
     FileText, Sparkles, CheckCircle2, Target, GraduationCap 
 } from 'lucide-react';
+import { getBadgeLevel, BADGE_LEVELS } from './scenarioHelpers';
 
 export default function ScenarioComplete({
     scenario,
@@ -18,8 +19,16 @@ export default function ScenarioComplete({
     const passed = responses.exitTicket?.passed ?? responses.passed;
     const exitScore = Math.round(Number(responses.exitTicket?.score) || 0);
 
+    const levelName = getBadgeLevel(
+        exitScore,
+        responses.scene2?.consequence,
+        responses.scene2?.justification,
+        scenario.id
+    );
+    const badgeLevelMeta = BADGE_LEVELS[levelName] || BADGE_LEVELS.Bronze;
+
     const feedbackSentence = passed
-        ? "Congratulations! You have successfully completed the mission and demonstrated great scientific critical thinking."
+        ? `Congratulations! You have successfully completed the mission and earned your ${levelName} level ${scenario.badge} badge.`
         : "You completed the mission check. Try again to improve your score and secure your certificate of mastery!";
 
     const [notebookExpanded, setNotebookExpanded] = useState(false);
@@ -85,9 +94,16 @@ export default function ScenarioComplete({
                     {/* Badge Earned */}
                     <div className="flex justify-between items-center pb-3.5 border-b border-slate-200/60">
                         <span className="text-xs font-mono text-slate-500 uppercase tracking-widest font-bold">Badge Earned</span>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2.5">
                             <span className="text-xl select-none">{scenario.badgeIcon}</span>
-                            <span className="text-sm font-bold text-slate-800 font-sans">{scenario.badge}</span>
+                            <div className="flex flex-col items-end">
+                                <span className="text-sm font-bold text-slate-800 font-sans">
+                                    {scenario.badge}
+                                </span>
+                                <span className={`text-[10px] px-2 py-0.5 rounded border font-mono font-bold uppercase tracking-wider mt-0.5 ${badgeLevelMeta.color}`}>
+                                    {levelName} Level
+                                </span>
+                            </div>
                         </div>
                     </div>
 
