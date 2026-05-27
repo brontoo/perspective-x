@@ -9,12 +9,14 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import { SCENARIOS, SKILLS } from '@/components/scenarios/scenarioData';
 import StudentAnswersModal from '@/components/scenario/StudentAnswersModal';
+import { getBadgeLevel } from '@/components/scenario/scenarioHelpers';
 import {
     Users, BookOpen, Settings, Lock, Unlock,
     Loader2, LogOut, GraduationCap, CheckCircle2,
     Target, Home, Eye, MessageSquare, Send, Trash2,
     Trophy, Brain, BarChart3, ChevronDown, ChevronUp,
-    UserCircle, Maximize2, Minimize2, Presentation
+    UserCircle, Maximize2, Minimize2, Presentation,
+    AlertTriangle
 } from 'lucide-react';
 
 
@@ -292,6 +294,182 @@ export default function TeacherDashboard() {
             };
         });
     }, [students, studentProgress]);
+
+    const learningInsights = React.useMemo(() => {
+        if (!studentProgress || studentProgress.length === 0) {
+            return {
+                classInsight: "No student attempts have been recorded yet to generate learning insights.",
+                misconceptions: [],
+                recommendedAction: "Review general scientific inquiry methods and reading data tables.",
+                needingSupport: [],
+                strongPerformers: []
+            };
+        }
+
+        const activeProgressRows = studentProgress.filter(p => p.scenario_id);
+        const totalAttemptsCount = activeProgressRows.length;
+        const avgScore = totalAttemptsCount > 0 
+            ? Math.round(activeProgressRows.reduce((a, b) => a + (b.score || 0), 0) / totalAttemptsCount)
+            : 0;
+
+        let strongestSkill = { name: '', score: -1 };
+        let weakestSkill = { name: '', score: 101 };
+        classSkillsData.forEach(sk => {
+            if (sk.score > strongestSkill.score) {
+                strongestSkill = sk;
+            }
+            if (sk.score < weakestSkill.score && sk.score >= 0) {
+                weakestSkill = sk;
+            }
+        });
+
+        const strongestSkillName = strongestSkill.name || "Data Interpretation";
+        const weakestSkillName = weakestSkill.name || "Scientific Reasoning";
+
+        let classInsightText = `The class shows solid understanding with an average score of ${avgScore}%. `;
+        if (strongestSkill.score > 0) {
+            classInsightText += `They demonstrated the strongest mastery in ${strongestSkillName} (${strongestSkill.score}%). `;
+        }
+        if (weakestSkill.score < 100 && weakestSkill.score >= 0) {
+            classInsightText += `However, they need additional focus and support in ${weakestSkillName} (${weakestSkill.score}%).`;
+        } else {
+            classInsightText += `Most students explained their reasoning clearly across all scenes.`;
+        }
+
+        const misconceptionCounts = {};
+        activeProgressRows.forEach(row => {
+            const scId = row.scenario_id;
+            const scenario = SCENARIOS[scId];
+            if (!scenario) return;
+
+            const answers = row.answers || {};
+            Object.entries(answers).forEach(([sceneKey, sceneAns]) => {
+                if (!sceneKey.startsWith('scene')) return;
+                const sceneNum = parseInt(sceneKey.replace('scene', ''), 10);
+                const sceneData = scenario.scenes?.[sceneNum - 1];
+                if (!sceneData || !sceneData.options) return;
+
+                const selected = sceneAns.selectedOption || sceneAns.decision_id;
+                if (!selected) return;
+
+                const option = sceneData.options.find(o => 
+                    o.id.toUpperCase() === selected.toUpperCase() || 
+                    o.text.toLowerCase() === selected.toLowerCase()
+                );
+
+                if (option && option.misconception) {
+                    const key = `${scId}-${sceneKey}-${option.id}`;
+                    if (!misconceptionCounts[key]) {
+                        misconceptionCounts[key] = {
+                            scenarioTitle: scenario.title,
+                            sceneTitle: sceneData.title,
+                            optionLetter: option.id,
+                            optionText: option.text,
+                            thought: option.misconception.thought,
+                            correction: option.misconception.correction,
+                            count: 0
+                        };
+                    }
+                    misconceptionCounts[key].count++;
+                }
+            });
+        });
+
+        const misconceptionsList = Object.values(misconceptionCounts)
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 3);
+
+        let actionText = "Review general scientific inquiry methods and reading data tables before starting the next mission.";
+        if (weakestSkill.name) {
+            const skillName = weakestSkill.name.toLowerCase();
+            if (skillName.includes('data') || skillName.includes('interpretation')) {
+                actionText = "Schedule a class review on interpreting measurements, reading standard reference tables, and identifying outliers in data sets.";
+            } else if (skillName.includes('reasoning') || skillName.includes('scientific')) {
+                actionText = "Encourage students to frame their justifications by referencing specific evidence values (e.g. ppm levels, pH readings) and linking them to outcomes.";
+            } else if (skillName.includes('decision') || skillName.includes('making')) {
+                actionText = "Hold a brief class discussion regarding safety vs. economic tradeoffs, focusing on immediate remediation versus long-term plans.";
+            } else if (skillName.includes('risk') || skillName.includes('analysis')) {
+                actionText = "Re-teach risk evaluation: compare measured concentrations directly against safety thresholds to determine urgency.";
+            } else if (skillName.includes('ethical') || skillName.includes('reasoning')) {
+                actionText = "Review the social and environmental implications of chemical regulations, emphasizing patient and public safety.";
+            } else if (skillName.includes('concept') || skillName.includes('application')) {
+                actionText = "Review core concepts such as solubility, chemical formulas, and stoichiometric ratios before students proceed to advanced modules.";
+            }
+        }
+
+        const needsSupportList = [];
+        const strongPerformersList = [];
+
+        students.forEach(student => {
+            const progressObj = getStudentProgress(student.id);
+            if (!progressObj || progressObj.completed_scenarios?.length === 0) return;
+
+            const name = student.full_name || student.email?.split('@')[0] || "Unknown Student";
+            const email = student.email;
+
+            const studentRows = progressObj.rows || [];
+            const totalScore = studentRows.reduce((a, b) => a + (b.score || 0), 0);
+            const avgStudScore = studentRows.length > 0 ? Math.round(totalScore / studentRows.length) : 0;
+
+            let totalJustificationLength = 0;
+            let justificationCount = 0;
+            studentRows.forEach(row => {
+                const answers = row.answers || {};
+                Object.values(answers).forEach(ans => {
+                    const reason = ans?.justification || ans?.reasoning;
+                    if (reason) {
+                        totalJustificationLength += reason.trim().length;
+                        justificationCount++;
+                    }
+                });
+            });
+
+            const avgJustificationLen = justificationCount > 0 ? Math.round(totalJustificationLength / justificationCount) : 0;
+
+            const reasonsSupport = [];
+            if (avgStudScore < 80) {
+                reasonsSupport.push(`Low Score (${avgStudScore}%)`);
+            }
+            if (avgJustificationLen > 0 && avgJustificationLen < 30) {
+                reasonsSupport.push(`Short Justifications`);
+            }
+            const studentAttemptsCount = studentProgress.filter(p => p.student_id === student.id).length;
+            if (studentAttemptsCount >= 3) {
+                reasonsSupport.push(`Multi-Attempt (${studentAttemptsCount} tries)`);
+            }
+
+            if (reasonsSupport.length > 0) {
+                needsSupportList.push({ name, email, reasons: reasonsSupport });
+            }
+
+            const reasonsStrong = [];
+            if (avgStudScore >= 90) {
+                reasonsStrong.push(`High Score (${avgStudScore}%)`);
+            }
+            if (avgJustificationLen >= 75) {
+                reasonsStrong.push(`Detailed Reasoning`);
+            }
+            const hasPlatinum = studentRows.some(row => {
+                const badgeLvl = getBadgeLevel(row.score, row.answers, row.answers?.exitTicket?.difficultyMode || 'on-level');
+                return badgeLvl === 'platinum';
+            });
+            if (hasPlatinum) {
+                reasonsStrong.push("Platinum Badge");
+            }
+
+            if (reasonsStrong.length > 0 && reasonsSupport.length === 0) {
+                strongPerformersList.push({ name, email, reasons: reasonsStrong });
+            }
+        });
+
+        return {
+            classInsight: classInsightText,
+            misconceptions: misconceptionsList,
+            recommendedAction: actionText,
+            needingSupport: needsSupportList.slice(0, 5),
+            strongPerformers: strongPerformersList.slice(0, 5)
+        };
+    }, [studentProgress, students, classSkillsData]);
 
     if (loading) {
         return (
@@ -1005,6 +1183,140 @@ export default function TeacherDashboard() {
                                         <p className="text-[var(--lx-text-muted)] text-xs mt-1">{card.label}</p>
                                     </div>
                                 ))}
+                            </div>
+
+                            {/* 💡 Teacher Learning Insights */}
+                            <div className="glass-card p-6 border-slate-200 bg-white shadow-sm space-y-6 rounded-2xl">
+                                <div className="border-b border-slate-100 pb-4">
+                                    <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                        💡 Teacher Learning Insights
+                                    </h3>
+                                    <p className="text-slate-505 text-xs mt-1">
+                                        Automatically calculated pedagogical insights based on student choice decisions and reasoning justifications.
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    {/* Class Insight Card */}
+                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                                        <div className="flex items-center gap-2 text-cyan-600 font-bold text-xs uppercase tracking-wider font-mono">
+                                            <Brain className="w-4.5 h-4.5" />
+                                            Class Progress
+                                        </div>
+                                        <p className="text-slate-800 text-sm leading-relaxed font-semibold">
+                                            {learningInsights.classInsight}
+                                        </p>
+                                    </div>
+
+                                    {/* Misconception Alert Card */}
+                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                                        <div className="flex items-center gap-2 text-amber-600 font-bold text-xs uppercase tracking-wider font-mono">
+                                            <AlertTriangle className="w-4.5 h-4.5" />
+                                            Misconception Alert
+                                        </div>
+                                        {learningInsights.misconceptions.length === 0 ? (
+                                            <p className="text-slate-600 text-xs italic">
+                                                No class-wide misconceptions detected so far.
+                                            </p>
+                                        ) : (
+                                            <div className="space-y-3">
+                                                {learningInsights.misconceptions.map((m, idx) => (
+                                                    <div key={idx} className="text-xs space-y-1">
+                                                        <div className="flex justify-between font-bold text-slate-850">
+                                                            <span className="truncate max-w-[80%] font-semibold">{m.scenarioTitle} ({m.optionLetter})</span>
+                                                            <span className="text-amber-600 shrink-0 font-mono font-bold">{m.count} student{m.count > 1 ? 's' : ''}</span>
+                                                        </div>
+                                                        <p className="text-slate-550 italic">"{m.thought}"</p>
+                                                        <p className="text-slate-700 font-bold">💡 {m.correction}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Recommended Action Card */}
+                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                                        <div className="flex items-center gap-2 text-purple-600 font-bold text-xs uppercase tracking-wider font-mono">
+                                            <Target className="w-4.5 h-4.5" />
+                                            Recommended Action
+                                        </div>
+                                        <p className="text-slate-800 text-sm leading-relaxed font-semibold">
+                                            {learningInsights.recommendedAction}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                                    {/* Students Needing Support */}
+                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-4">
+                                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                                            <span className="text-xs font-bold text-slate-850 flex items-center gap-1.5 uppercase font-mono tracking-wider">
+                                                ⚠️ Students Needing Support
+                                            </span>
+                                            <span className="text-[10px] font-mono font-bold bg-amber-100 border border-amber-200 text-amber-700 px-2 py-0.5 rounded">
+                                                {learningInsights.needingSupport.length} flagged
+                                            </span>
+                                        </div>
+                                        {learningInsights.needingSupport.length === 0 ? (
+                                            <p className="text-slate-500 text-xs italic">
+                                                All students are performing well above thresholds!
+                                            </p>
+                                        ) : (
+                                            <div className="space-y-3">
+                                                {learningInsights.needingSupport.map((student, sIdx) => (
+                                                    <div key={sIdx} className="flex justify-between items-center gap-4 text-xs">
+                                                        <div>
+                                                            <p className="font-bold text-slate-800">{student.name}</p>
+                                                            <p className="text-[10px] text-slate-500">{student.email}</p>
+                                                        </div>
+                                                        <div className="flex flex-wrap gap-1 justify-end max-w-[60%] font-semibold">
+                                                            {student.reasons.map((r, rIdx) => (
+                                                                <span key={rIdx} className="bg-amber-100 border border-amber-200 text-amber-700 px-1.5 py-0.5 rounded text-[9px] font-bold">
+                                                                    {r}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Strong Performers */}
+                                    <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-4">
+                                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                                            <span className="text-xs font-bold text-slate-850 flex items-center gap-1.5 uppercase font-mono tracking-wider">
+                                                ⭐ Strong Performers
+                                            </span>
+                                            <span className="text-[10px] font-mono font-bold bg-teal-100 border border-teal-200 text-teal-700 px-2 py-0.5 rounded">
+                                                {learningInsights.strongPerformers.length} student{learningInsights.strongPerformers.length !== 1 ? 's' : ''}
+                                            </span>
+                                        </div>
+                                        {learningInsights.strongPerformers.length === 0 ? (
+                                            <p className="text-slate-500 text-xs italic">
+                                                Complete scenarios to identify top class performers.
+                                            </p>
+                                        ) : (
+                                            <div className="space-y-3">
+                                                {learningInsights.strongPerformers.map((student, sIdx) => (
+                                                    <div key={sIdx} className="flex justify-between items-center gap-4 text-xs">
+                                                        <div>
+                                                            <p className="font-bold text-slate-800">{student.name}</p>
+                                                            <p className="text-[10px] text-slate-500">{student.email}</p>
+                                                        </div>
+                                                        <div className="flex flex-wrap gap-1 justify-end max-w-[60%] font-semibold">
+                                                            {student.reasons.map((r, rIdx) => (
+                                                                <span key={rIdx} className="bg-teal-100 border border-teal-200 text-teal-700 px-1.5 py-0.5 rounded text-[9px] font-bold">
+                                                                    {r}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Bar Chart — Completions per Scenario */}
