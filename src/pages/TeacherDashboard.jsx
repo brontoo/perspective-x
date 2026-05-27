@@ -4,7 +4,7 @@ import {
 } from 'recharts';
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import { SCENARIOS, SKILLS } from '@/components/scenarios/scenarioData';
@@ -18,6 +18,137 @@ import {
     UserCircle, Maximize2, Minimize2, Presentation,
     AlertTriangle
 } from 'lucide-react';
+
+const SCENARIO_METADATA = {
+    water_contamination: {
+        topic: 'Water Quality & Chemical Contamination',
+        learningObjective: 'Identify nitrate contamination risks and evaluate chemical filtration strategies to protect municipal drinking water.',
+        priorKnowledge: 'Understanding concentration units (ppm, ppb) and basic safety limits for drinking water.',
+        studentOutput: 'A choice and detailed evidence-based justification for drinking water filtration remediation.',
+        discussionQuestion: 'Which chemical filtration choice is most scientifically and ethically justified for long-term safety?',
+        skillsDeveloped: ['Data Interpretation', 'Scientific Reasoning', 'Risk Assessment', 'Ethical Reasoning']
+    },
+    reaction_gone_wrong: {
+        topic: 'Exothermic Reactions & Thermal Runaway',
+        learningObjective: 'Analyze reactor temperature and pressure data to choose correct cooling mitigations and prevent reactor explosion.',
+        priorKnowledge: 'Understanding exothermic reactions, thermal energy transfer, and safety valve operations.',
+        studentOutput: 'Reactor stabilization cooling selection and safety shutdown justification.',
+        discussionQuestion: 'How do engineers balance operational yield with human safety thresholds during chemical anomalies?',
+        skillsDeveloped: ['Data Interpretation', 'Scientific Reasoning', 'Risk Assessment', 'Decision Making']
+    },
+    acid_rain: {
+        topic: 'pH Scale & Acid Deposition Remediation',
+        learningObjective: 'Assess environmental pH levels and recommend neutralizing soil treatments to mitigate acid deposition.',
+        priorKnowledge: 'Familiarity with the pH scale, acid-base neutralization reactions, and ecosystem effects of SO2.',
+        studentOutput: 'Ecosystem limestone treatment selection and neutralization justification.',
+        discussionQuestion: 'What are the environmental and economic tradeoffs of direct chemical neutralizing agents in nature?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Risk Assessment', 'Ethical Reasoning']
+    },
+    mutation_dilemma: {
+        topic: 'Genetics & Autosomal Dominant/Recessive Inheritance',
+        learningObjective: 'Calculate genetic mutation probabilities using Punnett squares and provide empathetic patient counseling.',
+        priorKnowledge: 'Knowledge of genes, alleles, genotypes (heterozygous, homozygous), and basic probability.',
+        studentOutput: 'Punnett square probability calculation and genetic counseling script choice.',
+        discussionQuestion: 'How should a researcher counsel patients on genetic probabilities without causing unnecessary panic?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Ethical Reasoning', 'Communication']
+    },
+    reaction_time: {
+        topic: 'Neurophysiology & Stimulant Dosage Safety',
+        learningObjective: 'Analyze neural stimulant mechanisms and calculate correct dosing to optimize reaction time safely.',
+        priorKnowledge: 'Understanding synapse transmissions, nerve impulses, and stimulant effects on heart rate.',
+        studentOutput: 'Synapse dosing selection and neurophysiological safety justification.',
+        discussionQuestion: 'What ethical guidelines should govern the use of cognitive enhancers in high-stress work environments?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Risk Assessment']
+    },
+    unstable_slope: {
+        topic: 'Soil Mechanics & Geotechnical Slope Stability',
+        learningObjective: 'Evaluate landslide indicators and select structural stabilization solutions to protect nearby roads.',
+        priorKnowledge: 'Understanding shear stress, soil saturation, slope gradients, and landslide mechanics.',
+        studentOutput: 'Slope stabilization solution selection and geotechnical evidence justification.',
+        discussionQuestion: 'Which geotechnical factor (water content vs. slope angle) is most critical to prevent catastrophic failure?',
+        skillsDeveloped: ['Data Interpretation', 'Scientific Reasoning', 'Risk Assessment', 'Decision Making']
+    },
+    invasive_species: {
+        topic: 'Ecology & Biodiversity Mitigation',
+        learningObjective: 'Analyze food webs and select targeted eradication methods to control invasive species with minimal collateral damage.',
+        priorKnowledge: 'Understanding food chains, trophic cascades, ecological niches, and bio-control risks.',
+        studentOutput: 'Invasive eradication plan selection and ecological impact justification.',
+        discussionQuestion: 'How do conservationists determine whether biological or chemical eradication is safer for local biodiversity?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Risk Assessment', 'Decision Making']
+    },
+    power_grid: {
+        topic: 'Electrical Impedance & Grid Load Management',
+        learningObjective: 'Manage regional electricity supply and load shedding to prevent total blackout during peak demand.',
+        priorKnowledge: 'Understanding electricity concepts, load balancing (MW), and basic generator operations.',
+        studentOutput: 'Grid load allocation selection and infrastructure priority justification.',
+        discussionQuestion: 'How should grid operators ethically prioritize power distribution during critical energy deficits?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Decision Making']
+    },
+    heat_loss: {
+        topic: 'Thermodynamics & Thermal Insulation Design',
+        learningObjective: 'Evaluate conduction, convection, and radiation pathways to optimize home insulation and minimize energy bills.',
+        priorKnowledge: 'Understanding heat transfer mechanisms, R-value ratings, and thermal insulation materials.',
+        studentOutput: 'Insulation material configuration and thermodynamic efficiency justification.',
+        discussionQuestion: 'Which heat transfer mechanism contributes most to residential heat loss, and how do we prevent it?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Risk Assessment']
+    },
+    aspirin_production: {
+        topic: 'Stoichiometry & Limiting Reactant Calculations',
+        learningObjective: 'Determine the limiting reactant in acetylsalicylic acid synthesis to maximize product yield.',
+        priorKnowledge: 'Balancing chemical equations, calculating molar masses, and mass-to-mole conversions.',
+        studentOutput: 'Limiting reactant stoichiometric calculations and synthesis efficiency justification.',
+        discussionQuestion: 'Why is stoichiometric precision critical in pharmaceutical synthesis compared to general manufacturing?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Stoichiometric Calculations']
+    },
+    fuelproduction: {
+        topic: 'Biofuel Esterification & Catalyst Optimization',
+        learningObjective: 'Optimize esterification reaction parameters to maximize biofuel purity and synthesis yield.',
+        priorKnowledge: 'Familiarity with organic catalysts, molar ratios, and temperature influence on reaction rates.',
+        studentOutput: 'Catalyst formulation selection and chemical kinetics justification.',
+        discussionQuestion: 'How does catalyst selection influence both chemical production rate and final product purity?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Decision Making']
+    },
+    aspirin_percent_yield: {
+        topic: 'Chemical Synthesis Yield & Filtration Losses',
+        learningObjective: 'Calculate the theoretical and percent yield of aspirin synthesis and identify points of product loss.',
+        priorKnowledge: 'Understanding theoretical vs. actual yields and typical purification/filtration steps.',
+        studentOutput: 'Yield calculations and chemical purification loss justification.',
+        discussionQuestion: 'What chemical or physical processes during vacuum filtration contribute most to product loss?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Stoichiometric Calculations']
+    },
+    gas_boyle_adnoc: {
+        topic: "Boyle's Law & Gas Volume Compression",
+        learningObjective: 'Predict gas volume changes under extreme compression in industrial refining tanks to prevent rupture.',
+        priorKnowledge: "Knowledge of Boyle's Law (P1V1 = P2V2) and inverse volume-pressure relationship.",
+        studentOutput: 'Refining compressor calculations and gas storage pressure justification.',
+        discussionQuestion: 'How do changes in volume impact molecular collisions and pressure in a closed industrial vessel?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Risk Assessment']
+    },
+    gas_charles_aviation: {
+        topic: "Charles's Law & Thermal Volume Expansion",
+        learningObjective: 'Calculate volume changes of gas-filled aviation balloons under severe altitude temperature drops.',
+        priorKnowledge: "Knowledge of Charles's Law (V1/T1 = V2/T2) and absolute temperature in Kelvin.",
+        studentOutput: 'High-altitude thermal expansion calculations and flight safety justification.',
+        discussionQuestion: 'Why must flight safety calculations convert temperature to Kelvin to ensure balloon integrity?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Risk Assessment']
+    },
+    gas_gaylussac_cylinder: {
+        topic: "Gay-Lussac's Law & Pressure-Temperature Dynamics",
+        learningObjective: 'Calculate internal pressure changes of heated sealed tanks to determine fire explosion thresholds.',
+        priorKnowledge: "Knowledge of Gay-Lussac's Law (P1/T1 = P2/T2) and rigid volume boundaries.",
+        studentOutput: 'Gas cylinder heat calculations and safety zone storage justification.',
+        discussionQuestion: 'What are the main molecular differences between a rigid cylinder and an elastic balloon when heated?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Risk Assessment']
+    },
+    oxygen_failure: {
+        topic: 'Gas Chemistry & Life Support Stoichiometry',
+        learningObjective: 'Calculate molar ratios for chemical scrubbers to remove toxic carbon dioxide and restore spacecraft oxygen levels.',
+        priorKnowledge: 'Understanding of chemical equations, molar gas volumes, and carbon dioxide absorption mechanisms.',
+        studentOutput: 'Scrubber chemical replacement calculations and crew survival justification.',
+        discussionQuestion: 'How do mechanical weight and space limitations on space crafts affect chemical system selection?',
+        skillsDeveloped: ['Concept Application', 'Scientific Reasoning', 'Decision Making']
+    }
+};
 
 
 export default function TeacherDashboard() {
@@ -43,6 +174,7 @@ export default function TeacherDashboard() {
     const [selectedDebateScenario, setSelectedDebateScenario] = useState(Object.keys(SCENARIOS)[0] || '');
     const [selectedDebateScene, setSelectedDebateScene] = useState(1);
     const [isDebateFullscreen, setIsDebateFullscreen] = useState(false);
+    const [expandedPreviews, setExpandedPreviews] = useState({});
 
     useEffect(() => { loadData(); }, []);
 
@@ -645,6 +777,22 @@ export default function TeacherDashboard() {
                                 {Object.entries(SCENARIOS).map(([id, scenario]) => {
                                     const settings = scenarioSettings[id] || {};
                                     const difficulty = settings.difficulty_override || 'on-level';
+                                    const meta = SCENARIO_METADATA[id] || {};
+                                    const misconceptions = [];
+                                    (scenario.scenes || []).forEach(scene => {
+                                        (scene.options || []).forEach(opt => {
+                                            if (opt.misconception) {
+                                                misconceptions.push({
+                                                    sceneNum: scene.id,
+                                                    sceneTitle: scene.title,
+                                                    optionId: opt.id,
+                                                    thought: opt.misconception.thought,
+                                                    correction: opt.misconception.correction
+                                                });
+                                            }
+                                        });
+                                    });
+
                                     return (
                                         <motion.div key={id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                                             className="glass-card p-4">
@@ -665,9 +813,13 @@ export default function TeacherDashboard() {
                                                     </span>
                                                 </div>
                                                 <div className="flex flex-wrap items-center gap-4">
+                                                    <button onClick={() => setExpandedPreviews(prev => ({ ...prev, [id]: !prev[id] }))}
+                                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cyan-500/50 text-cyan-600 hover:bg-cyan-500/10 text-sm font-semibold transition">
+                                                        <Brain className="w-4 h-4 text-cyan-500" /> {expandedPreviews[id] ? 'Hide Preview' : 'Teacher Preview'}
+                                                    </button>
                                                     <button onClick={() => navigate(`/ScenarioPlayer?scenario=${id}`)}
-                                                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-purple-500/50 text-purple-400 hover:bg-purple-500/10 text-sm transition">
-                                                        <Eye className="w-4 h-4" /> Preview
+                                                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-purple-500/50 text-purple-600 hover:bg-purple-500/10 text-sm font-semibold transition">
+                                                        <Eye className="w-4 h-4 text-purple-500" /> Preview as Student
                                                     </button>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-[var(--lx-text-muted)] text-sm">Level:</span>
@@ -695,6 +847,93 @@ export default function TeacherDashboard() {
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {/* Collapsible pedagogical preview card */}
+                                            <AnimatePresence>
+                                                {expandedPreviews[id] && (
+                                                    <motion.div
+                                                        initial={{ height: 0, opacity: 0 }}
+                                                        animate={{ height: 'auto', opacity: 1 }}
+                                                        exit={{ height: 0, opacity: 0 }}
+                                                        transition={{ duration: 0.25 }}
+                                                        className="overflow-hidden"
+                                                    >
+                                                        <div className="mt-4 pt-4 border-t border-slate-200/60">
+                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-800 leading-relaxed">
+                                                                {/* Column 1: Mission Parameters */}
+                                                                <div className="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200/60">
+                                                                    <h4 className="font-bold text-xs uppercase tracking-wider text-cyan-600 font-mono flex items-center gap-1.5">
+                                                                        <Target className="w-4 h-4" /> Mission Objective
+                                                                    </h4>
+                                                                    <div>
+                                                                        <p className="font-semibold text-slate-900">Topic</p>
+                                                                        <p className="text-slate-700">{meta.topic || 'General Science'}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="font-semibold text-slate-900">Learning Objective</p>
+                                                                        <p className="text-slate-700">{meta.learningObjective || 'Analyze evidence-based scenarios.'}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="font-semibold text-slate-900">Estimated Time & Mode</p>
+                                                                        <p className="text-slate-700">{scenario.estimatedTime} minutes • Current active mode: <span className="font-bold uppercase text-purple-600">{difficulty === 'beginner' ? 'Guided' : difficulty === 'on-level' ? 'Standard' : 'Challenge'}</span></p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="font-semibold text-slate-900">Skills Developed</p>
+                                                                        <div className="flex flex-wrap gap-1 mt-1">
+                                                                            {(meta.skillsDeveloped || []).map((sk, idx) => (
+                                                                                <span key={idx} className="bg-cyan-50 border border-cyan-100 text-cyan-800 text-[10px] font-bold font-mono px-2 py-0.5 rounded">
+                                                                                    {sk}
+                                                                                </span>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Column 2: Prior Knowledge & Output */}
+                                                                <div className="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200/60">
+                                                                    <h4 className="font-bold text-xs uppercase tracking-wider text-purple-600 font-mono flex items-center gap-1.5">
+                                                                        <Brain className="w-4 h-4" /> Pedagogical Info
+                                                                    </h4>
+                                                                    <div>
+                                                                        <p className="font-semibold text-slate-900">Required Prior Knowledge</p>
+                                                                        <p className="text-slate-700">{meta.priorKnowledge || 'General high school science principles.'}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="font-semibold text-slate-900">Student Deliverable / Output</p>
+                                                                        <p className="text-slate-700">{meta.studentOutput || 'Completed decision-making matrix and justification.'}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="font-semibold text-slate-900">Suggested Debate Question</p>
+                                                                        <p className="text-slate-700 font-medium italic">"{meta.discussionQuestion || 'Which choice is most scientifically justified?'}"</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Column 3: Common Misconceptions */}
+                                                                <div className="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200/60">
+                                                                    <h4 className="font-bold text-xs uppercase tracking-wider text-amber-600 font-mono flex items-center gap-1.5">
+                                                                        <AlertTriangle className="w-4 h-4" /> Misconceptions to Address
+                                                                    </h4>
+                                                                    {misconceptions.length === 0 ? (
+                                                                        <p className="text-slate-500 italic text-xs">No specific misconceptions pre-mapped for this mission.</p>
+                                                                    ) : (
+                                                                        <div className="space-y-3 overflow-y-auto max-h-[220px] pr-1">
+                                                                            {misconceptions.map((mis, idx) => (
+                                                                                <div key={idx} className="text-xs border-b border-slate-100 pb-2 last:border-0 last:pb-0">
+                                                                                    <div className="flex items-center gap-1 text-[10px] font-mono font-bold text-slate-400">
+                                                                                        Scene {mis.sceneNum} • Option {mis.optionId}
+                                                                                    </div>
+                                                                                    <p className="text-slate-800 font-semibold italic mt-0.5">"{mis.thought}"</p>
+                                                                                    <p className="text-amber-700 font-bold mt-1">💡 Correction: <span className="font-medium text-slate-700">{mis.correction}</span></p>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
                                         </motion.div>
                                     );
                                 })}
