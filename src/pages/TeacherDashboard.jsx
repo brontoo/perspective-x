@@ -14,7 +14,7 @@ import {
     Loader2, LogOut, GraduationCap, CheckCircle2,
     Target, Home, Eye, MessageSquare, Send, Trash2,
     Trophy, Brain, BarChart3, ChevronDown, ChevronUp,
-    UserCircle
+    UserCircle, Maximize2, Minimize2, Presentation
 } from 'lucide-react';
 
 
@@ -38,6 +38,9 @@ export default function TeacherDashboard() {
         student_email: '', message: '', type: 'general', scenario_id: ''
     });
     const [sendingFeedback, setSendingFeedback] = useState(false);
+    const [selectedDebateScenario, setSelectedDebateScenario] = useState(Object.keys(SCENARIOS)[0] || '');
+    const [selectedDebateScene, setSelectedDebateScene] = useState(1);
+    const [isDebateFullscreen, setIsDebateFullscreen] = useState(false);
 
     useEffect(() => { loadData(); }, []);
 
@@ -328,7 +331,8 @@ export default function TeacherDashboard() {
         { key: 'scenarios', label: 'Manage Scenarios', Icon: Settings },
         { key: 'students', label: 'Student Progress', Icon: Users },
         { key: 'feedback', label: 'Feedback', Icon: MessageSquare },
-        { key: 'analytics', label: 'Analytics', Icon: BarChart3 },  // ← New
+        { key: 'debate', label: 'Class Debate', Icon: Presentation },
+        { key: 'analytics', label: 'Analytics', Icon: BarChart3 },
     ];
     // ── Analytics Data ──
     const scenarioCompletionData = Object.entries(SCENARIOS).map(([id, scenario]) => {
@@ -914,6 +918,57 @@ export default function TeacherDashboard() {
                         </div>
                     )}
 
+                    {/* ── Class Debate Tab ── */}
+                    {activeTab === 'debate' && (
+                        <div className="glass-card p-6 space-y-6">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[var(--lx-glass-border-sub)] pb-6">
+                                <div>
+                                    <h2 className="text-xl font-bold text-[var(--lx-text)] flex items-center gap-2">
+                                        <Presentation className="w-5 h-5 text-purple-400" /> Class Debate Mode
+                                    </h2>
+                                    <p className="text-[var(--lx-text-muted)] text-sm mt-1">
+                                        Facilitate scientific debates by displaying anonymous choice distributions and key reasoning themes.
+                                    </p>
+                                </div>
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[var(--lx-text-muted)] text-sm">Scenario:</span>
+                                        <select
+                                            value={selectedDebateScenario}
+                                            onChange={e => {
+                                                setSelectedDebateScenario(e.target.value);
+                                                setSelectedDebateScene(1);
+                                            }}
+                                            className="glass-input text-sm px-3 py-1.5 min-w-[200px]"
+                                        >
+                                            {Object.entries(SCENARIOS).map(([id, s]) => (
+                                                <option key={id} value={id}>{s.title}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[var(--lx-text-muted)] text-sm">Scene:</span>
+                                        <select
+                                            value={selectedDebateScene}
+                                            onChange={e => setSelectedDebateScene(Number(e.target.value))}
+                                            className="glass-input text-sm px-3 py-1.5"
+                                        >
+                                            <option value={1}>Scene 1 (Identification)</option>
+                                            <option value={2}>Scene 2 (Decision)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <DebateView
+                                scenarioId={selectedDebateScenario}
+                                sceneId={selectedDebateScene}
+                                studentProgress={studentProgress}
+                                onStartFullscreen={() => setIsDebateFullscreen(true)}
+                            />
+                        </div>
+                    )}
+
                     {/* ── Analytics Tab ── */}
                     {activeTab === 'analytics' && (
                         <div className="space-y-6">
@@ -1063,6 +1118,400 @@ export default function TeacherDashboard() {
                 attempts={selectedStudentForAnswers?.attempts || []}
                 studentName={selectedStudentForAnswers?.name}
             />
+
+            {/* Class Debate Presentation overlay */}
+            <DebatePresentationOverlay
+                isOpen={isDebateFullscreen}
+                onClose={() => setIsDebateFullscreen(false)}
+                scenarioId={selectedDebateScenario}
+                sceneId={selectedDebateScene}
+                studentProgress={studentProgress}
+            />
+        </div>
+    );
+}
+
+// ── Debate Helper Functions & Subcomponents ──
+
+const getThemesForScene = (scenarioId, justifications) => {
+    const themes = [
+        {
+            name: 'Data & Evidence Analysis',
+            icon: '📊',
+            keywords: ['ppm', 'data', 'table', 'measured', 'limit', 'value', 'graph', 'concentration', 'level', 'chloride', 'nitrate', 'scale', 'mg/l'],
+            count: 0,
+            matches: []
+        },
+        {
+            name: 'Scientific & Concept Application',
+            icon: '🧠',
+            keywords: ['law', 'ratio', 'chemical', 'reaction', 'equation', 'mole', 'mass', 'solubility', 'principle', 'boyle', 'charles', 'temperature', 'pressure'],
+            count: 0,
+            matches: []
+        },
+        {
+            name: 'Risk Assessment & Safety',
+            icon: '⚠️',
+            keywords: ['risk', 'safe', 'hazard', 'health', 'danger', 'harm', 'limit', 'exceed', 'infant', 'consequence', 'safety', 'warning'],
+            count: 0,
+            matches: []
+        },
+        {
+            name: 'Social, Ethical & Economic Impact',
+            icon: '💼',
+            keywords: ['cost', 'treatment', 'shut', 'factory', 'economic', 'recommend', 'action', 'plant', 'job', 'loss', 'balance', 'ethics'],
+            count: 0,
+            matches: []
+        }
+    ];
+
+    justifications.forEach(text => {
+        if (!text || text.toLowerCase().includes('skipped') || text.toLowerCase().includes('skip')) return;
+        const lower = text.toLowerCase();
+        themes.forEach(t => {
+            if (t.keywords.some(kw => lower.includes(kw))) {
+                t.count++;
+                if (t.matches.length < 3) {
+                    t.matches.push(text);
+                }
+            }
+        });
+    });
+
+    return themes.filter(t => t.count > 0);
+};
+
+function DebateView({ scenarioId, sceneId, studentProgress, onStartFullscreen }) {
+    const selectedScenario = SCENARIOS[scenarioId];
+    const scene = selectedScenario?.scenes?.[sceneId - 1];
+
+    if (!scene) {
+        return (
+            <div className="text-center py-12 text-[var(--lx-text-muted)] bg-slate-900/30 border border-slate-800 rounded-xl">
+                <p>No decision scene configuration found for Scene {sceneId}.</p>
+            </div>
+        );
+    }
+
+    const options = scene.options || [];
+    const attempts = studentProgress.filter(p => p.scenario_id === scenarioId && p.answers);
+    const totalAttempts = attempts.length;
+
+    // Count choices
+    const counts = {};
+    options.forEach(o => { counts[o.id] = 0; });
+
+    const justificationList = [];
+
+    attempts.forEach(attempt => {
+        const sceneAns = attempt.answers[`scene${sceneId}`];
+        if (sceneAns) {
+            const choice = sceneAns.selectedOption || sceneAns.decision_id;
+            if (choice) {
+                const matchedOption = options.find(o => 
+                    o.id.toUpperCase() === choice.toUpperCase() || 
+                    o.text.toLowerCase() === choice.toLowerCase()
+                );
+                if (matchedOption) {
+                    counts[matchedOption.id]++;
+                } else {
+                    const cleanChoice = choice.trim();
+                    if (cleanChoice.length > 0) {
+                        const firstChar = cleanChoice[0].toUpperCase();
+                        if (counts[firstChar] !== undefined) {
+                            counts[firstChar]++;
+                        }
+                    }
+                }
+            }
+
+            const reason = sceneAns.justification || sceneAns.reasoning;
+            if (reason && reason.trim()) {
+                justificationList.push(reason.trim());
+            }
+        }
+    });
+
+    const themes = getThemesForScene(scenarioId, justificationList);
+
+    return (
+        <div className="space-y-6 text-[var(--lx-text)]">
+            {/* Header controls & stats */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/50 p-4 border border-slate-800/80 rounded-xl">
+                <div>
+                    <span className="text-[10px] font-mono text-[var(--lx-text-muted)] uppercase tracking-widest block">Active Debate Scene</span>
+                    <span className="text-white font-bold text-base">{scene.title}</span>
+                </div>
+                <div className="flex items-center gap-4">
+                    <div className="text-right">
+                        <span className="text-[10px] font-mono text-[var(--lx-text-muted)] uppercase tracking-widest block">Total Submissions</span>
+                        <span className="text-teal-400 font-bold text-lg">{totalAttempts} students</span>
+                    </div>
+                    <button
+                        onClick={onStartFullscreen}
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 hover:from-purple-500/30 hover:to-indigo-500/30 border border-purple-500/40 text-purple-300 font-medium text-xs rounded-lg transition cursor-pointer font-semibold"
+                    >
+                        <Maximize2 className="w-3.5 h-3.5" />
+                        Present Mode
+                    </button>
+                </div>
+            </div>
+
+            {/* Question Summary */}
+            <div className="bg-slate-900/30 border border-slate-800/60 p-5 rounded-xl">
+                <span className="text-[10px] font-mono text-purple-400 uppercase tracking-widest font-bold block mb-1">Debate Prompt Question</span>
+                <p className="text-[var(--lx-text)] font-semibold text-lg leading-snug">{scene.question}</p>
+            </div>
+
+            {/* Prompt Alert */}
+            <div className="border border-purple-500/30 bg-purple-500/5 p-4 rounded-xl flex items-center gap-3">
+                <span className="text-2xl shrink-0">💬</span>
+                <div>
+                    <span className="text-[10px] font-mono text-purple-400 uppercase tracking-widest font-bold block">Suggested Discussion Prompt</span>
+                    <p className="text-slate-200 text-sm font-medium">“Which choice is most scientifically justified?”</p>
+                </div>
+            </div>
+
+            {/* Option distribution list */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="glass-card p-5 border-slate-800 space-y-4">
+                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                        📊 Class Choice Distribution
+                    </h3>
+                    <div className="space-y-4">
+                        {options.map((opt) => {
+                            const count = counts[opt.id] || 0;
+                            const pct = totalAttempts > 0 ? Math.round((count / totalAttempts) * 100) : 0;
+                            return (
+                                <div key={opt.id} className="space-y-1">
+                                    <div className="flex justify-between text-xs font-semibold">
+                                        <span className="text-slate-300 truncate max-w-[80%]">
+                                            Option {opt.id}: {opt.text}
+                                        </span>
+                                        <span className="text-teal-400 font-mono">{pct}% ({count})</span>
+                                    </div>
+                                    <div className="h-2 bg-slate-950/60 rounded-full overflow-hidden border border-slate-900">
+                                        <div
+                                            className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-500"
+                                            style={{ width: `${pct}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Themes and Reasoning Summary */}
+                <div className="glass-card p-5 border-slate-800 space-y-4">
+                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                        🧠 Key Reasoning Themes
+                    </h3>
+                    {themes.length === 0 ? (
+                        <div className="text-center py-8 text-slate-500 text-xs">
+                            No student justifications analyzed yet, or justifications are too short.
+                        </div>
+                    ) : (
+                        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                            {themes.map((theme, i) => (
+                                <div key={i} className="bg-slate-900/40 border border-slate-800 p-3 rounded-lg space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                                            <span>{theme.icon}</span> {theme.name}
+                                        </span>
+                                        <span className="text-[10px] font-mono bg-purple-500/10 border border-purple-500/20 text-purple-400 px-2 py-0.5 rounded">
+                                            {theme.count} mention{theme.count > 1 ? 's' : ''}
+                                        </span>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        {theme.matches.map((quote, qIdx) => (
+                                            <p key={qIdx} className="text-[11px] text-slate-400 italic pl-2 border-l border-purple-500/30">
+                                                "{quote.length > 100 ? quote.slice(0, 100) + '...' : quote}"
+                                            </p>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* General Justifications List */}
+            <div className="glass-card p-5 border-slate-800 space-y-4">
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    📋 All Student Reasoning (Anonymous)
+                </h3>
+                {justificationList.length === 0 ? (
+                    <div className="text-center py-6 text-slate-500 text-xs">
+                        No submissions recorded for this scenario yet.
+                    </div>
+                ) : (
+                    <div className="space-y-2.5 max-h-[250px] overflow-y-auto pr-1">
+                        {justificationList
+                            .filter(j => !j.toLowerCase().includes('skipped') && !j.toLowerCase().includes('skip'))
+                            .map((reason, idx) => (
+                                <div key={idx} className="bg-slate-950/40 border border-slate-900 p-3.5 rounded-lg text-xs leading-relaxed text-slate-300">
+                                    {reason}
+                                </div>
+                            ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function DebatePresentationOverlay({ isOpen, onClose, scenarioId, sceneId, studentProgress }) {
+    if (!isOpen) return null;
+
+    const selectedScenario = SCENARIOS[scenarioId];
+    const scene = selectedScenario?.scenes?.[sceneId - 1];
+
+    if (!scene) return null;
+
+    const options = scene.options || [];
+    const attempts = studentProgress.filter(p => p.scenario_id === scenarioId && p.answers);
+    const totalAttempts = attempts.length;
+
+    // Count choices
+    const counts = {};
+    options.forEach(o => { counts[o.id] = 0; });
+
+    const justificationList = [];
+
+    attempts.forEach(attempt => {
+        const sceneAns = attempt.answers[`scene${sceneId}`];
+        if (sceneAns) {
+            const choice = sceneAns.selectedOption || sceneAns.decision_id;
+            if (choice) {
+                const matchedOption = options.find(o => 
+                    o.id.toUpperCase() === choice.toUpperCase() || 
+                    o.text.toLowerCase() === choice.toLowerCase()
+                );
+                if (matchedOption) {
+                    counts[matchedOption.id]++;
+                } else {
+                    const cleanChoice = choice.trim();
+                    if (cleanChoice.length > 0) {
+                        const firstChar = cleanChoice[0].toUpperCase();
+                        if (counts[firstChar] !== undefined) {
+                            counts[firstChar]++;
+                        }
+                    }
+                }
+            }
+
+            const reason = sceneAns.justification || sceneAns.reasoning;
+            if (reason && reason.trim()) {
+                justificationList.push(reason.trim());
+            }
+        }
+    });
+
+    const themes = getThemesForScene(scenarioId, justificationList);
+
+    return (
+        <div className="fixed inset-0 z-50 bg-[#070a13] text-white flex flex-col overflow-y-auto font-sans p-6 md:p-10 select-none">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+            {/* Header */}
+            <div className="relative z-10 flex items-center justify-between border-b border-slate-800 pb-5 mb-8">
+                <div className="flex items-center gap-3">
+                    <span className="text-3xl">📢</span>
+                    <div>
+                        <span className="text-xs font-mono text-purple-400 uppercase tracking-widest block font-bold">Class Debate Hub</span>
+                        <h1 className="text-2xl font-black text-white">{selectedScenario.title}</h1>
+                    </div>
+                </div>
+                <button
+                    onClick={onClose}
+                    className="flex items-center gap-2 px-4 py-2 border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition text-sm font-semibold cursor-pointer"
+                >
+                    <Minimize2 className="w-4 h-4" />
+                    Exit Presentation
+                </button>
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1">
+                {/* Left Panel: Question and Prompt (5 cols) */}
+                <div className="lg:col-span-5 space-y-6 flex flex-col justify-center">
+                    <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl space-y-3">
+                        <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest font-bold block">Scenario Challenge</span>
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-100 leading-snug">{scene.question}</h2>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-purple-950/40 to-indigo-950/40 border border-purple-500/40 p-6 rounded-2xl space-y-3 shadow-lg shadow-purple-500/5">
+                        <span className="text-xs font-mono text-purple-400 uppercase tracking-widest font-bold block">Suggested Debate Question</span>
+                        <p className="text-xl font-bold text-white">“Which choice is most scientifically justified?”</p>
+                    </div>
+
+                    <div className="text-center md:text-left text-slate-400 font-mono text-xs">
+                        📊 Current Submissions: <span className="text-teal-400 font-bold">{totalAttempts} students</span> (Anonymous Results)
+                    </div>
+                </div>
+
+                {/* Right Panel: Data Presentation (7 cols) */}
+                <div className="lg:col-span-7 flex flex-col justify-center gap-6">
+                    {/* Class Choices */}
+                    <div className="bg-slate-900/60 border border-slate-800/80 p-8 rounded-2xl space-y-6 shadow-xl">
+                        <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-3">
+                            📊 Choice Distribution
+                        </h3>
+                        <div className="space-y-6">
+                            {options.map((opt) => {
+                                const count = counts[opt.id] || 0;
+                                const pct = totalAttempts > 0 ? Math.round((count / totalAttempts) * 100) : 0;
+                                return (
+                                    <div key={opt.id} className="space-y-2">
+                                        <div className="flex justify-between items-start text-sm font-semibold">
+                                            <span className="text-slate-200 pr-4 leading-snug max-w-[85%]">
+                                                Option {opt.id}: {opt.text}
+                                            </span>
+                                            <span className="text-teal-400 font-mono text-base">{pct}%</span>
+                                        </div>
+                                        <div className="h-3.5 bg-slate-950/80 rounded-full overflow-hidden border border-slate-900 shadow-inner">
+                                            <div
+                                                className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(20,184,166,0.5)]"
+                                                style={{ width: `${pct}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Reasoning Snippets */}
+                    {themes.length > 0 && (
+                        <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl space-y-4">
+                            <h3 className="text-md font-bold text-white">
+                                🧠 Key Scientific Reasoning Themes
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {themes.slice(0, 2).map((t, idx) => (
+                                    <div key={idx} className="bg-slate-950/40 border border-slate-900 p-4 rounded-xl space-y-2">
+                                        <div className="flex items-center justify-between border-b border-slate-900 pb-1.5">
+                                            <span className="text-xs font-bold text-slate-200 flex items-center gap-1">
+                                                {t.icon} {t.name}
+                                            </span>
+                                            <span className="text-[9px] font-mono text-purple-400 font-bold">{t.count} mentions</span>
+                                        </div>
+                                        {t.matches.slice(0, 1).map((quote, qIdx) => (
+                                            <p key={qIdx} className="text-[11px] text-slate-400 italic leading-relaxed">
+                                                "{quote.length > 120 ? quote.slice(0, 120) + '...' : quote}"
+                                            </p>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
