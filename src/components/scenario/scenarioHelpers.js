@@ -66,11 +66,11 @@ export function normalizeExitTicketQuestions(exitTicket, scenarioId) {
     return baseQuestions;
 }
 
-export function getBadgeLevel(score, consequence, justification, scenarioId) {
+export function getBadgeLevel(score, consequence, justification, scenarioId, difficultyMode) {
     const numericScore = Number(score) || 0;
 
-    // Platinum: Excellent performance (score = 100)
-    if (numericScore === 100) {
+    // Platinum: Excellent performance (score = 100) or completed in Challenge Mode (score >= 80)
+    if (numericScore === 100 || (difficultyMode === 'high-achievers' && numericScore >= 80)) {
         return 'Platinum';
     }
 
@@ -99,6 +99,33 @@ export function getBadgeLevel(score, consequence, justification, scenarioId) {
 
     // Bronze: Completed mission
     return 'Bronze';
+}
+
+export function getAdaptedScene(scene, difficultyMode) {
+    if (!scene) return null;
+    
+    // Maps difficultyMode value to scene override key
+    const modeKey = difficultyMode === 'beginner' ? 'guided' :
+                    difficultyMode === 'high-achievers' ? 'challenge' :
+                    'standard';
+                    
+    if (modeKey === 'standard') {
+        return scene;
+    }
+    
+    // Check if overrides exist
+    const overrides = scene[modeKey];
+    if (!overrides) {
+        return scene;
+    }
+    
+    // Merge overrides with the original scene
+    return {
+        ...scene,
+        ...overrides,
+        data: overrides.data ? { ...scene.data, ...overrides.data } : scene.data,
+        options: overrides.options ? overrides.options : scene.options,
+    };
 }
 
 export const BADGE_LEVELS = {

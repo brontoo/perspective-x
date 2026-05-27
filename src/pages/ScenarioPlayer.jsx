@@ -18,7 +18,7 @@ import ReflectionPrompt from '@/components/scenario/ReflectionPrompt';
 import ExitTicket from '@/components/scenario/ExitTicket';
 import ScenarioComplete from '@/components/scenario/ScenarioComplete';
 import CompletionCertificate from '@/components/scenario/CompletionCertificate';
-import { normalizeRoleThemeKey, getBadgeLevel } from '@/components/scenario/scenarioHelpers';
+import { normalizeRoleThemeKey, getBadgeLevel, getAdaptedScene } from '@/components/scenario/scenarioHelpers';
 import { evaluateScenarioOutcome } from '@/components/scenario/scenarioAnswerKey';
 import { ROLE_THEMES, DEFAULT_THEME } from '@/lib/roleThemes';
 import { useScenarioAudio } from '@/hooks/useScenarioAudio';
@@ -128,6 +128,7 @@ export default function ScenarioPlayer() {
     const [user, setUser] = useState(null);
     const [isTeacher, setIsTeacher] = useState(false);
     const [profileName, setProfileName] = useState(null);
+    const [difficultyMode, setDifficultyMode] = useState('on-level');
 
     // ── UI state ───────────────────────────────────────────────
     const [showCertificate, setShowCertificate] = useState(false);
@@ -210,6 +211,28 @@ export default function ScenarioPlayer() {
 
                 if (cancelled) return;
 
+                setProfileName(profile?.full_name || profile?.name || null);
+
+                // Fetch scenario settings
+                const { data: setting } = await supabase
+                    .from('scenario_settings')
+                    .eq('scenario_id', scenarioId)
+                    .maybeSingle();
+
+                // Fetch student difficulty overrides
+                const { data: feedbackOverrides } = await supabase
+                    .from('teacher_feedback')
+                    .select('*')
+                    .eq('student_email', currentUser.email)
+                    .eq('type', 'difficulty_override')
+                    .order('created_at', { ascending: false });
+
+                const studentOverride = feedbackOverrides?.find(f => f.scenario_id === scenarioId)
+                    || feedbackOverrides?.find(f => f.scenario_id === 'all');
+
+                const activeDifficulty = studentOverride?.message || setting?.difficulty_override || 'on-level';
+                setDifficultyMode(activeDifficulty);
+
                 const urlParams = new URLSearchParams(window.location.search);
                 const isPreview = urlParams.get('preview') === 'true';
                 setIsTeacher((profile?.role === 'teacher') || isPreview);
@@ -220,8 +243,6 @@ export default function ScenarioPlayer() {
                     setVideoState('idle');
                     setPhase('title');
                 }
-
-                setProfileName(profile?.full_name || profile?.name || null);
             } catch (e) {
                 console.error('Error loading scenario data:', e);
             } finally {
@@ -496,7 +517,18 @@ export default function ScenarioPlayer() {
                                         </div>
                                     </div>
                                     <div>
-                                        <h1 className="text-xl font-bold text-slate-800">{scenario.title}</h1>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <h1 className="text-xl font-bold text-slate-800">{scenario.title}</h1>
+                                            <span className={`text-[10px] px-2 py-0.5 rounded border font-mono font-bold uppercase tracking-wider ${
+                                                difficultyMode === 'beginner' ? 'text-emerald-600 bg-emerald-50 border-emerald-200' :
+                                                difficultyMode === 'high-achievers' ? 'text-rose-600 bg-rose-50 border-rose-200 animate-pulse' :
+                                                'text-amber-600 bg-amber-50 border-amber-200'
+                                            }`}>
+                                                {difficultyMode === 'beginner' ? 'Guided Mode' :
+                                                 difficultyMode === 'high-achievers' ? 'Challenge Mode' :
+                                                 'Standard Mode'}
+                                            </span>
+                                        </div>
                                         <p className={`text-sm font-semibold ${theme.text}`}>
                                             {scenario.character?.name || scenario.role}
                                         </p>
@@ -656,12 +688,13 @@ export default function ScenarioPlayer() {
 
                                 {phase === 'scene1' && (
                                     <SceneOne
-                                        scene={scenario.scenes[0]}
+                                        scene={getAdaptedScene(scenario.scenes[0], difficultyMode)}
                                         scenarioId={scenarioId}
                                         scenarioTitle={scenario.title}
                                         onComplete={handleScene1Complete}
                                         isTeacher={isTeacher}
                                         theme={theme}
+                                        difficultyMode={difficultyMode}
                                     />
                                 )}
 
@@ -735,7 +768,8 @@ export default function ScenarioPlayer() {
                     percentage,
                     activeResponses.scene2?.consequence,
                     activeResponses.scene2?.justification,
-                    scenario.id
+                    scenario.id,
+                    difficultyMode
                 );
                 return (
                     <CompletionCertificate

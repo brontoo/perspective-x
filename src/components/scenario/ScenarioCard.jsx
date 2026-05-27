@@ -14,15 +14,15 @@ const strandIcons = {
 };
 
 const difficultyLabel = {
-    'beginner': 'Beginner',
-    'on-level': 'On-Level',
-    'high-achievers': 'Advanced',
+    'beginner': 'Guided Mode',
+    'on-level': 'Standard Mode',
+    'high-achievers': 'Challenge Mode',
 };
 
 const difficultyColors = {
-    'beginner':       'text-emerald-600 bg-emerald-50 border-emerald-200',
-    'on-level':       'text-amber-600   bg-amber-50   border-amber-200',
-    'high-achievers': 'text-red-600     bg-red-50     border-red-200',
+    'beginner':       'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+    'on-level':       'text-amber-400   bg-amber-500/10 border-amber-500/20',
+    'high-achievers': 'text-rose-400    bg-rose-500/10   border-rose-500/20',
 };
 
 export default function ScenarioCard({ scenario, status, index, onClick, settings, roleTitle }) {

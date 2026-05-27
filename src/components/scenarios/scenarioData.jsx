@@ -128,7 +128,36 @@ export const SCENARIOS = {
                     { id: 'C', text: 'Nitrate concentration above safe limit', correct: true, feedback: 'Correct. Elevated nitrate levels can affect human health, especially infants.' },
                     { id: 'D', text: 'Distance of factory from the town', correct: false, feedback: 'Distance alone is not the scientific concern—contamination level is.' }
                 ],
-                learningObjective: 'Identifying environmental risks using data'
+                learningObjective: 'Identifying environmental risks using data',
+                guided: {
+                    question: 'What is the most serious chemical concern in this water report? (Hint: check Nitrates)',
+                    data: {
+                        table: {
+                            headers: ['Substance', 'Measured (ppm)', 'Safe Limit (ppm)', 'Exceeds Limit?'],
+                            rows: [
+                                ['Nitrates', '55', '50', '🔴 YES'],
+                                ['Chlorides', '210', '250', '🟢 NO'],
+                                ['Heavy Metals', 'Trace', '0', '🟢 NO']
+                            ]
+                        }
+                    },
+                    narrative: "You receive a report from the local municipality. Residents are complaining about strange taste in their drinking water. A nearby factory has recently expanded its operations. Let's compare each measurement to the safe limits."
+                },
+                challenge: {
+                    question: 'Analyze the chemical concentrations and determine the primary chemical risk violating municipal safety standards.',
+                    data: {
+                        table: {
+                            headers: ['Substance Analyzed', 'Measured Concentration', 'MCL (Safety Limit)'],
+                            rows: [
+                                ['Nitrates (as N-NO3)', '55 mg/L', '50 mg/L'],
+                                ['Chlorides (as Cl-)', '210 mg/L', '250 mg/L'],
+                                ['Sulfate (as SO4)', '180 mg/L', '250 mg/L'],
+                                ['Heavy Metals (as Pb)', 'Trace', '0 mg/L']
+                            ]
+                        }
+                    },
+                    narrative: 'You receive a water chemistry report from the local municipality. Chemical trace levels are rising, possibly correlated with a nearby industrial facility upstream. Perform regulatory assessment to identify the primary concern.'
+                }
             },
             {
                 id: 2,
@@ -182,7 +211,13 @@ export const SCENARIOS = {
                     }
                 ],
                 justificationStarter: 'I chose this option because scientifically...',
-                learningObjective: 'Applying scientific concepts and ethical reasoning'
+                learningObjective: 'Applying scientific concepts and ethical reasoning',
+                guided: {
+                    justificationStarter: 'I chose this option because the data shows nitrates are above 50 ppm, and this option...'
+                },
+                challenge: {
+                    justificationStarter: 'Based on our analysis of nitrate levels exceeding the 50 mg/L safe threshold by 10% and the upstream flow patterns, the optimal scientific response is...'
+                }
             },
             {
                 id: 3,

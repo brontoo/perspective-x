@@ -191,12 +191,27 @@ const SCENE_TWO_HINTS = {
   ]
 };
 
-function HintSystem({ scenarioId, scene, hintCount, setHintCount }) {
-    const customHints = SCENE_TWO_HINTS[scenarioId] || [
+function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode = 'on-level' }) {
+    let customHints = SCENE_TWO_HINTS[scenarioId] || [
         "Read the choice options and tags carefully.",
         "Check how each choice interacts with the scientific principles identified in the evidence stage.",
         "Consider which choice offers the most balanced and direct scientific solution to the core problem."
     ];
+
+    if (difficultyMode === 'beginner') {
+        customHints = [
+            ...customHints,
+            "Guided Support: One option addresses the root contamination directly, while others only delay action or offer incomplete coverage."
+        ];
+    } else if (difficultyMode === 'high-achievers') {
+        customHints = [
+            "Challenge Mode Hint: Weigh immediate safety priority vs long-term structural changes. Focus on direct efficacy."
+        ];
+    }
+
+    const maxHints = difficultyMode === 'beginner' ? 4 :
+                     difficultyMode === 'high-achievers' ? 1 :
+                     3;
 
     return (
         <div className="border border-slate-200 bg-slate-50/50 p-4 rounded-lg space-y-3">
@@ -204,16 +219,16 @@ function HintSystem({ scenarioId, scene, hintCount, setHintCount }) {
                 <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase font-bold">
                     Need Help?
                 </span>
-                {hintCount < 3 && (
+                {hintCount < maxHints && (
                     <button
                         onClick={() => setHintCount(prev => prev + 1)}
                         className="text-xs font-mono text-cyan-600 hover:text-cyan-700 font-bold flex items-center gap-1 cursor-pointer bg-white px-2 py-1 border border-slate-200 rounded"
                     >
                         <HelpCircle className="w-3.5 h-3.5 animate-pulse" />
-                        Need a Hint? ({hintCount}/3)
+                        Need a Hint? ({hintCount}/{maxHints})
                     </button>
                 )}
-                {hintCount >= 3 && (
+                {hintCount >= maxHints && (
                     <span className="text-[10px] font-mono text-slate-400 font-semibold">
                         All hints revealed
                     </span>
@@ -370,7 +385,7 @@ export function generateFormativeFeedback(scenarioId, evidenceText = '', meansTe
     }
 }
 
-export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTitle, onComplete, isTeacher = false, theme = {} }) {
+export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTitle, onComplete, isTeacher = false, theme = {}, difficultyMode = 'on-level' }) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [hintCount, setHintCount] = useState(0);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -439,7 +454,9 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
     const letters = ['A', 'B', 'C', 'D'];
 
     // Validation rule: basic response (at least 3 characters) in both "My evidence is" and "My choice is"
-    const isReasoningValid = evidenceText.trim().length >= 3 && choiceText.trim().length >= 3;
+    const minEvidenceLen = difficultyMode === 'high-achievers' ? 20 : 3;
+    const minChoiceLen = difficultyMode === 'high-achievers' ? 20 : 3;
+    const isReasoningValid = evidenceText.trim().length >= minEvidenceLen && choiceText.trim().length >= minChoiceLen;
     const canSubmit = selectedOption && (isReasoningValid || isTeacher);
 
     // Fetch key evidence points with fallback
@@ -565,7 +582,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                     </div>
 
                     {/* Progressive Hint System */}
-                    <HintSystem scenarioId={scenarioId} scene={scene} hintCount={hintCount} setHintCount={setHintCount} />
+                    <HintSystem scenarioId={scenarioId} scene={scene} hintCount={hintCount} setHintCount={setHintCount} difficultyMode={difficultyMode} />
 
                     {/* 4. Reason Box (Structured Reasoning Scaffold) */}
                     <AnimatePresence>
@@ -672,7 +689,9 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                         <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
                             <HelpCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                             <p className="text-xs text-amber-700 leading-relaxed font-semibold">
-                                Please type a basic response in both <strong className="font-bold">"My evidence is"</strong> and <strong className="font-bold">"My choice is"</strong> to enable the submit button.
+                                {difficultyMode === 'high-achievers' 
+                                    ? `Challenge Mode: Please write a more detailed justification (minimum 20 characters) in both "My evidence is" and "My choice is" to enable the submit button.`
+                                    : `Please type a basic response in both "My evidence is" and "My choice is" to enable the submit button.`}
                             </p>
                         </div>
                     )}

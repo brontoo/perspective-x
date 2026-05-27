@@ -170,6 +170,44 @@ export default function TeacherDashboard() {
         setSendingFeedback(false);
     };
 
+    const updateStudentDifficulty = async (studentEmail, newDifficulty) => {
+        try {
+            const existingRecord = feedbacks.find(
+                f => f.student_email === studentEmail && f.type === 'difficulty_override'
+            );
+
+            if (existingRecord) {
+                const { data: updatedRecord, error } = await supabase
+                    .from('teacher_feedback')
+                    .update({ message: newDifficulty })
+                    .eq('id', existingRecord.id)
+                    .select()
+                    .single();
+
+                if (error) throw error;
+                setFeedbacks(feedbacks.map(f => f.id === existingRecord.id ? updatedRecord : f));
+            } else {
+                const { data: newRecord, error } = await supabase
+                    .from('teacher_feedback')
+                    .insert({
+                        student_email: studentEmail,
+                        type: 'difficulty_override',
+                        message: newDifficulty,
+                        scenario_id: 'all',
+                        teacher_id: user?.id,
+                        teacher_name: profile?.full_name || 'Teacher'
+                    })
+                    .select()
+                    .single();
+
+                if (error) throw error;
+                setFeedbacks([newRecord, ...feedbacks]);
+            }
+        } catch (e) {
+            console.error('Error updating student difficulty override:', e);
+        }
+    };
+
     const deleteFeedback = async (id) => {
         await supabase.from('teacher_feedback').delete().eq('id', id);
         setFeedbacks(feedbacks.filter(f => f.id !== id));
@@ -440,8 +478,8 @@ export default function TeacherDashboard() {
                                                     <span className={`text-xs px-2 py-1 rounded-full border font-medium ${difficulty === 'beginner' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
                                                         difficulty === 'on-level' ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' :
                                                             'bg-red-500/20 text-red-400 border-red-500/30'}`}>
-                                                        {difficulty === 'beginner' ? '🟢 Beginner' :
-                                                            difficulty === 'on-level' ? '🟡 On-Level' : '🔴 High Achievers'}
+                                                        {difficulty === 'beginner' ? '🟢 Guided Mode' :
+                                                            difficulty === 'on-level' ? '🟡 Standard Mode' : '🔴 Challenge Mode'}
                                                     </span>
                                                 </div>
                                                 <div className="flex flex-wrap items-center gap-4">
@@ -454,9 +492,9 @@ export default function TeacherDashboard() {
                                                         <select value={difficulty}
                                                             onChange={e => updateScenarioSetting(id, 'difficulty_override', e.target.value)}
                                                             className="glass-input text-sm px-2 py-1.5">
-                                                            <option value="beginner">Beginner</option>
-                                                            <option value="on-level">On-Level</option>
-                                                            <option value="high-achievers">High Achievers</option>
+                                                            <option value="beginner">Guided Mode</option>
+                                                            <option value="on-level">Standard Mode</option>
+                                                            <option value="high-achievers">Challenge Mode</option>
                                                         </select>
                                                     </div>
                                                     <div className="flex items-center gap-2">
@@ -502,6 +540,8 @@ export default function TeacherDashboard() {
                                         const badges = progress?.badges?.length || 0;
                                         const isExpanded = expandedStudent === student.id;
                                         const studentName = student.full_name || student.email?.split('@')[0] || `Student ${index + 1}`;
+                                        const studentDiffRecord = feedbacks.find(f => f.student_email === student.email && f.type === 'difficulty_override');
+                                        const studentDiff = studentDiffRecord?.message || 'on-level';
 
                                         return (
                                             <motion.div key={student.id}
@@ -520,6 +560,14 @@ export default function TeacherDashboard() {
                                                         <p className="text-[var(--lx-text-muted)] text-xs truncate">{student.email}</p>
                                                     </div>
                                                     <div className="hidden sm:flex items-center gap-3">
+                                                        <div className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold border ${
+                                                            studentDiff === 'beginner' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                                                            studentDiff === 'on-level' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                                                            'bg-red-500/10 text-red-400 border-red-500/20'
+                                                        }`}>
+                                                            {studentDiff === 'beginner' ? 'Guided' :
+                                                             studentDiff === 'on-level' ? 'Standard' : 'Challenge'}
+                                                        </div>
                                                         <div className="flex items-center gap-1.5 bg-teal-500/10 border border-teal-500/20 rounded-lg px-3 py-1.5">
                                                             <BookOpen className="w-3.5 h-3.5 text-teal-400" />
                                                             <span className="text-teal-400 text-xs font-semibold">{completedCount}/{totalScenarios}</span>
@@ -645,6 +693,31 @@ export default function TeacherDashboard() {
                                                                     </div>
                                                                 </div>
 
+                                                                <div>
+                                                                    <h4 className="text-[var(--lx-text-muted)] text-sm font-semibold mb-3 flex items-center gap-2">
+                                                                        <Settings className="w-4 h-4 text-purple-400" /> Student Difficulty Mode
+                                                                    </h4>
+                                                                    <div className="flex items-center gap-3">
+                                                                        <select
+                                                                            value={studentDiff}
+                                                                            onChange={e => updateStudentDifficulty(student.email, e.target.value)}
+                                                                            className="glass-input text-xs px-3 py-2 bg-[var(--lx-glass-bg)] border border-[var(--lx-glass-border-sub)] rounded-lg text-[var(--lx-text)] focus:outline-none focus:border-[var(--lx-accent)] transition w-full sm:w-auto"
+                                                                        >
+                                                                            <option value="beginner">Guided Mode</option>
+                                                                            <option value="on-level">Standard Mode</option>
+                                                                            <option value="high-achievers">Challenge Mode</option>
+                                                                        </select>
+                                                                        <span className={`text-xs px-2.5 py-1 rounded-full border font-medium ${
+                                                                            studentDiff === 'beginner' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
+                                                                            studentDiff === 'on-level' ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' :
+                                                                            'bg-red-500/20 text-red-400 border-red-500/30'
+                                                                        }`}>
+                                                                            {studentDiff === 'beginner' ? '🟢 Guided' :
+                                                                             studentDiff === 'on-level' ? '🟡 Standard' : '🔴 Challenge'}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
                                                                 <div className="flex flex-col sm:flex-row gap-2">
                                                                     <button
                                                                         onClick={() => {
@@ -761,7 +834,7 @@ export default function TeacherDashboard() {
                                 <div className="flex items-center justify-between mb-6">
                                     <h2 className="text-xl font-bold text-[var(--lx-text)] flex items-center gap-2">
                                         <MessageSquare className="w-5 h-5 text-purple-400" />
-                                        Sent Feedback ({feedbacks.length})
+                                        Sent Feedback ({feedbacks.filter(fb => fb.type !== 'difficulty_override').length})
                                     </h2>
                                     {/* Filter */}
                                     <select
@@ -788,6 +861,7 @@ export default function TeacherDashboard() {
                                 <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
                                     {feedbacks
                                         .filter(fb =>
+                                            fb.type !== 'difficulty_override' &&
                                             (feedbackFilter === 'all' || fb.type === feedbackFilter) &&
                                             (fb.message?.toLowerCase().includes(feedbackSearch.toLowerCase()) ||
                                                 fb.student_email?.toLowerCase().includes(feedbackSearch.toLowerCase()))
@@ -800,6 +874,7 @@ export default function TeacherDashboard() {
                                     ) : (
                                         feedbacks
                                             .filter(fb =>
+                                                fb.type !== 'difficulty_override' &&
                                                 (feedbackFilter === 'all' || fb.type === feedbackFilter) &&
                                                 (fb.message?.toLowerCase().includes(feedbackSearch.toLowerCase()) ||
                                                     fb.student_email?.toLowerCase().includes(feedbackSearch.toLowerCase()))

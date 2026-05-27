@@ -15,6 +15,7 @@ export default function RoleHub() {
     const [progress, setProgress] = useState(null);
     const [loading, setLoading] = useState(true);
     const [scenarioSettings, setScenarioSettings] = useState({});
+    const [difficultyOverrides, setDifficultyOverrides] = useState({});
     const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'path'
     const intervalRef = useRef(null);
 
@@ -76,6 +77,27 @@ export default function RoleHub() {
                 completed_scenarios: completedScenarios,
                 unlocked_scenarios: [...new Set(unlockedScenarios)]
             });
+
+            const { data: feedbackOverrides } = await supabase
+                .from('teacher_feedback')
+                .select('*')
+                .eq('student_email', user.email)
+                .eq('type', 'difficulty_override')
+                .order('created_at', { ascending: false });
+
+            const overridesMap = {};
+            feedbackOverrides?.forEach(f => {
+                if (f.scenario_id === 'all') {
+                    role.scenarios.forEach(id => {
+                        if (!overridesMap[id]) {
+                            overridesMap[id] = f.message;
+                        }
+                    });
+                } else {
+                    overridesMap[f.scenario_id] = f.message;
+                }
+            });
+            setDifficultyOverrides(overridesMap);
 
             await fetchSettings();
 
@@ -274,6 +296,9 @@ export default function RoleHub() {
                                                 const scenario = SCENARIOS[scenarioId];
                                                 if (!scenario) return null;
                                                 const status = getScenarioStatus(scenarioId);
+                                                const studentOverride = difficultyOverrides[scenarioId];
+                                                const scenarioSetting = scenarioSettings[scenarioId]?.difficulty_override;
+                                                const activeDifficulty = studentOverride || scenarioSetting || 'on-level';
                                                 return (
                                                     <ScenarioCard
                                                         key={scenarioId}
@@ -282,7 +307,10 @@ export default function RoleHub() {
                                                         index={index}
                                                         roleColor={role.color}
                                                         roleTitle={role.title}
-                                                        settings={scenarioSettings[scenarioId]}
+                                                        settings={{
+                                                            ...scenarioSettings[scenarioId],
+                                                            difficulty_override: activeDifficulty
+                                                        }}
                                                         onClick={() => {
                                                             if (status !== 'locked') {
                                                                 navigate(`/ScenarioPlayer?scenario=${scenarioId}`);
@@ -330,7 +358,10 @@ export default function RoleHub() {
                                                             status={status}
                                                             index={index}
                                                             roleColor={role.color}
-                                                            settings={scenarioSettings[scenarioId]}
+                                                            settings={{
+                                                                ...scenarioSettings[scenarioId],
+                                                                difficulty_override: difficultyOverrides[scenarioId] || scenarioSettings[scenarioId]?.difficulty_override || 'on-level'
+                                                            }}
                                                             onClick={() => {
                                                                 if (status !== 'locked') {
                                                                     navigate(`/ScenarioPlayer?scenario=${scenarioId}`);

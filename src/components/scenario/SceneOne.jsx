@@ -92,12 +92,27 @@ const SCENE_ONE_HINTS = {
   ]
 };
 
-function HintSystem({ scenarioId, scene, hintCount, setHintCount }) {
-    const customHints = SCENE_ONE_HINTS[scenarioId] || [
+function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode = 'on-level' }) {
+    let customHints = SCENE_ONE_HINTS[scenarioId] || [
         "Review the key question and the data table provided.",
         "Check the measurements against the safe limits or baseline values.",
         "Analyze which option fits the clue or standard parameters of the system."
     ];
+
+    if (difficultyMode === 'beginner') {
+        customHints = [
+            ...customHints,
+            "Guided Support: Compare the measured value directly with the safety limit. If the measurement exceeds the limit, it poses an immediate hazard!"
+        ];
+    } else if (difficultyMode === 'high-achievers') {
+        customHints = [
+            "Challenge Mode Hint: Examine the chemical proportions or limits in detail. Standard solutions might not address the root issue."
+        ];
+    }
+
+    const maxHints = difficultyMode === 'beginner' ? 4 :
+                     difficultyMode === 'high-achievers' ? 1 :
+                     3;
 
     return (
         <div className="border border-slate-200 bg-slate-50/50 p-4 rounded-lg space-y-3">
@@ -105,16 +120,16 @@ function HintSystem({ scenarioId, scene, hintCount, setHintCount }) {
                 <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase font-bold">
                     Need Help?
                 </span>
-                {hintCount < 3 && (
+                {hintCount < maxHints && (
                     <button
                         onClick={() => setHintCount(prev => prev + 1)}
                         className="text-xs font-mono text-cyan-600 hover:text-cyan-700 font-bold flex items-center gap-1 cursor-pointer bg-white px-2 py-1 border border-slate-200 rounded"
                     >
                         <HelpCircle className="w-3.5 h-3.5 animate-pulse" />
-                        Need a Hint? ({hintCount}/3)
+                        Need a Hint? ({hintCount}/{maxHints})
                     </button>
                 )}
-                {hintCount >= 3 && (
+                {hintCount >= maxHints && (
                     <span className="text-[10px] font-mono text-slate-400 font-semibold">
                         All hints revealed
                     </span>
@@ -271,6 +286,7 @@ export default function SceneOne({
     onComplete,
     isTeacher = false,
     theme = {},
+    difficultyMode = 'on-level',
 }) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [justification, setJustification] = useState('');
@@ -736,7 +752,7 @@ export default function SceneOne({
                                         </div>
 
                                         {/* Hint System */}
-                                        <HintSystem scenarioId={scenarioId} scene={scene} hintCount={hintCount} setHintCount={setHintCount} />
+                                        <HintSystem scenarioId={scenarioId} scene={scene} hintCount={hintCount} setHintCount={setHintCount} difficultyMode={difficultyMode} />
 
                                         {/* Confidence note if no selection */}
                                         {!selectedOption && (

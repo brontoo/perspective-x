@@ -20,6 +20,7 @@ export default function Dashboard() {
     const [unreadCount, setUnreadCount] = useState(0);
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
+    const [assignedMode, setAssignedMode] = useState('on-level');
     const [activeTab, setActiveTab] = useState('overview');
 
 
@@ -160,9 +161,14 @@ export default function Dashboard() {
                 .eq('student_email', currentUser.email)
                 .order('created_at', { ascending: false });
 
-            setFeedbacks(feedbackList || []);
+            const difficultyOverride = (feedbackList || []).find(fb => fb.type === 'difficulty_override');
+            const mode = difficultyOverride?.message || 'on-level';
+            setAssignedMode(mode);
 
-            const unread = (feedbackList || []).filter(fb => {
+            const filteredFeedbacks = (feedbackList || []).filter(fb => fb.type !== 'difficulty_override');
+            setFeedbacks(filteredFeedbacks);
+
+            const unread = filteredFeedbacks.filter(fb => {
                 const diffHours = (new Date() - new Date(fb.created_at)) / (1000 * 60 * 60);
                 return diffHours < 24;
             });
@@ -341,9 +347,20 @@ export default function Dashboard() {
                             <div>
                                 <p className="text-[var(--lx-text-muted)] text-sm">Welcome back,</p>
                                 <p className="text-[var(--lx-text)] font-bold text-xl">{displayName}</p>
-                                <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold ${level.bg} ${level.color}`}>
-                                    {level.label}
-                                </span>
+                                <div className="flex flex-wrap items-center gap-2 mt-1">
+                                    <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold ${level.bg} ${level.color}`}>
+                                        {level.label}
+                                    </span>
+                                    <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold ${
+                                        assignedMode === 'beginner' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' :
+                                        assignedMode === 'high-achievers' ? 'text-rose-400 bg-rose-500/10 border-rose-500/20' :
+                                        'text-amber-400 bg-amber-500/10 border-amber-500/20'
+                                    }`}>
+                                        {assignedMode === 'beginner' ? '🟢 Guided Mode' :
+                                         assignedMode === 'high-achievers' ? '🔴 Challenge Mode' :
+                                         '🟡 Standard Mode'}
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
