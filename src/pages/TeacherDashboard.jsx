@@ -926,7 +926,7 @@ export default function TeacherDashboard() {
                                     <h2 className="text-xl font-bold text-[var(--lx-text)] flex items-center gap-2">
                                         <Presentation className="w-5 h-5 text-purple-400" /> Class Debate Mode
                                     </h2>
-                                    <p className="text-[var(--lx-text-muted)] text-sm mt-1">
+                                    <p className="text-slate-700 text-sm mt-1 font-medium">
                                         Facilitate scientific debates by displaying anonymous choice distributions and key reasoning themes.
                                     </p>
                                 </div>
@@ -1187,8 +1187,8 @@ function DebateView({ scenarioId, sceneId, studentProgress, onStartFullscreen })
 
     if (!scene) {
         return (
-            <div className="text-center py-12 text-[var(--lx-text-muted)] bg-slate-900/30 border border-slate-800 rounded-xl">
-                <p>No decision scene configuration found for Scene {sceneId}.</p>
+            <div className="text-center py-12 text-slate-500 bg-slate-50 border border-slate-200 rounded-xl">
+                <p className="font-semibold text-sm">No decision scene configuration found for Scene {sceneId}.</p>
             </div>
         );
     }
@@ -1235,21 +1235,21 @@ function DebateView({ scenarioId, sceneId, studentProgress, onStartFullscreen })
     const themes = getThemesForScene(scenarioId, justificationList);
 
     return (
-        <div className="space-y-6 text-[var(--lx-text)]">
+        <div className="space-y-6">
             {/* Header controls & stats */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/50 p-4 border border-slate-800/80 rounded-xl">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50 p-5 border border-slate-200 rounded-xl shadow-sm">
                 <div>
-                    <span className="text-[10px] font-mono text-[var(--lx-text-muted)] uppercase tracking-widest block">Active Debate Scene</span>
-                    <span className="text-white font-bold text-base">{scene.title}</span>
+                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block font-bold">Active Debate Scene</span>
+                    <span className="text-slate-900 font-extrabold text-lg">{scene.title}</span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-5">
                     <div className="text-right">
-                        <span className="text-[10px] font-mono text-[var(--lx-text-muted)] uppercase tracking-widest block">Total Submissions</span>
-                        <span className="text-teal-400 font-bold text-lg">{totalAttempts} students</span>
+                        <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block font-bold">Total Submissions</span>
+                        <span className="text-teal-600 font-black text-xl">{totalAttempts} students</span>
                     </div>
                     <button
                         onClick={onStartFullscreen}
-                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 hover:from-purple-500/30 hover:to-indigo-500/30 border border-purple-500/40 text-purple-300 font-medium text-xs rounded-lg transition cursor-pointer font-semibold"
+                        className="flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer animate-pulse"
                     >
                         <Maximize2 className="w-3.5 h-3.5" />
                         Present Mode
@@ -1258,24 +1258,25 @@ function DebateView({ scenarioId, sceneId, studentProgress, onStartFullscreen })
             </div>
 
             {/* Question Summary */}
-            <div className="bg-slate-900/30 border border-slate-800/60 p-5 rounded-xl">
-                <span className="text-[10px] font-mono text-purple-400 uppercase tracking-widest font-bold block mb-1">Debate Prompt Question</span>
-                <p className="text-[var(--lx-text)] font-semibold text-lg leading-snug">{scene.question}</p>
+            <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl">
+                <span className="text-[10px] font-mono text-purple-600 uppercase tracking-widest font-bold block mb-1">Debate Prompt Question</span>
+                <p className="text-slate-900 font-extrabold text-lg leading-snug">{scene.question}</p>
             </div>
 
             {/* Prompt Alert */}
-            <div className="border border-purple-500/30 bg-purple-500/5 p-4 rounded-xl flex items-center gap-3">
+            <div className="border border-purple-200 bg-purple-50 p-4.5 rounded-xl flex items-center gap-3 shadow-sm">
                 <span className="text-2xl shrink-0">💬</span>
                 <div>
-                    <span className="text-[10px] font-mono text-purple-400 uppercase tracking-widest font-bold block">Suggested Discussion Prompt</span>
-                    <p className="text-slate-200 text-sm font-medium">“Which choice is most scientifically justified?”</p>
+                    <span className="text-[10px] font-mono text-purple-600 uppercase tracking-widest font-bold block">Suggested Discussion Prompt</span>
+                    <p className="text-purple-900 text-base font-extrabold">“Which choice is most scientifically justified?”</p>
                 </div>
             </div>
 
-            {/* Option distribution list */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="glass-card p-5 border-slate-800 space-y-4">
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            {/* Option distribution list & themes */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Left Panel: Choice Distribution */}
+                <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-xl space-y-4">
+                    <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
                         📊 Class Choice Distribution
                     </h3>
                     <div className="space-y-4">
@@ -1283,14 +1284,14 @@ function DebateView({ scenarioId, sceneId, studentProgress, onStartFullscreen })
                             const count = counts[opt.id] || 0;
                             const pct = totalAttempts > 0 ? Math.round((count / totalAttempts) * 100) : 0;
                             return (
-                                <div key={opt.id} className="space-y-1">
-                                    <div className="flex justify-between text-xs font-semibold">
-                                        <span className="text-slate-300 truncate max-w-[80%]">
+                                <div key={opt.id} className="space-y-1.5">
+                                    <div className="flex justify-between text-xs font-bold">
+                                        <span className="text-slate-850 truncate max-w-[80%] font-semibold">
                                             Option {opt.id}: {opt.text}
                                         </span>
-                                        <span className="text-teal-400 font-mono">{pct}% ({count})</span>
+                                        <span className="text-teal-600 font-mono font-bold">{pct}% ({count} votes)</span>
                                     </div>
-                                    <div className="h-2 bg-slate-950/60 rounded-full overflow-hidden border border-slate-900">
+                                    <div className="h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner">
                                         <div
                                             className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-500"
                                             style={{ width: `${pct}%` }}
@@ -1302,30 +1303,30 @@ function DebateView({ scenarioId, sceneId, studentProgress, onStartFullscreen })
                     </div>
                 </div>
 
-                {/* Themes and Reasoning Summary */}
-                <div className="glass-card p-5 border-slate-800 space-y-4">
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                {/* Right Panel: Themes & Reasoning */}
+                <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-xl space-y-4">
+                    <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
                         🧠 Key Reasoning Themes
                     </h3>
                     {themes.length === 0 ? (
-                        <div className="text-center py-8 text-slate-500 text-xs">
+                        <div className="text-center py-12 text-slate-500 text-xs font-medium">
                             No student justifications analyzed yet, or justifications are too short.
                         </div>
                     ) : (
-                        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                        <div className="space-y-3 max-h-[320px] overflow-y-auto pr-1">
                             {themes.map((theme, i) => (
-                                <div key={i} className="bg-slate-900/40 border border-slate-800 p-3 rounded-lg space-y-2">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                                <div key={i} className="bg-slate-50 border border-slate-200 p-4 rounded-lg space-y-2">
+                                    <div className="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
+                                        <span className="text-xs font-bold text-slate-850 flex items-center gap-1.5">
                                             <span>{theme.icon}</span> {theme.name}
                                         </span>
-                                        <span className="text-[10px] font-mono bg-purple-500/10 border border-purple-500/20 text-purple-400 px-2 py-0.5 rounded">
-                                            {theme.count} mention{theme.count > 1 ? 's' : ''}
+                                        <span className="text-[10px] font-mono bg-purple-100 border border-purple-200 text-purple-700 px-2 py-0.5 rounded font-bold">
+                                            {theme.count} student{theme.count > 1 ? 's' : ''}
                                         </span>
                                     </div>
                                     <div className="space-y-1.5">
                                         {theme.matches.map((quote, qIdx) => (
-                                            <p key={qIdx} className="text-[11px] text-slate-400 italic pl-2 border-l border-purple-500/30">
+                                            <p key={qIdx} className="text-[11px] text-slate-700 italic pl-2.5 border-l-2 border-purple-400 leading-relaxed font-medium">
                                                 "{quote.length > 100 ? quote.slice(0, 100) + '...' : quote}"
                                             </p>
                                         ))}
@@ -1338,12 +1339,12 @@ function DebateView({ scenarioId, sceneId, studentProgress, onStartFullscreen })
             </div>
 
             {/* General Justifications List */}
-            <div className="glass-card p-5 border-slate-800 space-y-4">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <div className="glass-card p-6 border-slate-200 bg-white shadow-sm rounded-xl space-y-4">
+                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
                     📋 All Student Reasoning (Anonymous)
                 </h3>
                 {justificationList.length === 0 ? (
-                    <div className="text-center py-6 text-slate-500 text-xs">
+                    <div className="text-center py-10 text-slate-500 text-xs font-medium">
                         No submissions recorded for this scenario yet.
                     </div>
                 ) : (
@@ -1351,7 +1352,7 @@ function DebateView({ scenarioId, sceneId, studentProgress, onStartFullscreen })
                         {justificationList
                             .filter(j => !j.toLowerCase().includes('skipped') && !j.toLowerCase().includes('skip'))
                             .map((reason, idx) => (
-                                <div key={idx} className="bg-slate-950/40 border border-slate-900 p-3.5 rounded-lg text-xs leading-relaxed text-slate-300">
+                                <div key={idx} className="bg-slate-50 border border-slate-200 p-3.5 rounded-lg text-xs leading-relaxed text-slate-800 font-semibold shadow-sm">
                                     {reason}
                                 </div>
                             ))}
@@ -1412,7 +1413,7 @@ function DebatePresentationOverlay({ isOpen, onClose, scenarioId, sceneId, stude
     const themes = getThemesForScene(scenarioId, justificationList);
 
     return (
-        <div className="fixed inset-0 z-50 bg-[#070a13] text-white flex flex-col overflow-y-auto font-sans p-6 md:p-10 select-none">
+        <div className="fixed inset-0 z-50 bg-[#060913] text-white flex flex-col overflow-y-auto font-sans p-6 md:p-10 select-none">
             {/* Ambient Background Glows */}
             <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -1428,7 +1429,7 @@ function DebatePresentationOverlay({ isOpen, onClose, scenarioId, sceneId, stude
                 </div>
                 <button
                     onClick={onClose}
-                    className="flex items-center gap-2 px-4 py-2 border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition text-sm font-semibold cursor-pointer"
+                    className="flex items-center gap-2 px-4 py-2 border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition text-sm font-semibold cursor-pointer animate-pulse"
                 >
                     <Minimize2 className="w-4 h-4" />
                     Exit Presentation
@@ -1439,17 +1440,17 @@ function DebatePresentationOverlay({ isOpen, onClose, scenarioId, sceneId, stude
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1">
                 {/* Left Panel: Question and Prompt (5 cols) */}
                 <div className="lg:col-span-5 space-y-6 flex flex-col justify-center">
-                    <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl space-y-3">
+                    <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
                         <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest font-bold block">Scenario Challenge</span>
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-100 leading-snug">{scene.question}</h2>
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug">{scene.question}</h2>
                     </div>
 
-                    <div className="bg-gradient-to-br from-purple-950/40 to-indigo-950/40 border border-purple-500/40 p-6 rounded-2xl space-y-3 shadow-lg shadow-purple-500/5">
+                    <div className="bg-gradient-to-br from-purple-950 to-indigo-950 border border-purple-500/40 p-6 rounded-2xl space-y-3 shadow-lg shadow-purple-500/5">
                         <span className="text-xs font-mono text-purple-400 uppercase tracking-widest font-bold block">Suggested Debate Question</span>
                         <p className="text-xl font-bold text-white">“Which choice is most scientifically justified?”</p>
                     </div>
 
-                    <div className="text-center md:text-left text-slate-400 font-mono text-xs">
+                    <div className="text-center md:text-left text-slate-400 font-mono text-xs font-semibold">
                         📊 Current Submissions: <span className="text-teal-400 font-bold">{totalAttempts} students</span> (Anonymous Results)
                     </div>
                 </div>
@@ -1457,7 +1458,7 @@ function DebatePresentationOverlay({ isOpen, onClose, scenarioId, sceneId, stude
                 {/* Right Panel: Data Presentation (7 cols) */}
                 <div className="lg:col-span-7 flex flex-col justify-center gap-6">
                     {/* Class Choices */}
-                    <div className="bg-slate-900/60 border border-slate-800/80 p-8 rounded-2xl space-y-6 shadow-xl">
+                    <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl space-y-6 shadow-xl">
                         <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-3">
                             📊 Choice Distribution
                         </h3>
@@ -1468,12 +1469,12 @@ function DebatePresentationOverlay({ isOpen, onClose, scenarioId, sceneId, stude
                                 return (
                                     <div key={opt.id} className="space-y-2">
                                         <div className="flex justify-between items-start text-sm font-semibold">
-                                            <span className="text-slate-200 pr-4 leading-snug max-w-[85%]">
+                                            <span className="text-slate-100 pr-4 leading-snug max-w-[85%] font-bold">
                                                 Option {opt.id}: {opt.text}
                                             </span>
-                                            <span className="text-teal-400 font-mono text-base">{pct}%</span>
+                                            <span className="text-teal-300 font-mono text-base font-bold">{pct}%</span>
                                         </div>
-                                        <div className="h-3.5 bg-slate-950/80 rounded-full overflow-hidden border border-slate-900 shadow-inner">
+                                        <div className="h-4 bg-slate-950 rounded-full overflow-hidden border border-slate-800 shadow-inner">
                                             <div
                                                 className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(20,184,166,0.5)]"
                                                 style={{ width: `${pct}%` }}
@@ -1487,21 +1488,21 @@ function DebatePresentationOverlay({ isOpen, onClose, scenarioId, sceneId, stude
 
                     {/* Reasoning Snippets */}
                     {themes.length > 0 && (
-                        <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl space-y-4">
+                        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
                             <h3 className="text-md font-bold text-white">
                                 🧠 Key Scientific Reasoning Themes
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {themes.slice(0, 2).map((t, idx) => (
-                                    <div key={idx} className="bg-slate-950/40 border border-slate-900 p-4 rounded-xl space-y-2">
+                                    <div key={idx} className="bg-slate-950 border border-slate-900/60 p-4 rounded-xl space-y-2">
                                         <div className="flex items-center justify-between border-b border-slate-900 pb-1.5">
                                             <span className="text-xs font-bold text-slate-200 flex items-center gap-1">
                                                 {t.icon} {t.name}
                                             </span>
-                                            <span className="text-[9px] font-mono text-purple-400 font-bold">{t.count} mentions</span>
+                                            <span className="text-[9px] font-mono text-purple-300 font-bold bg-purple-900/30 px-1.5 py-0.5 rounded">{t.count} mentions</span>
                                         </div>
                                         {t.matches.slice(0, 1).map((quote, qIdx) => (
-                                            <p key={qIdx} className="text-[11px] text-slate-400 italic leading-relaxed">
+                                            <p key={qIdx} className="text-[11px] text-slate-300 font-medium italic leading-relaxed">
                                                 "{quote.length > 120 ? quote.slice(0, 120) + '...' : quote}"
                                             </p>
                                         ))}
