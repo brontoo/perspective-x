@@ -97,17 +97,31 @@ export default function TeacherDashboard() {
 
         const skillsMap = {};
         const skillKeys = Object.keys(SKILLS);
-        uniqueRows.forEach(row => {
-            const scenarioData = SCENARIOS[row.scenario_id];
-            if (scenarioData && (row.score || 0) > 0) {
-                scenarioData.scienceFocus?.forEach((focus, i) => {
-                    const key = skillKeys[i % skillKeys.length];
-                    if (key) {
-                        const gained = Math.round((row.score / 100) * 25);
-                        skillsMap[key] = Math.min(100, (skillsMap[key] || 0) + gained);
-                    }
-                });
-            }
+
+        // Initialize all skills to 0
+        skillKeys.forEach(key => {
+            skillsMap[key] = 0;
+        });
+
+        // Compute progress for each skill: average of best passing scores of mapped scenarios
+        skillKeys.forEach(skillKey => {
+            const mappedScenarioIds = Object.keys(SCENARIOS).filter(scenarioId => {
+                const sData = SCENARIOS[scenarioId];
+                return sData && sData.skills && sData.skills.includes(skillKey);
+            });
+
+            if (mappedScenarioIds.length === 0) return;
+
+            let totalScoreGained = 0;
+            mappedScenarioIds.forEach(scenarioId => {
+                const matchingRows = uniqueRows.filter(r => r.scenario_id === scenarioId && r.score >= 80);
+                if (matchingRows.length > 0) {
+                    const bestScore = Math.max(...matchingRows.map(r => r.score || 0));
+                    totalScoreGained += bestScore;
+                }
+            });
+
+            skillsMap[skillKey] = Math.round(totalScoreGained / mappedScenarioIds.length);
         });
 
         return {
@@ -272,6 +286,26 @@ export default function TeacherDashboard() {
             avgScore
         };
     });
+
+    const BAR_COLORS = ['#14b8a6', '#06b6d4', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#ec4899', '#f43f5e'];
+
+    const classSkillsData = React.useMemo(() => {
+        return Object.keys(SKILLS).map(skillKey => {
+            let total = 0;
+            let count = 0;
+            students.forEach(student => {
+                const progressObj = getStudentProgress(student.id);
+                if (progressObj && progressObj.completed_scenarios?.length > 0) {
+                    total += (progressObj.skills?.[skillKey] || 0);
+                    count++;
+                }
+            });
+            return {
+                name: SKILLS[skillKey]?.name || skillKey,
+                score: count > 0 ? Math.round(total / count) : 0
+            };
+        });
+    }, [students, studentProgress]);
 
     const studentPerformanceData = students.map(student => {
         const rows = studentProgress.filter(p => p.student_id === student.id && p.scenario_id);
@@ -860,6 +894,28 @@ export default function TeacherDashboard() {
                                         <Legend wrapperStyle={{ color: '#94a3b8', paddingTop: '20px' }} />
                                         <Bar dataKey="completions" fill="#14b8a6" name="Completions" radius={[4, 4, 0, 0]} />
                                         <Bar dataKey="avgScore" fill="#8b5cf6" name="Avg Score %" radius={[4, 4, 0, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+
+                            {/* Bar Chart — Class Skill Distribution */}
+                            <div className="glass-card p-6">
+                                <h3 className="text-[var(--lx-text)] font-bold mb-6 flex items-center gap-2">
+                                    <Brain className="w-5 h-5 text-emerald-400" />
+                                    Class Skill Distribution (Average Mastery %)
+                                </h3>
+                                <ResponsiveContainer width="100%" height={280}>
+                                    <BarChart data={classSkillsData} margin={{ top: 5, right: 20, left: 0, bottom: 20 }}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                                        <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11 }} />
+                                        <YAxis tick={{ fill: '#64748b', fontSize: 11 }} domain={[0, 100]} />
+                                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
+                                            labelStyle={{ color: '#fff' }} itemStyle={{ color: '#94a3b8' }} />
+                                        <Bar dataKey="score" name="Average Mastery %" radius={[4, 4, 0, 0]}>
+                                            {classSkillsData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={BAR_COLORS[index % BAR_COLORS.length]} />
+                                            ))}
+                                        </Bar>
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>

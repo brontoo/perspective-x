@@ -2465,9 +2465,40 @@ export const BADGES = {
 };
 
 export const SKILLS = {
-    data_analysis: { name: 'Data Analysis', icon: '📊', description: 'Interpreting graphs, tables, and measurements' },
-    problem_solving: { name: 'Problem Solving', icon: '🧩', description: 'Identifying issues and finding solutions' },
-    scientific_communication: { name: 'Scientific Communication', icon: '📝', description: 'Explaining reasoning clearly' },
-    ethical_reasoning: { name: 'Ethical Reasoning', icon: '⚖️', description: 'Considering impacts on people and environment' },
-    critical_thinking: { name: 'Critical Thinking', icon: '🎯', description: 'Evaluating evidence and making decisions' }
+    data_interpretation: { name: 'Data Interpretation', icon: '📊', description: 'Interpreting graphs, tables, and measurements' },
+    scientific_reasoning: { name: 'Scientific Reasoning', icon: '🧬', description: 'Applying scientific logic, calculations, and evidence' },
+    decision_making: { name: 'Decision-Making', icon: '🎯', description: 'Evaluating choices and making sound decisions' },
+    risk_analysis: { name: 'Risk Analysis', icon: '⚠️', description: 'Identifying and mitigating potential risks or trade-offs' },
+    ethical_reasoning: { name: 'Ethical Reasoning', icon: '⚖️', description: 'Considering impacts on people, safety, and environment' },
+    concept_application: { name: 'Concept Application', icon: '🧪', description: 'Applying core scientific principles to problems' },
+    communication: { name: 'Communication', icon: '📝', description: 'Explaining reasoning and justification clearly' },
+    reflection: { name: 'Reflection', icon: '🤔', description: 'Evaluating decisions and identifying improvements' }
 };
+
+export const SCENARIO_SKILLS_MAP = {
+    water_contamination: ['data_interpretation', 'ethical_reasoning', 'communication', 'reflection'],
+    reaction_gone_wrong: ['concept_application', 'risk_analysis', 'reflection'],
+    acid_rain: ['data_interpretation', 'ethical_reasoning', 'risk_analysis'],
+    mutation_dilemma: ['data_interpretation', 'ethical_reasoning', 'communication'],
+    reaction_time: ['data_interpretation', 'scientific_reasoning', 'communication'],
+    unstable_slope: ['concept_application', 'risk_analysis', 'decision_making'],
+    invasive_species: ['concept_application', 'decision_making', 'reflection'],
+    power_grid: ['data_interpretation', 'risk_analysis', 'decision_making'],
+    heat_loss: ['concept_application', 'risk_analysis', 'reflection'],
+    oxygen_failure: ['scientific_reasoning', 'concept_application', 'risk_analysis'],
+    aspirin_production: ['data_interpretation', 'ethical_reasoning', 'communication'],
+    fuelproduction: ['scientific_reasoning', 'concept_application', 'decision_making'],
+    aspirin_percent_yield: ['data_interpretation', 'scientific_reasoning', 'concept_application'],
+    gas_boyle_adnoc: ['scientific_reasoning', 'concept_application', 'risk_analysis'],
+    gas_charles_aviation: ['scientific_reasoning', 'concept_application', 'risk_analysis'],
+    gas_gaylussac_cylinder: ['scientific_reasoning', 'concept_application', 'risk_analysis']
+};
+
+// Dynamically inject skills array into each scenario in SCENARIOS
+Object.keys(SCENARIOS).forEach(id => {
+    if (SCENARIO_SKILLS_MAP[id]) {
+        SCENARIOS[id].skills = SCENARIO_SKILLS_MAP[id];
+    } else {
+        SCENARIOS[id].skills = [];
+    }
+});

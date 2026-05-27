@@ -64,24 +64,34 @@ export default function Dashboard() {
                 const skillsMap = {};
                 const skillKeys = Object.keys(SKILLS);
 
-                // ✅ We use unique completed scenarios only
-                completedScenarios.forEach(scenarioId => {
-                    const latestRow = progressRows.find(r =>
-                        r.scenario_id === scenarioId && r.score >= 80
-                    );
-                    if (!latestRow) return;
+                // Initialize all skills to 0
+                skillKeys.forEach(key => {
+                    skillsMap[key] = 0;
+                });
 
-                    const scenarioData = SCENARIOS[scenarioId];
-                    if (!scenarioData) return;
+                // Compute progress for each skill: average of best passing scores of mapped scenarios
+                skillKeys.forEach(skillKey => {
+                    const mappedScenarioIds = Object.keys(SCENARIOS).filter(scenarioId => {
+                        const sData = SCENARIOS[scenarioId];
+                        return sData && sData.skills && sData.skills.includes(skillKey);
+                    });
 
-                    scenarioData.scienceFocus?.forEach((focus, i) => {
-                        const key = skillKeys[i % skillKeys.length];
-                        if (key) {
-                            // Each completed scenario = 10 points only (reaches 100% after 10 completed scenarios)
-                            const gained = Math.round((latestRow.score / 100) * 10);
-                            skillsMap[key] = Math.min(100, (skillsMap[key] || 0) + gained);
+                    if (mappedScenarioIds.length === 0) return;
+
+                    let totalScoreGained = 0;
+                    let completedCountForSkill = 0;
+
+                    mappedScenarioIds.forEach(scenarioId => {
+                        const matchingRows = progressRows.filter(r => r.scenario_id === scenarioId && r.score >= 80);
+                        if (matchingRows.length > 0) {
+                            const bestScore = Math.max(...matchingRows.map(r => r.score || 0));
+                            totalScoreGained += bestScore;
+                            completedCountForSkill++;
                         }
                     });
+
+                    // Divide total score gained by the total number of scenarios mapping to this skill
+                    skillsMap[skillKey] = Math.round(totalScoreGained / mappedScenarioIds.length);
                 });
 
                 // Collect all decisions from completed scenarios only
@@ -194,6 +204,39 @@ export default function Dashboard() {
 
     const displayName = profile?.full_name || user?.email?.split('@')[0];
 
+    const skillInsights = React.useMemo(() => {
+        if (!progress?.skills) return { strongest: null, toImprove: null };
+
+        const skillsEntries = Object.entries(progress.skills);
+        
+        // Find skills with score > 0
+        const activeSkills = skillsEntries.filter(([_, val]) => val > 0);
+        
+        let strongest = null;
+        if (activeSkills.length > 0) {
+            // Sort by score descending
+            const sorted = [...activeSkills].sort((a, b) => b[1] - a[1]);
+            strongest = {
+                key: sorted[0][0],
+                score: sorted[0][1],
+                ...SKILLS[sorted[0][0]]
+            };
+        }
+
+        // Find skills with score < 100 (which means there is room to improve)
+        const improvementCandidates = skillsEntries.filter(([_, val]) => val < 100);
+        let toImprove = null;
+        if (improvementCandidates.length > 0) {
+            const sorted = [...improvementCandidates].sort((a, b) => a[1] - b[1]);
+            toImprove = {
+                key: sorted[0][0],
+                score: sorted[0][1],
+                ...SKILLS[sorted[0][0]]
+            };
+        }
+
+        return { strongest, toImprove };
+    }, [progress?.skills]);
 
     return (
         <div className="min-h-screen lx-bg-ambient">
@@ -350,6 +393,51 @@ export default function Dashboard() {
                 {/* Overview Tab */}
                 {activeTab === 'overview' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+                        {/* Skill Insights Card */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Strongest Skill */}
+                            <div className="glass-card p-5 border border-emerald-500/20 bg-emerald-500/5 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
+                                <div className="flex items-start gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-2xl">
+                                        {skillInsights.strongest ? skillInsights.strongest.icon : '🏆'}
+                                    </div>
+                                    <div className="flex-1">
+                                        <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase tracking-wider">Strongest Skill</span>
+                                        <h3 className="text-base font-bold text-white mt-0.5">
+                                            {skillInsights.strongest ? skillInsights.strongest.name : 'No Data Yet'}
+                                        </h3>
+                                        <p className="text-slate-400 text-xs mt-1 leading-relaxed">
+                                            {skillInsights.strongest 
+                                                ? `You have shown outstanding performance with ${skillInsights.strongest.score}% mastery. Keep using these analytical strengths!` 
+                                                : 'Complete missions with a passing score to analyze your strongest scientific skills.'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Area for Growth */}
+                            <div className="glass-card p-5 border border-amber-500/20 bg-amber-500/5 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+                                <div className="flex items-start gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-2xl">
+                                        {skillInsights.toImprove ? skillInsights.toImprove.icon : '💡'}
+                                    </div>
+                                    <div className="flex-1">
+                                        <span className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider">Area for Growth</span>
+                                        <h3 className="text-base font-bold text-white mt-0.5">
+                                            {skillInsights.toImprove ? skillInsights.toImprove.name : 'All Mastered!'}
+                                        </h3>
+                                        <p className="text-slate-400 text-xs mt-1 leading-relaxed">
+                                            {skillInsights.toImprove 
+                                                ? `Focus on missions that build this skill (currently at ${skillInsights.toImprove.score}%). Review details and refine your reasoning.`
+                                                : 'Congratulations! You have achieved maximum mastery across all scientific skills.'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="glass-card p-6">
                             <h2 className="text-xl font-bold text-[var(--lx-text)] mb-6">Role Progress</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
