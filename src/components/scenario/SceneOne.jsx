@@ -8,6 +8,10 @@ import {
 import { Button } from '@/components/ui/button';
 import ScenarioVisual from './ScenarioVisual';
 import useTypewriter from './useTypewriter';
+import { GLOSSARY } from '@/data/glossary';
+import GlossaryTerm from '@/components/ui/GlossaryTerm';
+import { SCENARIOS } from '@/components/scenarios/scenarioData';
+import { UAE_SCENARIOS } from '@/components/scenarios/uaeScenarioData';
 
 const SCENE_ONE_HINTS = {
   water_contamination: [
@@ -276,6 +280,63 @@ function MetricRow({ icon: Icon, label, value, unit, graph, highlight = false })
     );
 }
 
+function getGlossaryKey(matched) {
+  const lower = matched.toLowerCase();
+  if (lower.startsWith('nitrate')) return 'nitrate';
+  if (lower.startsWith('safe limit')) return 'safe limit';
+  if (lower.startsWith('desalination')) return 'desalination';
+  if (lower.startsWith('pressure')) return 'pressure';
+  if (lower.startsWith('volume')) return 'volume';
+  if (lower.startsWith('temperature')) return 'temperature';
+  if (lower.startsWith('percent yield')) return 'percent yield';
+  if (lower.startsWith('mutation')) return 'mutation';
+  if (lower.startsWith('invasive species')) return 'invasive species';
+  if (lower.startsWith('heat transfer')) return 'heat transfer';
+  return null;
+}
+
+function renderTextWithGlossary(text, scenarioTerms) {
+  if (!text || typeof text !== 'string') return text;
+  if (!scenarioTerms || scenarioTerms.length === 0) return text;
+
+  const validTerms = scenarioTerms.filter(t => GLOSSARY[t.toLowerCase()]);
+  if (validTerms.length === 0) return text;
+
+  const regexParts = validTerms.map(term => {
+    const t = term.toLowerCase();
+    if (t === 'nitrate') return 'nitrates?';
+    if (t === 'safe limit') return 'safe limits?';
+    if (t === 'desalination') return 'desalination';
+    if (t === 'pressure') return 'pressures?';
+    if (t === 'volume') return 'volumes?';
+    if (t === 'temperature') return 'temperatures?';
+    if (t === 'percent yield') return 'percent yields?';
+    if (t === 'mutation') return 'mutations?';
+    if (t === 'invasive species') return 'invasive species';
+    if (t === 'heat transfer') return 'heat transfers?';
+    return t.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + 's?';
+  });
+
+  const regex = new RegExp(`\\b(${regexParts.join('|')})\\b`, 'gi');
+  const parts = text.split(regex);
+
+  return parts.map((part, idx) => {
+    if (idx % 2 === 1) {
+      const key = getGlossaryKey(part);
+      if (key && GLOSSARY[key]) {
+        return (
+          <GlossaryTerm
+            key={idx}
+            term={part}
+            definition={GLOSSARY[key].definition}
+          />
+        );
+      }
+    }
+    return part;
+  });
+}
+
 /* ════════════════════════════════════════════════════════════════════════
    MAIN COMPONENT
 ═══════════════════════════════════════════════════════════════════════════ */
@@ -294,6 +355,10 @@ export default function SceneOne({
     const [showThinkTimer, setShowThinkTimer] = useState(true);
     const [thinkTime, setThinkTime] = useState(120);
     const [stage, setStage] = useState('briefing');
+    const baseScenario = SCENARIOS[scenarioId];
+    const uaeScenario = UAE_SCENARIOS?.[scenarioId];
+    const activeScenario = baseScenario ? { ...baseScenario, ...(uaeScenario || {}) } : null;
+    const scenarioTerms = activeScenario?.glossaryTerms || [];
     const displayedNarrative = useTypewriter(scene.narrative || '');
 
     const accent = theme.accent || 'from-teal-500 to-emerald-500';
@@ -440,7 +505,7 @@ export default function SceneOne({
                                             </span>
                                         </div>
                                         <p className="text-slate-800 leading-relaxed text-base font-sans min-h-[120px]">
-                                            {displayedNarrative}
+                                            {renderTextWithGlossary(displayedNarrative, scenarioTerms)}
                                             <motion.span
                                                 className="inline-block w-0.5 h-4 bg-cyan-500 ml-0.5 align-middle"
                                                 animate={{ opacity: [1, 0, 1] }}
@@ -483,7 +548,7 @@ export default function SceneOne({
                                         {/* Key Question */}
                                         <div className="glass-card border border-slate-200 bg-white/80 rounded-xl p-4 shadow-sm">
                                             <h3 className="text-xs font-bold text-cyan-700 uppercase mb-2">Key Question</h3>
-                                            <p className="text-sm text-slate-700 leading-relaxed">{scene.question}</p>
+                                            <p className="text-sm text-slate-700 leading-relaxed">{renderTextWithGlossary(scene.question, scenarioTerms)}</p>
                                         </div>
 
                                         {/* Evidence Table */}
@@ -493,7 +558,9 @@ export default function SceneOne({
                                                     <thead>
                                                         <tr className="border-b border-slate-200 bg-slate-50">
                                                             {sceneDataTable.headers.map((h) => (
-                                                                <th key={h} className="px-3 py-2 font-mono text-slate-700 uppercase tracking-wider font-bold">{h}</th>
+                                                                <th key={h} className="px-3 py-2 font-mono text-slate-700 uppercase tracking-wider font-bold">
+                                                                    {renderTextWithGlossary(h, scenarioTerms)}
+                                                                </th>
                                                             ))}
                                                         </tr>
                                                     </thead>
@@ -501,7 +568,9 @@ export default function SceneOne({
                                                         {sceneDataTable.rows.map((row, rIdx) => (
                                                             <tr key={rIdx} className="border-b border-slate-100">
                                                                 {row.map((cell, cIdx) => (
-                                                                    <td key={cIdx} className="px-3 py-2 text-slate-700 font-medium">{cell}</td>
+                                                                    <td key={cIdx} className="px-3 py-2 text-slate-700 font-medium">
+                                                                        {renderTextWithGlossary(cell, scenarioTerms)}
+                                                                    </td>
                                                                 ))}
                                                             </tr>
                                                         ))}
@@ -519,7 +588,25 @@ export default function SceneOne({
                                         {scene.importantClue && (
                                             <div className="glass-card border border-slate-200 bg-white/80 rounded-xl p-4 shadow-sm">
                                                 <h3 className="text-xs font-bold text-cyan-700 uppercase mb-2">Important Clue</h3>
-                                                <p className="text-sm text-slate-700 leading-relaxed">{scene.importantClue}</p>
+                                                <p className="text-sm text-slate-700 leading-relaxed">{renderTextWithGlossary(scene.importantClue, scenarioTerms)}</p>
+                                            </div>
+                                        )}
+
+                                        {/* Key Terms Panel */}
+                                        {scenarioTerms && scenarioTerms.length > 0 && (
+                                            <div className="glass-card border border-slate-200 bg-white/80 rounded-xl p-4 shadow-sm space-y-3">
+                                                <h3 className="text-xs font-bold text-cyan-700 uppercase">Key Terms</h3>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {scenarioTerms.map((termKey) => {
+                                                        const item = GLOSSARY[termKey.toLowerCase()];
+                                                        if (!item) return null;
+                                                        return (
+                                                            <div key={termKey} className="inline-flex bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm hover:border-cyan-400 hover:bg-white transition-colors">
+                                                                <GlossaryTerm term={item.term} definition={item.definition} />
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
                                         )}
 
@@ -552,7 +639,7 @@ export default function SceneOne({
                                         />
                                     </div>
                                     <div className="px-6 py-4 border-t border-slate-100 bg-white">
-                                        <p className="text-slate-700 text-base leading-relaxed">{scene.narrative}</p>
+                                        <p className="text-slate-700 text-base leading-relaxed">{renderTextWithGlossary(scene.narrative, scenarioTerms)}</p>
                                     </div>
                                 </Panel>
 
@@ -685,7 +772,7 @@ export default function SceneOne({
                                                 <AlertTriangle className="w-4 h-4 text-red-600" />
                                                 <span className="text-[10px] font-mono text-red-700 tracking-widest uppercase font-bold">Critical Question</span>
                                             </div>
-                                            <p className="text-slate-900 font-bold leading-snug text-base">{scene.question}</p>
+                                            <p className="text-slate-900 font-bold leading-snug text-base">{renderTextWithGlossary(scene.question, scenarioTerms)}</p>
                                         </div>
 
                                         {/* Scientific justification textarea */}

@@ -3,6 +3,7 @@
 export const UAE_SCENARIOS = {
     water_contamination: {
         id: 'water_contamination',
+        glossaryTerms: ['nitrate', 'safe limit', 'desalination'],
         title: 'The Invisible Threat',
         role: 'Environmental Chemist – Water Safety Specialist',
         character: {
@@ -325,11 +326,11 @@ export const UAE_VIDEO_CONTENT = {
             },
             {
                 visual: 'Water quality monitoring dashboard with data table',
-                narration: 'Our monitoring systems have detected changes in water quality. Look at this data table. Chloride levels have risen to 280 parts per million - normal seawater influence. But notice the nitrate reading.',
+                narration: 'Our monitoring systems have detected changes in water quality. Look at this data table. Chloride levels are at 210 parts per million — within the safe limit of 250 ppm. But the nitrate reading is a serious concern.',
                 duration: 6000,
                 showData: true,
                 dataPoints: [
-                    { label: 'Chlorides', value: '280 ppm', status: 'normal', benchmark: '< 300 ppm' },
+                    { label: 'Chlorides', value: '210 ppm', status: 'normal', benchmark: '< 250 ppm' },
                     { label: 'Nitrates', value: '52 ppm', status: 'warning', benchmark: '< 50 ppm' },
                     { label: 'Heavy Metals', value: 'Trace', status: 'alert', benchmark: '0 ppm' }
                 ]

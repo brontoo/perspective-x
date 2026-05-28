@@ -20,6 +20,7 @@ export const ScenarioSchema = {
   badge: "string (e.g., 'Water Safety Analyst')",
   badgeIcon: "string (emoji, e.g., '💧')",
   skills: "array of strings (e.g., ['data_interpretation', 'scientific_reasoning'])",
+  glossaryTerms: "array of strings (e.g., ['nitrate', 'safe_limit'])",
 
   scenes: [
     {
@@ -203,6 +204,7 @@ export function normalizeScenario(scenario) {
   normalized.skills = normalized.skills || normalized.scienceFocus || [];
   normalized.badge = normalized.badge || "Science Analyst";
   normalized.badgeIcon = normalized.badgeIcon || "🔬";
+  normalized.glossaryTerms = normalized.glossaryTerms || [];
 
   // Standard required properties
   normalized.simpleContext = normalized.simpleContext || normalized.context || "No context provided.";

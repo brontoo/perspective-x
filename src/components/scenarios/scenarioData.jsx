@@ -93,6 +93,7 @@ export const SCENARIOS = {
     // ============================================
     water_contamination: {
         id: 'water_contamination',
+        glossaryTerms: ['nitrate', 'safe limit'],
         title: 'The Invisible Threat',
         role: 'Environmental Chemist – Water Safety Specialist',
         roleQuote: 'Your job is to protect public health using science-based decisions.',
@@ -280,6 +281,7 @@ export const SCENARIOS = {
     // ============================================
     reaction_gone_wrong: {
         id: 'reaction_gone_wrong',
+        glossaryTerms: ['temperature'],
         title: 'The Reaction Gone Wrong',
         role: 'Industrial Chemist – Process Safety Specialist',
         roleQuote: 'Your expertise prevents disasters and keeps workers safe.',
@@ -559,6 +561,7 @@ export const SCENARIOS = {
     // ============================================
     mutation_dilemma: {
         id: 'mutation_dilemma',
+        glossaryTerms: ['mutation'],
         title: 'The Mutation Dilemma',
         role: 'Genetic Counselor',
         roleQuote: 'You help families navigate the complex world of genetic information.',
@@ -1000,6 +1003,7 @@ export const SCENARIOS = {
     // ============================================
     invasive_species: {
         id: 'invasive_species',
+        glossaryTerms: ['invasive species'],
         title: 'Invasive Species Crisis',
         role: 'Conservation Biologist',
         roleQuote: 'You protect biodiversity by understanding ecological relationships.',
@@ -1244,7 +1248,7 @@ export const SCENARIOS = {
                     rolling: {
                         outcome: 'Blackouts rotate through neighborhoods. Demand drops to 40,000 MW. Grid stabilizes. Some residents face 2-hour outages.',
                         message: 'Controlled load shedding prevents uncontrolled cascade failure.',
-                        newData: 'Grid frequency: stable at 60 Hz. No equipment damage.'
+                        newData: 'Grid frequency: stable at 50 Hz. No equipment damage.'
                     },
                     import: {
                         outcome: 'Neighboring state provides 2,000 MW emergency power. Combined with small reductions, grid stabilizes.',
@@ -1298,6 +1302,7 @@ export const SCENARIOS = {
     // ============================================
     heat_loss: {
         id: 'heat_loss',
+        glossaryTerms: ['heat transfer'],
         title: 'Heat Loss in Buildings',
         role: 'Energy Consultant',
         roleQuote: 'You help buildings become more efficient through understanding heat transfer.',
@@ -1447,6 +1452,7 @@ export const SCENARIOS = {
     // ============================================
     aspirin_production: {
         id: 'aspirin_production',
+        glossaryTerms: ['safe limit'],
         title: 'The Aspirin Crisis',
         role: 'Pharmaceutical Scientist – Tablet Production Specialist',
         roleQuote: 'Every gram matters. Precision in chemistry protects patient lives.',
@@ -1587,6 +1593,7 @@ export const SCENARIOS = {
     // ============================================
     fuelproduction: {
         id: "fuelproduction",
+        glossaryTerms: ['percent yield'],
         title: "The Jebel Ali Fuel Crisis",
         role: "Fuel Process Engineer – Masdar Clean Energy",
         roleQuote: "Your stoichiometry calculation fuels Dubai International Airport.",
@@ -1770,6 +1777,7 @@ export const SCENARIOS = {
     // ============================================
     aspirin_percent_yield: {
         id: 'aspirin_percent_yield',
+        glossaryTerms: ['percent yield'],
         title: 'The Efficiency Report',
         role: 'Chemical Process Engineer – Pharmaceutical Quality Control',
         roleQuote: 'In a UAE pharmaceutical plant, every percentage point of yield counts.',
@@ -1911,6 +1919,7 @@ export const SCENARIOS = {
     // ============================================
     gas_boyle_adnoc: {
         id: 'gas_boyle_adnoc',
+        glossaryTerms: ['pressure', 'volume', 'temperature'],
         title: 'Pressure Control at ADNOC Gas Storage',
         role: 'Process & Safety Engineer',
         roleQuote: 'In gas operations, pressure mistakes become safety incidents.',
@@ -2052,6 +2061,7 @@ export const SCENARIOS = {
     // ============================================
     gas_charles_aviation: {
         id: 'gas_charles_aviation',
+        glossaryTerms: ['pressure', 'volume', 'temperature'],
         title: 'Gas Expansion in UAE Aviation',
         role: 'Process & Safety Engineer',
         roleQuote: 'Temperature shifts on the runway can change gas behavior fast.',
@@ -2193,6 +2203,7 @@ export const SCENARIOS = {
     // ============================================
     gas_gaylussac_cylinder: {
         id: 'gas_gaylussac_cylinder',
+        glossaryTerms: ['pressure', 'volume', 'temperature'],
         title: 'Pressure Build-Up in Sealed Cylinder',
         role: 'Process & Safety Engineer',
         roleQuote: 'In sealed systems, rising temperature can become a pressure emergency.',
@@ -2334,6 +2345,7 @@ export const SCENARIOS = {
     // ============================================
     oxygen_failure: {
         id: 'oxygen_failure',
+        glossaryTerms: ['pressure', 'volume', 'temperature'],
         title: 'Mission Oxygen Failure',
         role: 'Life-Support Engineer',
         roleQuote: 'You keep astronauts alive by mastering the chemistry of survival.',
