@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import { ROLES, SCENARIOS, BADGES, SKILLS } from '@/components/scenarios/scenarioData';
 import { getBadgeLevel, BADGE_LEVELS } from '@/components/scenario/scenarioHelpers';
+import { LEARNING_PATHS_LIST, getPathProgress } from '@/data/learningPaths';
 import {
     ArrowRight, Trophy, Target, BookOpen, Loader2,
     MessageSquare, LogOut, Settings, Home, Zap,
-    CheckCircle2, Star, Bell, ChevronRight, Lock
+    CheckCircle2, Star, Bell, ChevronRight, Lock, Map
 } from 'lucide-react';
 
 
@@ -203,6 +204,20 @@ export default function Dashboard() {
 
     // Most recent teacher feedback (up to 3)
     const recentFeedback = feedbacks.slice(0, 3);
+
+    // Recommended path from teacher feedback
+    const recommendedPathId = React.useMemo(() => {
+        const rec = feedbacks.find(fb => fb.type === 'path_recommendation');
+        return rec?.message || null;
+    }, [feedbacks]);
+
+    // Per-path progress for Learning Paths section
+    const pathProgressList = React.useMemo(() => {
+        return LEARNING_PATHS_LIST.map(path => ({
+            path,
+            ...getPathProgress(path.id, progress?.completed_scenarios || []),
+        }));
+    }, [progress]);
 
     if (loading) {
         return (
@@ -517,7 +532,103 @@ export default function Dashboard() {
                     </div>
                 </motion.div>
 
-                {/* ─── 6. Teacher Feedback ─── */}
+                {/* ─── 6. Learning Paths ─── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.28 }}
+                >
+                    <div className="flex items-center justify-between mb-3">
+                        <h2 className="text-base font-bold text-slate-700 flex items-center gap-2">
+                            <Map className="w-4 h-4 text-indigo-500" />
+                            Learning Paths
+                        </h2>
+                        <span className="text-xs text-slate-400">Choose a subject track</span>
+                    </div>
+
+                    {/* Teacher-recommended path banner */}
+                    {recommendedPathId && (() => {
+                        const recPath = LEARNING_PATHS_LIST.find(p => p.id === recommendedPathId);
+                        if (!recPath) return null;
+                        return (
+                            <div className="glass-card mb-4 p-4 border border-purple-200 bg-purple-50/70 flex items-center gap-3">
+                                <span className="text-2xl flex-shrink-0">👨‍🏫</span>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-purple-800 font-bold text-sm">Your teacher recommends:</p>
+                                    <p className="text-purple-600 text-xs mt-0.5 truncate">{recPath.emoji} {recPath.title}</p>
+                                </div>
+                                <button
+                                    onClick={() => navigate(`/LearningPath?path=${recPath.id}`)}
+                                    className="flex-shrink-0 text-xs font-bold px-3 py-1.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition"
+                                >
+                                    Open Path
+                                </button>
+                            </div>
+                        );
+                    })()}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {pathProgressList.map(({ path, completed, total, pct, nextScenarioId, isComplete }) => {
+                            const c = path.colorClasses;
+                            const isRecommended = path.id === recommendedPathId;
+
+                            return (
+                                <button
+                                    key={path.id}
+                                    onClick={() => navigate(`/LearningPath?path=${path.id}`)}
+                                    className={`glass-card w-full text-left p-5 border transition-all group hover:shadow-md
+                                        ${ isRecommended ? 'border-purple-200 ring-2 ring-purple-200 ring-offset-1' :
+                                           isComplete ? 'border-emerald-200 bg-emerald-50/40' :
+                                           `${c.border} hover:${c.border}`
+                                        }`}
+                                >
+                                    {/* Header */}
+                                    <div className="flex items-start gap-3 mb-3">
+                                        <div className={`w-10 h-10 rounded-xl ${c.icon} flex items-center justify-center text-xl flex-shrink-0`}>
+                                            {path.emoji}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-1.5 flex-wrap">
+                                                <h3 className={`text-sm font-bold ${c.heading} truncate`}>{path.title}</h3>
+                                                {isRecommended && (
+                                                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700 border border-purple-200 flex-shrink-0">⭐ Recommended</span>
+                                                )}
+                                            </div>
+                                            <p className="text-slate-500 text-xs mt-0.5">{total} missions · {path.difficulty}</p>
+                                        </div>
+                                        {isComplete ? (
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                                        ) : (
+                                            <span className={`text-xs font-bold flex-shrink-0 mt-0.5 ${c.heading}`}>{pct}%</span>
+                                        )}
+                                    </div>
+
+                                    {/* Description */}
+                                    <p className="text-slate-500 text-xs leading-relaxed mb-3 line-clamp-2">{path.description}</p>
+
+                                    {/* Progress bar */}
+                                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200 mb-3">
+                                        <div
+                                            className={`h-full bg-gradient-to-r ${c.bar} rounded-full transition-all duration-700`}
+                                            style={{ width: `${pct}%` }}
+                                        />
+                                    </div>
+
+                                    {/* Footer */}
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs text-slate-400">{completed}/{total} done</span>
+                                        <span className={`text-xs font-bold flex items-center gap-1 ${c.heading} group-hover:translate-x-0.5 transition-transform`}>
+                                            {isComplete ? 'View' : completed === 0 ? 'Start' : 'Continue'}
+                                            <ArrowRight className="w-3 h-3" />
+                                        </span>
+                                    </div>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </motion.div>
+
+                {/* ─── 7. Teacher Feedback ─── */}
                 <motion.div
                     id="feedback-section"
                     initial={{ opacity: 0, y: 14 }}

@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import { SCENARIOS, SKILLS } from '@/components/scenarios/scenarioData';
+import { LEARNING_PATHS_LIST } from '@/data/learningPaths';
 import StudentAnswersModal from '@/components/scenario/StudentAnswersModal';
 import { getBadgeLevel } from '@/components/scenario/scenarioHelpers';
 import {
@@ -935,6 +936,80 @@ export default function TeacherDashboard() {
                                                 )}
                                             </AnimatePresence>
                                         </motion.div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* ── Learning Paths Recommendation Panel ── */}
+                        <div className="glass-card p-6 mt-2">
+                            <div className="border-b border-slate-100 pb-4 mb-6">
+                                <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                    🗺️ Recommend a Learning Path
+                                </h2>
+                                <p className="text-slate-500 text-sm mt-1">
+                                    Send a path recommendation to your whole class. Students will see it highlighted on their dashboard.
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {LEARNING_PATHS_LIST.map(path => {
+                                    const c = path.colorClasses;
+                                    const skillLabels = {
+                                        data_interpretation: '📊 Data',
+                                        scientific_reasoning: '🧬 Reasoning',
+                                        decision_making: '🎯 Decision-Making',
+                                        risk_analysis: '⚠️ Risk',
+                                        ethical_reasoning: '⚖️ Ethics',
+                                        concept_application: '🧪 Concepts',
+                                        communication: '📝 Communication',
+                                        reflection: '🤔 Reflection',
+                                    };
+                                    return (
+                                        <div key={path.id} className={`rounded-xl p-5 border ${c.border} ${c.bg} space-y-3`}>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-2xl">{path.emoji}</span>
+                                                <div className="flex-1 min-w-0">
+                                                    <h3 className={`font-bold text-sm ${c.heading}`}>{path.title}</h3>
+                                                    <p className="text-slate-500 text-xs">{path.scenarios.length} missions · {path.difficulty}</p>
+                                                </div>
+                                            </div>
+                                            <p className="text-slate-600 text-xs leading-relaxed">{path.description}</p>
+                                            <div className="flex flex-wrap gap-1">
+                                                {path.skills.map(sk => (
+                                                    <span key={sk} className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${c.badge}`}>
+                                                        {skillLabels[sk] || sk}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            <button
+                                                onClick={async () => {
+                                                    if (!students.length) {
+                                                        alert('No students registered yet.');
+                                                        return;
+                                                    }
+                                                    const teacherName = profile?.full_name || user?.email || 'Teacher';
+                                                    const rows = students.map(s => ({
+                                                        student_email: s.email,
+                                                        teacher_name: teacherName,
+                                                        message: path.id,
+                                                        type: 'path_recommendation',
+                                                        scenario_id: null,
+                                                    }));
+                                                    const { error } = await supabase
+                                                        .from('teacher_feedback')
+                                                        .insert(rows);
+                                                    if (!error) {
+                                                        alert(`✅ "${path.title}" recommended to ${students.length} student${students.length !== 1 ? 's' : ''}!`);
+                                                    } else {
+                                                        alert('Failed to send recommendation. Please try again.');
+                                                    }
+                                                }}
+                                                className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-bold transition shadow-sm ${c.button}`}
+                                            >
+                                                📤 Recommend to Class
+                                            </button>
+                                        </div>
                                     );
                                 })}
                             </div>

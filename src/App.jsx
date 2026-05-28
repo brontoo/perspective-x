@@ -16,6 +16,7 @@ const TeacherDashboard  = lazy(() => import('@/pages/TeacherDashboard'));
 const ProfileSettings   = lazy(() => import('@/pages/ProfileSettings'));
 const LeaderboardPage   = lazy(() => import('@/pages/LeaderboardPage'));
 const RoleHub           = lazy(() => import('@/pages/RoleHub'));
+const LearningPath      = lazy(() => import('@/pages/LearningPath'));
 const SignIn            = lazy(() => import('@/pages/SignIn'));
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -121,6 +122,11 @@ function AppRoutes() {
                     <Route path="/role-hub" element={
                         <LayoutWrapper currentPageName="RoleHub">
                             <RoleHub />
+                        </LayoutWrapper>
+                    } />
+                    <Route path="/LearningPath" element={
+                        <LayoutWrapper currentPageName="LearningPath">
+                            <LearningPath />
                         </LayoutWrapper>
                     } />
                     <Route path="*" element={<PageNotFound />} />
