@@ -772,6 +772,7 @@ export default function TeacherDashboard() {
 
                     {/* ── Scenarios Tab ── */}
                     {activeTab === 'scenarios' && (
+                        <>
                         <div className="glass-card p-6">
                             <h2 className="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-2">Scenario Controls</h2>
                             <div className="space-y-4">
@@ -1014,6 +1015,7 @@ export default function TeacherDashboard() {
                                 })}
                             </div>
                         </div>
+                        </>
                     )}
 
                     {/* ── Students Tab ── */}
