@@ -376,15 +376,16 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
 
     // Determine the rating (strong, risky, weak) using either the consequence key or the choice letter ID
     const scenarioRatingMap = OUTCOME_RATING_MAP[scenario.id] || {};
-    const rating = scenarioRatingMap[consequenceKey] || scenarioRatingMap[selectedChoiceId] || 'strong';
+    const ratingFromConsequence = consequence?.rating || consequence?.strength || selectedOption?.rating || selectedOption?.strength;
+    const rating = ratingFromConsequence || scenarioRatingMap[consequenceKey] || scenarioRatingMap[selectedChoiceId] || 'strong';
 
     // Get scientific impact text
-    const outcomeData = evaluateScenarioOutcome(scenario.id, consequenceKey || selectedOption?.consequence);
+    const outcomeData = evaluateScenarioOutcome(scenario.id, consequenceKey || selectedOption?.consequence, scenario);
     const impactText = outcomeData.impactText;
 
     // Get the Better Thinking tip if option was weak or risky
     const scenarioTips = BETTER_THINKING_TIPS[scenario.id] || {};
-    const betterThinkingTip = scenarioTips[consequenceKey] || scenarioTips[selectedChoiceId] || null;
+    const betterThinkingTip = consequence?.betterThinkingTip || consequence?.tip || selectedOption?.betterThinkingTip || selectedOption?.tip || scenarioTips[consequenceKey] || scenarioTips[selectedChoiceId] || null;
 
     // Retrieve misconception feedback if available
     const getMisconceptionFeedback = () => {
@@ -422,9 +423,40 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
     const misconceptionFeedback = getMisconceptionFeedback();
 
     // Get impact categories
-    const impactTags = SCENARIO_IMPACT_CATEGORIES[scenario.id] || [
-      { label: 'Safety', icon: <Shield className="w-3.5 h-3.5" />, color: 'bg-cyan-50 text-cyan-600 border-cyan-100' }
-    ];
+    const tagIcons = {
+      health: <Heart className="w-3.5 h-3.5" />,
+      safety: <Shield className="w-3.5 h-3.5" />,
+      cost: <DollarSign className="w-3.5 h-3.5" />,
+      environment: <Leaf className="w-3.5 h-3.5" />,
+      people: <Users className="w-3.5 h-3.5" />,
+      efficiency: <Zap className="w-3.5 h-3.5" />,
+    };
+
+    const tagColors = {
+      health: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+      safety: 'bg-cyan-50 text-cyan-600 border-cyan-100',
+      cost: 'bg-amber-50 text-amber-600 border-amber-100',
+      environment: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+      people: 'bg-indigo-50 text-indigo-600 border-indigo-100',
+      efficiency: 'bg-cyan-50 text-cyan-600 border-cyan-100',
+    };
+
+    let impactTags = SCENARIO_IMPACT_CATEGORIES[scenario.id];
+    if (!impactTags && Array.isArray(scenario.impactCategories)) {
+      impactTags = scenario.impactCategories.map(cat => {
+        const key = cat.toLowerCase();
+        return {
+          label: cat.charAt(0).toUpperCase() + cat.slice(1),
+          icon: tagIcons[key] || <Shield className="w-3.5 h-3.5" />,
+          color: tagColors[key] || 'bg-slate-50 text-slate-600 border-slate-100'
+        };
+      });
+    }
+    if (!impactTags) {
+      impactTags = [
+        { label: 'Safety', icon: <Shield className="w-3.5 h-3.5" />, color: 'bg-cyan-50 text-cyan-600 border-cyan-100' }
+      ];
+    }
 
     // Color theme variables based on rating
     const ratingThemes = {

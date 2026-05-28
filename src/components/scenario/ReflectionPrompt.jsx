@@ -3,25 +3,45 @@ import { motion } from 'framer-motion';
 import { Edit3, CheckCircle, ChevronRight } from 'lucide-react';
 
 export default function ReflectionPrompt({ scenario, onComplete, isTeacher, theme }) {
-    // State for the three guided prompts pre-populated with sentence starters
-    const [whyChoice, setWhyChoice] = useState('I chose this because ');
-    const [evidenceHelp, setEvidenceHelp] = useState('The evidence showed ');
-    const [nextTime, setNextTime] = useState('Next time, I would ');
+    // Dynamic reflection questions (from scenario or default)
+    const reflectionQuestions = scenario?.reflection || [
+        { id: 'whyChoice', question: 'Why did you make this choice?', starter: 'I chose this because ' },
+        { id: 'evidenceHelp', question: 'What evidence helped you?', starter: 'The evidence showed ' },
+        { id: 'nextTime', question: 'What would you do differently next time?', starter: 'Next time, I would ' }
+    ];
+
+    // State for dynamic prompts pre-populated with sentence starters
+    const [answers, setAnswers] = useState(() => {
+        const initial = {};
+        reflectionQuestions.forEach((q) => {
+            initial[q.id] = q.starter || '';
+        });
+        return initial;
+    });
+
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     // Validation checks to ensure students write something beyond the starter
-    const isWhyChoiceValid = whyChoice.trim().length > 23;      // Starter "I chose this because " is 22 chars
-    const isEvidenceHelpValid = evidenceHelp.trim().length > 21; // Starter "The evidence showed " is 20 chars
-    const isNextTimeValid = nextTime.trim().length > 21;        // Starter "Next time, I would " is 19 chars
+    const isValid = (qId) => {
+        const q = reflectionQuestions.find((x) => x.id === qId);
+        if (!q) return false;
+        const starter = q.starter || '';
+        const answer = answers[qId] || '';
+        // Require at least 2 non-whitespace characters beyond the starter
+        return answer.trim().length > starter.trim().length + 1;
+    };
 
-    const canSubmit = isTeacher || (isWhyChoiceValid && isEvidenceHelpValid && isNextTimeValid);
+    const canSubmit = isTeacher || reflectionQuestions.every((q) => isValid(q.id));
 
     const handleSubmit = () => {
         if (!canSubmit) return;
         setIsSubmitted(true);
         
         // Combine the guided responses into a formatted string to preserve saving compatibility
-        const combinedReflection = `Why I made this choice:\n${whyChoice}\n\nWhat evidence helped:\n${evidenceHelp}\n\nWhat I would do differently next time:\n${nextTime}`;
+        const combinedReflection = reflectionQuestions
+            .map((q) => `${q.question}\n${answers[q.id]}`)
+            .join('\n\n');
+
         onComplete(combinedReflection);
     };
 
@@ -64,79 +84,33 @@ export default function ReflectionPrompt({ scenario, onComplete, isTeacher, them
 
                     {/* Guided Reflection Prompts */}
                     <div className="space-y-5">
-                        
-                        {/* Prompt 1 */}
-                        <div className="space-y-2 bg-white/60 p-5 rounded-xl border border-slate-100 shadow-sm transition-all duration-300 hover:border-amber-200/50">
-                            <label className="text-sm font-bold text-slate-700 block font-sans">
-                                1. Why did you make this choice?
-                            </label>
-                            <textarea
-                                value={whyChoice}
-                                onChange={(e) => setWhyChoice(e.target.value)}
-                                disabled={isSubmitted}
-                                className="w-full min-h-[70px] bg-white border border-slate-200 hover:border-slate-300 focus:border-[#f59e0b] focus:ring-1 focus:ring-[#f59e0b] rounded-lg p-3 text-slate-800 text-sm outline-none transition-colors resize-none font-sans leading-relaxed shadow-inner"
-                            />
-                            <div className="flex justify-end">
-                                {isWhyChoiceValid ? (
-                                    <span className="text-[10px] font-mono text-emerald-600 font-bold flex items-center gap-1">
-                                        <CheckCircle className="w-3 h-3" /> Ready
-                                    </span>
-                                ) : (
-                                    <span className="text-[10px] font-mono text-slate-400">
-                                        Please complete the sentence starter
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Prompt 2 */}
-                        <div className="space-y-2 bg-white/60 p-5 rounded-xl border border-slate-100 shadow-sm transition-all duration-300 hover:border-amber-200/50">
-                            <label className="text-sm font-bold text-slate-700 block font-sans">
-                                2. What evidence helped you?
-                            </label>
-                            <textarea
-                                value={evidenceHelp}
-                                onChange={(e) => setEvidenceHelp(e.target.value)}
-                                disabled={isSubmitted}
-                                className="w-full min-h-[70px] bg-white border border-slate-200 hover:border-slate-300 focus:border-[#f59e0b] focus:ring-1 focus:ring-[#f59e0b] rounded-lg p-3 text-slate-800 text-sm outline-none transition-colors resize-none font-sans leading-relaxed shadow-inner"
-                            />
-                            <div className="flex justify-end">
-                                {isEvidenceHelpValid ? (
-                                    <span className="text-[10px] font-mono text-emerald-600 font-bold flex items-center gap-1">
-                                        <CheckCircle className="w-3 h-3" /> Ready
-                                    </span>
-                                ) : (
-                                    <span className="text-[10px] font-mono text-slate-400">
-                                        Please complete the sentence starter
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Prompt 3 */}
-                        <div className="space-y-2 bg-white/60 p-5 rounded-xl border border-slate-100 shadow-sm transition-all duration-300 hover:border-amber-200/50">
-                            <label className="text-sm font-bold text-slate-700 block font-sans">
-                                3. What would you do differently next time?
-                            </label>
-                            <textarea
-                                value={nextTime}
-                                onChange={(e) => setNextTime(e.target.value)}
-                                disabled={isSubmitted}
-                                className="w-full min-h-[70px] bg-white border border-slate-200 hover:border-slate-300 focus:border-[#f59e0b] focus:ring-1 focus:ring-[#f59e0b] rounded-lg p-3 text-slate-800 text-sm outline-none transition-colors resize-none font-sans leading-relaxed shadow-inner"
-                            />
-                            <div className="flex justify-end">
-                                {isNextTimeValid ? (
-                                    <span className="text-[10px] font-mono text-emerald-600 font-bold flex items-center gap-1">
-                                        <CheckCircle className="w-3 h-3" /> Ready
-                                    </span>
-                                ) : (
-                                    <span className="text-[10px] font-mono text-slate-400">
-                                        Please complete the sentence starter
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-
+                        {reflectionQuestions.map((q, idx) => {
+                            const isQValid = isValid(q.id);
+                            return (
+                                <div key={q.id} className="space-y-2 bg-white/60 p-5 rounded-xl border border-slate-100 shadow-sm transition-all duration-300 hover:border-amber-200/50">
+                                    <label className="text-sm font-bold text-slate-700 block font-sans">
+                                        {idx + 1}. {q.question}
+                                    </label>
+                                    <textarea
+                                        value={answers[q.id] || ''}
+                                        onChange={(e) => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
+                                        disabled={isSubmitted}
+                                        className="w-full min-h-[70px] bg-white border border-slate-200 hover:border-slate-300 focus:border-[#f59e0b] focus:ring-1 focus:ring-[#f59e0b] rounded-lg p-3 text-slate-800 text-sm outline-none transition-colors resize-none font-sans leading-relaxed shadow-inner"
+                                    />
+                                    <div className="flex justify-end">
+                                        {isQValid ? (
+                                            <span className="text-[10px] font-mono text-emerald-600 font-bold flex items-center gap-1">
+                                                <CheckCircle className="w-3 h-3" /> Ready
+                                            </span>
+                                        ) : (
+                                            <span className="text-[10px] font-mono text-slate-400">
+                                                Please complete the sentence starter
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
 
                     {/* Actions */}

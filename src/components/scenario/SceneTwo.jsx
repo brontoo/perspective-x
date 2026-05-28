@@ -192,7 +192,7 @@ const SCENE_TWO_HINTS = {
 };
 
 function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode = 'on-level' }) {
-    let customHints = SCENE_TWO_HINTS[scenarioId] || [
+    let customHints = scene.hints || SCENE_TWO_HINTS[scenarioId] || [
         "Read the choice options and tags carefully.",
         "Check how each choice interacts with the scientific principles identified in the evidence stage.",
         "Consider which choice offers the most balanced and direct scientific solution to the core problem."
@@ -460,7 +460,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
     const canSubmit = selectedOption && (isReasoningValid || isTeacher);
 
     // Fetch key evidence points with fallback
-    const evidencePoints = SCENARIO_EVIDENCE_MAP[scenarioId] || [
+    const evidencePoints = scene.evidence || SCENARIO_EVIDENCE_MAP[scenarioId] || [
         "Review the observations, logs, and measurements collected in the previous scene.",
         "Verify the scientific limits and parameters of the system.",
         "Consider the public safety, economic, and environmental trade-offs."

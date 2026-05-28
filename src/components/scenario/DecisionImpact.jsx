@@ -163,7 +163,7 @@ export default function DecisionImpact({
         : toMetricRows(consequence?.newData);
 
     /* CRITICAL: preserve as-is */
-    const outcome = evaluateScenarioOutcome(scenarioId, consequenceKey);
+    const outcome = evaluateScenarioOutcome(scenarioId, consequenceKey, scenario);
 
     const handleSubmitReflection = () => setImpactRevealed(true);
 

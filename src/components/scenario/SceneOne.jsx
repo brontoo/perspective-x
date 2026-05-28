@@ -93,7 +93,7 @@ const SCENE_ONE_HINTS = {
 };
 
 function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode = 'on-level' }) {
-    let customHints = SCENE_ONE_HINTS[scenarioId] || [
+    let customHints = scene.hints || SCENE_ONE_HINTS[scenarioId] || [
         "Review the key question and the data table provided.",
         "Check the measurements against the safe limits or baseline values.",
         "Analyze which option fits the clue or standard parameters of the system."

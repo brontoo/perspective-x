@@ -737,7 +737,7 @@ export default function ScenarioPlayer() {
                                         isTeacher={isTeacher}
                                         missionResult={
                                             responses.scene2?.consequence
-                                                ? evaluateScenarioOutcome(scenarioId, responses.scene2.consequence)
+                                                ? evaluateScenarioOutcome(scenarioId, responses.scene2.consequence, scenario)
                                                 : null
                                         }
                                         scenarioId={scenarioId}

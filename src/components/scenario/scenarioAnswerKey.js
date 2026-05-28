@@ -160,13 +160,27 @@ export const SCENARIO_ANSWER_KEY = {
   },
 };
 
-/**
- * Returns whether a given consequence key is a success or failure for the scenario.
- * @param {string} scenarioId
- * @param {string} consequenceKey  — the value from scene2 response (e.g. "quench", "treatment")
- * @returns {{ isSuccess: boolean, impactText: string }}
- */
-export function evaluateScenarioOutcome(scenarioId, consequenceKey) {
+export function evaluateScenarioOutcome(scenarioId, consequenceKey, scenario = null) {
+  // If scenario object is passed, check if it contains the consequence evaluation rules
+  if (scenario) {
+    const successConsequences = scenario.successConsequences || scenario.consequences?.successConsequences;
+    const allSuccess = scenario.allSuccess !== undefined ? scenario.allSuccess : scenario.consequences?.allSuccess;
+    const successImpact = scenario.successImpact || scenario.consequences?.successImpact || 'Your decision had a positive outcome.';
+    const failureImpact = scenario.failureImpact || scenario.consequences?.failureImpact || 'Your decision had a negative outcome.';
+
+    if (allSuccess) {
+      return { isSuccess: true, impactText: successImpact };
+    }
+
+    if (Array.isArray(successConsequences)) {
+      const isSuccess = successConsequences.includes(consequenceKey);
+      return {
+        isSuccess,
+        impactText: isSuccess ? successImpact : failureImpact,
+      };
+    }
+  }
+
   const key = SCENARIO_ANSWER_KEY[scenarioId];
 
   if (!key) {

@@ -36,6 +36,8 @@ export function toMetricMap(rawData) {
 
 import { ADDITIONAL_QUESTIONS } from '../scenarios/additionalQuestions';
 import { evaluateScenarioOutcome } from './scenarioAnswerKey';
+import { SCENARIOS } from '../scenarios/scenarioData';
+import { UAE_SCENARIOS } from '../scenarios/uaeScenarioData';
 
 export function normalizeExitTicketQuestions(exitTicket, scenarioId) {
     let baseQuestions = [];
@@ -84,7 +86,8 @@ export function getBadgeLevel(score, consequence, justification, scenarioId, dif
         .replace(/This method generates oxygen through the chemical reaction\.\.\./g, '')
         .trim();
 
-    const outcome = evaluateScenarioOutcome(scenarioId, consequence);
+    const scenario = SCENARIOS[scenarioId] || UAE_SCENARIOS?.[scenarioId];
+    const outcome = evaluateScenarioOutcome(scenarioId, consequence, scenario);
     const isCorrectChoice = outcome?.isSuccess === true;
     const hasStrongReasoning = cleanJust.length >= 60;
 
