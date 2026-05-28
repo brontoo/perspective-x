@@ -7,9 +7,7 @@ import {
 } from 'lucide-react';
 
 // Reusable HUD Decoration Components
-const HUDCorner = ({ className }) => (
-    <div className={`absolute w-3 h-3 border-teal-500/40 ${className}`} />
-);
+const HUDCorner = () => null;
 
 const HUDFrame = ({ children, title, accentColor = "teal" }) => (
     <div className="relative w-full h-full min-h-[180px] flex flex-col items-center justify-center bg-white/40 rounded-xl overflow-hidden border border-cyan-500/15 shadow-sm">
@@ -21,7 +19,7 @@ const HUDFrame = ({ children, title, accentColor = "teal" }) => (
         {title && (
             <div className="absolute bottom-2 left-4 flex items-center gap-2">
                 <div className="w-1 h-3 bg-cyan-500" />
-                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{title}</span>
+                <span className="text-xs font-semibold text-slate-600">{title}</span>
             </div>
         )}
     </div>
@@ -347,11 +345,11 @@ const SCENE_VISUALS = {
                     </div>
                     <div className="space-y-4">
                         <div className="flex flex-col">
-                            <span className="text-[8px] text-slate-500 uppercase">Input Voltage</span>
+                            <span className="text-[9px] text-slate-500">Input Voltage</span>
                             <span className="text-red-400 font-mono text-xs">0.0V [OFF]</span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-[8px] text-slate-500 uppercase">Efficiency</span>
+                            <span className="text-[9px] text-slate-500">Efficiency</span>
                             <span className="text-red-400 font-mono text-xs">0% [FAIL]</span>
                         </div>
                     </div>
@@ -363,7 +361,7 @@ const SCENE_VISUALS = {
                 <div className="flex items-center gap-4 py-10">
                     <div className="p-3 bg-teal-500/10 border border-teal-500/30 rounded-xl">
                         <div className="text-xs font-mono font-bold text-teal-400">2H₂O₂ → 2H₂O + O₂</div>
-                        <div className="text-[8px] text-slate-500 mt-1 uppercase text-center">Decomposition</div>
+                        <div className="text-[9px] text-slate-500 mt-1 text-center">Decomposition</div>
                     </div>
                     <motion.div 
                         animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
@@ -400,8 +398,8 @@ const SCENE_VISUALS = {
                 <div className="w-64 space-y-4 py-10">
                     <div className="flex justify-between items-end">
                         <div className="flex flex-col">
-                            <span className="text-[7px] text-slate-500 uppercase font-bold">System Status</span>
-                            <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 0.5, repeat: Infinity }} className="text-red-400 font-bold text-xs">CRITICAL OVERLOAD</motion.span>
+                            <span className="text-[9px] text-slate-500 font-bold">System Status</span>
+                            <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 0.5, repeat: Infinity }} className="text-red-400 font-bold text-xs">Critical Overload</motion.span>
                         </div>
                         <div className="text-right">
                             <span className="text-[18px] font-mono font-bold text-red-500">98.4%</span>
@@ -444,8 +442,6 @@ const SCENE_VISUALS = {
             <HUDFrame title="Building Thermal Scan">
                 <div className="relative py-6 scale-125">
                     <Building2 className="w-24 h-24 text-blue-400/40" />
-                    <HUDCorner className="top-0 left-0 border-t-2 border-l-2" />
-                    <HUDCorner className="top-0 right-0 border-t-2 border-r-2" />
                 </div>
             </HUDFrame>
         ),
@@ -658,7 +654,7 @@ const SCENE_VISUALS = {
                             ))}
                         </div>
                     </div>
-                    <div className="text-[10px] font-mono text-red-400 animate-pulse">WARNING: PURITY BELOW THRESHOLD</div>
+                    <div className="text-[10px] font-mono text-red-400">Warning: Purity Below Threshold</div>
                 </div>
             </HUDFrame>
         ),
@@ -669,14 +665,14 @@ const SCENE_VISUALS = {
                         <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2, repeat: Infinity }}>
                             <ShieldCheck className="w-12 h-12 text-emerald-400" />
                         </motion.div>
-                        <span className="text-[8px] font-mono text-emerald-500/60 uppercase">Safety</span>
+                        <span className="text-[9px] font-mono text-emerald-500/60">Safety</span>
                     </div>
                     <div className="h-12 w-px bg-slate-800" />
                     <div className="flex flex-col items-center gap-2">
                         <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 2, repeat: Infinity }}>
                             <Zap className="w-12 h-12 text-amber-400 opacity-40" />
                         </motion.div>
-                        <span className="text-[8px] font-mono text-amber-500/30 uppercase">Profit</span>
+                        <span className="text-[9px] font-mono text-amber-500/30">Profit</span>
                     </div>
                 </div>
             </HUDFrame>
@@ -801,7 +797,7 @@ const SCENE_VISUALS = {
                         className="w-24 h-24 rounded-full border-4 border-teal-500/30 flex flex-col items-center justify-center relative"
                     >
                         <div className="text-2xl font-black text-white">75%</div>
-                        <div className="text-[8px] font-mono text-teal-400 uppercase tracking-widest">Yield</div>
+                        <div className="text-[9px] font-mono text-teal-400">Yield</div>
                         <svg className="absolute inset-0 w-full h-full -rotate-90">
                             <motion.circle 
                                 cx="50%" cy="50%" r="44%"
@@ -845,7 +841,7 @@ function DataTable({ dataTable }) {
                     <thead>
                         <tr className="border-b border-slate-700">
                             {dataTable.headers?.map((header) => (
-                                <th key={header} className="px-3 py-2 text-left text-teal-300 font-semibold uppercase tracking-wide text-xs">
+                                <th key={header} className="px-3 py-2 text-left text-teal-300 font-semibold text-xs">
                                     {header}
                                 </th>
                             ))}
@@ -905,8 +901,8 @@ export default function ScenarioVisual({ scenarioId, sceneIndex, showData, avata
                         transition={{ delay: 0.1, duration: 0.35 }}
                         className="space-y-2 relative z-10"
                     >
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-teal-500/20 bg-slate-900/70 text-[10px] font-semibold uppercase tracking-[0.2em] text-teal-300">
-                            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-teal-500/20 bg-slate-900/70 text-[10px] font-semibold text-teal-300">
+                            <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
                             Visual Briefing
                         </div>
                         {title && <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>}

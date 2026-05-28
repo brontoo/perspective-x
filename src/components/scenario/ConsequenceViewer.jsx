@@ -502,33 +502,30 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
             {/* ── Header / Banner ── */}
             <div className="flex items-center gap-3">
                 <span className="w-2 h-2 rounded-full bg-[#14b8a6]" />
-                <span className="text-xs font-mono text-[#14b8a6] tracking-widest uppercase select-none font-bold">
+                <span className="text-xs font-mono text-[#14b8a6] tracking-wider select-none font-bold">
                     Result
                 </span>
                 <div className="h-px flex-1 bg-gradient-to-r from-[#14b8a6]/40 to-transparent" />
             </div>
 
             <div className={`glass-card border ${ratingTheme.border} ${ratingTheme.bg} rounded-xl overflow-hidden shadow-2xl transition-all duration-300`}>
-                
-                {/* Visual Header */}
                 <div className="bg-white/80 p-6 border-b border-slate-200/80 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         {ratingTheme.icon}
-                        <h2 className="text-lg font-black text-slate-800 uppercase tracking-wide font-sans">
+                        <h2 className="text-lg font-black text-slate-800 tracking-wide font-sans">
                             Operation Result
                         </h2>
                     </div>
-                    <span className={`text-[10px] font-mono font-black tracking-widest uppercase px-3 py-1 rounded-full shadow-sm ${ratingTheme.badgeColor}`}>
+                    <span className={`text-[10px] font-mono font-black tracking-wider px-3 py-1 rounded-full shadow-sm ${ratingTheme.badgeColor}`}>
                         {ratingTheme.badgeText}
                     </span>
                 </div>
 
                 <div className="p-8 space-y-6">
 
-                    {/* 1. Your Choice */}
                     {selectedOption && (
                         <div className="bg-white/90 border border-slate-200/60 rounded-xl p-5 shadow-sm">
-                            <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase block mb-1 font-bold">
+                            <span className="text-[10px] font-mono text-slate-500 tracking-wider block mb-1 font-bold">
                                 Your Choice
                             </span>
                             <p className="text-slate-800 text-base font-bold leading-snug font-sans">
@@ -537,11 +534,10 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         </div>
                     )}
 
-                    {/* 2. What Happened */}
                     <div className="space-y-2.5">
                         <div className="flex items-center gap-2 text-slate-500 font-bold">
                             <FileText className="w-4 h-4 text-cyan-600" />
-                            <span className="text-xs font-mono tracking-widest uppercase">
+                            <span className="text-xs font-mono tracking-wider">
                                 What Happened
                             </span>
                         </div>
@@ -550,12 +546,11 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         </p>
                     </div>
 
-                    {/* 3. Why It Happened (Science explanation) */}
                     {consequence?.message && (
                         <div className="border-l-4 border-cyan-500 bg-cyan-50/40 p-5 rounded-r-xl border-t border-b border-r border-cyan-100">
                             <div className="flex items-center gap-2 mb-2">
                                 <Sparkles className="w-4 h-4 text-cyan-600" />
-                                <span className="text-[10px] font-mono text-cyan-700 tracking-widest uppercase block font-bold">
+                                <span className="text-[10px] font-mono text-cyan-700 tracking-wider block font-bold">
                                     Why It Happened (Scientific Explanation)
                                 </span>
                             </div>
@@ -565,12 +560,11 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         </div>
                     )}
 
-                    {/* Resulting Data Metrics */}
                     {consequence?.newData && (
                         <div className="bg-white/90 border border-slate-200/60 rounded-xl p-5 shadow-sm">
                             <div className="flex items-center gap-2 text-slate-500 mb-2.5 font-bold">
                                 <BarChart3 className="w-4 h-4 text-amber-600" />
-                                <span className="text-[10px] font-mono tracking-widest uppercase">
+                                <span className="text-[10px] font-mono tracking-wider">
                                     Post-Intervention Data
                                 </span>
                             </div>
@@ -580,12 +574,11 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         </div>
                     )}
 
-                    {/* 4. Impact */}
                     <div className="bg-white/90 border border-slate-200/60 rounded-xl p-5 shadow-sm space-y-4">
                         <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
                             <div className="flex items-center gap-2">
                                 <Activity className="w-4 h-4 text-cyan-600" />
-                                <span className="text-[10px] font-mono tracking-widest text-slate-500 uppercase font-bold">
+                                <span className="text-[10px] font-mono tracking-wider text-slate-500 font-bold">
                                     System Impact
                                 </span>
                             </div>
@@ -603,12 +596,11 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         </p>
                     </div>
 
-                    {/* Misconception-based Feedback */}
                     {misconceptionFeedback && (
                         <div className="p-6 border rounded-xl bg-sky-50/30 border-sky-100/80 shadow-sm space-y-3">
                             <div className="flex items-center gap-2">
                                 <Lightbulb className="w-4.5 h-4.5 text-sky-600" />
-                                <span className="text-[10px] font-mono text-sky-700 tracking-widest uppercase block font-bold">
+                                <span className="text-[10px] font-mono text-sky-700 tracking-wider block font-bold">
                                     Scientific Thinking Check
                                 </span>
                             </div>
@@ -623,12 +615,11 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         </div>
                     )}
 
-                    {/* 5. Better Thinking (Constructive feedback cards for Amber or Red outcomes) */}
                     {betterThinkingTip && (
                         <div className={`p-5 border rounded-xl bg-amber-50/30 border-amber-200/60 text-slate-800`}>
                             <div className="flex items-center gap-2 mb-2.5">
-                                <Sparkles className="w-4.5 h-4.5 text-amber-600 animate-pulse" />
-                                <span className="text-[10px] font-mono text-amber-700 tracking-widest uppercase block font-bold">
+                                <Sparkles className="w-4.5 h-4.5 text-amber-600" />
+                                <span className="text-[10px] font-mono text-amber-700 tracking-wider block font-bold">
                                     Better Thinking (Tips for Next Time)
                                 </span>
                             </div>
@@ -638,19 +629,18 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         </div>
                     )}
                     
-                    {/* CTAs */}
                     <div className="pt-6 border-t border-slate-200/60 flex flex-col sm:flex-row gap-3 justify-end">
                         {isTeacher && (
                             <button
                                 onClick={onNext}
                                 className="px-6 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-600 border border-purple-200 rounded-lg text-xs font-mono tracking-wider transition-colors font-bold cursor-pointer"
                             >
-                                SKIP PREVIEW
+                                Skip Preview
                             </button>
                         )}
                         <button
                             onClick={onNext}
-                            className="px-8 py-3.5 bg-[#14b8a6] hover:bg-[#0f766e] text-white font-bold rounded-lg uppercase tracking-widest transition-colors flex items-center gap-2 font-sans text-sm shadow-lg shadow-[#14b8a6]/20 cursor-pointer"
+                            className="px-8 py-3.5 bg-[#14b8a6] hover:bg-[#0f766e] text-white font-bold rounded-lg tracking-wider transition-colors flex items-center gap-2 font-sans text-sm shadow-lg shadow-[#14b8a6]/20 cursor-pointer"
                         >
                             <span>Reflect</span>
                             <ChevronRight className="w-4 h-4" />

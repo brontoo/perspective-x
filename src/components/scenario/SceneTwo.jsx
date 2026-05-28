@@ -222,9 +222,9 @@ function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode
                 {hintCount < maxHints && (
                     <button
                         onClick={() => setHintCount(prev => prev + 1)}
-                        className="text-xs font-mono text-cyan-600 hover:text-cyan-700 font-bold flex items-center gap-1 cursor-pointer bg-white px-2 py-1 border border-slate-200 rounded"
+                        className="text-xs font-mono text-cyan-600 hover:text-cyan-700 font-bold flex items-center gap-1 cursor-pointer bg-white px-2 py-1 border border-slate-200 rounded-md"
                     >
-                        <HelpCircle className="w-3.5 h-3.5 animate-pulse" />
+                        <HelpCircle className="w-3.5 h-3.5" />
                         Need a Hint? ({hintCount}/{maxHints})
                     </button>
                 )}
@@ -477,7 +477,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
             {/* ── Phase label row ── */}
             <div className="flex items-center gap-3 mb-6">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#14b8a6]" />
-                <span className="text-xs font-mono text-cyan-700 tracking-widest uppercase select-none font-bold">
+                <span className="text-xs font-mono text-cyan-700 tracking-wider select-none font-bold">
                     Make Your Choice
                 </span>
                 <div className="h-px flex-1 bg-gradient-to-r from-[#14b8a6]/40 to-transparent" />
@@ -493,7 +493,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                     <div className="hud-panel p-6 border-cyan-500/30 bg-cyan-50/10">
                         <div className="flex items-center gap-2 mb-3">
                             <AlertCircle className="w-4.5 h-4.5 text-cyan-600" />
-                            <span className="text-xs font-mono text-cyan-700 tracking-widest uppercase font-bold">Decision Point</span>
+                            <span className="text-xs font-mono text-cyan-700 tracking-wider font-bold">Decision Point</span>
                         </div>
                         <h2 className="text-xl md:text-2xl text-slate-900 font-extrabold leading-snug tracking-tight">
                             {scene.question}
@@ -504,7 +504,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                     <Panel className="border-teal-500/20 bg-teal-50/10">
                         <div className="flex items-center gap-2 mb-4 pb-2 border-b border-teal-200/40">
                             <Sparkles className="w-4.5 h-4.5 text-[#14b8a6]" />
-                            <span className="text-xs font-mono text-teal-700 tracking-widest uppercase font-bold">Evidence Reminder</span>
+                            <span className="text-xs font-mono text-teal-700 tracking-wider font-bold">Evidence Reminder</span>
                         </div>
                         <ul className="space-y-3">
                             {evidencePoints.map((point, index) => (
@@ -520,7 +520,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
 
                     {/* 3. Choice Cards */}
                     <div>
-                        <h3 className="text-xs font-mono text-slate-500 tracking-widest uppercase mb-3 font-bold">
+                        <h3 className="text-xs font-mono text-slate-500 tracking-wider mb-3 font-bold">
                             Select an Option
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -560,7 +560,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                                 )}
                                                 {ethical && (
                                                     <span className="text-xs font-mono text-slate-500 flex items-center gap-1.5 font-semibold">
-                                                        <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                                                        <span className="w-2 h-2 rounded-full bg-amber-500" />
                                                         {ethical} analysis
                                                     </span>
                                                 )}
@@ -596,7 +596,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                             >
                                 <Panel className="p-6 border-slate-200">
                                     <div className="mb-4">
-                                        <h3 className="text-xs font-mono text-slate-500 tracking-widest uppercase font-bold mb-1">
+                                        <h3 className="text-xs font-mono text-slate-500 tracking-wider font-bold mb-1">
                                             Structured Reasoning Scaffold
                                         </h3>
                                         <p className="text-xs text-slate-500">
@@ -672,7 +672,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                         whileTap={canSubmit ? { scale: 0.99 } : {}}
                         onClick={canSubmit ? handleContinue : undefined}
                         disabled={!canSubmit}
-                        className={`w-full relative overflow-hidden py-4 text-sm font-bold tracking-widest uppercase transition-all rounded-lg py-5 ${
+                        className={`w-full relative overflow-hidden py-4 text-sm font-bold tracking-wider transition-all rounded-lg py-5 ${
                             canSubmit
                                 ? 'bg-[#14b8a6] hover:bg-[#0f766e] text-white cursor-pointer shadow-lg shadow-[#14b8a6]/20'
                                 : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
@@ -710,7 +710,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                 {/* ═══════════ RIGHT COLUMN: REFERENCE HUB ═══════════ */}
                 <div className="flex flex-col gap-6">
                     <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-slate-500 tracking-widest uppercase font-bold">Reference Hub</span>
+                        <span className="text-xs font-mono text-slate-500 tracking-wider font-bold">Reference Hub</span>
                         <div className="h-px flex-1 bg-slate-200" />
                     </div>
 
@@ -733,7 +733,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                         <div className="relative z-10 space-y-3">
                             <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
                                 <BookOpen className="w-4 h-4 text-[#14b8a6]" />
-                                <span className="text-xs font-mono text-slate-500 tracking-widest uppercase font-bold">Story Context</span>
+                                <span className="text-xs font-mono text-slate-500 tracking-wider font-bold">Story Context</span>
                             </div>
                             <div className="text-slate-800 text-sm leading-relaxed min-h-[80px] font-sans">
                                 {displayedNarrative}
@@ -747,16 +747,16 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                     {/* Evidence data table */}
                     {scene.data?.table?.rows?.length > 0 && (
                         <Panel className="p-5">
-                            <div className="text-xs font-mono text-slate-500 tracking-widest uppercase mb-3 pb-2 border-b border-slate-200 font-bold">
+                            <div className="text-xs font-mono text-slate-500 tracking-wider mb-3 pb-2 border-b border-slate-200 font-bold">
                                 Collected Data Logs
                             </div>
                             <div className="overflow-x-auto rounded-lg border border-slate-200">
-                                <table className="w-full text-xs border-collapse">
+                                <table className="w-full text-sm border-collapse">
                                     {scene.data.table.headers && (
                                         <thead>
                                             <tr className="border-b border-slate-200 bg-slate-50">
                                                 {scene.data.table.headers.map((h, i) => (
-                                                    <th key={i} className="text-left py-2 px-3 text-[10px] font-mono text-slate-700 uppercase tracking-wider font-bold">{h}</th>
+                                                    <th key={i} className="text-left py-2 px-3 text-[10px] font-mono text-slate-700 tracking-wider font-bold">{h}</th>
                                                 ))}
                                             </tr>
                                         </thead>
@@ -771,7 +771,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                                 className="border-b border-slate-100 last:border-0 hover:bg-slate-50/70 transition-colors"
                                             >
                                                 {row.map((cell, j) => (
-                                                    <td key={j} className="py-2.5 px-3 text-xs font-sans text-slate-700">{cell}</td>
+                                                    <td key={j} className="py-2.5 px-3 text-sm font-sans text-slate-700">{cell}</td>
                                                 ))}
                                             </motion.tr>
                                         ))}
@@ -832,8 +832,8 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                             {/* Formative Feedback Card */}
                             {formativeFeedback && (
                                 <div className="p-4 rounded-xl border border-cyan-100 bg-cyan-50/50 space-y-1.5 shadow-inner">
-                                    <div className="flex items-center gap-1.5 text-[9px] font-mono text-cyan-800 font-bold uppercase tracking-wider">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                                    <div className="flex items-center gap-1.5 text-[9px] font-mono text-cyan-800 font-bold tracking-wider">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                                         Formative Review
                                     </div>
                                     <p className="text-xs text-slate-700 font-semibold leading-relaxed">
@@ -846,7 +846,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                             <div className="flex flex-col sm:flex-row gap-3 pt-2">
                                 <button
                                     onClick={() => setShowConfirm(false)}
-                                    className="flex-1 py-3 text-sm font-bold tracking-wider uppercase border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg transition-colors cursor-pointer"
+                                    className="flex-1 py-3 text-sm font-bold tracking-wider border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg transition-colors cursor-pointer"
                                 >
                                     Go Back
                                 </button>
@@ -855,7 +855,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                         setShowConfirm(false);
                                         handleConfirmSubmit();
                                     }}
-                                    className="flex-1 py-3 text-sm font-bold tracking-wider uppercase bg-[#14b8a6] hover:bg-[#0f766e] text-white rounded-lg transition-colors cursor-pointer shadow-lg shadow-[#14b8a6]/10"
+                                    className="flex-1 py-3 text-sm font-bold tracking-wider bg-[#14b8a6] hover:bg-[#0f766e] text-white rounded-lg transition-colors cursor-pointer shadow-lg shadow-[#14b8a6]/10"
                                 >
                                     Submit My Choice
                                 </button>

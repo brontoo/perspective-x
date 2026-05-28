@@ -521,9 +521,9 @@ export default function ScenarioPlayer() {
                                     <div>
                                         <div className="flex flex-wrap items-center gap-2">
                                             <h1 className="text-xl font-bold text-slate-800">{scenario.title}</h1>
-                                            <span className={`text-[10px] px-2 py-0.5 rounded border font-mono font-bold uppercase tracking-wider ${
+                                            <span className={`text-[10px] px-2 py-0.5 rounded border font-mono font-bold tracking-wider ${
                                                 difficultyMode === 'beginner' ? 'text-emerald-600 bg-emerald-50 border-emerald-200' :
-                                                difficultyMode === 'high-achievers' ? 'text-rose-600 bg-rose-50 border-rose-200 animate-pulse' :
+                                                difficultyMode === 'high-achievers' ? 'text-rose-600 bg-rose-50 border-rose-200' :
                                                 'text-amber-600 bg-amber-50 border-amber-200'
                                             }`}>
                                                 {difficultyMode === 'beginner' ? 'Guided Mode' :
@@ -587,8 +587,8 @@ export default function ScenarioPlayer() {
                                     </div>
                                     {/* Mobile step indicator */}
                                     <div className="flex md:hidden items-center justify-between mb-3 text-xs font-mono font-bold text-[#14b8a6] select-none">
-                                        <span>STEP {getActiveStepIndex(phase) + 1} OF 8</span>
-                                        <span className="uppercase text-slate-700">{STEPS[getActiveStepIndex(phase)] || ''}</span>
+                                        <span>Step {getActiveStepIndex(phase) + 1} of 8</span>
+                                        <span className="text-slate-700">{STEPS[getActiveStepIndex(phase)] || ''}</span>
                                     </div>
                                 </>
                             )}
@@ -643,8 +643,8 @@ export default function ScenarioPlayer() {
                                 className="mb-6 bg-white border border-slate-200 p-4 rounded-xl shadow-sm"
                             >
                                 <div className="flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-[#14b8a6] animate-pulse" />
-                                    <span className="text-[10px] font-mono font-bold tracking-widest text-cyan-700 uppercase">
+                                    <span className="w-2 h-2 rounded-full bg-[#14b8a6]" />
+                                    <span className="text-[10px] font-mono font-bold tracking-wider text-cyan-700">
                                         Current Stage: {PHASE_DEFAULTS[phase].title}
                                     </span>
                                 </div>
@@ -796,7 +796,7 @@ export default function ScenarioPlayer() {
                     className="fixed bottom-6 right-6 z-40 bg-slate-900 hover:bg-slate-800 text-white border border-slate-700/50 shadow-2xl p-4 rounded-full flex items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-105"
                 >
                     <Notebook className="w-5 h-5 text-cyan-400" />
-                    <span className="text-xs font-mono font-bold tracking-wider uppercase pr-1 hidden sm:inline">Notebook</span>
+                     <span className="text-xs font-mono font-bold tracking-wider pr-1 hidden sm:inline">Notebook</span>
                 </motion.button>
             )}
 

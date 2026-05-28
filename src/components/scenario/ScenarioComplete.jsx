@@ -67,10 +67,10 @@ export default function ScenarioComplete({
                 
                 {/* 1. Title */}
                 <div className="text-center space-y-2">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-50 border border-cyan-100 rounded-full text-[10px] font-mono font-bold text-cyan-700 tracking-wider uppercase select-none">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-50 border border-cyan-100 rounded-full text-[10px] font-mono font-bold text-cyan-700 tracking-wider select-none">
                         Mission Status
                     </div>
-                    <h1 className="text-3xl font-black text-slate-800 uppercase tracking-wider font-sans">
+                    <h1 className="text-3xl font-black text-slate-800 font-sans">
                         Mission Complete
                     </h1>
                 </div>
@@ -79,13 +79,13 @@ export default function ScenarioComplete({
                 <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 space-y-6 shadow-inner">
                     {/* Mission Name */}
                     <div className="flex justify-between items-center pb-3.5 border-b border-slate-200/60">
-                        <span className="text-xs font-mono text-slate-500 uppercase tracking-widest font-bold">Mission</span>
+                        <span className="text-xs font-mono text-slate-500 font-bold">Mission</span>
                         <span className="text-base font-bold text-slate-800 font-sans text-right">{scenario.title}</span>
                     </div>
 
                     {/* Student Score */}
                     <div className="flex justify-between items-center pb-3.5 border-b border-slate-200/60">
-                        <span className="text-xs font-mono text-slate-500 uppercase tracking-widest font-bold">Your Score</span>
+                        <span className="text-xs font-mono text-slate-500 font-bold">Your Score</span>
                         <span className={`text-lg font-black font-mono ${passed ? 'text-emerald-600' : 'text-amber-600'}`}>
                             {exitScore}%
                         </span>
@@ -93,14 +93,14 @@ export default function ScenarioComplete({
 
                     {/* Badge Earned */}
                     <div className="flex justify-between items-center pb-3.5 border-b border-slate-200/60">
-                        <span className="text-xs font-mono text-slate-500 uppercase tracking-widest font-bold">Badge Earned</span>
+                        <span className="text-xs font-mono text-slate-500 font-bold">Badge Earned</span>
                         <div className="flex items-center gap-2.5">
                             <span className="text-xl select-none">{scenario.badgeIcon}</span>
                             <div className="flex flex-col items-end">
                                 <span className="text-sm font-bold text-slate-800 font-sans">
                                     {scenario.badge}
                                 </span>
-                                <span className={`text-[10px] px-2 py-0.5 rounded border font-mono font-bold uppercase tracking-wider mt-0.5 ${badgeLevelMeta.color}`}>
+                                <span className={`text-[10px] px-2 py-0.5 rounded border font-mono font-bold mt-0.5 ${badgeLevelMeta.color}`}>
                                     {levelName} Level
                                 </span>
                             </div>
@@ -127,7 +127,7 @@ export default function ScenarioComplete({
                             <Notebook className="w-5 h-5 text-cyan-600 shrink-0" />
                             <div className="font-sans">
                                 <h3 className="text-sm font-bold text-slate-800">My Mission Notebook Summary</h3>
-                                <p className="text-[9px] font-mono text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                                <p className="text-[9px] font-mono text-slate-400 font-bold mt-0.5">
                                     {hasNotes ? 'Review your custom notes and milestones' : 'Review your auto-filled milestones'}
                                 </p>
                             </div>
@@ -158,13 +158,13 @@ export default function ScenarioComplete({
                                         <div className="bg-slate-50 border border-slate-100 rounded-lg p-2.5 space-y-1.5 shadow-inner">
                                             {scene1OptText && (
                                                 <div>
-                                                    <span className="text-[9px] font-mono text-cyan-700 block uppercase font-bold tracking-wider">Identified Clue</span>
+                                                    <span className="text-[9px] font-mono text-cyan-700 block font-bold">Identified Clue</span>
                                                     <p className="text-xs text-slate-650 font-medium italic mt-0.5">{scene1OptText}</p>
                                                 </div>
                                             )}
                                             {scene1Just && (
                                                 <div>
-                                                    <span className="text-[9px] font-mono text-cyan-700 block uppercase font-bold tracking-wider">Scientific Justification</span>
+                                                    <span className="text-[9px] font-mono text-cyan-700 block font-bold">Scientific Justification</span>
                                                     <p className="text-xs text-slate-650 font-medium italic mt-0.5">{scene1Just}</p>
                                                 </div>
                                             )}
@@ -172,7 +172,7 @@ export default function ScenarioComplete({
                                     )}
                                     {notebookData.evidenceNotes && (
                                         <div className="bg-cyan-50/20 border border-cyan-150/30 rounded-lg p-2.5">
-                                            <span className="text-[9px] font-mono text-cyan-800 block uppercase font-bold tracking-wider">My Notes</span>
+                                            <span className="text-[9px] font-mono text-cyan-800 block font-bold">My Notes</span>
                                             <p className="text-xs text-slate-700 font-semibold mt-0.5 leading-relaxed">{notebookData.evidenceNotes}</p>
                                         </div>
                                     )}
@@ -186,13 +186,13 @@ export default function ScenarioComplete({
                                     </div>
                                     {scene2Just && (
                                         <div className="bg-slate-50 border border-slate-100 rounded-lg p-2.5 shadow-inner">
-                                            <span className="text-[9px] font-mono text-purple-700 block uppercase font-bold tracking-wider">Structured Reasoning</span>
+                                            <span className="text-[9px] font-mono text-purple-700 block font-bold">Structured Reasoning</span>
                                             <p className="text-xs text-slate-650 font-medium italic mt-0.5 whitespace-pre-wrap leading-relaxed">{scene2Just}</p>
                                         </div>
                                     )}
                                     {notebookData.thinkingNotes && (
                                         <div className="bg-purple-50/20 border border-purple-150/30 rounded-lg p-2.5">
-                                            <span className="text-[9px] font-mono text-purple-800 block uppercase font-bold tracking-wider">My Notes</span>
+                                            <span className="text-[9px] font-mono text-purple-800 block font-bold">My Notes</span>
                                             <p className="text-xs text-slate-700 font-semibold mt-0.5 leading-relaxed">{notebookData.thinkingNotes}</p>
                                         </div>
                                     )}
@@ -206,13 +206,13 @@ export default function ScenarioComplete({
                                     </div>
                                     {scene2OptText && (
                                         <div className="bg-slate-50 border border-slate-100 rounded-lg p-2.5 shadow-inner">
-                                            <span className="text-[9px] font-mono text-emerald-700 block uppercase font-bold tracking-wider">Action Taken</span>
+                                            <span className="text-[9px] font-mono text-emerald-700 block font-bold">Action Taken</span>
                                             <p className="text-xs text-slate-650 font-medium italic mt-0.5">{scene2OptText}</p>
                                         </div>
                                     )}
                                     {notebookData.choiceNotes && (
                                         <div className="bg-emerald-50/20 border border-emerald-150/30 rounded-lg p-2.5">
-                                            <span className="text-[9px] font-mono text-emerald-800 block uppercase font-bold tracking-wider">My Notes</span>
+                                            <span className="text-[9px] font-mono text-emerald-800 block font-bold">My Notes</span>
                                             <p className="text-xs text-slate-700 font-semibold mt-0.5 leading-relaxed">{notebookData.choiceNotes}</p>
                                         </div>
                                     )}
@@ -228,13 +228,13 @@ export default function ScenarioComplete({
                                         <div className="bg-slate-50 border border-slate-100 rounded-lg p-2.5 space-y-1.5 shadow-inner">
                                             {outcomeText && (
                                                 <div>
-                                                    <span className="text-[9px] font-mono text-amber-700 block uppercase font-bold tracking-wider">Outcome</span>
+                                                    <span className="text-[9px] font-mono text-amber-700 block font-bold">Outcome</span>
                                                     <p className="text-xs text-slate-650 font-medium italic mt-0.5">{outcomeText}</p>
                                                 </div>
                                             )}
                                             {explanationText && (
                                                 <div>
-                                                    <span className="text-[9px] font-mono text-amber-700 block uppercase font-bold tracking-wider">Science Explanation</span>
+                                                    <span className="text-[9px] font-mono text-amber-700 block font-bold">Science Explanation</span>
                                                     <p className="text-xs text-slate-650 font-medium italic mt-0.5">{explanationText}</p>
                                                 </div>
                                             )}
@@ -242,7 +242,7 @@ export default function ScenarioComplete({
                                     )}
                                     {notebookData.whatHappenedNotes && (
                                         <div className="bg-amber-50/20 border border-amber-150/30 rounded-lg p-2.5">
-                                            <span className="text-[9px] font-mono text-amber-800 block uppercase font-bold tracking-wider">My Notes</span>
+                                            <span className="text-[9px] font-mono text-amber-800 block font-bold">My Notes</span>
                                             <p className="text-xs text-slate-700 font-semibold mt-0.5 leading-relaxed">{notebookData.whatHappenedNotes}</p>
                                         </div>
                                     )}
@@ -256,13 +256,13 @@ export default function ScenarioComplete({
                                     </div>
                                     {reflectionText && (
                                         <div className="bg-slate-50 border border-slate-100 rounded-lg p-2.5 shadow-inner">
-                                            <span className="text-[9px] font-mono text-indigo-700 block uppercase font-bold tracking-wider">Final Reflection</span>
+                                            <span className="text-[9px] font-mono text-indigo-700 block font-bold">Final Reflection</span>
                                             <p className="text-xs text-slate-650 font-medium italic mt-0.5 whitespace-pre-wrap leading-relaxed">{reflectionText}</p>
                                         </div>
                                     )}
                                     {notebookData.learnedNotes && (
                                         <div className="bg-indigo-50/20 border border-indigo-150/30 rounded-lg p-2.5">
-                                            <span className="text-[9px] font-mono text-indigo-800 block uppercase font-bold tracking-wider">My Notes</span>
+                                            <span className="text-[9px] font-mono text-indigo-800 block font-bold">My Notes</span>
                                             <p className="text-xs text-slate-700 font-semibold mt-0.5 leading-relaxed">{notebookData.learnedNotes}</p>
                                         </div>
                                     )}
@@ -278,7 +278,7 @@ export default function ScenarioComplete({
                     {passed && onShowCertificate && (
                         <button
                             onClick={onShowCertificate}
-                            className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl uppercase tracking-widest transition-colors shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 font-sans cursor-pointer"
+                            className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 font-sans cursor-pointer"
                         >
                             <Award className="w-5 h-5 shrink-0" />
                             <span>View Certificate</span>
@@ -289,7 +289,7 @@ export default function ScenarioComplete({
                         {/* Try Again */}
                         <button
                             onClick={onRetry}
-                            className="py-3.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold rounded-xl uppercase tracking-widest transition-all shadow-sm flex items-center justify-center gap-2 font-sans text-xs cursor-pointer"
+                            className="py-3.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 font-sans text-xs cursor-pointer"
                         >
                             <RefreshCw className="w-4 h-4 shrink-0 text-slate-500" />
                             <span>Try Again</span>
@@ -298,7 +298,7 @@ export default function ScenarioComplete({
                         {/* Back to Missions */}
                         <Link to={`/role-hub?role=${role?.id || ''}`} className="flex-grow">
                             <button
-                                className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl uppercase tracking-widest transition-colors shadow-sm flex items-center justify-center gap-2 font-sans text-xs cursor-pointer"
+                                className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 font-sans text-xs cursor-pointer"
                             >
                                 <ArrowLeft className="w-4 h-4 shrink-0" />
                                 <span>Back to Missions</span>

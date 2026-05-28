@@ -68,7 +68,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                         <div className="p-1.5 bg-cyan-50 text-cyan-600 rounded-lg border border-cyan-100">
                             <BookOpen className="w-3.5 h-3.5" />
                         </div>
-                        <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase font-bold">
+                        <span className="text-[10px] font-mono text-slate-500 tracking-wider font-bold">
                             Question {currentQuestion + 1} of {questions.length}
                         </span>
                     </div>
@@ -97,7 +97,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
 
                 {/* Question Box */}
                 <div className="bg-slate-50 border border-slate-200/60 p-6 rounded-xl shadow-sm">
-                    <p className="text-[10px] font-mono text-slate-500 tracking-widest uppercase mb-1.5 font-bold">Question Prompts</p>
+                    <p className="text-[10px] font-mono text-slate-500 tracking-wider mb-1.5 font-bold">Question Prompts</p>
                     <p className="text-slate-800 text-lg font-bold leading-snug font-sans">{question.prompt}</p>
                 </div>
 
@@ -178,7 +178,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                         <span className={`text-3xl font-black font-mono leading-none ${passed ? 'text-emerald-700' : 'text-amber-700'}`}>
                             {score}%
                         </span>
-                        <span className="text-[10px] font-mono text-slate-500 mt-1 uppercase font-bold tracking-wider">
+                        <span className="text-[10px] font-mono text-slate-500 mt-1 font-bold tracking-wider">
                             Score
                         </span>
                     </motion.div>
@@ -186,7 +186,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
 
                 {/* Score descriptor in simple language */}
                 <div className="space-y-2">
-                    <h2 className={`text-2xl font-black uppercase tracking-wide font-sans ${passed ? 'text-emerald-800' : 'text-amber-800'}`}>
+                    <h2 className={`text-2xl font-black tracking-wide font-sans ${passed ? 'text-emerald-800' : 'text-amber-800'}`}>
                         {passed ? 'Passed Final Check!' : 'Review & Try Again'}
                     </h2>
                     <p className="text-slate-700 text-base leading-relaxed font-sans font-medium max-w-md mx-auto">
@@ -202,7 +202,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={handleSubmit}
-                    className={`w-full py-4 font-bold text-base tracking-widest uppercase transition-all duration-300 rounded-xl shadow-lg cursor-pointer flex items-center justify-center gap-2 font-sans ${
+                    className={`w-full py-4 font-bold text-base tracking-wider transition-all duration-300 rounded-xl shadow-lg cursor-pointer flex items-center justify-center gap-2 font-sans ${
                         passed
                             ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20'
                             : 'bg-amber-600 hover:bg-amber-700 text-white shadow-amber-600/20'
@@ -227,8 +227,8 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                 {/* Top status bar */}
                 <div className="flex items-center justify-between bg-slate-50 border-b border-slate-200/80 px-6 py-3.5">
                     <div className="flex items-center gap-2">
-                        <div className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse" />
-                        <span className="text-[10px] font-mono text-cyan-800 tracking-widest uppercase font-bold select-none">
+                        <div className="w-2.5 h-2.5 rounded-full bg-cyan-500" />
+                        <span className="text-[10px] font-mono text-cyan-800 tracking-wider font-bold select-none">
                             Final Check
                         </span>
                     </div>
@@ -242,7 +242,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                     {/* Branding */}
                     <div className="text-center mb-6">
                         <h1
-                            className="text-2xl font-black text-slate-800 uppercase tracking-wider font-sans"
+                            className="text-2xl font-black text-slate-800 tracking-wider font-sans"
                         >
                             Final Check
                         </h1>
@@ -264,7 +264,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                             <div className="flex items-start gap-3">
                                 <Lightbulb className="w-4.5 h-4.5 text-amber-600 shrink-0 mt-0.5" />
                                 <div>
-                                    <p className="text-[9px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1">
+                                    <p className="text-[9px] font-mono font-bold text-amber-700 tracking-wider mb-1">
                                         Consider As You Answer
                                     </p>
                                     <p className="text-slate-700 text-xs leading-relaxed font-medium">{missionResult.impactText}</p>
@@ -285,7 +285,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                 {/* Footer */}
                 <div className="border-t border-slate-100 bg-slate-50/50 px-8 py-4 text-center">
                     <p className="text-[10px] font-mono text-slate-400 font-bold tracking-wider">
-                        PERSPECTIVE X • SCIENTIFIC LEARNING LABS
+                        Perspective X • Scientific Learning Labs
                     </p>
                 </div>
             </div>

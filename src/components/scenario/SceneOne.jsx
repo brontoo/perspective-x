@@ -121,15 +121,15 @@ function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode
     return (
         <div className="border border-slate-200 bg-slate-50/50 p-4 rounded-lg space-y-3">
             <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase font-bold">
+                <span className="text-[10px] font-mono text-slate-500 tracking-wider font-bold">
                     Need Help?
                 </span>
                 {hintCount < maxHints && (
                     <button
                         onClick={() => setHintCount(prev => prev + 1)}
-                        className="text-xs font-mono text-cyan-600 hover:text-cyan-700 font-bold flex items-center gap-1 cursor-pointer bg-white px-2 py-1 border border-slate-200 rounded"
+                        className="text-xs font-mono text-cyan-600 hover:text-cyan-700 font-bold flex items-center gap-1 cursor-pointer bg-white px-2 py-1 border border-slate-200 rounded-md"
                     >
-                        <HelpCircle className="w-3.5 h-3.5 animate-pulse" />
+                        <HelpCircle className="w-3.5 h-3.5" />
                         Need a Hint? ({hintCount}/{maxHints})
                     </button>
                 )}
@@ -245,7 +245,7 @@ function Panel({ label, icon: Icon, status, children, className = '', dimmed = f
                         <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
                     )}
                     {dimmed && <div className="w-1.5 h-1.5 rounded-full bg-slate-600" />}
-                    <span className={`text-[9px] font-mono tracking-widest uppercase select-none ${dimmed ? 'text-slate-500' : 'text-cyan-400'}`}>
+                    <span className={`text-[9px] font-mono tracking-wider select-none ${dimmed ? 'text-slate-500' : 'text-cyan-400'}`}>
                         {Icon && <Icon className="w-2.5 h-2.5 inline mr-1.5 -mt-0.5" />}
                         {label}
                     </span>
@@ -266,7 +266,7 @@ function MetricRow({ icon: Icon, label, value, unit, graph, highlight = false })
         <div className={`flex items-center justify-between gap-2 px-3.5 py-2 border-b border-[var(--lx-dark-glass-border)] ${highlight ? 'bg-amber-500/5' : ''}`}>
             <div className="flex items-center gap-1.5 shrink-0 w-24">
                 <Icon className={`w-3 h-3 shrink-0 ${highlight ? 'text-amber-400' : 'text-cyan-500/70'}`} />
-                <span className="text-[9px] font-mono text-[var(--lx-text-muted)] uppercase tracking-wider truncate">{label}</span>
+                <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-wider truncate">{label}</span>
             </div>
             <span className={`text-[11px] font-mono font-bold tabular-nums shrink-0 ${highlight ? 'text-amber-300' : 'text-cyan-300'}`}>
                 {value}<span className="text-[9px] font-normal text-[var(--lx-text-muted)] ml-0.5">{unit}</span>
@@ -425,12 +425,12 @@ export default function SceneOne({
             {/* ── Scene identifier header ────────────────────────────────── */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                    <div className={`inline-flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white/90 shadow-sm`} style={{ borderRadius: '6px' }}>
-                        <span className={`text-xs font-mono font-bold ${text} uppercase tracking-widest`}>
+                    <div className={`inline-flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white/90 shadow-sm rounded-lg`}>
+                        <span className={`text-xs font-mono font-bold ${text} tracking-wider`}>
                             Evidence
                         </span>
                         <span className="text-slate-300 text-xs">•</span>
-                        <span className="text-xs font-mono text-slate-800 uppercase tracking-wider font-semibold">
+                        <span className="text-xs font-mono text-slate-800 tracking-wider font-semibold">
                             {scene.title}
                         </span>
                     </div>
@@ -442,12 +442,11 @@ export default function SceneOne({
                                 <button
                                     onClick={() => isTeacher && setStage(s)}
                                     disabled={!isTeacher}
-                                    className={`flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider px-3 py-1.5 border transition-all ${
+                                    className={`flex items-center gap-1.5 text-xs font-mono tracking-wider px-3 py-1.5 border transition-all ${
                                         stage === s
                                             ? `border-cyan-500 text-cyan-600 bg-cyan-50/50 font-bold`
                                             : 'border-slate-200 text-slate-500 bg-white/50 hover:bg-slate-50'
-                                    } ${isTeacher ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`}
-                                    style={{ borderRadius: '4px' }}
+                                    } ${isTeacher ? 'cursor-pointer hover:opacity-80' : 'cursor-default'} rounded-md`}
                                 >
                                     <span className={`w-4 h-4 rounded-full border flex items-center justify-center text-[9px] font-bold ${
                                         stage === s ? `border-current bg-current/10` : 'border-slate-300'
@@ -464,10 +463,9 @@ export default function SceneOne({
 
                 {isTeacher && (
                     <span
-                        className="text-xs font-mono text-purple-600 bg-purple-50 border border-purple-200 px-3 py-1 select-none font-bold"
-                        style={{ borderRadius: '4px' }}
+                        className="text-xs font-mono text-purple-600 bg-purple-50 border border-purple-200 px-3 py-1 select-none font-bold rounded-md"
                     >
-                        TEACHER MODE
+                        Teacher Mode
                     </span>
                 )}
             </div>
@@ -500,7 +498,7 @@ export default function SceneOne({
                                     <div className="p-6">
                                         <div className="flex items-center gap-2 mb-4">
                                             <div className={`w-px h-8 bg-gradient-to-b ${accent}`} />
-                                            <span className="text-xs font-mono text-slate-500 tracking-widest uppercase">
+                                            <span className="text-xs font-mono text-slate-500 tracking-wider">
                                                 Incoming Transmission
                                             </span>
                                         </div>
@@ -518,8 +516,8 @@ export default function SceneOne({
                                 {/* Auto-advance timer bar */}
                                 {!isTeacher && (
                                     <div className="flex items-center gap-3 px-1">
-                                        <span className="text-xs font-mono text-slate-500 uppercase tracking-wider">Processing</span>
-                                        <div className="flex-1 h-[2px] bg-slate-200 overflow-hidden" style={{ borderRadius: '1px' }}>
+                                        <span className="text-xs font-mono text-slate-500 tracking-wider">Processing</span>
+                                        <div className="flex-1 h-[2px] bg-slate-200 overflow-hidden rounded-full">
                                             <motion.div
                                                 className={`h-full bg-gradient-to-r ${accent}`}
                                                 initial={{ width: '0%' }}
@@ -527,7 +525,7 @@ export default function SceneOne({
                                                 transition={{ duration: 5, ease: 'linear' }}
                                             />
                                         </div>
-                                        <span className="text-xs font-mono text-slate-500 uppercase tracking-wider">Auto-advance</span>
+                                        <span className="text-xs font-mono text-slate-500 tracking-wider">Auto-advance</span>
                                     </div>
                                 )}
                             </motion.div>
@@ -547,18 +545,18 @@ export default function SceneOne({
                                     <div className="p-6 space-y-6">
                                         {/* Key Question */}
                                         <div className="glass-card border border-slate-200 bg-white/80 rounded-xl p-4 shadow-sm">
-                                            <h3 className="text-xs font-bold text-cyan-700 uppercase mb-2">Key Question</h3>
-                                            <p className="text-sm text-slate-700 leading-relaxed">{renderTextWithGlossary(scene.question, scenarioTerms)}</p>
+                                            <h3 className="text-xs font-bold text-cyan-700 mb-2">Key Question</h3>
+                                            <p className="text-base text-slate-700 leading-relaxed">{renderTextWithGlossary(scene.question, scenarioTerms)}</p>
                                         </div>
 
                                         {/* Evidence Table */}
                                         {sceneDataTable ? (
                                             <div className="overflow-hidden border border-slate-200 rounded-lg shadow-sm glass-card bg-white/80">
-                                                <table className="w-full text-left text-xs">
+                                                <table className="w-full text-left text-sm">
                                                     <thead>
                                                         <tr className="border-b border-slate-200 bg-slate-50">
                                                             {sceneDataTable.headers.map((h) => (
-                                                                <th key={h} className="px-3 py-2 font-mono text-slate-700 uppercase tracking-wider font-bold">
+                                                                <th key={h} className="px-3 py-2 font-mono text-slate-700 tracking-wider font-bold">
                                                                     {renderTextWithGlossary(h, scenarioTerms)}
                                                                 </th>
                                                             ))}
@@ -587,15 +585,15 @@ export default function SceneOne({
                                         {/* Important Clue */}
                                         {scene.importantClue && (
                                             <div className="glass-card border border-slate-200 bg-white/80 rounded-xl p-4 shadow-sm">
-                                                <h3 className="text-xs font-bold text-cyan-700 uppercase mb-2">Important Clue</h3>
-                                                <p className="text-sm text-slate-700 leading-relaxed">{renderTextWithGlossary(scene.importantClue, scenarioTerms)}</p>
+                                                <h3 className="text-xs font-bold text-cyan-700 mb-2">Important Clue</h3>
+                                                <p className="text-base text-slate-700 leading-relaxed">{renderTextWithGlossary(scene.importantClue, scenarioTerms)}</p>
                                             </div>
                                         )}
 
                                         {/* Key Terms Panel */}
                                         {scenarioTerms && scenarioTerms.length > 0 && (
                                             <div className="glass-card border border-slate-200 bg-white/80 rounded-xl p-4 shadow-sm space-y-3">
-                                                <h3 className="text-xs font-bold text-cyan-700 uppercase">Key Terms</h3>
+                                                <h3 className="text-xs font-bold text-cyan-700">Key Terms</h3>
                                                 <div className="flex flex-wrap gap-2">
                                                     {scenarioTerms.map((termKey) => {
                                                         const item = GLOSSARY[termKey.toLowerCase()];
@@ -644,11 +642,11 @@ export default function SceneOne({
                                 </Panel>
 
                                 {scene.learningObjective && (
-                                    <div className={`flex items-start gap-4 p-4 border border-slate-200 bg-white/80 shadow-sm`} style={{ borderRadius: '8px' }}>
+                                    <div className="flex items-start gap-4 p-4 border border-slate-200 bg-white/80 shadow-sm rounded-lg">
                                         <Target className={`w-5 h-5 ${text} shrink-0 mt-0.5`} />
                                         <div>
-                                            <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase block mb-1">Learning Objective</span>
-                                            <p className={`text-base text-slate-800 font-semibold leading-relaxed`}>{scene.learningObjective}</p>
+                                            <span className="text-[10px] font-mono text-slate-500 tracking-wider block mb-1">Learning Objective</span>
+                                            <p className="text-base text-slate-800 font-semibold leading-relaxed">{scene.learningObjective}</p>
                                         </div>
                                     </div>
                                 )}
@@ -696,26 +694,20 @@ export default function SceneOne({
                             >
                                 <Panel label="Make Your Choice" dimmed>
                                     <div className="flex flex-col items-center justify-center py-20 px-6 text-center gap-4 bg-slate-50/50">
-                                        <motion.div
-                                            className="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center bg-white shadow-sm"
-                                            animate={{ boxShadow: ['0 0 0 0px rgba(148,163,184,0.1)', '0 0 0 8px rgba(148,163,184,0)', '0 0 0 0px rgba(148,163,184,0)'] }}
-                                            transition={{ duration: 2, repeat: Infinity }}
-                                        >
+                                        <div className="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center bg-white shadow-sm">
                                             <Lock className="w-5 h-5 text-slate-400" />
-                                        </motion.div>
+                                        </div>
                                         <div>
-                                            <p className="text-[10px] font-mono text-slate-500 tracking-widest uppercase mb-1">Choice Locked</p>
+                                            <p className="text-[10px] font-mono text-slate-500 tracking-wider mb-1">Choice Locked</p>
                                             <p className="text-slate-600 text-sm">Complete the {stage === 'briefing' ? 'Story' : 'Evidence'} to unlock the Choice interface.</p>
                                         </div>
 
-                                        {/* Pulsing dots */}
+                                        {/* Static dots */}
                                         <div className="flex items-center gap-1 mt-2">
                                             {[0, 1, 2].map(i => (
-                                                <motion.div
+                                                <div
                                                     key={i}
                                                     className="w-1.5 h-1.5 rounded-full bg-slate-300"
-                                                    animate={{ opacity: [0.3, 1, 0.3] }}
-                                                    transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.4 }}
                                                 />
                                             ))}
                                         </div>
@@ -745,10 +737,10 @@ export default function SceneOne({
                                                     exit={{ opacity: 0, height: 0 }}
                                                     className="overflow-hidden"
                                                 >
-                                                    <div className="flex items-center justify-between p-4 bg-amber-50 border border-amber-200" style={{ borderRadius: '6px' }}>
+                                                    <div className="flex items-center justify-between p-4 bg-amber-50 border border-amber-200 rounded-lg">
                                                         <div className="flex items-center gap-2.5">
                                                             <Timer className="w-4.5 h-4.5 text-amber-600" />
-                                                            <span className="text-xs font-mono text-amber-800 tracking-wider uppercase font-bold">Critical Thinking Phase</span>
+                                                            <span className="text-xs font-mono text-amber-800 tracking-wider font-bold">Critical Thinking Phase</span>
                                                         </div>
                                                         <div className="flex items-center gap-2">
                                                             <span className="text-lg font-bold font-mono text-amber-700 tabular-nums">{thinkTime}s</span>
@@ -767,10 +759,10 @@ export default function SceneOne({
                                         </AnimatePresence>
 
                                         {/* Critical question */}
-                                        <div className="p-4 border border-red-200 bg-red-50/60" style={{ borderRadius: '6px' }}>
+                                        <div className="p-4 border border-red-200 bg-red-50/60 rounded-lg">
                                             <div className="flex items-center gap-2 mb-2">
                                                 <AlertTriangle className="w-4 h-4 text-red-600" />
-                                                <span className="text-[10px] font-mono text-red-700 tracking-widest uppercase font-bold">Critical Question</span>
+                                                <span className="text-[10px] font-mono text-red-700 tracking-wider font-bold">Critical Question</span>
                                             </div>
                                             <p className="text-slate-900 font-bold leading-snug text-base">{renderTextWithGlossary(scene.question, scenarioTerms)}</p>
                                         </div>
@@ -779,7 +771,7 @@ export default function SceneOne({
                                         <div>
                                             <div className="flex items-center gap-2 mb-2">
                                                 <FileText className="w-4 h-4 text-slate-500" />
-                                                <span className="text-xs font-mono text-slate-600 tracking-widest uppercase font-semibold">Scientific Justification</span>
+                                                <span className="text-xs font-mono text-slate-600 tracking-wider font-semibold">Scientific Justification</span>
                                             </div>
                                             <div className="relative">
                                                 <textarea
@@ -787,13 +779,8 @@ export default function SceneOne({
                                                     onChange={e => setJustification(e.target.value)}
                                                     placeholder={scene.justificationStarter || 'Enter your scientific reasoning using evidence from the data...'}
                                                     rows={4}
-                                                    className="glass-input w-full text-base leading-relaxed px-4 py-3.5 resize-none focus:outline-none"
-                                                    style={{ borderRadius: '6px' }}
+                                                    className="glass-input w-full text-base leading-relaxed px-4 py-3.5 resize-none focus:outline-none rounded-lg"
                                                 />
-                                                {/* Watermark */}
-                                                <span className="absolute bottom-2 right-3 text-[8px] font-mono text-slate-400 uppercase tracking-widest pointer-events-none select-none">
-                                                    SCENARIO_LOG
-                                                </span>
                                             </div>
                                             {!isTeacher && justification.length > 0 && justification.length < 15 && (
                                                 <p className="text-xs font-mono text-amber-600 mt-1 font-bold">
@@ -804,7 +791,7 @@ export default function SceneOne({
 
                                         {/* Answer options */}
                                         <div className="space-y-3">
-                                            <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase font-bold">
+                                            <span className="text-[10px] font-mono text-slate-500 tracking-wider font-bold">
                                                 Select Response
                                             </span>
                                             {scene.options.map(({ id, text: optText }, idx) => {
@@ -816,12 +803,11 @@ export default function SceneOne({
                                                         whileHover={{ x: 2 }}
                                                         whileTap={{ scale: 0.99 }}
                                                         onClick={() => setSelectedOption(scene.options.find(o => o.id === id))}
-                                                        className={`w-full text-left flex items-start gap-4 p-4 border transition-all duration-200 ${
+                                                        className={`w-full text-left flex items-start gap-4 p-4 border transition-all duration-200 rounded-lg ${
                                                             isSelected
                                                                 ? 'border-cyan-500 bg-cyan-50/50 shadow-md'
                                                                 : 'border-slate-200 bg-white/80 hover:border-cyan-400 hover:bg-slate-50/80'
                                                         }`}
-                                                        style={{ borderRadius: '8px' }}
                                                     >
                                                         <span className={`shrink-0 w-7 h-7 rounded border flex items-center justify-center text-xs font-mono font-bold transition-colors ${
                                                             isSelected
@@ -830,7 +816,7 @@ export default function SceneOne({
                                                         }`}>
                                                             {letter}
                                                         </span>
-                                                        <span className={`text-sm leading-snug transition-colors ${isSelected ? 'text-slate-900 font-bold' : 'text-slate-700 font-medium'}`}>
+                                                        <span className={`text-base leading-snug transition-colors ${isSelected ? 'text-slate-900 font-bold' : 'text-slate-700 font-medium'}`}>
                                                             {optText}
                                                         </span>
                                                     </motion.button>

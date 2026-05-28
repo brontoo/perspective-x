@@ -750,8 +750,8 @@ const [showTranscript, setShowTranscript] = useState(false);
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                     />
-                    <p className="text-[var(--lx-text-sub)] font-mono text-sm tracking-widest uppercase">
-                        INITIALIZING_SYSTEM...
+                    <p className="text-[var(--lx-text-sub)] font-mono text-sm tracking-wider">
+                        Initializing system...
                     </p>
                 </div>
             </div>
@@ -789,12 +789,6 @@ const [showTranscript, setShowTranscript] = useState(false);
             {/* Light blueprint grid overlay */}
             <BlueprintGrid />
 
-            {/* Outer HUD corners */}
-            <span className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-cyan-400/25 pointer-events-none z-20" />
-            <span className="absolute top-0 right-0 w-10 h-10 border-t-2 border-r-2 border-cyan-400/25 pointer-events-none z-20" />
-            <span className="absolute bottom-0 left-0 w-10 h-10 border-b-2 border-l-2 border-cyan-400/25 pointer-events-none z-20" />
-            <span className="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 border-cyan-400/25 pointer-events-none z-20" />
-
             {/* Side accent lines */}
             <div className="absolute left-0 inset-y-0 w-px bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent pointer-events-none z-10" />
             <div className="absolute right-0 inset-y-0 w-px bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent pointer-events-none z-10" />
@@ -804,16 +798,12 @@ const [showTranscript, setShowTranscript] = useState(false);
 
                 {/* Left: brand + phase label */}
                 <div className="flex items-center gap-3">
-                    <motion.div
-                        className="w-1.5 h-1.5 rounded-full bg-cyan-500"
-                        animate={{ opacity: [1, 0.3, 1] }}
-                        transition={{ duration: 1.1, repeat: Infinity }}
-                    />
-                    <span className="text-[10px] font-mono text-[var(--lx-text-muted)] tracking-widest uppercase select-none">
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                    <span className="text-[10px] font-mono text-[var(--lx-text-muted)] tracking-wider select-none">
                         Perspective X
                     </span>
                     <div className="w-px h-3 bg-[var(--lx-glass-border-sub)]" />
-                    <span className="text-[10px] font-mono text-[var(--lx-accent)] tracking-widest uppercase select-none">
+                    <span className="text-[10px] font-mono text-[var(--lx-accent)] tracking-wider select-none">
                         Story
                     </span>
                     {isTeacher && (
@@ -823,7 +813,7 @@ const [showTranscript, setShowTranscript] = useState(false);
                                 className="text-[9px] font-mono text-purple-400 bg-purple-500/10 border border-purple-500/30 px-1.5 py-0.5 select-none"
                                 style={{ borderRadius: '2px' }}
                             >
-                                PREVIEW
+                                Preview
                             </span>
                         </>
                     )}
@@ -836,25 +826,25 @@ const [showTranscript, setShowTranscript] = useState(false);
                     <AnimatePresence mode="wait">
                         {playbackState === 'playing' && (
                             <motion.div key="playing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5">
-                                <motion.div className="w-1 h-1 rounded-full bg-cyan-500" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 0.7, repeat: Infinity }} />
-                                <span className="text-[9px] font-mono text-cyan-600 tracking-widest uppercase">PLAYING</span>
+                                <div className="w-1 h-1 rounded-full bg-cyan-500" />
+                                <span className="text-[9px] font-mono text-cyan-600 tracking-wider">Playing</span>
                             </motion.div>
                         )}
                         {playbackState === 'paused' && (
                             <motion.div key="paused" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5">
                                 <div className="w-1 h-1 rounded-full bg-amber-400" />
-                                <span className="text-[9px] font-mono text-amber-600 tracking-widest uppercase">PAUSED</span>
+                                <span className="text-[9px] font-mono text-amber-600 tracking-wider">Paused</span>
                             </motion.div>
                         )}
                         {playbackState === 'complete' && (
                             <motion.div key="complete" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5">
                                 <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                                <span className="text-[9px] font-mono text-emerald-600 tracking-widest uppercase">COMPLETE</span>
+                                <span className="text-[9px] font-mono text-emerald-600 tracking-wider">Complete</span>
                             </motion.div>
                         )}
                         {playbackState === 'idle' && (
                             <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                                <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-widest uppercase">LOADING</span>
+                                <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-wider">Loading</span>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -908,7 +898,7 @@ const [showTranscript, setShowTranscript] = useState(false);
                     <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-[var(--lx-glass-border-sub)] bg-white/20">
                         <div className="flex items-center gap-2 min-w-0">
                             <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0" />
-                            <span className="text-[10px] font-mono text-cyan-700 tracking-widest uppercase truncate select-none">
+                            <span className="text-[10px] font-mono text-cyan-700 tracking-wider truncate select-none">
                                 {currentScene?.visual || 'Story'}
                             </span>
                         </div>
@@ -935,7 +925,7 @@ const [showTranscript, setShowTranscript] = useState(false);
                                     >
                                         <div className="flex items-center gap-2.5 px-4 py-2.5 border-b border-cyan-500/15 bg-cyan-500/5">
                                             <BarChart3 className="w-4 h-4 text-cyan-600 shrink-0" />
-                                            <span className="text-[11px] font-mono text-cyan-700 tracking-widest uppercase font-semibold">
+                                            <span className="text-[11px] font-mono text-cyan-700 tracking-wider font-semibold">
                                                 Evidence
                                             </span>
                                         </div>
@@ -946,7 +936,7 @@ const [showTranscript, setShowTranscript] = useState(false);
                                                         {currentScene.dataTable?.headers?.map((h, i) => (
                                                             <th
                                                                 key={i}
-                                                                className="text-left px-3 py-2 text-[10px] font-mono text-cyan-700 uppercase tracking-wider"
+                                                                className="text-left px-3 py-2 text-[10px] font-mono text-cyan-700 tracking-wider"
                                                             >
                                                                 {h}
                                                             </th>
@@ -1018,7 +1008,7 @@ const [showTranscript, setShowTranscript] = useState(false);
                                             className="flex items-center gap-2"
                                         >
                                             <div className="h-px w-8 bg-gradient-to-r from-transparent to-cyan-500/20" />
-                                            <span className="text-[10px] font-mono text-cyan-600 tracking-widest uppercase select-none font-semibold">
+                                            <span className="text-[10px] font-mono text-cyan-600 tracking-wider select-none font-semibold">
                                                 Story Part {String(currentSceneIndex + 1).padStart(2, '0')}
                                             </span>
                                             <div className="h-px w-8 bg-gradient-to-l from-transparent to-cyan-500/20" />
@@ -1038,7 +1028,7 @@ const [showTranscript, setShowTranscript] = useState(false);
                                         >
                                             <div className="flex items-center gap-2.5 px-4 py-2.5 border-b border-[var(--lx-glass-border-sub)] bg-[var(--lx-glass)]/20">
                                                 <BarChart3 className="w-4 h-4 text-cyan-600 shrink-0" />
-                                                <span className="text-[11px] font-mono text-cyan-700 tracking-widest uppercase font-semibold">
+                                                <span className="text-[11px] font-mono text-cyan-700 tracking-wider font-semibold">
                                                     Evidence
                                                 </span>
                                             </div>
@@ -1049,7 +1039,7 @@ const [showTranscript, setShowTranscript] = useState(false);
                                                             {currentScene.dataTable?.headers?.map((h, i) => (
                                                                 <th
                                                                     key={i}
-                                                                    className="text-left px-3 py-2 text-[10px] font-mono text-cyan-700 uppercase tracking-wider"
+                                                                    className="text-left px-3 py-2 text-[10px] font-mono text-cyan-700 tracking-wider"
                                                                 >
                                                                     {h}
                                                                 </th>
@@ -1093,8 +1083,8 @@ const [showTranscript, setShowTranscript] = useState(false);
                 {/* Progress bars */}
                 <div className="px-6 pt-3 pb-2 space-y-1.5 border-b border-[var(--lx-glass-border-sub)]">
                     <div className="flex items-center gap-3">
-                        <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-wider uppercase w-9 shrink-0 select-none">
-                            SCENE
+                        <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-wider w-9 shrink-0 select-none">
+                            Scene
                         </span>
                         <div className="glass-progress flex-1 h-[3px]" style={{ borderRadius: '2px' }}>
                             <div className="glass-progress-bar h-full transition-all duration-75" style={{ width: `${progress}%` }} />
@@ -1104,8 +1094,8 @@ const [showTranscript, setShowTranscript] = useState(false);
                         </span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-wider uppercase w-9 shrink-0 select-none">
-                            TOTAL
+                        <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-wider w-9 shrink-0 select-none">
+                            Total
                         </span>
                         <div className="glass-progress flex-1 h-[3px]" style={{ borderRadius: '2px' }}>
                             <div className="glass-progress-bar h-full transition-all duration-75" style={{ width: `${totalProgress}%`, background: 'var(--lx-accent-glow)' }} />
@@ -1128,8 +1118,8 @@ const [showTranscript, setShowTranscript] = useState(false);
                             {character?.avatar || '🧑‍🔬'}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <span className="text-[9px] font-mono text-cyan-600 tracking-widest uppercase block mb-0.5 select-none">
-                                {character?.name || 'NARRATOR'}
+                            <span className="text-[9px] font-mono text-cyan-600 tracking-wider block mb-0.5 select-none">
+                                {character?.name || 'Narrator'}
                             </span>
                             <AnimatePresence mode="wait">
                                 <motion.p

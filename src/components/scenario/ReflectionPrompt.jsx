@@ -55,8 +55,8 @@ export default function ReflectionPrompt({ scenario, onComplete, isTeacher, them
         >
             {/* Header / Banner */}
             <div className="flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-[#f59e0b] animate-pulse" />
-                <span className="text-xs font-mono text-[#f59e0b] tracking-widest uppercase select-none font-bold">
+                <span className="w-2 h-2 rounded-full bg-[#f59e0b]" />
+                <span className="text-xs font-mono text-[#f59e0b] tracking-wider select-none font-bold">
                     Reflection
                 </span>
                 <div className="h-px flex-1 bg-gradient-to-r from-[#f59e0b]/40 to-transparent" />
@@ -67,11 +67,11 @@ export default function ReflectionPrompt({ scenario, onComplete, isTeacher, them
                 <div className="bg-slate-50 p-6 border-b border-slate-200/80 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <Edit3 className="w-5 h-5 text-[#f59e0b]" />
-                        <h2 className="text-lg font-black text-slate-800 uppercase tracking-wide font-sans">
+                        <h2 className="text-lg font-black text-slate-800 tracking-wide font-sans">
                             Reflect on Your Decision
                         </h2>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase font-bold">
+                    <span className="text-[10px] font-mono text-slate-500 tracking-wider font-bold">
                         Mission Review
                     </span>
                 </div>
@@ -118,7 +118,7 @@ export default function ReflectionPrompt({ scenario, onComplete, isTeacher, them
                         <button
                             onClick={handleSubmit}
                             disabled={!canSubmit || isSubmitted}
-                            className={`px-8 py-3.5 rounded-lg font-bold uppercase tracking-widest transition-colors flex items-center gap-2 font-sans text-sm shadow-lg ${
+                            className={`px-8 py-3.5 rounded-lg font-bold tracking-wider transition-colors flex items-center gap-2 font-sans text-sm shadow-lg ${
                                 canSubmit && !isSubmitted
                                     ? 'bg-[#f59e0b] hover:bg-[#d97706] text-white shadow-[#f59e0b]/20 cursor-pointer'
                                     : 'bg-slate-100 text-slate-400 border border-slate-200/60 cursor-not-allowed'
