@@ -4,6 +4,9 @@ import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import ScenarioVisual from './ScenarioVisual';
 
+// Re-export pedagogical primitives for backward compatibility
+export { RiskMeter, DataLabel, BeforeAfterPanel } from './PedagogicalPrimitives';
+
 const TIMER_TONES = {
     amber: {
         card: 'bg-amber-500/10 border-amber-500/30',

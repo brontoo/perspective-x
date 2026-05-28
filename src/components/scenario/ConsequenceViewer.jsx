@@ -6,6 +6,8 @@ import {
   DollarSign, Heart, Zap, Users, Lightbulb 
 } from 'lucide-react';
 import { evaluateScenarioOutcome } from './scenarioAnswerKey';
+import ScenarioVisual from './ScenarioVisual';
+import { BeforeAfterPanel } from './PedagogicalPrimitives';
 
 // Dictionary mapping Choice ID (A, B, C, D) or Consequence Key to choice strength
 const OUTCOME_RATING_MAP = {
@@ -360,6 +362,26 @@ const SCENARIO_IMPACT_CATEGORIES = {
   ]
 };
 
+// Risk levels for before/after comparison in consequence visuals
+const SCENARIO_RISK_LEVELS = {
+  water_contamination: { before: 'high', label: 'Contamination Risk' },
+  acid_rain: { before: 'high', label: 'Environmental Risk' },
+  invasive_species: { before: 'high', label: 'Ecosystem Risk' },
+  mutation_dilemma: { before: 'medium', label: 'Genetic Risk' },
+  reaction_time: { before: 'medium', label: 'Performance Risk' },
+  oxygen_failure: { before: 'high', label: 'Life Support Risk' },
+  power_grid: { before: 'high', label: 'Grid Overload Risk' },
+  heat_loss: { before: 'high', label: 'Energy Waste' },
+  reaction_gone_wrong: { before: 'high', label: 'Reactor Risk' },
+  unstable_slope: { before: 'high', label: 'Landslide Risk' },
+  gas_boyle_adnoc: { before: 'medium', label: 'Pressure Risk' },
+  gas_charles_aviation: { before: 'medium', label: 'Safety Risk' },
+  gas_gaylussac_cylinder: { before: 'medium', label: 'Pressure Risk' },
+  aspirin_production: { before: 'medium', label: 'Quality Risk' },
+  fuelproduction: { before: 'medium', label: 'Yield Risk' },
+  aspirin_percent_yield: { before: 'medium', label: 'Quality Risk' },
+};
+
 export default function ConsequenceViewer({ scenario, consequenceKey, onNext, isTeacher, theme }) {
     // Find the decision scene (usually scene index 1, i.e., scene2)
     const decisionScene = scenario.scenes[1];
@@ -533,6 +555,38 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                             </p>
                         </div>
                     )}
+
+                    {/* Before / After Visual Comparison */}
+                    {(() => {
+                        const riskConfig = SCENARIO_RISK_LEVELS[scenario.id];
+                        if (!riskConfig) return null;
+                        const afterRisk = rating === 'strong' ? 'low' : rating === 'risky' ? 'medium' : 'high';
+                        return (
+                            <div className="bg-slate-900/80 rounded-xl p-4 border border-slate-700/40">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                                    <span className="text-[10px] font-bold text-cyan-300">Visual Comparison</span>
+                                </div>
+                                <BeforeAfterPanel
+                                    beforeLabel="Before Your Decision"
+                                    afterLabel="After Your Decision"
+                                    beforeContent={
+                                        <div className="h-40 overflow-hidden rounded-lg">
+                                            <ScenarioVisual scenarioId={scenario.id} sceneIndex={0} avatar={scenario.character?.avatar} />
+                                        </div>
+                                    }
+                                    afterContent={
+                                        <div className="h-40 overflow-hidden rounded-lg">
+                                            <ScenarioVisual scenarioId={scenario.id} sceneIndex={2} avatar={scenario.character?.avatar} />
+                                        </div>
+                                    }
+                                    beforeRisk={riskConfig.before}
+                                    afterRisk={afterRisk}
+                                    riskLabel={riskConfig.label}
+                                />
+                            </div>
+                        );
+                    })()}
 
                     <div className="space-y-2.5">
                         <div className="flex items-center gap-2 text-slate-500 font-bold">
