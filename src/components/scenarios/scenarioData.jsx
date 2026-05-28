@@ -1,4 +1,4 @@
-// Complete scenario database for all 10 role-play scenarios
+// Complete scenario database for all 16 role-play scenarios
 
 export const ROLES = {
     environmental_scientist: {

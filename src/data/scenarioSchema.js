@@ -181,8 +181,11 @@ export function validateScenario(scenario) {
 }
 
 /**
- * Normalizes a scenario, providing fallbacks for optional data-driven fields.
+ * Normalizes a scenario, providing fallbacks for optional and standardized fields.
  * Ensures the scenario structure is fully safe to render inside the dashboard.
+ * Supports: id, title, role, simpleContext, studentMission, scienceFocus, strand,
+ * estimatedTime, badge, badgeIcon, difficulty, character, scenes, exitTicket,
+ * storySummary, keyEvidence, studentTask, hints, misconceptions, skills.
  * @param {object} scenario - The raw scenario object.
  * @returns {object} Normalized scenario.
  */
@@ -197,15 +200,38 @@ export function normalizeScenario(scenario) {
   normalized.difficulty = normalized.difficulty || "On-Level";
   normalized.estimatedTime = normalized.estimatedTime || 15;
   normalized.scienceFocus = normalized.scienceFocus || [];
-  normalized.skills = normalized.skills || [];
+  normalized.skills = normalized.skills || normalized.scienceFocus || [];
   normalized.badge = normalized.badge || "Science Analyst";
   normalized.badgeIcon = normalized.badgeIcon || "🔬";
 
+  // Standard required properties
+  normalized.simpleContext = normalized.simpleContext || normalized.context || "No context provided.";
+  normalized.studentMission = normalized.studentMission || normalized.learningObjective || "Examine the data and make a scientifically sound decision.";
+  normalized.character = normalized.character || {
+    name: "Senior Lead Analyst",
+    avatar: "🧑‍🔬",
+    title: "Scientific Operations Specialist"
+  };
+
+  // Student-friendly optional properties
+  normalized.storySummary = normalized.storySummary || normalized.simpleContext || normalized.context || "";
+  normalized.studentTask = normalized.studentTask || normalized.studentMission || "";
+  normalized.keyEvidence = normalized.keyEvidence || [];
+  normalized.hints = normalized.hints || [];
+  normalized.misconceptions = normalized.misconceptions || [];
+
   // Ensure scenes are populated
   if (Array.isArray(normalized.scenes)) {
-    normalized.scenes = normalized.scenes.map((scene) => {
+    normalized.scenes = normalized.scenes.map((scene, idx) => {
       const normScene = { ...scene };
       if (!normScene.hints) normScene.hints = [];
+      if (!normScene.misconceptions) normScene.misconceptions = [];
+      if (!normScene.skills) normScene.skills = [];
+      
+      // Inherit evidence reminder points from the main scenario keyEvidence if empty
+      if (idx === 1 && (!normScene.evidence || normScene.evidence.length === 0)) {
+        normScene.evidence = normalized.keyEvidence.length > 0 ? normalized.keyEvidence : undefined;
+      }
       return normScene;
     });
   } else {

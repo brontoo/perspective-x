@@ -20,6 +20,7 @@ import ScenarioComplete from '@/components/scenario/ScenarioComplete';
 import CompletionCertificate from '@/components/scenario/CompletionCertificate';
 import { normalizeRoleThemeKey, getBadgeLevel, getAdaptedScene } from '@/components/scenario/scenarioHelpers';
 import { evaluateScenarioOutcome } from '@/components/scenario/scenarioAnswerKey';
+import { normalizeScenario } from '@/data/scenarioSchema';
 import { ROLE_THEMES, DEFAULT_THEME } from '@/lib/roleThemes';
 import { useScenarioAudio } from '@/hooks/useScenarioAudio';
 import { t as motionT } from '@/lib/motionPresets';
@@ -169,7 +170,8 @@ export default function ScenarioPlayer() {
     // ── Scenario / role / theme lookup ─────────────────────────
     const baseScenario = SCENARIOS[scenarioId];
     const uaeScenario = UAE_SCENARIOS?.[scenarioId];
-    const scenario = baseScenario ? { ...baseScenario, ...(uaeScenario || {}) } : null;
+    const rawScenario = baseScenario ? { ...baseScenario, ...(uaeScenario || {}) } : null;
+    const scenario = rawScenario ? normalizeScenario(rawScenario) : null;
     const role = useMemo(
         () => Object.values(ROLES).find((r) => r.scenarios.includes(scenarioId)),
         [scenarioId]
