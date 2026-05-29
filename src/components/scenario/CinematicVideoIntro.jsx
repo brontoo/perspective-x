@@ -11,6 +11,10 @@ const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSSt
 
 const DEFAULT_SCENE_DURATION = 5500;
 
+// Scenarios that have a completed video file and should play it as a single
+// uninterrupted intro (no generated slides, no speech synthesis).
+const FULL_VIDEO_SCENARIOS = new Set(['water_contamination']);
+
 const toDataPoints = (table) => {
     if (!table || !Array.isArray(table.rows)) return [];
     return table.rows.slice(0, 4).map((row) => ({
@@ -204,6 +208,10 @@ const [showTranscript, setShowTranscript] = useState(false);
 
     // Real video player states
     const [useRealVideo, setUseRealVideo] = useState(false);
+
+    // Full-video mode: play the real video as one complete intro with its own
+    // audio, hiding all generated slide content and speech synthesis.
+    const useFullVideo = useRealVideo && FULL_VIDEO_SCENARIOS.has(scenarioId);
     const [videoLoading, setVideoLoading] = useState(true);
 
     const isMountedRef = useRef(true);
@@ -415,6 +423,10 @@ const [showTranscript, setShowTranscript] = useState(false);
             if (!video) return;
             stopAllPlayback();
             setPlaybackState('playing');
+            // Full-video mode: unmute by default so the video's own audio plays
+            if (useFullVideo) {
+                video.muted = isMuted;
+            }
             video.play().catch(err => {
                 console.warn("Video play failed:", err);
                 setPlaybackState('paused');
@@ -474,7 +486,7 @@ const [showTranscript, setShowTranscript] = useState(false);
             }, segDuration);
         }
 
-        if (!isMuted && 'speechSynthesis' in window && text) {
+        if (!isMuted && !useFullVideo && 'speechSynthesis' in window && text) {
             window.speechSynthesis.cancel();
 
             const speakUtterance = () => {
@@ -545,7 +557,7 @@ const [showTranscript, setShowTranscript] = useState(false);
                 }
             }, duration);
         }
-    }, [useRealVideo, currentScene, isMuted, selectedVoice, stopAllPlayback, checkCompletion, videoState]);
+    }, [useRealVideo, useFullVideo, currentScene, isMuted, selectedVoice, stopAllPlayback, checkCompletion, videoState]);
 
     const getSceneStartTime = useCallback((sceneIdx) => {
         const video = videoRef.current;
@@ -852,9 +864,11 @@ const [showTranscript, setShowTranscript] = useState(false);
                     <div className="w-px h-3 bg-[var(--lx-glass-border-sub)]" />
 
                     {/* Scene counter */}
-                    <span className="text-[10px] font-mono text-[var(--lx-text-muted)] tabular-nums select-none tracking-wider">
-                        {String(currentSceneIndex + 1).padStart(2, '0')}&thinsp;/&thinsp;{String(totalScenes).padStart(2, '0')}
-                    </span>
+                    {!useFullVideo && (
+                        <span className="text-[10px] font-mono text-[var(--lx-text-muted)] tabular-nums select-none tracking-wider">
+                            {String(currentSceneIndex + 1).padStart(2, '0')}&thinsp;/&thinsp;{String(totalScenes).padStart(2, '0')}
+                        </span>
+                    )}
 
                     {/* Skip — active for teacher only */}
                     <button
@@ -881,12 +895,12 @@ const [showTranscript, setShowTranscript] = useState(false);
                 >
                     {/* Real Video background */}
                     {useRealVideo && (
-                        <div className="absolute inset-0 z-0">
+                        <div className={`absolute inset-0 z-0 ${useFullVideo ? 'z-20' : ''}`}>
                             <video
                                 ref={videoRef}
                                 src={`/videos/scenarios/${scenarioId}.mp4`}
                                 className="w-full h-full object-cover"
-                                onTimeUpdate={handleTimeUpdate}
+                                onTimeUpdate={useFullVideo ? undefined : handleTimeUpdate}
                                 onEnded={handleVideoEnded}
                                 playsInline
                                 muted={isMuted}
@@ -894,17 +908,20 @@ const [showTranscript, setShowTranscript] = useState(false);
                         </div>
                     )}
 
-                    {/* Top scene label bar */}
-                    <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-[var(--lx-glass-border-sub)] bg-white/20">
-                        <div className="flex items-center gap-2 min-w-0">
-                            <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0" />
-                            <span className="text-[10px] font-mono text-cyan-700 tracking-wider truncate select-none">
-                                {currentScene?.visual || 'Story'}
-                            </span>
+                    {/* Top scene label bar — hidden in full-video mode */}
+                    {!useFullVideo && (
+                        <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-[var(--lx-glass-border-sub)] bg-white/20">
+                            <div className="flex items-center gap-2 min-w-0">
+                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0" />
+                                <span className="text-[10px] font-mono text-cyan-700 tracking-wider truncate select-none">
+                                    {currentScene?.visual || 'Story'}
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* ── Main visual area ── */}
+                    {!useFullVideo && (
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentSceneIndex}
@@ -1074,6 +1091,12 @@ const [showTranscript, setShowTranscript] = useState(false);
                             )}
                         </motion.div>
                     </AnimatePresence>
+                    )}
+
+                    {/* Full-video mode: just show the video, no overlays */}
+                    {useFullVideo && (
+                        <div className="flex-1" />
+                    )}
                 </div>
             </div>
 
@@ -1082,6 +1105,21 @@ const [showTranscript, setShowTranscript] = useState(false);
 
                 {/* Progress bars */}
                 <div className="px-6 pt-3 pb-2 space-y-1.5 border-b border-[var(--lx-glass-border-sub)]">
+                    {/* Full-video mode: single continuous progress bar */}
+                    {useFullVideo ? (
+                        <div className="flex items-center gap-3">
+                            <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-wider w-14 shrink-0 select-none">
+                                Progress
+                            </span>
+                            <div className="glass-progress flex-1 h-[3px]" style={{ borderRadius: '2px' }}>
+                                <div className="glass-progress-bar h-full transition-all duration-75" style={{ width: `${progress}%` }} />
+                            </div>
+                            <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tabular-nums w-7 text-right shrink-0 select-none">
+                                {Math.round(progress)}%
+                            </span>
+                        </div>
+                    ) : (
+                    <>
                     <div className="flex items-center gap-3">
                         <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-wider w-9 shrink-0 select-none">
                             Scene
@@ -1104,12 +1142,15 @@ const [showTranscript, setShowTranscript] = useState(false);
                             {Math.round(totalProgress)}%
                         </span>
                     </div>
+                    </>
+                    )}
                 </div>
 
                 {/* Narration + controls row */}
                 <div className="px-6 py-3 flex items-center gap-4">
 
-                    {/* Character avatar + subtitle text */}
+                    {/* Character avatar + subtitle text — hidden in full-video mode */}
+                    {!useFullVideo && (
                     <div className="flex items-start gap-3 flex-1 min-w-0">
                         <div
                             className="w-8 h-8 shrink-0 bg-[var(--lx-glass)] border border-[var(--lx-glass-border-sub)] flex items-center justify-center text-xl select-none"
@@ -1138,32 +1179,79 @@ const [showTranscript, setShowTranscript] = useState(false);
                             </AnimatePresence>
                         </div>
                     </div>
+                    )}
+
+                    {/* Full-video mode: spacer so controls push right */}
+                    {useFullVideo && <div className="flex-1" />}
 
                     {/* Playback controls */}
                     <div className="flex items-center gap-1 shrink-0">
-                        <ControlBtn onClick={goToPrevScene} disabled={currentSceneIndex === 0} title="Previous scene">
-                            <SkipBack className="w-3.5 h-3.5" />
-                        </ControlBtn>
+                        {/* Prev/Next scene — only in multi-scene mode */}
+                        {!useFullVideo && (
+                            <ControlBtn onClick={goToPrevScene} disabled={currentSceneIndex === 0} title="Previous scene">
+                                <SkipBack className="w-3.5 h-3.5" />
+                            </ControlBtn>
+                        )}
                         <ControlBtn onClick={togglePlayPause} title={playbackState === 'playing' ? 'Pause' : 'Play'}>
                             {playbackState === 'playing' ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
                         </ControlBtn>
-                        <ControlBtn onClick={replayScene} title="Replay scene">
+                        <ControlBtn onClick={replayScene} title="Replay">
                             <RotateCcw className="w-3.5 h-3.5" />
                         </ControlBtn>
                         <ControlBtn onClick={toggleMute} title={isMuted ? 'Unmute' : 'Mute'} active={isMuted}>
                             {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
                         </ControlBtn>
-                        <ControlBtn onClick={() => setShowSubtitles(s => !s)} title="Toggle subtitles" active={showSubtitles}>
-                            <Subtitles className="w-3.5 h-3.5" />
-                        </ControlBtn>
-                        <ControlBtn onClick={() => setShowTranscript(t => !t)} title={showTranscript ? "Hide Transcript" : "Show Transcript"} active={showTranscript}>
-                            {showTranscript ? "Hide Transcript" : "Show Transcript"}
-                        </ControlBtn>
+                        {/* Subtitles & transcript — only in generated-slide mode */}
+                        {!useFullVideo && (
+                            <>
+                            <ControlBtn onClick={() => setShowSubtitles(s => !s)} title="Toggle subtitles" active={showSubtitles}>
+                                <Subtitles className="w-3.5 h-3.5" />
+                            </ControlBtn>
+                            <ControlBtn onClick={() => setShowTranscript(t => !t)} title={showTranscript ? "Hide Transcript" : "Show Transcript"} active={showTranscript}>
+                                {showTranscript ? "Hide Transcript" : "Show Transcript"}
+                            </ControlBtn>
+                            </>
+                        )}
                     </div>
 
                     {/* Action button */}
                     <div className="shrink-0">
 
+                        {/* Full-video mode: Skip Story + Start Mission only */}
+                        {useFullVideo ? (
+                            <div className="flex items-center gap-2">
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={safeOnComplete}
+                                    className="flex items-center gap-1.5 text-[10px] font-mono tracking-wider px-3 py-2 border border-[var(--lx-glass-border-sub)] text-[var(--lx-text-sub)] hover:text-[var(--lx-text)] hover:border-[var(--lx-accent)]/40 glass-panel select-none"
+                                    style={{ borderRadius: '4px' }}
+                                >
+                                    <SkipForward className="w-3 h-3" />
+                                    Skip Story
+                                </motion.button>
+                                {playbackState === 'complete' && (
+                                    <motion.button
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={safeOnComplete}
+                                        className="liquid-btn-accent relative overflow-hidden flex items-center gap-2 text-[10px] font-mono tracking-widest font-bold px-5 py-2.5 select-none"
+                                        style={{ borderRadius: '4px' }}
+                                    >
+                                        <motion.div
+                                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"
+                                            animate={{ x: ['-100%', '200%'] }}
+                                            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.8 }}
+                                        />
+                                        <Play className="w-3.5 h-3.5 fill-current shrink-0 relative z-10" />
+                                        <span className="relative z-10">Start Mission</span>
+                                    </motion.button>
+                                )}
+                            </div>
+                        ) : (
+                        <>
                         {/* Non-last scene: CONTINUE (disabled until scene completes for students) */}
                         {!isLastScene && (
                             <motion.button
@@ -1224,9 +1312,11 @@ const [showTranscript, setShowTranscript] = useState(false);
                                 </AnimatePresence>
                             </div>
                         )}
+                        </>
+                        )}
                     </div>
                 </div>
-{showTranscript && (
+{showTranscript && !useFullVideo && (
     <div className="px-6 py-2 text-sm text-[var(--lx-text-sub)] bg-[var(--lx-glass)]/30 border-t border-[var(--lx-glass-border-sub)]">
         {subtitleSegments.join(' ')}
     </div>
