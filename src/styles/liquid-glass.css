@@ -356,6 +356,27 @@
   border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.55);
 }
 
+/* ── Focus-visible accessibility ──────────────────────────────────────── */
+.liquid-btn:focus-visible,
+.liquid-btn-accent:focus-visible,
+.liquid-btn-ghost:focus-visible {
+  outline: 2px solid var(--lx-accent);
+  outline-offset: 2px;
+  box-shadow: var(--lx-shadow), 0 0 0 4px var(--lx-accent-soft);
+}
+
+.glass-card:focus-visible,
+.glass-panel:focus-visible {
+  outline: 2px solid var(--lx-accent);
+  outline-offset: 2px;
+  box-shadow: var(--lx-shadow), 0 0 0 4px var(--lx-accent-soft);
+}
+
+.glass-tab:focus-visible {
+  outline: 2px solid var(--lx-accent);
+  outline-offset: -2px;
+}
+
 /* ── 6. Inputs / Forms ────────────────────────────────────────────────── */
 .glass-input {
   background: rgba(255, 255, 255, 0.55);
@@ -370,7 +391,7 @@
 .glass-input:focus {
   border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.55);
   box-shadow: 0 0 0 3px rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.12);
-  outline: none;
+  outline: 2px solid transparent;
 }
 
 .glass-input::placeholder { color: var(--lx-text-muted); }
@@ -390,7 +411,7 @@
 .glass-input-dark:focus {
   border-color: rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.55);
   box-shadow: 0 0 0 3px rgba(var(--lx-accent-r), var(--lx-accent-g), var(--lx-accent-b), 0.12);
-  outline: none;
+  outline: 2px solid transparent;
 }
 
 /* ── 7. Badges / Chips / Tags ─────────────────────────────────────────── */
@@ -759,6 +780,14 @@
   .lx-bg-orbs::before, .lx-bg-orbs::after {
     animation: none !important;
   }
+
+  /* Disable all motion globally for reduced-motion users */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ── 16. Scrollbar Styling ────────────────────────────────────────────── */
@@ -778,16 +807,18 @@
 }
 
 /* ── 17. Theme Transition ─────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  transition-property: background-color, border-color, color;
-  transition-duration: var(--lx-dur-fast);
-  transition-timing-function: var(--lx-ease-std);
-}
+@media (prefers-reduced-motion: no-preference) {
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color;
+    transition-duration: var(--lx-dur-fast);
+    transition-timing-function: var(--lx-ease-std);
+  }
 
-/* Exception: don't bleed transition onto animated elements */
-.anim-float *, .anim-blob *, .anim-scan { transition: none; }
+  /* Exception: don't bleed transition onto animated elements */
+  .anim-float *, .anim-blob *, .anim-scan { transition: none; }
+}
 
 /* ── 18. Utility Helpers ──────────────────────────────────────────────── */
 
@@ -832,9 +863,34 @@
 }
 
 .lx-hud-label {
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   font-family: 'Space Mono', monospace;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--lx-text-muted);
+}
+
+/* ── 19. Accessibility — Mobile Touch Targets ─────────────────────────── */
+@media (max-width: 640px) {
+  button, [role="button"], a, input, select, textarea {
+    min-height: 44px;
+  }
+
+  .glass-modal {
+    max-width: 95vw;
+    padding: 0.75rem;
+  }
+}
+
+/* ── 20. Accessible Label Utilities ───────────────────────────────────── */
+.lx-label {
+  font-size: 0.6875rem;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.06em;
+  color: var(--lx-text-sub);
+}
+
+.lx-caption {
+  font-size: 0.75rem;
+  color: var(--lx-text-sub);
 }

@@ -216,7 +216,7 @@ function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode
     return (
         <div className="border border-slate-200 bg-slate-50/50 p-4 rounded-lg space-y-3">
             <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase font-bold">
+                <span className="text-xs font-mono text-slate-500 tracking-widest uppercase font-bold">
                     Need Help?
                 </span>
                 {hintCount < maxHints && (
@@ -229,7 +229,7 @@ function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode
                     </button>
                 )}
                 {hintCount >= maxHints && (
-                    <span className="text-[10px] font-mono text-slate-400 font-semibold">
+                    <span className="text-xs font-mono text-slate-400 font-semibold">
                         All hints revealed
                     </span>
                 )}
@@ -552,7 +552,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                                 {Array.isArray(tags) && tags.length > 0 && (
                                                     <div className="flex flex-wrap gap-1.5 mb-2">
                                                         {tags.map(tag => (
-                                                            <span key={tag} className="text-[10px] font-mono font-semibold text-slate-700 bg-slate-100 border border-slate-200/60 px-2 py-0.5 rounded">
+                                                            <span key={tag} className="text-xs font-mono font-semibold text-slate-700 bg-slate-100 border border-slate-200/60 px-2 py-0.5 rounded">
                                                                 {tag}
                                                             </span>
                                                         ))}
@@ -756,7 +756,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                         <thead>
                                             <tr className="border-b border-slate-200 bg-slate-50">
                                                 {scene.data.table.headers.map((h, i) => (
-                                                    <th key={i} className="text-left py-2 px-3 text-[10px] font-mono text-slate-700 tracking-wider font-bold">{h}</th>
+                                                    <th key={i} className="text-left py-2 px-3 text-xs font-mono text-slate-700 tracking-wider font-bold">{h}</th>
                                                 ))}
                                             </tr>
                                         </thead>
@@ -786,7 +786,13 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
             {/* ── Confirmation Checkpoint Modal ── */}
             <AnimatePresence>
                 {showConfirm && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Confirm your choice"
+                        onKeyDown={(e) => { if (e.key === 'Escape') setShowConfirm(false); }}
+                    >
                         {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -832,7 +838,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                             {/* Formative Feedback Card */}
                             {formativeFeedback && (
                                 <div className="p-4 rounded-xl border border-cyan-100 bg-cyan-50/50 space-y-1.5 shadow-inner">
-                                    <div className="flex items-center gap-1.5 text-[9px] font-mono text-cyan-800 font-bold tracking-wider">
+                                    <div className="flex items-center gap-1.5 text-[11px] font-mono text-cyan-800 font-bold tracking-wider">
                                         <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                                         Formative Review
                                     </div>

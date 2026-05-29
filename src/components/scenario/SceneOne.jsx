@@ -121,7 +121,7 @@ function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode
     return (
         <div className="border border-slate-200 bg-slate-50/50 p-4 rounded-lg space-y-3">
             <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono text-slate-500 tracking-wider font-bold">
+                <span className="text-xs font-mono text-slate-500 tracking-wider font-bold">
                     Need Help?
                 </span>
                 {hintCount < maxHints && (
@@ -134,7 +134,7 @@ function HintSystem({ scenarioId, scene, hintCount, setHintCount, difficultyMode
                     </button>
                 )}
                 {hintCount >= maxHints && (
-                    <span className="text-[10px] font-mono text-slate-400 font-semibold">
+                    <span className="text-xs font-mono text-slate-400 font-semibold">
                         All hints revealed
                     </span>
                 )}
@@ -245,7 +245,7 @@ function Panel({ label, icon: Icon, status, children, className = '', dimmed = f
                         <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
                     )}
                     {dimmed && <div className="w-1.5 h-1.5 rounded-full bg-slate-600" />}
-                    <span className={`text-[9px] font-mono tracking-wider select-none ${dimmed ? 'text-slate-500' : 'text-cyan-400'}`}>
+                    <span className={`text-[11px] font-mono tracking-wider select-none ${dimmed ? 'text-slate-500' : 'text-cyan-400'}`}>
                         {Icon && <Icon className="w-2.5 h-2.5 inline mr-1.5 -mt-0.5" />}
                         {label}
                     </span>
@@ -266,10 +266,10 @@ function MetricRow({ icon: Icon, label, value, unit, graph, highlight = false })
         <div className={`flex items-center justify-between gap-2 px-3.5 py-2 border-b border-[var(--lx-dark-glass-border)] ${highlight ? 'bg-amber-500/5' : ''}`}>
             <div className="flex items-center gap-1.5 shrink-0 w-24">
                 <Icon className={`w-3 h-3 shrink-0 ${highlight ? 'text-amber-400' : 'text-cyan-500/70'}`} />
-                <span className="text-[9px] font-mono text-[var(--lx-text-muted)] tracking-wider truncate">{label}</span>
+                <span className="text-[11px] font-mono text-[var(--lx-text-muted)] tracking-wider truncate">{label}</span>
             </div>
             <span className={`text-[11px] font-mono font-bold tabular-nums shrink-0 ${highlight ? 'text-amber-300' : 'text-cyan-300'}`}>
-                {value}<span className="text-[9px] font-normal text-[var(--lx-text-muted)] ml-0.5">{unit}</span>
+                {value}<span className="text-[11px] font-normal text-[var(--lx-text-muted)] ml-0.5">{unit}</span>
             </span>
             {graph && (
                 <div className="flex-1 flex justify-end min-w-0">
@@ -448,7 +448,7 @@ export default function SceneOne({
                                             : 'border-slate-200 text-slate-500 bg-white/50 hover:bg-slate-50'
                                     } ${isTeacher ? 'cursor-pointer hover:opacity-80' : 'cursor-default'} rounded-md`}
                                 >
-                                    <span className={`w-4 h-4 rounded-full border flex items-center justify-center text-[9px] font-bold ${
+                                    <span className={`w-4 h-4 rounded-full border flex items-center justify-center text-[11px] font-bold ${
                                         stage === s ? `border-current bg-current/10` : 'border-slate-300'
                                     }`}>
                                         {i + 1}
@@ -645,7 +645,7 @@ export default function SceneOne({
                                     <div className="flex items-start gap-4 p-4 border border-slate-200 bg-white/80 shadow-sm rounded-lg">
                                         <Target className={`w-5 h-5 ${text} shrink-0 mt-0.5`} />
                                         <div>
-                                            <span className="text-[10px] font-mono text-slate-500 tracking-wider block mb-1">Learning Objective</span>
+                                            <span className="text-xs font-mono text-slate-500 tracking-wider block mb-1">Learning Objective</span>
                                             <p className="text-base text-slate-800 font-semibold leading-relaxed">{scene.learningObjective}</p>
                                         </div>
                                     </div>
@@ -698,7 +698,7 @@ export default function SceneOne({
                                             <Lock className="w-5 h-5 text-slate-400" />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-mono text-slate-500 tracking-wider mb-1">Choice Locked</p>
+                                            <p className="text-xs font-mono text-slate-500 tracking-wider mb-1">Choice Locked</p>
                                             <p className="text-slate-600 text-sm">Complete the {stage === 'briefing' ? 'Story' : 'Evidence'} to unlock the Choice interface.</p>
                                         </div>
 
@@ -747,7 +747,7 @@ export default function SceneOne({
                                                             {isTeacher && (
                                                                 <button
                                                                     onClick={() => setShowThinkTimer(false)}
-                                                                    className="text-[10px] text-amber-600 hover:text-amber-700 font-mono font-bold"
+                                                                    className="text-xs text-amber-600 hover:text-amber-700 font-mono font-bold"
                                                                 >
                                                                     [SKIP]
                                                                 </button>
@@ -762,7 +762,7 @@ export default function SceneOne({
                                         <div className="p-4 border border-red-200 bg-red-50/60 rounded-lg">
                                             <div className="flex items-center gap-2 mb-2">
                                                 <AlertTriangle className="w-4 h-4 text-red-600" />
-                                                <span className="text-[10px] font-mono text-red-700 tracking-wider font-bold">Critical Question</span>
+                                                <span className="text-xs font-mono text-red-700 tracking-wider font-bold">Critical Question</span>
                                             </div>
                                             <p className="text-slate-900 font-bold leading-snug text-base">{renderTextWithGlossary(scene.question, scenarioTerms)}</p>
                                         </div>
@@ -791,7 +791,7 @@ export default function SceneOne({
 
                                         {/* Answer options */}
                                         <div className="space-y-3">
-                                            <span className="text-[10px] font-mono text-slate-500 tracking-wider font-bold">
+                                            <span className="text-xs font-mono text-slate-500 tracking-wider font-bold">
                                                 Select Response
                                             </span>
                                             {scene.options.map(({ id, text: optText }, idx) => {

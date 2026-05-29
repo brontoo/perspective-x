@@ -24,7 +24,7 @@ export default function ScenarioGrid({ children, scenarioCount = 0, completedCou
                         <span className="text-xs text-[var(--lx-text-muted)] select-none">
                             {completedCount}/{scenarioCount} Completed
                         </span>
-                        <div className="glass-progress w-16">
+                        <div className="glass-progress w-16" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={`${completedCount} of ${scenarioCount} completed`}>
                             <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${pct}%` }}

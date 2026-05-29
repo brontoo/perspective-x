@@ -68,7 +68,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                         <div className="p-1.5 bg-cyan-50 text-cyan-600 rounded-lg border border-cyan-100">
                             <BookOpen className="w-3.5 h-3.5" />
                         </div>
-                        <span className="text-[10px] font-mono text-slate-500 tracking-wider font-bold">
+                        <span className="text-xs font-mono text-slate-500 tracking-wider font-bold">
                             Question {currentQuestion + 1} of {questions.length}
                         </span>
                     </div>
@@ -97,7 +97,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
 
                 {/* Question Box */}
                 <div className="bg-slate-50 border border-slate-200/60 p-6 rounded-xl shadow-sm">
-                    <p className="text-[10px] font-mono text-slate-500 tracking-wider mb-1.5 font-bold">Question Prompts</p>
+                    <p className="text-xs font-mono text-slate-500 tracking-wider mb-1.5 font-bold">Question Prompts</p>
                     <p className="text-slate-800 text-lg font-bold leading-snug font-sans">{question.prompt}</p>
                 </div>
 
@@ -131,7 +131,8 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                                 key={option.id}
                                 disabled={selectedOptionId !== null}
                                 onClick={() => handleAnswer(option.id, option.correct)}
-                                className={`w-full text-left flex items-center gap-3 px-5 py-4 border rounded-xl transition-all duration-300 cursor-pointer shadow-sm ${optionStyle}`}
+                                aria-pressed={selectedOptionId === option.id}
+                                className={`w-full text-left flex items-center gap-3 px-5 py-4 border rounded-xl transition-all duration-300 cursor-pointer shadow-sm focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-1 ${optionStyle}`}
                             >
                                 <div className={`w-8 h-8 flex items-center justify-center text-xs font-mono font-bold shrink-0 rounded-lg transition-all duration-300 ${badgeStyle}`}>
                                     {iconToShow === "✓" ? (
@@ -178,7 +179,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                         <span className={`text-3xl font-black font-mono leading-none ${passed ? 'text-emerald-700' : 'text-amber-700'}`}>
                             {score}%
                         </span>
-                        <span className="text-[10px] font-mono text-slate-500 mt-1 font-bold tracking-wider">
+                        <span className="text-xs font-mono text-slate-500 mt-1 font-bold tracking-wider">
                             Score
                         </span>
                     </motion.div>
@@ -228,11 +229,11 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                 <div className="flex items-center justify-between bg-slate-50 border-b border-slate-200/80 px-6 py-3.5">
                     <div className="flex items-center gap-2">
                         <div className="w-2.5 h-2.5 rounded-full bg-cyan-500" />
-                        <span className="text-[10px] font-mono text-cyan-800 tracking-wider font-bold select-none">
+                        <span className="text-xs font-mono text-cyan-800 tracking-wider font-bold select-none">
                             Final Check
                         </span>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-400 tracking-wider font-bold select-none">
+                    <span className="text-xs font-mono text-slate-400 tracking-wider font-bold select-none">
                         Mission Phase 7 of 8
                     </span>
                 </div>
@@ -264,7 +265,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                             <div className="flex items-start gap-3">
                                 <Lightbulb className="w-4.5 h-4.5 text-amber-600 shrink-0 mt-0.5" />
                                 <div>
-                                    <p className="text-[9px] font-mono font-bold text-amber-700 tracking-wider mb-1">
+                                    <p className="text-[11px] font-mono font-bold text-amber-700 tracking-wider mb-1">
                                         Consider As You Answer
                                     </p>
                                     <p className="text-slate-700 text-xs leading-relaxed font-medium">{missionResult.impactText}</p>
@@ -284,7 +285,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
 
                 {/* Footer */}
                 <div className="border-t border-slate-100 bg-slate-50/50 px-8 py-4 text-center">
-                    <p className="text-[10px] font-mono text-slate-400 font-bold tracking-wider">
+                    <p className="text-xs font-mono text-slate-400 font-bold tracking-wider">
                         Perspective X • Scientific Learning Labs
                     </p>
                 </div>

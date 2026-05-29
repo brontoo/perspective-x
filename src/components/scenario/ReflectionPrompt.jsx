@@ -71,7 +71,7 @@ export default function ReflectionPrompt({ scenario, onComplete, isTeacher, them
                             Reflect on Your Decision
                         </h2>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-500 tracking-wider font-bold">
+                    <span className="text-xs font-mono text-slate-500 tracking-wider font-bold">
                         Mission Review
                     </span>
                 </div>
@@ -99,11 +99,11 @@ export default function ReflectionPrompt({ scenario, onComplete, isTeacher, them
                                     />
                                     <div className="flex justify-end">
                                         {isQValid ? (
-                                            <span className="text-[10px] font-mono text-emerald-600 font-bold flex items-center gap-1">
+                                            <span className="text-xs font-mono text-emerald-600 font-bold flex items-center gap-1">
                                                 <CheckCircle className="w-3 h-3" /> Ready
                                             </span>
                                         ) : (
-                                            <span className="text-[10px] font-mono text-slate-400">
+                                            <span className="text-xs font-mono text-slate-400">
                                                 Please complete the sentence starter
                                             </span>
                                         )}
@@ -118,7 +118,7 @@ export default function ReflectionPrompt({ scenario, onComplete, isTeacher, them
                         <button
                             onClick={handleSubmit}
                             disabled={!canSubmit || isSubmitted}
-                            className={`px-8 py-3.5 rounded-lg font-bold tracking-wider transition-colors flex items-center gap-2 font-sans text-sm shadow-lg ${
+                            className={`px-8 py-3.5 rounded-lg font-bold tracking-wider transition-colors flex items-center gap-2 font-sans text-sm shadow-lg focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-1 ${
                                 canSubmit && !isSubmitted
                                     ? 'bg-[#f59e0b] hover:bg-[#d97706] text-white shadow-[#f59e0b]/20 cursor-pointer'
                                     : 'bg-slate-100 text-slate-400 border border-slate-200/60 cursor-not-allowed'

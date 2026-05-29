@@ -6,6 +6,7 @@ import { queryClientInstance } from '@/lib/query-client';
 import { pagesConfig } from './pages.config';
 import PageNotFound from './lib/PageNotFound';
 import { supabase } from '@/lib/supabaseClient';
+import { useReducedMotion } from './hooks/useReducedMotion';
 
 // ── Eager: ScenarioPlayer is special-cased by path before any routing ──
 import ScenarioPlayer from '@/pages/ScenarioPlayer';
@@ -138,6 +139,8 @@ function AppRoutes() {
 
 
 function App() {
+    useReducedMotion(); // Sets data-reduced-motion attribute on <html>
+
     return (
         <QueryClientProvider client={queryClientInstance}>
             <Router>

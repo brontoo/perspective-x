@@ -17,10 +17,10 @@ export function RiskMeter({ level = 'low', label = 'Risk Level', className = '' 
     const config = RISK_LEVELS[level] || RISK_LEVELS.low;
 
     return (
-        <div className={`w-full max-w-xs ${className}`.trim()}>
+        <div className={`w-full max-w-xs ${className}`.trim()} role="meter" aria-label={label} aria-valuenow={level === 'low' ? 1 : level === 'medium' ? 2 : 3} aria-valuemin={1} aria-valuemax={3}>
             <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] font-semibold text-slate-400">{label}</span>
-                <span className={`text-[10px] font-bold ${config.textColor}`}>{config.label}</span>
+                <span className="text-xs font-semibold text-slate-400">{label}</span>
+                <span className={`text-xs font-bold ${config.textColor}`}>{config.label}</span>
             </div>
             <div className="flex gap-1 h-2.5 rounded-full overflow-hidden bg-slate-800/60 p-0.5">
                 {['low', 'medium', 'high'].map((seg, i) => {
@@ -38,9 +38,9 @@ export function RiskMeter({ level = 'low', label = 'Risk Level', className = '' 
                 })}
             </div>
             <div className="flex justify-between mt-1">
-                <span className="text-[8px] text-slate-500">Low</span>
-                <span className="text-[8px] text-slate-500">Medium</span>
-                <span className="text-[8px] text-slate-500">High</span>
+                <span className="text-[11px] text-slate-500">Low</span>
+                <span className="text-[11px] text-slate-500">Medium</span>
+                <span className="text-[11px] text-slate-500">High</span>
             </div>
         </div>
     );
@@ -64,9 +64,9 @@ export function DataLabel({ label, value, unit = '', status = 'info', className 
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border ${style.bg} ${style.border} ${className}`.trim()}
         >
             <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
-            <span className="text-[10px] font-medium text-slate-400">{label}:</span>
+            <span className="text-xs font-medium text-slate-400">{label}:</span>
             <span className={`text-xs font-bold font-mono ${style.text}`}>
-                {value}{unit && <span className="text-[9px] ml-0.5 font-normal opacity-70">{unit}</span>}
+                {value}{unit && <span className="text-[11px] ml-0.5 font-normal opacity-70">{unit}</span>}
             </span>
         </motion.div>
     );
@@ -89,7 +89,7 @@ export function BeforeAfterPanel({
                 <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl overflow-hidden">
                     <div className="px-3 py-1.5 bg-slate-700/40 border-b border-slate-600/30 flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-                        <span className="text-[10px] font-bold text-slate-300">{beforeLabel}</span>
+                        <span className="text-xs font-bold text-slate-300">{beforeLabel}</span>
                     </div>
                     <div className="p-3">
                         {typeof beforeContent === 'string' 
@@ -112,7 +112,7 @@ export function BeforeAfterPanel({
                 >
                     <div className="px-3 py-1.5 bg-slate-700/40 border-b border-slate-600/30 flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
-                        <span className="text-[10px] font-bold text-teal-300">{afterLabel}</span>
+                        <span className="text-xs font-bold text-teal-300">{afterLabel}</span>
                     </div>
                     <div className="p-3">
                         {typeof afterContent === 'string'

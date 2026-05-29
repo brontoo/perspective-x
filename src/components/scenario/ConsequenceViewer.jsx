@@ -538,7 +538,7 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                             Operation Result
                         </h2>
                     </div>
-                    <span className={`text-[10px] font-mono font-black tracking-wider px-3 py-1 rounded-full shadow-sm ${ratingTheme.badgeColor}`}>
+                    <span className={`text-xs font-mono font-black tracking-wider px-3 py-1 rounded-full shadow-sm ${ratingTheme.badgeColor}`}>
                         {ratingTheme.badgeText}
                     </span>
                 </div>
@@ -547,7 +547,7 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
 
                     {selectedOption && (
                         <div className="bg-white/90 border border-slate-200/60 rounded-xl p-5 shadow-sm">
-                            <span className="text-[10px] font-mono text-slate-500 tracking-wider block mb-1 font-bold">
+                            <span className="text-xs font-mono text-slate-500 tracking-wider block mb-1 font-bold">
                                 Your Choice
                             </span>
                             <p className="text-slate-800 text-base font-bold leading-snug font-sans">
@@ -565,7 +565,7 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                             <div className="bg-slate-900/80 rounded-xl p-4 border border-slate-700/40">
                                 <div className="flex items-center gap-2 mb-3">
                                     <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                                    <span className="text-[10px] font-bold text-cyan-300">Visual Comparison</span>
+                                    <span className="text-xs font-bold text-cyan-300">Visual Comparison</span>
                                 </div>
                                 <BeforeAfterPanel
                                     beforeLabel="Before Your Decision"
@@ -604,7 +604,7 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         <div className="border-l-4 border-cyan-500 bg-cyan-50/40 p-5 rounded-r-xl border-t border-b border-r border-cyan-100">
                             <div className="flex items-center gap-2 mb-2">
                                 <Sparkles className="w-4 h-4 text-cyan-600" />
-                                <span className="text-[10px] font-mono text-cyan-700 tracking-wider block font-bold">
+                                <span className="text-xs font-mono text-cyan-700 tracking-wider block font-bold">
                                     Why It Happened (Scientific Explanation)
                                 </span>
                             </div>
@@ -618,7 +618,7 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         <div className="bg-white/90 border border-slate-200/60 rounded-xl p-5 shadow-sm">
                             <div className="flex items-center gap-2 text-slate-500 mb-2.5 font-bold">
                                 <BarChart3 className="w-4 h-4 text-amber-600" />
-                                <span className="text-[10px] font-mono tracking-wider">
+                                <span className="text-xs font-mono tracking-wider">
                                     Post-Intervention Data
                                 </span>
                             </div>
@@ -632,13 +632,13 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
                             <div className="flex items-center gap-2">
                                 <Activity className="w-4 h-4 text-cyan-600" />
-                                <span className="text-[10px] font-mono tracking-wider text-slate-500 font-bold">
+                                <span className="text-xs font-mono tracking-wider text-slate-500 font-bold">
                                     System Impact
                                 </span>
                             </div>
                             <div className="flex items-center gap-1.5 flex-wrap">
                                 {impactTags.map(tag => (
-                                    <span key={tag.label} className={`flex items-center gap-1 border rounded px-2 py-0.5 text-[10px] font-semibold font-mono ${tag.color}`}>
+                                    <span key={tag.label} className={`flex items-center gap-1 border rounded px-2 py-0.5 text-xs font-semibold font-mono ${tag.color}`}>
                                         {tag.icon}
                                         {tag.label}
                                     </span>
@@ -654,7 +654,7 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         <div className="p-6 border rounded-xl bg-sky-50/30 border-sky-100/80 shadow-sm space-y-3">
                             <div className="flex items-center gap-2">
                                 <Lightbulb className="w-4.5 h-4.5 text-sky-600" />
-                                <span className="text-[10px] font-mono text-sky-700 tracking-wider block font-bold">
+                                <span className="text-xs font-mono text-sky-700 tracking-wider block font-bold">
                                     Scientific Thinking Check
                                 </span>
                             </div>
@@ -673,7 +673,7 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         <div className={`p-5 border rounded-xl bg-amber-50/30 border-amber-200/60 text-slate-800`}>
                             <div className="flex items-center gap-2 mb-2.5">
                                 <Sparkles className="w-4.5 h-4.5 text-amber-600" />
-                                <span className="text-[10px] font-mono text-amber-700 tracking-wider block font-bold">
+                                <span className="text-xs font-mono text-amber-700 tracking-wider block font-bold">
                                     Better Thinking (Tips for Next Time)
                                 </span>
                             </div>
@@ -687,14 +687,16 @@ export default function ConsequenceViewer({ scenario, consequenceKey, onNext, is
                         {isTeacher && (
                             <button
                                 onClick={onNext}
-                                className="px-6 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-600 border border-purple-200 rounded-lg text-xs font-mono tracking-wider transition-colors font-bold cursor-pointer"
+                                className="px-6 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-600 border border-purple-200 rounded-lg text-xs font-mono tracking-wider transition-colors font-bold cursor-pointer focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-1"
+                                aria-label="Skip preview"
                             >
                                 Skip Preview
                             </button>
                         )}
                         <button
                             onClick={onNext}
-                            className="px-8 py-3.5 bg-[#14b8a6] hover:bg-[#0f766e] text-white font-bold rounded-lg tracking-wider transition-colors flex items-center gap-2 font-sans text-sm shadow-lg shadow-[#14b8a6]/20 cursor-pointer"
+                            className="px-8 py-3.5 bg-[#14b8a6] hover:bg-[#0f766e] text-white font-bold rounded-lg tracking-wider transition-colors flex items-center gap-2 font-sans text-sm shadow-lg shadow-[#14b8a6]/20 cursor-pointer focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-1"
+                            aria-label="Continue to reflection"
                         >
                             <span>Reflect</span>
                             <ChevronRight className="w-4 h-4" />
