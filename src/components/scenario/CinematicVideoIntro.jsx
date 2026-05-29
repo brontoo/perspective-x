@@ -287,6 +287,15 @@ const [showTranscript, setShowTranscript] = useState(false);
     useEffect(() => {
         if (!scenarioId) return;
 
+        // For scenarios with a known completed video, skip the probe entirely
+        // and go straight to real-video mode. The probe is unreliable for large
+        // files because canplaythrough may not fire before the timeout.
+        if (FULL_VIDEO_SCENARIOS.has(scenarioId)) {
+            setUseRealVideo(true);
+            setVideoLoading(false);
+            return;
+        }
+
         setVideoLoading(true);
         setUseRealVideo(false);
 
