@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { SCENARIOS } from '../scenarios/scenarioData';
 import { UAE_VIDEO_CONTENT, UAE_SCENARIOS } from '../scenarios/uaeScenarioData';
+import KenBurnsSlideshow from './KenBurnsSlideshow';
 
 const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
@@ -14,6 +15,76 @@ const DEFAULT_SCENE_DURATION = 5500;
 // Scenarios that have a completed video file and should play it as a single
 // uninterrupted intro (no generated slides, no speech synthesis).
 const FULL_VIDEO_SCENARIOS = new Set(['water_contamination']);
+
+/* ── Asset discovery helpers for Ken Burns mode ─────────────────────────── */
+const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'webp', 'png'];
+
+/**
+ * Probes for /audio/scenarios/[scenarioId].mp3 using a real Audio element.
+ * fetch HEAD is unreliable because Vite's SPA fallback returns 200+text/html
+ * for any unknown URL.  Only a native Audio element correctly rejects HTML.
+ * Returns the URL string if loadable, or null.
+ */
+function probeAudioAsset(scenarioId) {
+    const url = `/audio/scenarios/${scenarioId}.mp3`;
+    return new Promise((resolve) => {
+        const audio = document.createElement('audio');
+        const cleanup = () => {
+            audio.oncanplaythrough = null;
+            audio.onerror = null;
+            audio.src = '';
+        };
+        const timer = setTimeout(() => { cleanup(); resolve(null); }, 6000);
+
+        audio.oncanplaythrough = () => {
+            clearTimeout(timer);
+            cleanup();
+            resolve(url);
+        };
+        audio.onerror = () => {
+            clearTimeout(timer);
+            cleanup();
+            resolve(null);
+        };
+
+        audio.preload = 'metadata';
+        audio.src = url;
+        audio.load();
+    });
+}
+
+/**
+ * Probes /images/scenarios/[scenarioId]/1.jpg … N.ext for up to 10 images
+ * using real Image elements.  fetch HEAD cannot be trusted in Vite dev mode
+ * because the SPA fallback returns 200+text/html for missing assets.
+ * Returns an array of valid image URLs (may be empty).
+ */
+function probeOneImage(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload  = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+    });
+}
+
+async function probeImageAssets(scenarioId) {
+    const found = [];
+    for (let i = 1; i <= 10; i++) {
+        let matched = false;
+        for (const ext of IMAGE_EXTENSIONS) {
+            const url = `/images/scenarios/${scenarioId}/${i}.${ext}`;
+            const ok = await probeOneImage(url);
+            if (ok) {
+                found.push(url);
+                matched = true;
+                break;
+            }
+        }
+        if (!matched) break; // stop at first gap
+    }
+    return found;
+}
 
 const toDataPoints = (table) => {
     if (!table || !Array.isArray(table.rows)) return [];
@@ -205,7 +276,7 @@ export default function CinematicVideoIntro({
     const [voiceReady, setVoiceReady] = useState(false);
     const [subtitleSegments, setSubtitleSegments] = useState([]);
     const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
-const [showTranscript, setShowTranscript] = useState(false);
+    const [showTranscript, setShowTranscript] = useState(false);
 
     // Real video player states
     const [useRealVideo, setUseRealVideo] = useState(false);
@@ -214,6 +285,12 @@ const [showTranscript, setShowTranscript] = useState(false);
     // audio, hiding all generated slide content and speech synthesis.
     const useFullVideo = useRealVideo && FULL_VIDEO_SCENARIOS.has(scenarioId);
     const [videoLoading, setVideoLoading] = useState(true);
+
+    // ── Ken Burns mode (Mode 3): MP3 + images, no real MP4 ──────────────
+    const [kenBurnsAudioSrc, setKenBurnsAudioSrc] = useState(null);
+    const [kenBurnsImages, setKenBurnsImages] = useState([]);
+    const [kenBurnsReady, setKenBurnsReady] = useState(false);  // discovery done
+    const useKenBurns = kenBurnsReady && kenBurnsAudioSrc !== null && kenBurnsImages.length > 0;
 
     const isMountedRef = useRef(true);
     const progressTimerRef = useRef(null);
@@ -284,52 +361,82 @@ const [showTranscript, setShowTranscript] = useState(false);
         };
     }, [stopAllPlayback, videoState]);
 
-    // Probe if the real video file exists on server/public directory
+    // ── Asset discovery: probe for MP4, then MP3+images ─────────────────
     useEffect(() => {
         if (!scenarioId) return;
 
-        // For scenarios with a known completed video, skip the probe entirely
-        // and go straight to real-video mode. The probe is unreliable for large
-        // files because canplaythrough may not fire before the timeout.
+        // Mode 1 (full MP4 video): known completed scenarios — skip probing
         if (FULL_VIDEO_SCENARIOS.has(scenarioId)) {
             setUseRealVideo(true);
             setVideoLoading(false);
+            setKenBurnsReady(true); // won't be used since useFullVideo wins
             return;
         }
 
         setVideoLoading(true);
         setUseRealVideo(false);
+        setKenBurnsReady(false);
 
+        let cancelled = false;
+
+        // Probe MP4 first (video takes priority over Ken Burns)
         const videoSrc = `/videos/scenarios/${scenarioId}.mp4`;
         const videoProbe = document.createElement('video');
-        
-        let timeoutId = setTimeout(() => {
-            if (isMountedRef.current) {
-                setUseRealVideo(false);
+        let videoFound = false;
+
+        let videoTimeout = setTimeout(async () => {
+            if (cancelled) return;
+            // MP4 not found in time → check for Ken Burns assets
+            setUseRealVideo(false);
+
+            const [audioUrl, imgUrls] = await Promise.all([
+                probeAudioAsset(scenarioId),
+                probeImageAssets(scenarioId),
+            ]);
+
+            if (!cancelled && isMountedRef.current) {
+                setKenBurnsAudioSrc(audioUrl);
+                setKenBurnsImages(imgUrls);
+                setKenBurnsReady(true);
                 setVideoLoading(false);
             }
-            cleanup();
+            cleanupVideoProbe();
         }, 3000);
 
-        const handleProbeCanPlay = () => {
-            clearTimeout(timeoutId);
+        const handleProbeCanPlay = async () => {
+            videoFound = true;
+            clearTimeout(videoTimeout);
+            if (cancelled) return;
+
             if (isMountedRef.current) {
                 setUseRealVideo(true);
+                setKenBurnsReady(true);
                 setVideoLoading(false);
             }
-            cleanup();
+            cleanupVideoProbe();
         };
 
-        const handleProbeError = () => {
-            clearTimeout(timeoutId);
-            if (isMountedRef.current) {
+        const handleProbeError = async () => {
+            clearTimeout(videoTimeout);
+            if (cancelled || videoFound) return;
+
+            // MP4 missing → check Ken Burns assets
+            const [audioUrl, imgUrls] = await Promise.all([
+                probeAudioAsset(scenarioId),
+                probeImageAssets(scenarioId),
+            ]);
+
+            if (!cancelled && isMountedRef.current) {
                 setUseRealVideo(false);
+                setKenBurnsAudioSrc(audioUrl);
+                setKenBurnsImages(imgUrls);
+                setKenBurnsReady(true);
                 setVideoLoading(false);
             }
-            cleanup();
+            cleanupVideoProbe();
         };
 
-        const cleanup = () => {
+        const cleanupVideoProbe = () => {
             videoProbe.removeEventListener('canplaythrough', handleProbeCanPlay);
             videoProbe.removeEventListener('error', handleProbeError);
         };
@@ -340,8 +447,9 @@ const [showTranscript, setShowTranscript] = useState(false);
         videoProbe.load();
 
         return () => {
-            clearTimeout(timeoutId);
-            cleanup();
+            cancelled = true;
+            clearTimeout(videoTimeout);
+            cleanupVideoProbe();
         };
     }, [scenarioId]);
 
@@ -779,6 +887,15 @@ const [showTranscript, setShowTranscript] = useState(false);
     }, [togglePlayPause, toggleMute, isTeacher, teacherSkip]);
 
     useEffect(() => {
+        // ── Wait for asset discovery to finish before doing anything.
+        // If we don't wait, TTS might start playing before we even know if
+        // Ken Burns mode is going to be activated!
+        if (videoLoading) return;
+
+        // ── Ken Burns mode: MP3 audio is handled by KenBurnsSlideshow.
+        // Do NOT start speech synthesis or TTS — that would cause double audio.
+        if (useKenBurns) return;
+
         const canStart = useRealVideo ? (playbackState === 'idle' && currentScene) : (voiceReady && playbackState === 'idle' && currentScene);
         if (canStart) {
             const timer = setTimeout(() => {
@@ -787,7 +904,7 @@ const [showTranscript, setShowTranscript] = useState(false);
 
             return () => clearTimeout(timer);
         }
-    }, [useRealVideo, voiceReady, playbackState, currentSceneIndex, playCurrentScene, currentScene]);
+    }, [videoLoading, useKenBurns, useRealVideo, voiceReady, playbackState, currentSceneIndex, playCurrentScene, currentScene]);
 
     /* ── Error / empty state ─────────────────────────────────────────────────── */
 
@@ -805,6 +922,21 @@ const [showTranscript, setShowTranscript] = useState(false);
                     </p>
                 </div>
             </div>
+        );
+    }
+
+    // ── Mode 3: Ken Burns Slideshow (MP3 + images, no MP4) ──────────────
+    if (useKenBurns) {
+        return (
+            <KenBurnsSlideshow
+                scenarioId={scenarioId}
+                audioSrc={kenBurnsAudioSrc}
+                images={kenBurnsImages}
+                content={content}
+                onComplete={onComplete}
+                isTeacher={isTeacher}
+                videoState={videoState}
+            />
         );
     }
 
