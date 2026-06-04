@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Play, Pause, Volume2, VolumeX, SkipForward, SkipBack, RotateCcw,
@@ -307,7 +307,7 @@ export default function CinematicVideoIntro({
         onComplete?.();
     }, [onComplete]);
 
-    const scenes = normalizeScenes(content?.scenes);
+    const scenes = useMemo(() => normalizeScenes(content?.scenes), [content]);
     const currentScene = scenes[currentSceneIndex];
     const totalScenes = scenes.length;
     const isLastScene = currentSceneIndex === totalScenes - 1;
@@ -439,6 +439,8 @@ export default function CinematicVideoIntro({
         const cleanupVideoProbe = () => {
             videoProbe.removeEventListener('canplaythrough', handleProbeCanPlay);
             videoProbe.removeEventListener('error', handleProbeError);
+            videoProbe.src = '';
+            videoProbe.load();
         };
 
         videoProbe.addEventListener('canplaythrough', handleProbeCanPlay);
@@ -474,10 +476,13 @@ export default function CinematicVideoIntro({
             if (isMountedRef.current) setVoiceReady(true);
         }, 2000);
 
-        return () => clearTimeout(timeout);
+        return () => {
+            clearTimeout(timeout);
+            window.speechSynthesis.onvoiceschanged = null;
+        };
     }, [character]);
 
-    const segmentNarration = (text) => {
+    const segmentNarration = useCallback((text) => {
         if (!text) return [];
 
         const raw = text.split(/(?<=[.!?,])\s+|(?<=\w{3,})\s+(?=\w)/g);
@@ -507,7 +512,7 @@ export default function CinematicVideoIntro({
         }
 
         return segments.length ? segments : [text];
-    };
+    }, []);
 
     const handleSceneComplete = useCallback(() => {
         if (!isMountedRef.current) return;
@@ -572,7 +577,7 @@ export default function CinematicVideoIntro({
                 return;
             }
 
-            elapsed += 50;
+            elapsed += 200;
             setProgress(Math.min((elapsed / duration) * 100, 100));
 
             if (elapsed >= duration) {
@@ -581,7 +586,7 @@ export default function CinematicVideoIntro({
                 sceneCompleteRef.current.visual = true;
                 checkCompletion();
             }
-        }, 50);
+        }, 200);
 
         if (segments.length > 1) {
             const segDuration = duration / segments.length;
@@ -677,16 +682,18 @@ export default function CinematicVideoIntro({
         }
     }, [useRealVideo, useFullVideo, currentScene, isMuted, selectedVoice, stopAllPlayback, checkCompletion, videoState]);
 
+    const totalSceneDuration = useMemo(() => scenes.reduce((sum, s) => sum + s.duration, 0), [scenes]);
+    const memoizedSegments = useMemo(() => scenes.map(scene => segmentNarration(scene.narration || '')), [scenes, segmentNarration]);
+
     const getSceneStartTime = useCallback((sceneIdx) => {
         const video = videoRef.current;
         if (!video || !video.duration || scenes.length === 0) return 0;
-        const totalSceneDuration = scenes.reduce((sum, s) => sum + s.duration, 0);
         let elapsed = 0;
         for (let i = 0; i < sceneIdx; i++) {
             elapsed += (scenes[i].duration / totalSceneDuration) * video.duration;
         }
         return elapsed;
-    }, [scenes]);
+    }, [scenes, totalSceneDuration]);
 
     const handleTimeUpdate = useCallback(() => {
         const video = videoRef.current;
@@ -699,7 +706,6 @@ export default function CinematicVideoIntro({
         const curProgress = (curTime / dur) * 100;
         setProgress(curProgress);
 
-        const totalSceneDuration = scenes.reduce((sum, s) => sum + s.duration, 0);
         let elapsedThreshold = 0;
         let activeSceneIdx = 0;
 
@@ -718,21 +724,24 @@ export default function CinematicVideoIntro({
 
         const activeScene = scenes[activeSceneIdx];
         if (activeScene) {
-            const segments = segmentNarration(activeScene.narration || '');
+            const segments = memoizedSegments[activeSceneIdx] || [];
             if (segments.length > 0) {
                 const sceneShare = (activeScene.duration / totalSceneDuration) * dur;
-                const sceneElapsedTime = curTime - (elapsedThreshold - (activeScene.duration / totalSceneDuration) * dur);
+                // Avoid rendering subtitles constantly by only updating if segment index changes
+                const sceneElapsedTime = curTime - elapsedThreshold;
                 const segmentShare = sceneShare / segments.length;
-                const activeSegmentIdx = Math.min(
+                const activeSegmentIdx = Math.max(0, Math.min(
                     Math.floor(sceneElapsedTime / segmentShare),
                     segments.length - 1
-                );
+                ));
                 
+                // We only need to trigger state updates if the segments array itself changes or segment index changes.
+                // React handles object identity for arrays, so if it's the same memoized array, it won't re-render heavily.
                 setSubtitleSegments(segments);
-                setCurrentSegmentIndex(activeSegmentIdx >= 0 ? activeSegmentIdx : 0);
+                setCurrentSegmentIndex(activeSegmentIdx);
             }
         }
-    }, [useRealVideo, scenes, currentSceneIndex]);
+    }, [useRealVideo, scenes, currentSceneIndex, totalSceneDuration, memoizedSegments]);
 
     const handleVideoEnded = useCallback(() => {
         if (!isMountedRef.current) return;

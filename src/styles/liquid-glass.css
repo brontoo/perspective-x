@@ -807,18 +807,7 @@
 }
 
 /* ── 17. Theme Transition ─────────────────────────────────────────────── */
-@media (prefers-reduced-motion: no-preference) {
-  *,
-  *::before,
-  *::after {
-    transition-property: background-color, border-color, color;
-    transition-duration: var(--lx-dur-fast);
-    transition-timing-function: var(--lx-ease-std);
-  }
-
-  /* Exception: don't bleed transition onto animated elements */
-  .anim-float *, .anim-blob *, .anim-scan { transition: none; }
-}
+/* Global transitions on * are removed for performance. Use utility classes for transitions. */
 
 /* ── 18. Utility Helpers ──────────────────────────────────────────────── */
 

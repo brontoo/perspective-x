@@ -388,8 +388,8 @@ export default function KenBurnsSlideshow({
                 KEN BURNS IMAGE LAYER
             ══════════════════════════════════════════════════════════════ */}
             <div className="absolute inset-0 overflow-hidden">
-                {/* AnimatePresence mode="sync" allows old image to exit while new one enters */}
-                <AnimatePresence mode="sync">
+                {/* AnimatePresence mode="wait" prevents old image from exiting while new one enters, saving GPU */}
+                <AnimatePresence mode="wait">
                     <motion.div
                         key={currentImageIdx}
                         className="absolute inset-0"

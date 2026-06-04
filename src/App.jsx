@@ -8,8 +8,8 @@ import PageNotFound from './lib/PageNotFound';
 import { supabase } from '@/lib/supabaseClient';
 import { useReducedMotion } from './hooks/useReducedMotion';
 
-// ── Eager: ScenarioPlayer is special-cased by path before any routing ──
-import ScenarioPlayer from '@/pages/ScenarioPlayer';
+// ── Lazy: ScenarioPlayer is heavily componentized, load dynamically ──
+const ScenarioPlayer = lazy(() => import('@/pages/ScenarioPlayer'));
 
 // ── Lazy: all other pages — split so ScenarioPlayer stays lean ──────
 const Dashboard         = lazy(() => import('@/pages/Dashboard'));
@@ -61,9 +61,13 @@ function AppRoutes() {
     const location = useLocation();
     const isPublicPath = location.pathname === '/' || location.pathname === '/SignIn';
 
-    // ScenarioPlayer: fullscreen, no Layout — eager-loaded so it starts immediately
+    // ScenarioPlayer: fullscreen, no Layout — lazy loaded
     if (location.pathname === '/ScenarioPlayer') {
-        return <ScenarioPlayer />;
+        return (
+            <Suspense fallback={<LoadingScreen />}>
+                <ScenarioPlayer />
+            </Suspense>
+        );
     }
 
     if (location.pathname === '/GasLawScenario' || location.pathname === '/gas-law-scenario') {

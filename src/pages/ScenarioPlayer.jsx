@@ -205,11 +205,21 @@ export default function ScenarioPlayer() {
 
                 setUser(currentUser);
 
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', currentUser.id)
-                    .single();
+                // Use simple module-level cache to prevent redundant profile fetches during rapid navigation
+                if (!window.__scenarioPlayerCache) window.__scenarioPlayerCache = { profile: null, lastFetch: 0 };
+                const cache = window.__scenarioPlayerCache;
+                
+                let profile = cache.profile;
+                if (!profile || Date.now() - cache.lastFetch > 300000) {
+                    const { data } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', currentUser.id)
+                        .single();
+                    profile = data;
+                    cache.profile = data;
+                    cache.lastFetch = Date.now();
+                }
 
                 if (cancelled) return;
 

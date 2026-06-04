@@ -26,10 +26,10 @@ export default function RoleHub() {
 
         loadProgress();
 
-        // Poll every 30 seconds to fetch teacher settings
+        // Poll every 5 minutes to fetch teacher settings (throttled from 30s for performance)
         intervalRef.current = setInterval(() => {
             fetchSettings();
-        }, 30000);
+        }, 300000);
 
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
