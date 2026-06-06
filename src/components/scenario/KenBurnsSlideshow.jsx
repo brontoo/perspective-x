@@ -58,13 +58,8 @@ const KB_PRESETS = [
 function buildSubtitleSegments(content) {
     const scenes = content?.scenes || [];
 
-    // Collect narration text from every scene
-    const texts = [
-        content?.title ? `Mission: ${content.title}.` : '',
-        ...scenes.map((s) => s.narration).filter(Boolean),
-    ]
-        .filter(Boolean)
-        .join(' ');
+    // Collect narration text from every scene (skip title — it is not in the audio)
+    const texts = scenes.map((s) => s.narration).filter(Boolean).join(' ');
 
     if (!texts.trim()) return [];
 

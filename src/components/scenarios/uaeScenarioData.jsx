@@ -681,6 +681,48 @@ export const UAE_VIDEO_CONTENT = {
                 }
             }
         ]
+    },
+
+    acid_rain: {
+        title: 'Desert Air Quality Alert',
+        character: UAE_SCENARIOS.acid_rain.character,
+        scenes: [
+            {
+                visual: 'Ancient forest with towering trees showing signs of decay',
+                narration: 'These forests have stood for centuries. But look at them now, the trees are dying.',
+                duration: 5000,
+                dataPoints: []
+            },
+            {
+                visual: 'Stone statues in parks dissolving under acidic rainfall',
+                narration: 'Even the stone statues in our parks are dissolving. Something in the rain is eating away at everything.',
+                duration: 5000,
+                dataPoints: []
+            },
+            {
+                visual: 'Monitoring station with rainfall sample collection equipment',
+                narration: 'Our monitoring stations collected rainfall samples. Normal rain has a pH of about 5.6, but Forest Zone A is at pH 4.2.',
+                duration: 6000,
+                showData: true,
+                dataPoints: [
+                    { label: 'Normal Rain pH', value: '5.6', status: 'info' },
+                    { label: 'Zone A Rain pH', value: '4.2', status: 'critical' },
+                    { label: 'Difference', value: '1.4 lower', status: 'warning' }
+                ]
+            },
+            {
+                visual: 'Industrial plants emitting sulfur dioxide into the atmosphere',
+                narration: 'Sulfur dioxide from industrial plants rises into the atmosphere and falls as sulfuric acid.',
+                duration: 5000,
+                dataPoints: []
+            },
+            {
+                visual: 'Dead fish floating in a lake surrounded by affected landscape',
+                narration: 'The fish in our lakes are dying. We need scientific solutions now.',
+                duration: 5000,
+                dataPoints: []
+            }
+        ]
     }
 };
 

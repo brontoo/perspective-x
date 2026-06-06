@@ -14,7 +14,7 @@ const DEFAULT_SCENE_DURATION = 5500;
 
 // Scenarios that have a completed video file and should play it as a single
 // uninterrupted intro (no generated slides, no speech synthesis).
-const FULL_VIDEO_SCENARIOS = new Set(['water_contamination']);
+const FULL_VIDEO_SCENARIOS = new Set([]);
 
 /* ── Asset discovery helpers for Ken Burns mode ─────────────────────────── */
 const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'webp', 'png'];
@@ -361,7 +361,7 @@ export default function CinematicVideoIntro({
         };
     }, [stopAllPlayback, videoState]);
 
-    // ── Asset discovery: probe for MP4, then MP3+images ─────────────────
+    // ── Asset discovery: probe for MP3+images first, then MP4 fallback ───
     useEffect(() => {
         if (!scenarioId) return;
 
@@ -379,79 +379,84 @@ export default function CinematicVideoIntro({
 
         let cancelled = false;
 
-        // Probe MP4 first (video takes priority over Ken Burns)
-        const videoSrc = `/videos/scenarios/${scenarioId}.mp4`;
-        const videoProbe = document.createElement('video');
-        let videoFound = false;
-
-        let videoTimeout = setTimeout(async () => {
-            if (cancelled) return;
-            // MP4 not found in time → check for Ken Burns assets
-            setUseRealVideo(false);
-
+        // Probe Ken Burns assets first (MP3 + images take priority over MP4)
+        (async () => {
             const [audioUrl, imgUrls] = await Promise.all([
                 probeAudioAsset(scenarioId),
                 probeImageAssets(scenarioId),
             ]);
 
-            if (!cancelled && isMountedRef.current) {
-                setKenBurnsAudioSrc(audioUrl);
-                setKenBurnsImages(imgUrls);
-                setKenBurnsReady(true);
-                setVideoLoading(false);
-            }
-            cleanupVideoProbe();
-        }, 3000);
-
-        const handleProbeCanPlay = async () => {
-            videoFound = true;
-            clearTimeout(videoTimeout);
             if (cancelled) return;
 
-            if (isMountedRef.current) {
-                setUseRealVideo(true);
-                setKenBurnsReady(true);
-                setVideoLoading(false);
+            // If both MP3 and images exist → use Ken Burns mode, skip MP4
+            if (audioUrl && imgUrls.length > 0) {
+                if (isMountedRef.current) {
+                    setKenBurnsAudioSrc(audioUrl);
+                    setKenBurnsImages(imgUrls);
+                    setKenBurnsReady(true);
+                    setUseRealVideo(false);
+                    setVideoLoading(false);
+                }
+                return;
             }
-            cleanupVideoProbe();
-        };
 
-        const handleProbeError = async () => {
-            clearTimeout(videoTimeout);
-            if (cancelled || videoFound) return;
+            // No Ken Burns assets → fall back to MP4 probe
+            const videoSrc = `/videos/scenarios/${scenarioId}.mp4`;
+            const videoProbe = document.createElement('video');
+            let videoFound = false;
 
-            // MP4 missing → check Ken Burns assets
-            const [audioUrl, imgUrls] = await Promise.all([
-                probeAudioAsset(scenarioId),
-                probeImageAssets(scenarioId),
-            ]);
+            const videoTimeout = setTimeout(() => {
+                if (cancelled) return;
+                // MP4 not found in time → TTS fallback
+                if (isMountedRef.current) {
+                    setUseRealVideo(false);
+                    setKenBurnsReady(true);
+                    setVideoLoading(false);
+                }
+                cleanupVideoProbe();
+            }, 3000);
 
-            if (!cancelled && isMountedRef.current) {
-                setUseRealVideo(false);
-                setKenBurnsAudioSrc(audioUrl);
-                setKenBurnsImages(imgUrls);
-                setKenBurnsReady(true);
-                setVideoLoading(false);
-            }
-            cleanupVideoProbe();
-        };
+            const handleProbeCanPlay = () => {
+                videoFound = true;
+                clearTimeout(videoTimeout);
+                if (cancelled) return;
 
-        const cleanupVideoProbe = () => {
-            videoProbe.removeEventListener('canplaythrough', handleProbeCanPlay);
-            videoProbe.removeEventListener('error', handleProbeError);
-            videoProbe.src = '';
+                if (isMountedRef.current) {
+                    setUseRealVideo(true);
+                    setKenBurnsReady(true);
+                    setVideoLoading(false);
+                }
+                cleanupVideoProbe();
+            };
+
+            const handleProbeError = () => {
+                clearTimeout(videoTimeout);
+                if (cancelled || videoFound) return;
+
+                // MP4 missing → TTS fallback
+                if (isMountedRef.current) {
+                    setUseRealVideo(false);
+                    setKenBurnsReady(true);
+                    setVideoLoading(false);
+                }
+                cleanupVideoProbe();
+            };
+
+            const cleanupVideoProbe = () => {
+                videoProbe.removeEventListener('canplaythrough', handleProbeCanPlay);
+                videoProbe.removeEventListener('error', handleProbeError);
+                videoProbe.src = '';
+                videoProbe.load();
+            };
+
+            videoProbe.addEventListener('canplaythrough', handleProbeCanPlay);
+            videoProbe.addEventListener('error', handleProbeError);
+            videoProbe.src = videoSrc;
             videoProbe.load();
-        };
-
-        videoProbe.addEventListener('canplaythrough', handleProbeCanPlay);
-        videoProbe.addEventListener('error', handleProbeError);
-        videoProbe.src = videoSrc;
-        videoProbe.load();
+        })();
 
         return () => {
             cancelled = true;
-            clearTimeout(videoTimeout);
-            cleanupVideoProbe();
         };
     }, [scenarioId]);
 
