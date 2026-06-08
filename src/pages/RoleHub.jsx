@@ -53,7 +53,7 @@ export default function RoleHub() {
     const loadProgress = async () => {
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) { navigate('/login'); return; }
+            if (!user) { navigate('/SignIn', { replace: true }); return; }
 
             const { data: completedRows } = await supabase
                 .from('student_progress')

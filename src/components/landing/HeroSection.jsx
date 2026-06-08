@@ -1,12 +1,10 @@
-
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Sparkles, LogIn, ArrowRight, Users, Trophy, BookOpen, LayoutDashboard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
-import MetaballCanvas from './MetaballCanvas';
 
-
+const MetaballCanvas = lazy(() => import('./MetaballCanvas'));
 
 // ── Animated counter ─────────────────────────────────────────────────────────
 function useCounter(target, duration = 1400) {
@@ -49,7 +47,25 @@ function StatPanel({ numericValue, suffix = '', label, icon, motionDelay }) {
 
 // ── Particle canvas ──────────────────────────────────────────────────────────
 function ParticleCanvas() {
-    return <MetaballCanvas />;
+    const [shouldUseHeavyEffects, setShouldUseHeavyEffects] = useState(false);
+
+    useEffect(() => {
+        const isSmallScreen = window.innerWidth < 1024;
+        const lowCpu = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4;
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        if (!isSmallScreen && !lowCpu && !prefersReducedMotion) {
+            setShouldUseHeavyEffects(true);
+        }
+    }, []);
+
+    if (!shouldUseHeavyEffects) return null;
+
+    return (
+        <Suspense fallback={null}>
+            <MetaballCanvas />
+        </Suspense>
+    );
 }
 
 // ── Floating molecules decoration ────────────────────────────────────────────

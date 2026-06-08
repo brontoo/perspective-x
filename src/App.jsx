@@ -59,7 +59,7 @@ const ProtectedRoute = ({ children }) => {
 
 function AppRoutes() {
     const location = useLocation();
-    const isPublicPath = location.pathname === '/' || location.pathname === '/SignIn';
+    const isPublicPath = location.pathname === '/' || location.pathname === '/SignIn' || location.pathname.toLowerCase() === '/login' || location.pathname.toLowerCase() === '/signin' || location.pathname.toLowerCase() === '/sign-in';
 
     // ScenarioPlayer: fullscreen, no Layout — lazy loaded
     if (location.pathname === '/ScenarioPlayer') {
@@ -84,6 +84,9 @@ function AppRoutes() {
                         </LayoutWrapper>
                     } />
                     <Route path="/SignIn" element={<SignIn />} />
+                    <Route path="/login" element={<Navigate to="/SignIn" replace />} />
+                    <Route path="/signin" element={<Navigate to="/SignIn" replace />} />
+                    <Route path="/sign-in" element={<Navigate to="/SignIn" replace />} />
                 </Routes>
             </Suspense>
         );

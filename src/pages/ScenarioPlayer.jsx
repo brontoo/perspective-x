@@ -17,7 +17,9 @@ import ConsequenceViewer from '@/components/scenario/ConsequenceViewer';
 import ReflectionPrompt from '@/components/scenario/ReflectionPrompt';
 import ExitTicket from '@/components/scenario/ExitTicket';
 import ScenarioComplete from '@/components/scenario/ScenarioComplete';
-import CompletionCertificate from '@/components/scenario/CompletionCertificate';
+
+const CompletionCertificate = lazy(() => import('@/components/scenario/CompletionCertificate'));
+
 import { normalizeRoleThemeKey, getBadgeLevel, getAdaptedScene } from '@/components/scenario/scenarioHelpers';
 import { evaluateScenarioOutcome } from '@/components/scenario/scenarioAnswerKey';
 import { normalizeScenario } from '@/data/scenarioSchema';
@@ -199,7 +201,7 @@ export default function ScenarioPlayer() {
                 const { data: { user: currentUser } } = await supabase.auth.getUser();
                 if (cancelled) return;
                 if (!currentUser) {
-                    navigate('/login');
+                    navigate('/SignIn', { replace: true });
                     return;
                 }
 
@@ -784,16 +786,18 @@ export default function ScenarioPlayer() {
                     difficultyMode
                 );
                 return (
-                    <CompletionCertificate
-                        studentName={profileName || user?.user_metadata?.full_name || user?.email?.split('@')[0]}
-                        scenarioTitle={scenario.title}
-                        percentage={percentage}
-                        completionDate={new Date().toISOString()}
-                        badgeIcon={scenario.badgeIcon}
-                        badge={scenario.badge}
-                        badgeLevel={levelName}
-                        onClose={() => setShowCertificate(false)}
-                    />
+                    <Suspense fallback={<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"><Loader2 className="w-8 h-8 text-white animate-spin" /></div>}>
+                        <CompletionCertificate
+                            studentName={profileName || user?.user_metadata?.full_name || user?.email?.split('@')[0]}
+                            scenarioTitle={scenario.title}
+                            percentage={percentage}
+                            completionDate={new Date().toISOString()}
+                            badgeIcon={scenario.badgeIcon}
+                            badge={scenario.badge}
+                            badgeLevel={levelName}
+                            onClose={() => setShowCertificate(false)}
+                        />
+                    </Suspense>
                 );
             })()}
 

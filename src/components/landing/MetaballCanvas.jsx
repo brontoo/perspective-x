@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import * as THREE from 'https://esm.sh/three@0.178.0';
+import * as THREE from 'three';
 
 export default function MetaballCanvas() {
   const containerRef = useRef(null);
@@ -564,8 +564,9 @@ export default function MetaballCanvas() {
     window.addEventListener('resize', handleResize, { passive: true });
 
     // Animation loop
+    let animationFrameId;
     const animate = () => {
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
 
       const settings = settingsRef.current;
       const mouse = mouseRef.current;
@@ -589,6 +590,7 @@ export default function MetaballCanvas() {
 
     // Cleanup
     return () => {
+      cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('resize', handleResize);
