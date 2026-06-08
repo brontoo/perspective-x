@@ -28,12 +28,6 @@ export default defineConfig({
             output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
-                        if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-                            return 'react-vendor';
-                        }
-                        if (id.includes('@radix-ui') || id.includes('framer-motion') || id.includes('lucide-react')) {
-                            return 'ui-vendor';
-                        }
                         if (id.includes('three') || id.includes('@react-three/fiber')) {
                             return 'three-vendor';
                         }
@@ -45,6 +39,9 @@ export default defineConfig({
                         }
                         if (id.includes('@supabase/supabase-js')) {
                             return 'supabase-vendor';
+                        }
+                        if (id.includes('@radix-ui') || id.includes('framer-motion') || id.includes('lucide-react')) {
+                            return 'ui-vendor';
                         }
                         return 'vendor';
                     }
