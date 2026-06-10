@@ -4,7 +4,6 @@ import { Play, Sparkles, LogIn, ArrowRight, Users, Trophy, BookOpen, LayoutDashb
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 
-const MetaballCanvas = lazy(() => import('./MetaballCanvas'));
 
 // ── Animated counter ─────────────────────────────────────────────────────────
 function useCounter(target, duration = 1400) {
@@ -45,32 +44,59 @@ function StatPanel({ numericValue, suffix = '', label, icon, motionDelay }) {
     );
 }
 
-// ── Particle canvas ──────────────────────────────────────────────────────────
-function ParticleCanvas() {
-    const [shouldUseHeavyEffects, setShouldUseHeavyEffects] = useState(false);
-
+// ── Static Background Blobs (Lightweight) ────────────────────────────────────
+function StaticBlobs() {
     useEffect(() => {
-        const isSmallScreen = window.innerWidth < 768;
-        const lowCpu = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4;
-        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
-        if (!isSmallScreen && !lowCpu && !prefersReducedMotion) {
-            const timer = setTimeout(() => {
-                setShouldUseHeavyEffects(true);
-            }, 100);
-            return () => clearTimeout(timer);
-        }
+        const handleMouseMove = (e) => {
+            const glow = document.getElementById('cursor-glow-effect');
+            if (glow) {
+                // Center the 400x400 element on the cursor
+                glow.style.transform = `translate3d(${e.clientX - 200}px, ${e.clientY - 200}px, 0)`;
+            }
+        };
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        return () => window.removeEventListener('mousemove', handleMouseMove);
     }, []);
 
+    const sphereStyle = {
+        background: 'radial-gradient(circle at 35% 35%, #00d9ff 0%, #007a99 35%, #003d5c 80%, #001f33 100%)',
+        boxShadow: '0 15px 35px -5px rgba(0,0,0,0.2), inset -10px -10px 20px rgba(0,0,0,0.3)',
+        borderRadius: '50%'
+    };
+
     return (
-        <>
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#090d16] via-[#0d1527] to-[#080f1e]" />
-            {shouldUseHeavyEffects && (
-                <Suspense fallback={null}>
-                    <MetaballCanvas />
-                </Suspense>
-            )}
-        </>
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            {/* Top Left */}
+            <div className="absolute -top-32 -left-20 w-[450px] h-[450px]" style={sphereStyle} />
+            
+            {/* Left Middle */}
+            <div className="absolute top-[35%] left-10 w-28 h-28" style={sphereStyle} />
+
+            {/* Center cluster behind X */}
+            <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 opacity-90">
+                <div className="absolute top-0 left-4 w-28 h-28" style={sphereStyle} />
+                <div className="absolute top-12 left-24 w-36 h-36" style={sphereStyle} />
+                <div className="absolute top-32 left-0 w-24 h-24" style={sphereStyle} />
+                <div className="absolute top-36 left-20 w-32 h-32" style={sphereStyle} />
+            </div>
+
+            {/* Mouse Tracking Glow */}
+            <div id="cursor-glow-effect" 
+                 className="fixed top-0 left-0 w-[400px] h-[400px] rounded-full mix-blend-color-dodge opacity-70 pointer-events-none z-50 flex items-center justify-center" 
+                 style={{ 
+                     background: 'radial-gradient(circle at 50% 50%, rgba(0,255,255,0.6) 0%, rgba(0,217,255,0.2) 40%, transparent 70%)',
+                     willChange: 'transform',
+                     transform: 'translate3d(-500px, -500px, 0)' // Start off-screen
+                 }}>
+                <div className="w-16 h-16 rounded-full shadow-[0_0_60px_30px_rgba(0,255,255,0.8)]" style={{ background: '#00ffff' }} />
+            </div>
+
+            {/* Bottom Right large */}
+            <div className="absolute -bottom-48 -right-20 w-[550px] h-[550px]" style={sphereStyle} />
+            
+            {/* Bottom Right small */}
+            <div className="absolute bottom-16 right-56 w-40 h-40" style={sphereStyle} />
+        </div>
     );
 }
 
@@ -136,7 +162,7 @@ export default function HeroSection({ onStart, isLoggedIn = false, isLoading = f
 
     return (
         <section className="relative min-h-[95vh] flex flex-col overflow-hidden lx-bg-ambient">
-            <ParticleCanvas />
+            <StaticBlobs />
             <FloatingMolecules />
 
             {/* Blueprint square grid overlay */}
