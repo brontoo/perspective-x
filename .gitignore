@@ -35,3 +35,7 @@ everything-claude-code/
 .aider*
 
 .vercel
+
+# Approved UI test artifacts
+/test-results/
+/playwright-report/
