@@ -9,8 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 const CinematicTitle = lazy(() => import('@/components/scenario/CinematicTitle'));
 const CinematicVideoIntro = lazy(() => import('@/components/scenario/CinematicVideoIntro'));
-const ScenarioIntro = lazy(() => import('@/components/scenario/ScenarioIntro'));
-const CharacterBriefing = lazy(() => import('@/components/scenario/CharacterBriefing'));
 const SceneOne = lazy(() => import('@/components/scenario/SceneOne'));
 const SceneTwo = lazy(() => import('@/components/scenario/SceneTwo'));
 const ConsequenceViewer = lazy(() => import('@/components/scenario/ConsequenceViewer'));
@@ -28,7 +26,6 @@ import { normalizeScenario } from '@/data/scenarioSchema';
 import { ROLE_THEMES, DEFAULT_THEME } from '@/lib/roleThemes';
 import { useScenarioAudio } from '@/hooks/useScenarioAudio';
 import { t as motionT } from '@/lib/motionPresets';
-const StoryRecap = lazy(() => import('@/components/scenario/StoryRecap'));
 const MissionNotebook = lazy(() => import('@/components/scenario/MissionNotebook'));
 
 // Five visible chapters; videos are preserved without modification.
