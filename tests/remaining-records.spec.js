@@ -77,7 +77,7 @@ test("student result persists separately, unlocks progression, and exports certi
   await expect(page.getByRole("dialog")).toContainText("Test Learner");
   await page.screenshot({
     path: "docs/remaining-portal/certificate-desktop.png",
-    fullPage: true,
+    fullPage: false,
   });
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: /PNG/i }).click();
@@ -146,7 +146,7 @@ test("interface review screenshots and keyboard notebook close", async ({
     .click();
   await page.screenshot({
     path: "docs/remaining-portal/notebook-desktop.png",
-    fullPage: true,
+    fullPage: false,
   });
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).not.toBeVisible();

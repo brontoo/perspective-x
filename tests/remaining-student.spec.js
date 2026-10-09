@@ -58,6 +58,9 @@ test("student decisions and reasoning appear in notebook without changing graded
     await textarea.fill(
       "I compared the measured evidence with the reference limit and considered the treatment risks.",
     );
+  await expect(
+    page.getByRole("button", { name: "Submit Choice", exact: true }),
+  ).toBeEnabled();
   await page.screenshot({
     path: "docs/remaining-portal/mission-decision-desktop.png",
     fullPage: true,
@@ -138,13 +141,16 @@ test("teacher mission controls and submission review retain original student ans
     .getByRole("button", { name: "View Answers", exact: true })
     .first()
     .click();
-  await page.getByRole("dialog").locator("summary").first().click();
-  await expect(page.getByRole("dialog")).toContainText(
-    "Original saved evidence",
-  );
+  for (const summary of await page.getByRole("dialog").locator("summary").all())
+    await summary.click();
+  await expect(
+    page
+      .getByRole("dialog")
+      .getByText("Original saved evidence", { exact: true }),
+  ).toBeVisible();
   await page.screenshot({
     path: "docs/remaining-portal/teacher-review-desktop.png",
-    fullPage: true,
+    fullPage: false,
   });
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).not.toBeVisible();

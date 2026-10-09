@@ -327,6 +327,7 @@ export default function ScenarioPlayer() {
     capture("notebook", notes, phase);
   }
   async function finish(assessment) {
+    if (finalizing.current) return;
     finalizing.current = true;
     const result = {
       ...responseRef.current,

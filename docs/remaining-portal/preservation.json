@@ -1,0 +1,77 @@
+{
+  "base_main": "2b3a2f7e4b9a5eb0e5282e76e44c77a51480e01f",
+  "files": [
+    {
+      "path": "src/pages/Home.jsx",
+      "sha256": "d57fb67fffc91bfb1ce609f3c93e6d2a59ea9eeb7c3b46f6469e0eb67b5db9e0",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/pages/SignIn.jsx",
+      "sha256": "adc72a736fa18886e3e481472c142f96f09f2ed2821b21257b8653d76f84c986",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/pages/Dashboard.jsx",
+      "sha256": "5e63677cc1c78c7b95c4a8bb2d1fbcd558f0195aeba42b70766aef51620394f0",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/pages/TeacherDashboard.jsx",
+      "sha256": "e703eb3b885e1cd2c8f6c1c4970fd2dedffd03e0b05b3a8835eb4d6a4a1b2e3f",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/pages/LeaderboardPage.jsx",
+      "sha256": "7a0016ab06f94be86a4c55a542ea230942e2478a0c74226dafdeeae0a22a1002",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/components/perspective/Portal.jsx",
+      "sha256": "bb45be22e2df5a5e75790aa7c2819f4ed4670bc7f072f59e621a28e6c4bd4db2",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/components/perspective/perspective.css",
+      "sha256": "cd059f0397c94aa5f8a0ab2aca5221b4af824779a1858d2b554cc4907521ddc9",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/components/scenarios/scenarioData.jsx",
+      "sha256": "2d2608bd4436ac1eeae03d9ada582bfe310235b4ad3cedf0000901b2656e0547",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/components/scenarios/uaeScenarioData.jsx",
+      "sha256": "ac04ab3b29a7485d3cd22823fd5cefbc51dac3f4aef5a751deb85ce33747ce78",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/components/scenario/scenarioAnswerKey.js",
+      "sha256": "941eaaca765884c418cf65357cf984842df628a427e40ac5e663156a6c002a06",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/components/scenario/scenarioHelpers.js",
+      "sha256": "7f2d859ffbc0313f5d9b5df35c5ee801530593cde53b129f85a3802b0148e06f",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/data/learningPaths.js",
+      "sha256": "cea26c3ace4de503f2fa6304e1e47f3bae332947af1621003f6573f6e74aa1f0",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/components/scenario/CinematicVideoIntro.jsx",
+      "sha256": "b50ffe3d8d9ec2790e62795714b2d0822275dc0e70b718de901fe27b86692077",
+      "identical_to_protected_main": true
+    },
+    {
+      "path": "src/components/scenarios/additionalQuestions.js",
+      "sha256": "3d265a1dedd5772c1fad992128ec92e26333c82cb1eeffc4f40bb3a346a72dd3",
+      "identical_to_protected_main": true
+    }
+  ],
+  "original_video_audio_changed": false,
+  "original_scenario_images_changed": false
+}
