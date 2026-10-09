@@ -234,7 +234,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
                         </span>
                     </div>
                     <span className="text-xs font-mono text-slate-400 tracking-wider font-bold select-none">
-                        Mission Phase 7 of 8
+                        Chapter 5 of 5
                     </span>
                 </div>
 

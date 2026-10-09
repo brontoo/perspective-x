@@ -775,6 +775,7 @@ export default function SceneOne({
                                             </div>
                                             <div className="relative">
                                                 <textarea
+                                                    aria-label="Scientific justification"
                                                     value={justification}
                                                     onChange={e => setJustification(e.target.value)}
                                                     placeholder={scene.justificationStarter || 'Enter your scientific reasoning using evidence from the data...'}

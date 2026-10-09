@@ -23,8 +23,7 @@ import React, {
 } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Play, Pause, Volume2, VolumeX, SkipForward,
-    ChevronRight, Subtitles, RotateCcw, FileText, X,
+    Play, Pause, Volume2, VolumeX, SkipForward, Subtitles, RotateCcw, FileText, X,
     CheckCircle2,
 } from 'lucide-react';
 

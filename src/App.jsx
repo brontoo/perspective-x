@@ -14,6 +14,7 @@ const ScenarioPlayer = lazy(() => import('@/pages/ScenarioPlayer'));
 const ProfileSettings   = lazy(() => import('@/pages/ProfileSettings'));
 const LeaderboardPage   = lazy(() => import('@/pages/LeaderboardPage'));
 const LearningPath      = lazy(() => import('@/pages/LearningPath'));
+const Roles = lazy(() => import('@/pages/Roles'));
 const PageNotFound      = lazy(() => import('./lib/PageNotFound'));
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -111,6 +112,8 @@ function AppRoutes() {
                         );
                     })}
                     {/* Explicit routes for pages not in pages.config.js */}
+                    <Route path="/Roles" element={<LayoutWrapper currentPageName="Roles"><Roles /></LayoutWrapper>} />
+                    <Route path="/role-hub" element={<Navigate to={`/RoleHub${location.search}`} replace />} />
                     <Route path="/ProfileSettings" element={
                         <LayoutWrapper currentPageName="ProfileSettings">
                             <ProfileSettings />
