@@ -1,205 +1,270 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabaseClient";
+import { ROLES, SCENARIOS } from "@/components/scenarios/scenarioData";
+import { Avatar } from "@/components/perspective/Portal";
+import HeroSection from "@/components/landing/HeroSection";
+import "@/components/landing/homepage.css";
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabaseClient';
-import { ROLES } from '@/components/scenarios/scenarioData';
-import HeroSection from '@/components/landing/HeroSection';
-import RoleCard from '@/components/landing/RoleCard';
-import LearningFocusSection from '@/components/landing/LearningFocusSection';
-import { Loader2, LogOut, LayoutDashboard, LogIn } from 'lucide-react';
+function ApprovedMark({ className, label, viewBox }) {
+  return (
+    <svg
+      className={className}
+      viewBox={viewBox}
+      role={label ? "img" : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : true}
+    >
+      <image
+        href="/images/perspective/home-branding-source.webp"
+        width="1448"
+        height="1086"
+        filter={
+          label
+            ? "url(#home-approved-white-ink)"
+            : "url(#home-approved-logo-ink)"
+        }
+      />
+    </svg>
+  );
+}
 
 export default function Home() {
-    const navigate = useNavigate();
-    const [progress, setProgress] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState(null);
-    const [userRole, setUserRole] = useState(null);
-
-    useEffect(() => { loadData(); }, []);
-
-    const loadData = async () => {
-        try {
-            const { data: { user: currentUser } } = await supabase.auth.getUser();
-            if (!currentUser) { setLoading(false); return; }
-
-            setUser(currentUser);
-
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('role, full_name')
-                .eq('id', currentUser.id)
-                .single();
-
-            const role = profile?.role || 'student';
-            setUserRole(role);
-            setUser({ ...currentUser, full_name: profile?.full_name });
-
-            if (role !== 'teacher') {
-                const { data: progressList } = await supabase
-                    .from('student_progress')
-                    .select('scenario_id, score')
-                    .eq('student_id', currentUser.id)
-                    .not('scenario_id', 'is', null);
-
-                const completedScenarios = (progressList || [])
-                    .filter(r => r.score >= 80)
-                    .map(r => r.scenario_id);
-
-                setProgress({ completed_scenarios: completedScenarios });
-            }
-        } catch (e) {
-            console.log('Error loading home data:', e);
-        } finally {
-            setLoading(false);
+  const navigate = useNavigate();
+  const [account, setAccount] = useState({
+    user: null,
+    profile: null,
+    loading: true,
+  });
+  const [students, setStudents] = useState(null);
+  useEffect(() => {
+    let active = true;
+    let version = 0;
+    async function loadAccount() {
+      const request = ++version;
+      try {
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
+        if (error || !user) {
+          if (active && request === version)
+            setAccount({ user: null, profile: null, loading: false });
+          return;
         }
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("id,full_name,role,avatar_path")
+          .eq("id", user.id)
+          .single();
+        if (active && request === version)
+          setAccount({ user, profile, loading: false });
+      } catch {
+        if (active && request === version)
+          setAccount({ user: null, profile: null, loading: false });
+      }
+    }
+    loadAccount();
+    // Defer querying outside the Supabase auth callback to avoid its session lock.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      setTimeout(() => {
+        if (active) loadAccount();
+      }, 0);
+    });
+    supabase
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("role", "student")
+      .then(({ count, error }) => {
+        if (active) setStudents(error || count == null ? null : count);
+      })
+      .catch(() => {
+        if (active) setStudents(null);
+      });
+    return () => {
+      active = false;
+      subscription.unsubscribe();
     };
-
-    const handleLogout = async () => {
-        await supabase.auth.signOut();
-        setUser(null);
-        setProgress(null);
-        setUserRole(null);
-    };
-
-    const handleStart = () => {
-        if (!user) { navigate('/SignIn'); return; }
-        document.getElementById('roles-section')?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    const handleRoleSelect = (roleId) => {
-        if (!user) { navigate('/SignIn'); return; }
-        navigate(`/RoleHub?role=${roleId}`);
-    };
-
-    return (
-        <div className="min-h-screen lx-bg-ambient">
-
-            {/* ── Header ── */}
-            {!loading && (
-                <div className="fixed top-0 left-0 right-0 z-50 glass-nav">
-                    <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between">
-                        {/* Logo */}
-                        <span className="text-xs font-semibold text-[var(--lx-accent)] tracking-widest hidden sm:block select-none">
-                            Perspective X
-                        </span>
-
-                        {/* Right controls */}
-                        <div className="flex items-center gap-3 ml-auto">
-                            {user ? (
-                                <>
-                                     {/* Welcome chip */}
-                                    <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 glass-panel border border-[var(--lx-glass-border-sub)]"
-                                        style={{ borderRadius: 'var(--lx-r-btn)' }}>
-                                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--lx-success)]" />
-                                        <span className="text-[var(--lx-text-sub)] text-[11px] font-mono">
-                                            {user.full_name || user.email?.split('@')[0]}
-                                        </span>
-                                    </div>
-
-                                    {/* Dashboard */}
-                                    <button
-                                        onClick={() => navigate(userRole === 'teacher' ? '/TeacherDashboard' : '/Dashboard')}
-                                        className="liquid-btn flex items-center gap-1.5 text-[11px] font-mono tracking-wider"
-                                        style={{ borderRadius: 'var(--lx-r-btn)', padding: '6px 12px' }}>
-                                        <LayoutDashboard className="w-3.5 h-3.5" />
-                                        {userRole === 'teacher' ? 'Teacher Dashboard' : 'Dashboard'}
-                                    </button>
-
-                                    {/* Sign out */}
-                                    <button
-                                        onClick={handleLogout}
-                                        title="Sign Out"
-                                        className="liquid-btn-ghost p-1.5"
-                                        style={{ borderRadius: 'var(--lx-r-btn)' }}>
-                                        <LogOut className="w-3.5 h-3.5" />
-                                    </button>
-                                </>
-                            ) : (
-                                <button
-                                    onClick={() => navigate('/SignIn')}
-                                    className="liquid-btn-accent flex items-center gap-2 text-[11px] font-mono tracking-wider"
-                                    style={{ borderRadius: 'var(--lx-r-btn)', padding: '6px 16px' }}>
-                                    <LogIn className="w-3.5 h-3.5" />
-                                    Sign In / Register
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Spacer for fixed header */}
-            {!loading && <div className="h-11" />}
-
-            {/* ── Hero ── */}
-            <HeroSection onStart={handleStart} isLoggedIn={!!user} isLoading={loading} />
-
-            {/* ── Learning focus ── */}
-            <LearningFocusSection />
-
-            {/* ── Roles section ── */}
-            <section id="roles-section" className="pt-10 pb-20 px-6 relative z-10 lx-footer-surface">
-                <div className="max-w-7xl mx-auto">
-
-                    {/* Section divider */}
-                    <div className="flex items-center gap-3 mb-12">
-                        <div className="h-px flex-1 bg-gradient-to-r from-transparent to-cyan-200" />
-                        <span className="text-xs font-semibold text-cyan-600 px-4 tracking-wider uppercase">
-                            Roles
-                        </span>
-                        <div className="h-px flex-1 bg-gradient-to-l from-transparent to-cyan-200" />
-                    </div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-14"
-                    >
-                        <h2 className="text-3xl md:text-4xl font-bold text-[var(--lx-text)] mb-3">
-                            Choose Your Role
-                        </h2>
-                        <p className="text-[var(--lx-text-sub)] max-w-2xl mx-auto text-sm leading-relaxed">
-                            Each role offers unique scenarios based on real scientific challenges.
-                            Complete scenarios to unlock more and earn badges.
-                        </p>
-                    </motion.div>
-
-                    {loading ? (
-                        <div className="flex flex-col items-center py-20 gap-3">
-                            <Loader2 className="w-6 h-6 text-[var(--lx-accent)] animate-spin" />
-                            <span className="text-[11px] font-mono text-[var(--lx-text-muted)] tracking-widest">
-                                Loading Roles...
-                            </span>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                            {Object.values(ROLES).map((role, index) => (
-                                <RoleCard
-                                    key={role.id}
-                                    role={role}
-                                    index={index}
-                                    progress={progress}
-                                    onClick={() => handleRoleSelect(role.id)}
-                                />
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </section>
-
-            {/* ── Footer ── */}
-            <footer className="py-10 border-t border-[var(--lx-glass-border-sub)] glass-card relative z-10" style={{ borderRadius: 0 }}>
-                <div className="max-w-6xl mx-auto px-6 text-center">
-                    <div className="text-xs font-semibold text-cyan-600/70 mb-2 tracking-wide">
-                        Interactive Science Learning Platform
-                    </div>
-                    <p className="text-[var(--lx-text-muted)] text-xs">
-                        © 2026 Um Al Emarat School • Perspective X | Developed by Teacher Riham Saleh
-                    </p>
-                </div>
-            </footer>
-        </div>
+  }, []);
+  const enterPortal = () =>
+    navigate(
+      !account.user
+        ? "/SignIn"
+        : account.profile?.role === "teacher"
+          ? "/TeacherDashboard"
+          : "/Dashboard",
     );
+  const name =
+    account.profile?.full_name ||
+    account.user?.user_metadata?.full_name ||
+    account.user?.email?.split("@")[0] ||
+    "Your profile";
+  return (
+    <main className="px-home">
+      <svg
+        width="0"
+        height="0"
+        aria-hidden="true"
+        style={{ position: "absolute" }}
+      >
+        <defs>
+          <filter id="home-approved-white-ink" colorInterpolationFilters="sRGB">
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1 1 1 0 -1.2"
+            />
+          </filter>
+          <filter id="home-approved-logo-ink" colorInterpolationFilters="sRGB">
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.333 1.333 1.333 0 -2.8"
+            />
+          </filter>
+        </defs>
+      </svg>
+      <a className="home-skip" href="#home-intro">
+        Skip to content
+      </a>
+      <div className="home-cinema">
+        <div className="home-frame">
+          <header className="home-nav">
+            <Link
+              to="/"
+              className="home-brand"
+              aria-label="Perspective X — Home"
+            >
+              <ApprovedMark className="home-logo" viewBox="126 147 50 43" />
+              <span>Perspective X</span>
+            </Link>
+            <nav aria-label="Main navigation">
+              <a href="#roles-section">Roles</a>
+              <Link to="/LearningPath">Learning Paths</Link>
+              <a href="#roles-section">Worlds &amp; Missions</a>
+              <Link to="/TeacherDashboard">Teacher Dashboard</Link>
+              <a href="#our-story">Our Story</a>
+            </nav>
+            <div className="home-account">
+              {account.user && (
+                <Link to="/ProfileSettings" className="home-profile">
+                  <Avatar
+                    user={account.user}
+                    profile={account.profile}
+                    name={name}
+                    size={34}
+                  />
+                  <span>{name}</span>
+                </Link>
+              )}
+              <button
+                className="home-enter"
+                disabled={account.loading}
+                onClick={enterPortal}
+              >
+                {account.loading ? "Loading…" : "Enter Portal"}
+              </button>
+            </div>
+          </header>
+          <HeroSection onStart={enterPortal} isLoading={account.loading} />
+          <div className="home-bottom">
+            <footer className="home-footer">
+              <p>
+                Trusted by educators, schools, and partners across the UAE
+                <br className="home-desktop-break" /> and around the world.
+              </p>
+              <div className="home-branding">
+                <ApprovedMark
+                  className="home-institution home-uae"
+                  label="UAE"
+                  viewBox="102.5 893.75 118.75 82.5"
+                />
+                <ApprovedMark
+                  className="home-institution home-ministry"
+                  label="Ministry of Education"
+                  viewBox="226.25 893.75 178.75 82.5"
+                />
+                <ApprovedMark
+                  className="home-institution home-school"
+                  label="Um Al Emarat School"
+                  viewBox="400 893.75 155 82.5"
+                />
+                <span>
+                  Riham Saleh<small>Portal Creator</small>
+                </span>
+              </div>
+            </footer>
+            <section className="home-stats" aria-label="Platform statistics">
+              <div>
+                <strong>{Object.keys(SCENARIOS).length}</strong>
+                <span>
+                  Live
+                  <br />
+                  Scenarios
+                </span>
+              </div>
+              <div>
+                <strong>{Object.keys(ROLES).length}</strong>
+                <span>
+                  Role
+                  <br />
+                  Paths
+                </span>
+              </div>
+              <div>
+                <strong>{students ?? "—"}</strong>
+                <span>
+                  {students == null
+                    ? "Student count unavailable"
+                    : "Registered Students"}
+                </span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <section
+        id="roles-section"
+        className="home-roles"
+        aria-labelledby="home-roles-title"
+      >
+        <p className="home-eyebrow">A world of possibilities</p>
+        <h2 id="home-roles-title">Choose your perspective</h2>
+        <p>
+          Step into a scientific role. Explore its missions, investigate the
+          evidence, and make a difference.
+        </p>
+        <div className="home-role-grid">
+          {Object.values(ROLES).map((role) => (
+            <Link
+              key={role.id}
+              to={account.user ? `/RoleHub?role=${role.id}` : "/SignIn"}
+              className="home-role-card"
+            >
+              <span aria-hidden="true">{role.icon}</span>
+              <h3>{role.title}</h3>
+              <p>{role.description}</p>
+              <span>
+                {role.scenarios.filter((id) => SCENARIOS[id]).length} missions{" "}
+                <span aria-hidden="true">→</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section id="our-story" className="home-story">
+        <p className="home-eyebrow">Our story</p>
+        <h2>Real science. Meaningful choices.</h2>
+        <p>
+          Perspective X invites learners to explore immersive scientific roles,
+          tackle real-world challenges, and shape a more sustainable future for
+          the UAE and beyond.
+        </p>
+        <p>Um Al Emarat School · Riham Saleh — Portal Creator</p>
+        <button onClick={enterPortal} disabled={account.loading}>
+          Enter Portal <span aria-hidden="true">→</span>
+        </button>
+      </section>
+    </main>
+  );
 }
