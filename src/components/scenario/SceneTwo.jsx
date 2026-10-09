@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, BookOpen, AlertTriangle, CheckCircle2, AlertCircle, Sparkles, Check, HelpCircle } from 'lucide-react';
+import { Play, BookOpen, AlertCircle, Sparkles, Check, HelpCircle } from 'lucide-react';
 import { ScenarioVisualPanel } from './ScenarioPrimitives';
 import useTypewriter from './useTypewriter';
 
@@ -611,6 +611,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                                 My evidence is: <span className="text-red-500 font-bold">*</span>
                                             </label>
                                             <textarea
+                                                aria-label="My evidence is"
                                                 value={evidenceText}
                                                 onChange={e => setEvidenceText(e.target.value)}
                                                 placeholder="What scientific measurements, logs, or facts did you collect?"
@@ -625,6 +626,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                                 This means:
                                             </label>
                                             <textarea
+                                                aria-label="This means"
                                                 value={meansText}
                                                 onChange={e => setMeansText(e.target.value)}
                                                 placeholder="How do you interpret this data? What scientific concept explains this?"
@@ -639,6 +641,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                                 My choice is: <span className="text-red-500 font-bold">*</span>
                                             </label>
                                             <textarea
+                                                aria-label="My choice is"
                                                 value={choiceText}
                                                 onChange={e => setChoiceText(e.target.value)}
                                                 placeholder="Why does this choice best address the scientific issue?"
@@ -653,6 +656,7 @@ export default function SceneTwo({ scene, scenarioId, scenarioTitle: _scenarioTi
                                                 One possible risk is:
                                             </label>
                                             <textarea
+                                                aria-label="One possible risk is"
                                                 value={riskText}
                                                 onChange={e => setRiskText(e.target.value)}
                                                 placeholder="What is a potential trade-off, cost, or risk of your recommendation?"

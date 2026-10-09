@@ -4,7 +4,7 @@ import {
     Droplets, Activity, Thermometer, Zap, Dna, Timer, 
     Rocket, Factory, Building2, FlaskConical, Beaker, 
     Mountain, Plane, AlertTriangle, ShieldCheck, Gauge, ArrowRight,
-    TrendingUp, TrendingDown, Wind, Flame, Waves
+    TrendingUp
 } from 'lucide-react';
 import { RiskMeter, DataLabel } from './PedagogicalPrimitives';
 

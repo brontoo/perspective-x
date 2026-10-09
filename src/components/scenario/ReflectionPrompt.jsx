@@ -92,6 +92,7 @@ export default function ReflectionPrompt({ scenario, onComplete, isTeacher, them
                                         {idx + 1}. {q.question}
                                     </label>
                                     <textarea
+                                        aria-label={q.question}
                                         value={answers[q.id] || ''}
                                         onChange={(e) => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
                                         disabled={isSubmitted}

@@ -1,234 +1,226 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
-import { ROLES } from '@/components/scenarios/scenarioData';
-import {
-    ArrowLeft, Trophy, Sparkles, MessageSquare,
-    Target, Briefcase, Loader2, CheckCircle2
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-
+import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { supabase } from "@/lib/supabaseClient";
+import { ROLES } from "@/components/scenarios/scenarioData";
+import { answersOf, formatDate } from "@/lib/perspective/progress.mjs";
+import usePortalData from "@/lib/expedition/usePortalData";
+import PortalShell, {
+  DataState,
+  Progress,
+  RoleArtwork,
+} from "@/components/expedition/PortalShell";
+const FIELDS = [
+  ["whatLearned", "What did you learn?"],
+  ["hardestDecision", "What decision was hardest?"],
+  ["impact", "How did your work affect the situation?"],
+  ["realWorldConnection", "How does this connect to real life or careers?"],
+];
 export default function RoleReflection() {
-    const navigate = useNavigate();
-    const params = new URLSearchParams(window.location.search);
-    const roleId = params.get('role');
-
-    const [progress, setProgress] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [submitted, setSubmitted] = useState(false);
-
-    const [responses, setResponses] = useState({
-        skillImproved: '',
-        hardestDecision: '',
-        realWorldConnection: ''
-    });
-
-    const role = ROLES[roleId];
-
-    useEffect(() => {
-        if (!role) {
-            navigate(createPageUrl('Home'));
-            return;
-        }
-        loadProgress();
-    }, [roleId]);
-
-    const loadProgress = async () => {
-        try {
-            const progressList = await base44.entities.StudentProgress.list();
-            if (progressList.length > 0) {
-                setProgress(progressList[0]);
-            }
-        } catch (e) {
-            console.error('Error:', e);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const completedInRole = progress?.completed_scenarios?.filter(s =>
-        role?.scenarios.includes(s)
-    ) || [];
-
-    const handleSubmit = async () => {
-        setSubmitted(true);
-        // Could save reflection to database here
-    };
-
-    if (!role || loading) {
-        return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
-            </div>
-        );
+  const data = usePortalData();
+  const [params] = useSearchParams();
+  const role = ROLES[params.get("role")];
+  const [responses, setResponses] = useState({
+    skillImproved: "",
+    whatLearned: "",
+    hardestDecision: "",
+    impact: "",
+    realWorldConnection: "",
+  });
+  const [status, setStatus] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const key =
+    data.user && role ? `px-role-reflection:${data.user.id}:${role.id}` : null;
+  useEffect(() => {
+    if (!key) return;
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored) setResponses(JSON.parse(stored));
+    } catch {
+      /* A storage failure must not discard the editable form. */
     }
-
-    if (submitted) {
-        return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center px-6">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center max-w-lg"
-                >
-                    <div className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
-                        <CheckCircle2 className="w-12 h-12 text-emerald-400" />
-                    </div>
-
-                    <h1 className="text-3xl font-bold text-white mb-4">Reflection Complete!</h1>
-                    <p className="text-slate-400 mb-8">
-                        Your thoughtful reflection helps deepen your learning.
-                        You've completed the {role.title} journey!
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link to={createPageUrl('Home')}>
-                            <Button size="lg" className="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white w-full sm:w-auto">
-                                Explore Other Roles
-                            </Button>
-                        </Link>
-                        <Link to={createPageUrl('Dashboard')}>
-                            <Button variant="outline" size="lg" className="border-slate-700 text-slate-300 w-full sm:w-auto">
-                                View Dashboard
-                            </Button>
-                        </Link>
-                    </div>
-                </motion.div>
-            </div>
-        );
+  }, [key]);
+  function change(field, value) {
+    const next = { ...responses, [field]: value };
+    setResponses(next);
+    setStatus("Unsaved reflection");
+    try {
+      if (key) localStorage.setItem(key, JSON.stringify(next));
+    } catch {
+      setError(
+        "Browser draft storage is unavailable. Keep this page open or copy your reflection before leaving.",
+      );
     }
-
+  }
+  async function save() {
+    setError("");
+    setBusy(true);
+    setStatus("Saving…");
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user || user.id !== data.user.id)
+        throw new Error(
+          "Sign in again before saving. Your draft remains here.",
+        );
+      const { error: e, data: saved } = await supabase
+        .from("student_progress")
+        .insert({
+          student_id: user.id,
+          scenario_id: null,
+          scenario_title: `Role reflection: ${role.title}`,
+          score: null,
+          completed_at: null,
+          answers: {
+            meta: {
+              recordType: "role_reflection",
+              roleId: role.id,
+              updatedAt: new Date().toISOString(),
+            },
+            roleReflection: responses,
+          },
+        })
+        .select("id")
+        .single();
+      if (e || !saved) throw e || new Error("No saved record was returned.");
+      setStatus("Reflection saved to your account");
+      setError("");
+    } catch (e) {
+      setStatus("Not saved to your account");
+      setError(
+        `${e.message || "The backend could not save this reflection."} Your draft is kept in this browser; no previous responses were changed.`,
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+  if (data.loading || data.error) return <DataState data={data} />;
+  if (!role)
     return (
-        <div className="min-h-screen bg-slate-950">
-            {/* Header */}
-            <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/70 border-b border-slate-800">
-                <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <Link
-                        to={createPageUrl('RoleHub') + `?role=${roleId}`}
-                        className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
-                    >
-                        <ArrowLeft className="w-5 h-5" />
-                        <span>Back to {role.title}</span>
-                    </Link>
-                </div>
-            </header>
-
-            <main className="max-w-3xl mx-auto px-6 py-12">
-                {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center mb-12"
-                >
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm mb-6">
-                        <Sparkles className="w-4 h-4" />
-                        <span>Role Reflection</span>
-                    </div>
-
-                    <div className="flex items-center justify-center gap-4 mb-4">
-                        <span className="text-5xl">{role.icon}</span>
-                        <h1 className="text-3xl font-bold text-white">{role.title} Journey</h1>
-                    </div>
-
-                    <p className="text-slate-400">
-                        You've completed {completedInRole.length} of {role.scenarios.length} scenarios.
-                        Take a moment to reflect on your learning.
-                    </p>
-                </motion.div>
-
-                {/* Questions */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="space-y-8"
-                >
-                    {/* Question 1: Skill Improvement */}
-                    <Card className="bg-slate-900/50 border-slate-800 p-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                                <Target className="w-5 h-5 text-teal-400" />
-                            </div>
-                            <h3 className="text-lg font-semibold text-white">What skill improved most?</h3>
-                        </div>
-
-                        <RadioGroup
-                            value={responses.skillImproved}
-                            onValueChange={(v) => setResponses({ ...responses, skillImproved: v })}
-                            className="space-y-3"
-                        >
-                            {['Data Analysis', 'Critical Thinking', 'Scientific Communication', 'Ethical Reasoning', 'Problem Solving'].map((skill) => (
-                                <div key={skill} className="flex items-center space-x-3 p-3 rounded-lg bg-slate-800/50 hover:bg-slate-800 transition-colors">
-                                    <RadioGroupItem value={skill} id={skill} />
-                                    <Label htmlFor={skill} className="text-slate-300 cursor-pointer flex-1">{skill}</Label>
-                                </div>
-                            ))}
-                        </RadioGroup>
-                    </Card>
-
-                    {/* Question 2: Hardest Decision */}
-                    <Card className="bg-slate-900/50 border-slate-800 p-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                                <MessageSquare className="w-5 h-5 text-amber-400" />
-                            </div>
-                            <h3 className="text-lg font-semibold text-white">What decision was hardest?</h3>
-                        </div>
-
-                        <Textarea
-                            value={responses.hardestDecision}
-                            onChange={(e) => setResponses({ ...responses, hardestDecision: e.target.value })}
-                            placeholder="Describe a decision that challenged you and why it was difficult..."
-                            className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 min-h-[120px] resize-none"
-                        />
-                    </Card>
-
-                    {/* Question 3: Real World Connection */}
-                    <Card className="bg-slate-900/50 border-slate-800 p-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                                <Briefcase className="w-5 h-5 text-purple-400" />
-                            </div>
-                            <h3 className="text-lg font-semibold text-white">How does this connect to real life or careers?</h3>
-                        </div>
-
-                        <Textarea
-                            value={responses.realWorldConnection}
-                            onChange={(e) => setResponses({ ...responses, realWorldConnection: e.target.value })}
-                            placeholder="Explain how what you learned could apply to real-world situations or career paths..."
-                            className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 min-h-[120px] resize-none"
-                        />
-                    </Card>
-                </motion.div>
-
-                {/* Submit */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="mt-8 text-center"
-                >
-                    <Button
-                        onClick={handleSubmit}
-                        disabled={!responses.skillImproved || responses.hardestDecision.length < 20 || responses.realWorldConnection.length < 20}
-                        size="lg"
-                        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-12"
-                    >
-                        Complete Reflection
-                        <Trophy className="w-5 h-5 ml-2" />
-                    </Button>
-
-                    <p className="text-slate-500 text-sm mt-3">
-                        Answer all questions to submit your reflection
-                    </p>
-                </motion.div>
-            </main>
-        </div>
+      <PortalShell data={data} back="/Roles" backLabel="All roles">
+        <h1>Choose a role to reflect on</h1>
+        <Link className="px-button" to="/Roles">
+          Explore roles
+        </Link>
+      </PortalShell>
     );
+  const done = role.scenarios.filter((id) => data.passed.includes(id)).length;
+  const saved = data.rows.filter(
+    (r) =>
+      answersOf(r).meta?.recordType === "role_reflection" &&
+      answersOf(r).meta.roleId === role.id,
+  );
+  return (
+    <PortalShell
+      data={data}
+      back={`/RoleHub?role=${role.id}`}
+      backLabel={role.title}
+    >
+      <section className="xp-role-hero xp-reflection-hero">
+        <RoleArtwork
+          roleId={role.id}
+          alt={`${role.title} professional environment`}
+        />
+        <div>
+          <p className="px-eyebrow">From experience to understanding</p>
+          <h1>Your {role.title.toLowerCase()} journey</h1>
+          <p>
+            Reflect on the evidence you used, the decisions you made, and the
+            scientist you are becoming.
+          </p>
+          <Progress done={done} total={role.scenarios.length} />
+        </div>
+      </section>
+      <section className="xp-reflection-form">
+        <h2>What will you take forward?</h2>
+        <p>
+          {done === role.scenarios.length
+            ? "You have passed every mission in this role."
+            : "You can draft your reflection now. Pass every mission in this role before submitting your professional reflection."}
+        </p>
+        <fieldset>
+          <legend>What skill improved most?</legend>
+          {[
+            "Data Analysis",
+            "Critical Thinking",
+            "Scientific Communication",
+            "Ethical Reasoning",
+            "Problem Solving",
+          ].map((skill) => (
+            <label className="xp-radio" key={skill}>
+              <input
+                type="radio"
+                name="skill"
+                value={skill}
+                checked={responses.skillImproved === skill}
+                onChange={() => change("skillImproved", skill)}
+              />
+              {skill}
+            </label>
+          ))}
+        </fieldset>
+        {FIELDS.map(([field, label]) => (
+          <label key={field} className="xp-field">
+            {label}
+            <textarea
+              maxLength={1500}
+              rows={4}
+              value={responses[field] || ""}
+              onChange={(e) => change(field, e.target.value)}
+              placeholder="Explain using your own mission experience…"
+            />
+          </label>
+        ))}
+        {error && (
+          <p className="px-error" role="alert">
+            {error}
+          </p>
+        )}
+        <p role="status">
+          {status ||
+            "Your reflection is a draft until it is saved to your account."}
+        </p>
+        <button
+          className="px-button"
+          onClick={save}
+          disabled={
+            busy ||
+            data.profile.role === "teacher" ||
+            done !== role.scenarios.length ||
+            !responses.skillImproved ||
+            FIELDS.some(
+              ([field]) => (responses[field] || "").trim().length < 20,
+            )
+          }
+        >
+          {busy ? "Saving…" : "Save professional reflection"}
+        </button>
+        {data.profile.role === "teacher" && (
+          <p className="px-muted">
+            Teacher preview: reflections are not recorded as student work.
+          </p>
+        )}
+      </section>
+      {saved.length > 0 && (
+        <section className="xp-saved-reflections">
+          <h2>Earlier reflections</h2>
+          {saved.map((row) => (
+            <details key={row.id}>
+              <summary>
+                Saved reflection · {formatDate(answersOf(row).meta.updatedAt)}
+              </summary>
+              <p>{answersOf(row).roleReflection?.skillImproved}</p>
+              {FIELDS.map(([field, label]) => (
+                <div key={field}>
+                  <h3>{label}</h3>
+                  <p>{answersOf(row).roleReflection?.[field]}</p>
+                </div>
+              ))}
+            </details>
+          ))}
+        </section>
+      )}
+    </PortalShell>
+  );
 }

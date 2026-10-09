@@ -1,0 +1,73 @@
+
+Running 55 tests using 2 workers
+
+(node:21885) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21885) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 tests/approved-ui.spec.js:5:1 › sign-in is public, supports password visibility, optional presets, and real errors (6.9s)
+  ✓   3 tests/approved-ui.spec.js:40:1 › preset selection persists after authentication and appears on Dashboard (6.0s)
+  ✓   4 tests/approved-ui.spec.js:70:1 › draft notebook does not award completion and saved history opens accessibly (5.7s)
+  ✓   5 tests/approved-ui.spec.js:87:1 › mission action rechecks locks and never launches a teacher-locked mission (2.3s)
+  ✓   6 tests/approved-ui.spec.js:105:1 › student cannot load teacher data or see teacher controls (1.2s)
+  ✓   7 tests/approved-ui.spec.js:120:1 › teacher operational controls and scenario locks remain available (3.6s)
+  ✓   8 tests/approved-ui.spec.js:143:1 › leaderboard sorts points, highlights own rank, and disables unsupported periods (3.0s)
+  ✓   1 tests/remaining-portal.spec.js:16:1 › nine role journeys and six pathways retain their scientific relationships (30.3s)
+  ✓  10 tests/remaining-portal.spec.js:45:1 › teacher locks and prerequisites cannot be bypassed with preview query (3.5s)
+  ✓   9 tests/approved-ui.spec.js:163:1 › empty and backend-failure states do not invent statistics (4.4s)
+  ✓  12 tests/approved-ui.spec.js:186:1 › invalid uploads are rejected before any storage writes (1.1s)
+  ✓  13 tests/approved-ui.spec.js:205:3 › /SignIn responsive reference screenshots with synthetic records (8.9s)
+  ✓  11 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: water_contamination (13.5s)
+  ✓  14 tests/approved-ui.spec.js:205:3 › /Dashboard responsive reference screenshots with synthetic records (9.6s)
+  ✓  15 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: reaction_gone_wrong (12.8s)
+  ✓  16 tests/approved-ui.spec.js:205:3 › /TeacherDashboard responsive reference screenshots with synthetic records (11.1s)
+  ✓  17 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: acid_rain (12.2s)
+  ✓  18 tests/approved-ui.spec.js:205:3 › /leaderboard responsive reference screenshots with synthetic records (7.1s)
+  ✓  20 tests/approved-ui.spec.js:252:1 › confirmation-required signup does not insert an unauthenticated profile (2.9s)
+  ✓  21 tests/approved-ui.spec.js:284:1 › profile presets survive reload and do not overwrite storage paths (2.8s)
+  ✓  22 tests/approved-ui.spec.js:299:1 › photo uploads fail closed for an unverified or public bucket (1.7s)
+  ✓  23 tests/approved-ui.spec.js:325:1 › configured private photo upload stores a user-owned WebP path and renders signed URL (1.7s)
+  ✓  24 tests/approved-ui.spec.js:380:1 › a student outside the visible leaderboard page still sees the server-provided own rank (1.1s)
+  ✓  19 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: mutation_dilemma (15.4s)
+  ✓  25 tests/approved-ui.spec.js:395:1 › loading interior CSS leaves homepage computed styles unchanged (5.8s)
+  ✓  27 tests/approved-ui.spec.js:446:1 › cinematic homepage uses interactive reference layout and guest portal routing (2.4s)
+  ✓  28 tests/approved-ui.spec.js:459:38 › homepage Enter Portal routes authenticated student with own identity (2.1s)
+  ✓  29 tests/approved-ui.spec.js:459:38 › homepage Enter Portal routes authenticated teacher with own identity (1.7s)
+  ✓  30 tests/approved-ui.spec.js:469:1 › homepage reference composition responds at desktop tablet and mobile without fabricated student counts (4.2s)
+  ✓  26 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: reaction_time (13.0s)
+  ✓  31 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: unstable_slope (14.8s)
+  ✓  32 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: invasive_species (14.6s)
+  ✓  33 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: power_grid (13.2s)
+  ✓  34 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: heat_loss (15.9s)
+  ✓  35 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: aspirin_production (14.8s)
+  ✓  36 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: fuelproduction (12.8s)
+  ✓  37 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: aspirin_percent_yield (13.1s)
+  ✓  38 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: gas_boyle_adnoc (14.6s)
+  ✓  39 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: gas_charles_aviation (10.8s)
+  ✓  40 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: gas_gaylussac_cylinder (12.9s)
+  ✓  42 tests/remaining-portal.spec.js:96:1 › notebook saves a separate draft, restores it, and preserves assessed work (2.9s)
+  ✓  43 tests/remaining-portal.spec.js:139:1 › failed reflection persistence retains draft and reports failure honestly (2.3s)
+  ✓  41 tests/remaining-portal.spec.js:64:3 › all five chapters preserve original assessment: oxygen_failure (13.6s)
+  ✓  44 tests/remaining-portal.spec.js:159:3 › remaining pages responsive at 1440px (7.8s)
+  ✓  45 tests/remaining-portal.spec.js:159:3 › remaining pages responsive at 1024px (9.6s)
+  ✓  46 tests/remaining-portal.spec.js:159:3 › remaining pages responsive at 768px (6.9s)
+  ✓  47 tests/remaining-portal.spec.js:159:3 › remaining pages responsive at 390px (7.2s)
+  ✓  48 tests/remaining-portal.spec.js:159:3 › remaining pages responsive at 375px (8.5s)
+  ✓  50 tests/remaining-student.spec.js:5:1 › student decisions and reasoning appear in notebook without changing graded history (7.4s)
+  ✓  49 tests/remaining-records.spec.js:54:1 › student result persists separately, unlocks progression, and exports certificate (17.6s)
+  ✓  51 tests/remaining-student.spec.js:98:1 › teacher mission controls and submission review retain original student answers (8.6s)
+  ✓  53 tests/remaining-student.spec.js:152:1 › professional reflection appends an unassessed record and remains readable after reload (2.8s)
+  ✓  54 tests/remaining-student.spec.js:186:1 › profile name and password use existing authenticated connections with validation (2.5s)
+  ✓  52 tests/remaining-records.spec.js:92:1 › failed assessment and rejected result saving do not award certificate (13.8s)
+  ✓  55 tests/remaining-records.spec.js:114:1 › interface review screenshots and keyboard notebook close (10.6s)
+
+  55 passed (4.1m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

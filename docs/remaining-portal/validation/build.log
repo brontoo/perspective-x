@@ -1,0 +1,154 @@
+
+> base44-app@0.0.0 build
+> vite build
+
+vite v6.4.1 building for production...
+transforming...
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 3032 modules transformed.
+Circular chunk: chart-vendor -> ui-vendor -> chart-vendor. Please adjust the manual chunk logic for these chunks.
+rendering chunks...
+computing gzip size...
+dist/index.html                                  1.16 kB │ gzip:   0.51 kB
+dist/assets/Home-CA4HoGJx.css                   10.50 kB │ gzip:   2.82 kB
+dist/assets/expedition-D4p1CRk6.css             25.14 kB │ gzip:   5.34 kB
+dist/assets/Portal-CKJQsnUt.css                 25.97 kB │ gzip:   6.34 kB
+dist/assets/index-D1BBxo3a.css                 149.28 kB │ gzip:  23.40 kB
+dist/assets/useTypewriter-CD9gY6i2.js            0.28 kB │ gzip:   0.21 kB
+dist/assets/roleIdentity-Df7jrF4R.js             1.04 kB │ gzip:   0.55 kB
+dist/assets/PageNotFound-LjJE68Xe.js             1.14 kB │ gzip:   0.59 kB
+dist/assets/usePortalData-B1ZtTe7R.js            1.18 kB │ gzip:   0.66 kB
+dist/assets/PortalShell-DWRHXNON.js              1.22 kB │ gzip:   0.61 kB
+dist/assets/progress-BdbQUXBZ.js                 1.72 kB │ gzip:   0.84 kB
+dist/assets/Roles-BLF0fJzP.js                    1.95 kB │ gzip:   0.89 kB
+dist/assets/AvatarPicker-C6jf-RXp.js             2.13 kB │ gzip:   0.99 kB
+dist/assets/CompletionCertificate-BMLI0s9L.js    3.02 kB │ gzip:   1.38 kB
+dist/assets/ReflectionPrompt-BueSwCPy.js         3.99 kB │ gzip:   1.64 kB
+dist/assets/LearningPath-D-OUyUUR.js             4.86 kB │ gzip:   2.02 kB
+dist/assets/RoleReflection-C0tAl1f6.js           5.02 kB │ gzip:   2.26 kB
+dist/assets/learningPaths--ocxBBc4.js            5.66 kB │ gzip:   1.77 kB
+dist/assets/RoleHub-Bm5ox8PQ.js                  5.93 kB │ gzip:   2.37 kB
+dist/assets/ProfileSettings-CP7tX1NG.js          6.07 kB │ gzip:   2.28 kB
+dist/assets/Home-14JVVLXf.js                     6.82 kB │ gzip:   2.43 kB
+dist/assets/SignIn-Bx93c7cS.js                   6.92 kB │ gzip:   2.73 kB
+dist/assets/LeaderboardPage-B6vtXENp.js          7.13 kB │ gzip:   2.65 kB
+dist/assets/Portal-CAInpr2R.js                   7.27 kB │ gzip:   3.05 kB
+dist/assets/ExitTicket-CjRTltL_.js               7.58 kB │ gzip:   2.61 kB
+dist/assets/Dashboard-C98TDJVd.js               11.34 kB │ gzip:   3.93 kB
+dist/assets/purify.es-BgtpMKW3.js               22.77 kB │ gzip:   8.79 kB
+dist/assets/uaeScenarioData-CpjW5DtA.js         25.23 kB │ gzip:   8.23 kB
+dist/assets/SceneOne-BmVNJXDs.js                26.24 kB │ gzip:   8.65 kB
+dist/assets/scenarioHelpers-92-huBfs.js         26.94 kB │ gzip:   8.72 kB
+dist/assets/ConsequenceViewer-CxHwKAtv.js       28.18 kB │ gzip:   7.84 kB
+dist/assets/SceneTwo-BpyT5jUG.js                36.40 kB │ gzip:  11.36 kB
+dist/assets/ScenarioPlayer-ILr2Lmvx.js          37.67 kB │ gzip:  12.91 kB
+dist/assets/CinematicVideoIntro-DlOQTtdq.js     41.78 kB │ gzip:  11.21 kB
+dist/assets/ScenarioVisual-BAeFQEbb.js          47.15 kB │ gzip:   9.50 kB
+dist/assets/TeacherDashboard-tljyQgv3.js        81.75 kB │ gzip:  20.85 kB
+dist/assets/index-rfyheH3y.js                   88.43 kB │ gzip:  28.70 kB
+dist/assets/scenarioData-DLMqjDsi.js            92.31 kB │ gzip:  28.30 kB
+dist/assets/index.es-DGLwxt76.js               159.71 kB │ gzip:  53.57 kB
+dist/assets/supabase-vendor-DvyAj1h4.js        194.25 kB │ gzip:  51.09 kB
+dist/assets/ui-vendor--D_Zasxn.js              215.28 kB │ gzip:  69.17 kB
+dist/assets/chart-vendor-Cv9X_bB0.js           546.25 kB │ gzip: 155.26 kB
+dist/assets/pdf-vendor-BWGka3U0.js             594.83 kB │ gzip: 177.46 kB
+✓ built in 12.25s
+
+✨ [vite-plugin-compression]:algorithm=gzip - compressed file successfully: 
+dist//workspace/perspective-x/assets/AvatarPicker-C6jf-RXp.js.gz            2.08kb / gzip: 0.97kb
+dist//workspace/perspective-x/assets/CompletionCertificate-BMLI0s9L.js.gz   2.95kb / gzip: 1.35kb
+dist//workspace/perspective-x/assets/ExitTicket-CjRTltL_.js.gz              7.41kb / gzip: 2.55kb
+dist//workspace/perspective-x/assets/Dashboard-C98TDJVd.js.gz               11.07kb / gzip: 3.83kb
+dist//workspace/perspective-x/assets/LeaderboardPage-B6vtXENp.js.gz         6.97kb / gzip: 2.59kb
+dist//workspace/perspective-x/assets/PageNotFound-LjJE68Xe.js.gz            1.12kb / gzip: 0.57kb
+dist//workspace/perspective-x/assets/ConsequenceViewer-CxHwKAtv.js.gz       27.52kb / gzip: 7.65kb
+dist//workspace/perspective-x/assets/LearningPath-D-OUyUUR.js.gz            4.74kb / gzip: 1.97kb
+dist//workspace/perspective-x/assets/Home-14JVVLXf.js.gz                    6.66kb / gzip: 2.37kb
+dist//workspace/perspective-x/assets/Portal-CAInpr2R.js.gz                  7.10kb / gzip: 2.97kb
+dist//workspace/perspective-x/assets/CinematicVideoIntro-DlOQTtdq.js.gz     40.80kb / gzip: 10.91kb
+dist//workspace/perspective-x/assets/PortalShell-DWRHXNON.js.gz             1.19kb / gzip: 0.59kb
+dist//workspace/perspective-x/assets/ProfileSettings-CP7tX1NG.js.gz         5.93kb / gzip: 2.23kb
+dist//workspace/perspective-x/assets/ReflectionPrompt-BueSwCPy.js.gz        3.89kb / gzip: 1.60kb
+dist//workspace/perspective-x/assets/Home-CA4HoGJx.css.gz                   10.25kb / gzip: 2.72kb
+dist//workspace/perspective-x/assets/Roles-BLF0fJzP.js.gz                   1.90kb / gzip: 0.87kb
+dist//workspace/perspective-x/assets/RoleReflection-C0tAl1f6.js.gz          4.91kb / gzip: 2.20kb
+dist//workspace/perspective-x/assets/RoleHub-Bm5ox8PQ.js.gz                 5.79kb / gzip: 2.31kb
+dist//workspace/perspective-x/assets/SceneOne-BmVNJXDs.js.gz                25.63kb / gzip: 8.43kb
+dist//workspace/perspective-x/assets/SignIn-Bx93c7cS.js.gz                  6.76kb / gzip: 2.66kb
+dist//workspace/perspective-x/assets/Portal-CKJQsnUt.css.gz                 25.36kb / gzip: 6.13kb
+dist//workspace/perspective-x/assets/ScenarioPlayer-ILr2Lmvx.js.gz          36.78kb / gzip: 12.60kb
+dist//workspace/perspective-x/assets/ScenarioVisual-BAeFQEbb.js.gz          46.05kb / gzip: 9.20kb
+dist//workspace/perspective-x/assets/SceneTwo-BpyT5jUG.js.gz                35.54kb / gzip: 11.08kb
+dist//workspace/perspective-x/assets/learningPaths--ocxBBc4.js.gz           5.53kb / gzip: 1.72kb
+dist//workspace/perspective-x/assets/progress-BdbQUXBZ.js.gz                1.68kb / gzip: 0.82kb
+dist//workspace/perspective-x/assets/expedition-D4p1CRk6.css.gz             24.55kb / gzip: 5.12kb
+dist//workspace/perspective-x/assets/purify.es-BgtpMKW3.js.gz               22.24kb / gzip: 8.58kb
+dist//workspace/perspective-x/assets/roleIdentity-Df7jrF4R.js.gz            1.02kb / gzip: 0.53kb
+dist//workspace/perspective-x/assets/scenarioHelpers-92-huBfs.js.gz         26.31kb / gzip: 8.48kb
+dist//workspace/perspective-x/assets/uaeScenarioData-CpjW5DtA.js.gz         24.64kb / gzip: 8.03kb
+dist//workspace/perspective-x/index.html.gz                                 1.13kb / gzip: 0.50kb
+dist//workspace/perspective-x/assets/usePortalData-B1ZtTe7R.js.gz           1.15kb / gzip: 0.64kb
+dist//workspace/perspective-x/assets/TeacherDashboard-tljyQgv3.js.gz        79.83kb / gzip: 20.24kb
+dist//workspace/perspective-x/assets/index-rfyheH3y.js.gz                   86.36kb / gzip: 28.02kb
+dist//workspace/perspective-x/assets/index-D1BBxo3a.css.gz                  145.79kb / gzip: 22.57kb
+dist//workspace/perspective-x/assets/scenarioData-DLMqjDsi.js.gz            90.15kb / gzip: 27.61kb
+dist//workspace/perspective-x/assets/index.es-DGLwxt76.js.gz                155.97kb / gzip: 52.16kb
+dist//workspace/perspective-x/assets/supabase-vendor-DvyAj1h4.js.gz         189.70kb / gzip: 49.75kb
+dist//workspace/perspective-x/assets/ui-vendor--D_Zasxn.js.gz               210.23kb / gzip: 67.39kb
+dist//workspace/perspective-x/assets/chart-vendor-Cv9X_bB0.js.gz            533.45kb / gzip: 151.31kb
+dist//workspace/perspective-x/assets/pdf-vendor-BWGka3U0.js.gz              580.89kb / gzip: 172.74kb
+
+
+
+✨ [vite-plugin-compression]:algorithm=brotliCompress - compressed file successfully: 
+dist//workspace/perspective-x/assets/CompletionCertificate-BMLI0s9L.js.br   2.95kb / brotliCompress: 1.14kb
+dist//workspace/perspective-x/assets/AvatarPicker-C6jf-RXp.js.br            2.08kb / brotliCompress: 0.83kb
+dist//workspace/perspective-x/assets/Home-CA4HoGJx.css.br                   10.25kb / brotliCompress: 2.31kb
+dist//workspace/perspective-x/assets/ExitTicket-CjRTltL_.js.br              7.41kb / brotliCompress: 2.21kb
+dist//workspace/perspective-x/assets/Home-14JVVLXf.js.br                    6.66kb / brotliCompress: 2.05kb
+dist//workspace/perspective-x/assets/LearningPath-D-OUyUUR.js.br            4.74kb / brotliCompress: 1.71kb
+dist//workspace/perspective-x/assets/LeaderboardPage-B6vtXENp.js.br         6.97kb / brotliCompress: 2.25kb
+dist//workspace/perspective-x/assets/Portal-CAInpr2R.js.br                  7.10kb / brotliCompress: 2.60kb
+dist//workspace/perspective-x/assets/PageNotFound-LjJE68Xe.js.br            1.12kb / brotliCompress: 0.47kb
+dist//workspace/perspective-x/assets/Dashboard-C98TDJVd.js.br               11.07kb / brotliCompress: 3.36kb
+dist//workspace/perspective-x/assets/PortalShell-DWRHXNON.js.br             1.19kb / brotliCompress: 0.52kb
+dist//workspace/perspective-x/assets/CinematicVideoIntro-DlOQTtdq.js.br     40.80kb / brotliCompress: 9.67kb
+dist//workspace/perspective-x/assets/ReflectionPrompt-BueSwCPy.js.br        3.89kb / brotliCompress: 1.37kb
+dist//workspace/perspective-x/assets/ProfileSettings-CP7tX1NG.js.br         5.93kb / brotliCompress: 1.92kb
+dist//workspace/perspective-x/assets/ConsequenceViewer-CxHwKAtv.js.br       27.52kb / brotliCompress: 6.45kb
+dist//workspace/perspective-x/assets/Roles-BLF0fJzP.js.br                   1.90kb / brotliCompress: 0.75kb
+dist//workspace/perspective-x/assets/RoleHub-Bm5ox8PQ.js.br                 5.79kb / brotliCompress: 2.03kb
+dist//workspace/perspective-x/assets/RoleReflection-C0tAl1f6.js.br          4.91kb / brotliCompress: 1.88kb
+dist//workspace/perspective-x/assets/Portal-CKJQsnUt.css.br                 25.36kb / brotliCompress: 5.40kb
+dist//workspace/perspective-x/assets/SceneOne-BmVNJXDs.js.br                25.63kb / brotliCompress: 7.26kb
+dist//workspace/perspective-x/assets/SignIn-Bx93c7cS.js.br                  6.76kb / brotliCompress: 2.26kb
+dist//workspace/perspective-x/assets/ScenarioVisual-BAeFQEbb.js.br          46.05kb / brotliCompress: 7.88kb
+dist//workspace/perspective-x/assets/SceneTwo-BpyT5jUG.js.br                35.54kb / brotliCompress: 9.39kb
+dist//workspace/perspective-x/assets/ScenarioPlayer-ILr2Lmvx.js.br          36.78kb / brotliCompress: 10.86kb
+dist//workspace/perspective-x/assets/learningPaths--ocxBBc4.js.br           5.53kb / brotliCompress: 1.38kb
+dist//workspace/perspective-x/assets/progress-BdbQUXBZ.js.br                1.68kb / brotliCompress: 0.72kb
+dist//workspace/perspective-x/assets/expedition-D4p1CRk6.css.br             24.55kb / brotliCompress: 4.51kb
+dist//workspace/perspective-x/assets/purify.es-BgtpMKW3.js.br               22.24kb / brotliCompress: 7.68kb
+dist//workspace/perspective-x/assets/scenarioHelpers-92-huBfs.js.br         26.31kb / brotliCompress: 7.05kb
+dist//workspace/perspective-x/assets/roleIdentity-Df7jrF4R.js.br            1.02kb / brotliCompress: 0.41kb
+dist//workspace/perspective-x/assets/usePortalData-B1ZtTe7R.js.br           1.15kb / brotliCompress: 0.55kb
+dist//workspace/perspective-x/assets/uaeScenarioData-CpjW5DtA.js.br         24.64kb / brotliCompress: 6.57kb
+dist//workspace/perspective-x/index.html.br                                 1.13kb / brotliCompress: 0.36kb
+dist//workspace/perspective-x/assets/TeacherDashboard-tljyQgv3.js.br        79.83kb / brotliCompress: 17.34kb
+dist//workspace/perspective-x/assets/index-rfyheH3y.js.br                   86.36kb / brotliCompress: 24.87kb
+dist//workspace/perspective-x/assets/index.es-DGLwxt76.js.br                155.97kb / brotliCompress: 45.45kb
+dist//workspace/perspective-x/assets/scenarioData-DLMqjDsi.js.br            90.15kb / brotliCompress: 22.92kb
+dist//workspace/perspective-x/assets/index-D1BBxo3a.css.br                  145.79kb / brotliCompress: 18.50kb
+dist//workspace/perspective-x/assets/supabase-vendor-DvyAj1h4.js.br         189.70kb / brotliCompress: 42.23kb
+dist//workspace/perspective-x/assets/ui-vendor--D_Zasxn.js.br               210.23kb / brotliCompress: 59.00kb
+dist//workspace/perspective-x/assets/chart-vendor-Cv9X_bB0.js.br            533.45kb / brotliCompress: 125.20kb
+dist//workspace/perspective-x/assets/pdf-vendor-BWGka3U0.js.br              580.89kb / brotliCompress: 143.08kb
+
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

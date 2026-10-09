@@ -13,7 +13,7 @@ export default function useTypewriter(text, speed = 30) {
         let index = 0;
 
         const timer = setInterval(() => {
-            setDisplayedText((previous) => previous + text.charAt(index));
+            setDisplayedText(text.slice(0, index + 1));
             index += 1;
 
             if (index >= text.length) {
