@@ -28,6 +28,10 @@ export default defineConfig({
             output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
+                        // Keep React initialized independently of vendor chunks that import it.
+                        if (/\/node_modules\/(react|react-dom|scheduler)\//.test(id)) {
+                            return 'react-vendor';
+                        }
                         if (id.includes('three') || id.includes('@react-three/fiber')) {
                             return 'three-vendor';
                         }
