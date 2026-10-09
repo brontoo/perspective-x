@@ -184,6 +184,7 @@ async function setup(
         const single = request.headers().accept?.includes("vnd.pgrst.object");
         return json(single ? rows[0] || null : rows, 200, {
           "content-range": `0-${Math.max(rows.length - 1, 0)}/${rows.length}`,
+          "access-control-expose-headers": "content-range",
         });
       }
       return json({});
@@ -666,4 +667,40 @@ test("loading interior CSS leaves homepage computed styles unchanged", async ({
     path: "test-results/screenshots/Home-protected.png",
     fullPage: true,
   });
+});
+
+test('cinematic homepage uses interactive reference layout and guest portal routing', async ({ page }) => {
+  await setup(page, { guest: true });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Perspective X', exact: true })).toBeVisible();
+  await expect(page.locator('.home-slogan')).toHaveText('Real Science. Real Choices. Real Impact.');
+  await expect(page.locator('.home-stats')).toContainText('Registered Students');
+  await expect(page.getByRole('img', { name: 'Ministry of Education', exact: true })).toBeVisible();
+  await page.getByRole('link', { name: 'Explore Roles', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Choose your perspective' })).toBeInViewport();
+  await page.getByRole('button', { name: 'Start Your Mission', exact: true }).click();
+  await expect(page).toHaveURL(/\/SignIn$/);
+});
+
+for (const teacher of [false, true]) test(`homepage Enter Portal routes authenticated ${teacher ? 'teacher' : 'student'} with own identity`, async ({ page }) => {
+  await setup(page, { teacher });
+  await page.goto('/');
+  await expect(page.locator('.home-profile')).toContainText(teacher ? 'Test Teacher' : 'Test Learner');
+  await expect(page.locator('.home-profile .px-avatar')).toBeVisible();
+  await expect(page.locator('.home-account')).not.toContainText('Riham Saleh');
+  await page.getByRole('button', { name: 'Enter Portal', exact: true }).first().click();
+  await expect(page).toHaveURL(teacher ? /\/TeacherDashboard$/ : /\/Dashboard$/);
+});
+
+test('homepage reference composition responds at desktop tablet and mobile without fabricated student counts', async ({ page }) => {
+  await setup(page, { guest: true, error: true });
+  await page.goto('/');
+  await expect(page.locator('.home-stats')).toContainText('Student count unavailable');
+  await expect(page.locator('.home-stats > div:last-child strong')).toHaveText('—');
+  for (const [width, height] of [[1448,1086],[1024,900],[768,1024],[390,844],[375,812]]) {
+    await page.setViewportSize({width,height});
+    await noOverflow(page);
+    await expect(page.getByRole('button', {name:'Start Your Mission',exact:true})).toBeVisible();
+    await page.screenshot({path:`test-results/screenshots/Home-cinematic-${width}.png`,fullPage:true});
+  }
 });
