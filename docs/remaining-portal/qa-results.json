@@ -1,0 +1,48 @@
+{
+  "verified_at_utc": "2026-10-09T23:23:15.010717+00:00",
+  "build": "passed",
+  "typecheck": "passed",
+  "lint": "passed",
+  "unit": {
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "unique_tests_passed": 55,
+    "failed": 0,
+    "skipped": 0,
+    "final_review_tests_rerun_and_passed": 7
+  },
+  "scenario_ids_exercised_in_teacher_preview": [
+    "acid_rain",
+    "aspirin_percent_yield",
+    "aspirin_production",
+    "fuelproduction",
+    "gas_boyle_adnoc",
+    "gas_charles_aviation",
+    "gas_gaylussac_cylinder",
+    "heat_loss",
+    "invasive_species",
+    "mutation_dilemma",
+    "oxygen_failure",
+    "power_grid",
+    "reaction_gone_wrong",
+    "reaction_time",
+    "unstable_slope",
+    "water_contamination"
+  ],
+  "roles_supported": 9,
+  "learning_paths": 6,
+  "remaining_page_viewport_widths": [
+    1440,
+    1024,
+    768,
+    390,
+    375
+  ],
+  "live_authenticated_supabase_qa": "unverified; synthetic fixtures authorized by user",
+  "preview_direct_http": 302,
+  "preview_direct_browser_qa": "blocked by owner Vercel SSO; provider reports ready",
+  "production_merge": false
+}

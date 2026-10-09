@@ -1,0 +1,26 @@
+
+> base44-app@0.0.0 test:unit
+> node --test tests/*.test.mjs
+
+✔ drafts use new records and cannot award completion (6.200659ms)
+✔ queued saves update only the newly created owned unassessed draft with revision checks (11.228061ms)
+✔ rejected persistence reports failure and cannot claim a saved result (3.223883ms)
+✔ teacher preview performs no persistence calls (0.834304ms)
+✔ notes, malformed scores and undated rows never award progress (17.123493ms)
+✔ deduplicates passing missions without treating failed attempts as passes (0.715133ms)
+✔ teacher locks win over passing history and sequential unlocks (0.371182ms)
+✔ malformed historical answers remain readable and do not crash (0.457164ms)
+✔ rank sorting uses points and stable ID, never screenshot order (101.296107ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 826.3365
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
