@@ -11,7 +11,8 @@ export default function MissionNotebook({
     onSave,
     isOpen,
     onClose,
-    currentPhase = 'scene1'
+    currentPhase = 'scene1',
+    missionPlan = null
 }) {
     // Local state for notebook notes, pre-filled from responses.notebook
     const [localNotes, setLocalNotes] = useState({
@@ -95,11 +96,13 @@ export default function MissionNotebook({
     const explanationText = consequence?.message || '';
 
     const reflectionText = responses.reflection || '';
+    const objectiveList = missionPlan?.objectives || [];
+    const completion = responses.exitTicket;
 
     const sections = [
         {
             key: 'evidence',
-            title: '1. My Evidence',
+            title: '1. My Scientific Findings',
             icon: <FileText className="w-4 h-4 text-cyan-600" />,
             notesField: 'evidenceNotes',
             placeholder: 'Write down key measurements, limits, or odd data points here...',
@@ -122,7 +125,7 @@ export default function MissionNotebook({
         },
         {
             key: 'thinking',
-            title: '2. My Thinking',
+            title: '2. My Reasoning',
             icon: <Sparkles className="w-4 h-4 text-purple-600" />,
             notesField: 'thinkingNotes',
             placeholder: 'Reflect on what the evidence means, possible risks, or ideas...',
@@ -137,7 +140,7 @@ export default function MissionNotebook({
         },
         {
             key: 'choice',
-            title: '3. My Choice',
+            title: '3. My Professional Decision',
             icon: <Target className="w-4 h-4 text-emerald-600" />,
             notesField: 'choiceNotes',
             placeholder: 'Record why you chose this action and what trade-offs you balanced...',
@@ -150,7 +153,7 @@ export default function MissionNotebook({
         },
         {
             key: 'whatHappened',
-            title: '4. What Happened',
+            title: '4. Consequences & Learning',
             icon: <CheckCircle2 className="w-4 h-4 text-amber-600" />,
             notesField: 'whatHappenedNotes',
             placeholder: 'Write down your analysis of the consequence and scientific explanation...',
@@ -173,7 +176,7 @@ export default function MissionNotebook({
         },
         {
             key: 'learned',
-            title: '5. What I Learned',
+            title: '5. My Final Reflection',
             icon: <GraduationCap className="w-4 h-4 text-indigo-600" />,
             notesField: 'learnedNotes',
             placeholder: 'Summarize the core science concepts learned and what you would do next time...',
@@ -217,7 +220,7 @@ export default function MissionNotebook({
                                 </div>
                                 <div>
                                     <h2 className="text-base font-extrabold text-slate-800 tracking-tight font-sans">Mission Notebook</h2>
-                                    <p className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider mt-0.5">Collect your thinking</p>
+                                    <p className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider mt-0.5">Your science journey, saved as you go</p>
                                 </div>
                             </div>
                             <button
@@ -230,7 +233,8 @@ export default function MissionNotebook({
 
                         {/* Collapsible content (scrollable) */}
                         <div className="flex-1 overflow-y-auto py-4 space-y-4 pr-1">
-                            {sections.map(({ key, title, icon, notesField, placeholder, autoFilled }) => {
+                            {objectiveList.length > 0 && <div className="rounded-xl border border-[#EDD7E2] bg-[#FFF8FB] p-4"><p className="text-xs font-bold text-[#7A365D] mb-2">{missionPlan.roleLead} · Science Objectives</p>{objectiveList.map((objective,i)=><p key={i} className="text-xs text-slate-700 py-1">{i+1}. {objective}</p>)}</div>}
+                             {sections.map(({ key, title, icon, notesField, placeholder, autoFilled }) => {
                                 const isExpanded = !!expandedSections[key];
                                 return (
                                     <div key={key} className="border border-slate-150 rounded-xl bg-white overflow-hidden shadow-sm transition-all duration-300">

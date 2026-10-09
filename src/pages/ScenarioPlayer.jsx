@@ -9,12 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 const CinematicTitle = lazy(() => import('@/components/scenario/CinematicTitle'));
 const CinematicVideoIntro = lazy(() => import('@/components/scenario/CinematicVideoIntro'));
-const ScenarioIntro = lazy(() => import('@/components/scenario/ScenarioIntro'));
-const CharacterBriefing = lazy(() => import('@/components/scenario/CharacterBriefing'));
 const SceneOne = lazy(() => import('@/components/scenario/SceneOne'));
 const SceneTwo = lazy(() => import('@/components/scenario/SceneTwo'));
 const ConsequenceViewer = lazy(() => import('@/components/scenario/ConsequenceViewer'));
-const ReflectionPrompt = lazy(() => import('@/components/scenario/ReflectionPrompt'));
+const MissionReflection = lazy(() => import('@/components/scenario/MissionReflection'));
+const MissionBrief = lazy(() => import('@/components/scenario/MissionBrief'));
+import { MISSION_CHAPTERS, getMissionBlueprint } from '@/data/missionBlueprints';
 const ExitTicket = lazy(() => import('@/components/scenario/ExitTicket'));
 const ScenarioComplete = lazy(() => import('@/components/scenario/ScenarioComplete'));
 
@@ -26,94 +26,20 @@ import { normalizeScenario } from '@/data/scenarioSchema';
 import { ROLE_THEMES, DEFAULT_THEME } from '@/lib/roleThemes';
 import { useScenarioAudio } from '@/hooks/useScenarioAudio';
 import { t as motionT } from '@/lib/motionPresets';
-const StoryRecap = lazy(() => import('@/components/scenario/StoryRecap'));
 const MissionNotebook = lazy(() => import('@/components/scenario/MissionNotebook'));
 
-// ── Finite phase machine ───────────────────────────────────────
-// 'title' auto-advances (fullscreen cinematic, no header)
-// All phases after 'title' render inside the header/main layout
-const PHASE_SEQUENCE = ['video', 'intro', 'recap', 'briefing', 'scene1', 'scene2', 'consequence', 'reflection', 'exit', 'complete'];
-
-const PHASE_PROGRESS = {
-    video:       5,
-    intro:      15,
-    recap:      20,
-    briefing:   30,
-    scene1:     45,
-    scene2:     60,
-    consequence:75,
-    reflection: 85,
-    exit:       95,
-    complete:  100,
-};
-
-const STEPS = ['Story', 'Your Role', 'Evidence', 'Choice', 'Result', 'Reflection', 'Final Check', 'Complete'];
-
-const getActiveStepIndex = (currentPhase) => {
-    switch (currentPhase) {
-        case 'video':
-        case 'intro':
-            return 0;
-        case 'briefing':
-            return 1;
-        case 'scene1':
-            return 2;
-        case 'scene2':
-            return 3;
-        case 'consequence':
-            return 4;
-        case 'reflection':
-            return 5;
-        case 'exit':
-            return 6;
-        case 'complete':
-            return 7;
-        default:
-            return -1;
-    }
-};
-
+// Five visible chapters; videos are preserved without modification.
+const PHASE_SEQUENCE = ['video','intro','scene1','scene2','consequence','reflection','exit','complete'];
+const PHASE_PROGRESS = {video:0,intro:6,scene1:24,scene2:44,consequence:65,reflection:77,exit:90,complete:100};
+const getActiveStepIndex = p => p === 'scene1' ? 1 : p === 'scene2' ? 2 : ['consequence','reflection'].includes(p) ? 3 : ['exit','complete'].includes(p) ? 4 : 0;
 const PHASE_DEFAULTS = {
-    video: {
-        title: 'Story',
-        helper: 'Watch the cinematic introduction to understand the scenario narrative.',
-    },
-    intro: {
-        title: 'Story',
-        helper: 'Review the background, curriculum standards, and timeframe for this mission.',
-    },
-    recap: {
-        title: 'Story Recap',
-        helper: 'Quick overview before you step into your role.',
-    },
-    briefing: {
-        title: 'Your Role',
-        helper: 'Study your character details, responsibilities, and stakes in this mission.',
-    },
-    scene1: {
-        title: 'Evidence',
-        helper: 'Examine the data table, logs, and telemetry to build your understanding.',
-    },
-    scene2: {
-        title: 'Make Your Choice',
-        helper: 'Evaluate the options and make a scientifically justified choice.',
-    },
-    consequence: {
-        title: 'Result',
-        helper: 'See the immediate outcome and scientific impact of your choice.',
-    },
-    reflection: {
-        title: 'Reflection',
-        helper: 'Reflect on how scientific principles explain the observed outcome.',
-    },
-    exit: {
-        title: 'Final Check',
-        helper: 'Demonstrate your learning by answering the evaluation questions.',
-    },
-    complete: {
-        title: 'Complete',
-        helper: 'Review your results, retry if needed, or claim your completion certificate.',
-    }
+ intro:{title:"You're Needed",helper:"Accept your assignment and understand its scientific goal."},
+ scene1:{title:"Find the Clues",helper:"Investigate evidence and read the data."},
+ scene2:{title:"Make the Call",helper:"Make an evidence-based professional decision."},
+ consequence:{title:"See What Happens",helper:"Review the outcome of your choice."},
+ reflection:{title:"See What Happens",helper:"Record one concise scientific reflection."},
+ exit:{title:"Prove Your Expertise",helper:"Apply the science in the existing final check."},
+ complete:{title:"Mission Summary",helper:"Review results, feedback and the Mission Notebook."}
 };
 
 export default function ScenarioPlayer() {
@@ -178,6 +104,7 @@ export default function ScenarioPlayer() {
         () => Object.values(ROLES).find((r) => r.scenarios.includes(scenarioId)),
         [scenarioId]
     );
+    const plan = getMissionBlueprint(scenario, role?.id);
     const theme = useMemo(
         () => ROLE_THEMES[normalizeRoleThemeKey(role?.id)] || DEFAULT_THEME,
         [role?.id]
@@ -283,17 +210,13 @@ export default function ScenarioPlayer() {
     }, []);
 
     const handleIntroStart = useCallback(() => {
-        setPhase('recap');
-    }, []);
-
-    const handleRecapContinue = useCallback(() => {
-        setPhase('briefing');
-    }, []);
-
-
-    const handleBriefingComplete = useCallback(() => {
         setPhase('scene1');
     }, []);
+
+
+
+
+
 
     const handleScene1Complete = useCallback((data) => {
         setResponses((prev) => ({ ...prev, scene1: data }));
@@ -333,7 +256,6 @@ export default function ScenarioPlayer() {
                                 .from('student_progress')
                                 .update({
                                     answers: next,
-                                    completed_at: new Date().toISOString(),
                                 })
                                 .eq('id', existing.id)
                                 .then(({ error }) => {
@@ -347,7 +269,6 @@ export default function ScenarioPlayer() {
                                     scenario_id: scenarioId,
                                     scenario_title: scenario.title,
                                     answers: next,
-                                    completed_at: new Date().toISOString(),
                                 })
                                 .then(({ error }) => {
                                     if (error) console.error('Error auto-saving notebook:', error);
@@ -572,7 +493,8 @@ export default function ScenarioPlayer() {
                                 <>
                                     {/* Desktop Stepper */}
                                     <div className="hidden md:flex items-center justify-between mb-4 mt-2 text-[11px] font-mono tracking-wider select-none bg-slate-50/50 p-2 rounded-lg border border-slate-100/50">
-                                        {STEPS.map((stepText, idx) => {
+                                        {MISSION_CHAPTERS.map((chapter, idx) => {
+                                             const stepText = chapter.title;
                                             const activeIdx = getActiveStepIndex(phase);
                                             const isActive = activeIdx === idx;
                                             const isCompleted = activeIdx > idx;
@@ -603,8 +525,8 @@ export default function ScenarioPlayer() {
                                     </div>
                                     {/* Mobile step indicator */}
                                     <div className="flex md:hidden items-center justify-between mb-3 text-xs font-mono font-bold text-[#14b8a6] select-none">
-                                        <span>Step {getActiveStepIndex(phase) + 1} of 8</span>
-                                        <span className="text-slate-700">{STEPS[getActiveStepIndex(phase)] || ''}</span>
+                                        <span>Chapter {getActiveStepIndex(phase) + 1} of 5</span>
+                                        <span className="text-slate-700">{MISSION_CHAPTERS[getActiveStepIndex(phase)]?.title || ''}</span>
                                     </div>
                                 </>
                             )}
@@ -680,30 +602,7 @@ export default function ScenarioPlayer() {
                                 <Suspense fallback={<div className="flex justify-center p-12"><Loader2 className="w-8 h-8 text-[var(--lx-accent)] animate-spin" /></div>}>
                                     {/* ─── FLOW CONTROLLER ────────────────────────────────────── */}
 
-                                    {phase === 'intro' && (
-                                        <ScenarioIntro
-                                            scenario={scenario}
-                                            onStart={handleIntroStart}
-                                            isTeacher={isTeacher}
-                                            theme={theme}
-                                        />
-                                    )}
-
-                                    {phase === 'recap' && (
-                                        <StoryRecap
-                                            scenario={scenario}
-                                            onContinue={handleRecapContinue}
-                                            theme={theme}
-                                        />
-                                    )}
-
-                                    {phase === 'briefing' && (
-                                        <CharacterBriefing
-                                            scenario={scenario}
-                                            onNext={handleBriefingComplete}
-                                            isTeacher={isTeacher}
-                                        />
-                                    )}
+                                    {phase === 'intro' && <MissionBrief scenario={scenario} plan={plan} difficultyMode={difficultyMode} onStart={handleIntroStart} />}
 
                                     {phase === 'scene1' && (
                                         <SceneOne
@@ -738,14 +637,7 @@ export default function ScenarioPlayer() {
                                         />
                                     )}
 
-                                    {phase === 'reflection' && (
-                                        <ReflectionPrompt
-                                            scenario={scenario}
-                                            onComplete={handleReflectionComplete}
-                                            isTeacher={isTeacher}
-                                            theme={theme}
-                                        />
-                                    )}
+                                    {phase === 'reflection' && <MissionReflection plan={plan} onComplete={handleReflectionComplete} isTeacher={isTeacher} difficultyMode={difficultyMode} />}
 
                                     {phase === 'exit' && (
                                         <ExitTicket
@@ -808,7 +700,7 @@ export default function ScenarioPlayer() {
             })()}
 
             {/* Floating Notebook Toggle Button */}
-            {phase !== 'title' && phase !== 'video' && phase !== 'intro' && phase !== 'recap' && phase !== 'briefing' && (
+            {phase !== 'title' && phase !== 'video' && phase !== 'intro' && (
                 <motion.button
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -829,6 +721,7 @@ export default function ScenarioPlayer() {
                     isOpen={notebookOpen}
                     onClose={() => setNotebookOpen(false)}
                     currentPhase={phase}
+                    missionPlan={plan}
                 />
             )}
         </div>
