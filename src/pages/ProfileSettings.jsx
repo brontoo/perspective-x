@@ -1,16 +1,15 @@
+import AvatarPicker from '@/components/perspective/AvatarPicker';
+import { Avatar } from '@/components/perspective/Portal';
+import { savePreset, savePhoto } from '@/lib/perspective/avatar';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
-import {
-    ArrowLeft, Camera, User, Lock, Trash2,
-    Loader2, CheckCircle2, AlertTriangle, Eye, EyeOff
-} from 'lucide-react';
+import { ArrowLeft, Camera, User, Lock, Trash2, Loader2, CheckCircle2, AlertTriangle, Eye, EyeOff } from 'lucide-react';
 
 export default function ProfileSettings() {
     const navigate = useNavigate();
-    const fileInputRef = useRef(null);
 
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
@@ -33,7 +32,8 @@ export default function ProfileSettings() {
     const [passwordError, setPasswordError] = useState('');
 
     // Avatar
-    const [avatarUrl, setAvatarUrl] = useState(null);
+    const [picture, setPicture] = useState(null);
+    const [avatarSuccess, setAvatarSuccess] = useState('');
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
     const [avatarError, setAvatarError] = useState('');
 
@@ -42,29 +42,25 @@ export default function ProfileSettings() {
     const [deleteInput, setDeleteInput] = useState('');
     const [deletingAccount, setDeletingAccount] = useState(false);
 
-    useEffect(() => { loadProfile(); }, []);
+    useEffect(() => {
+        loadProfile();
+    }, []);
 
     const loadProfile = async () => {
         try {
-            const { data: { user: currentUser } } = await supabase.auth.getUser();
+            const {
+                data: { user: currentUser }
+            } = await supabase.auth.getUser();
+            if (!currentUser) {
+                navigate('/SignIn', { replace: true });
+                return;
+            }
             setUser(currentUser);
 
-            const { data: profileData } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', currentUser.id)
-                .single();
+            const { data: profileData } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
 
             setProfile(profileData);
             setFullName(profileData?.full_name || '');
-
-            // Fetch the image if it exists
-            if (profileData?.avatar_path) {
-                const { data: urlData } = supabase.storage
-                    .from('avatars')
-                    .getPublicUrl(profileData.avatar_path);
-                setAvatarUrl(urlData.publicUrl);
-            }
         } catch (e) {
             console.error(e);
         } finally {
@@ -79,10 +75,7 @@ export default function ProfileSettings() {
         setNameError('');
         setNameSuccess('');
 
-        const { error } = await supabase
-            .from('profiles')
-            .update({ full_name: fullName.trim() })
-            .eq('id', user.id);
+        const { error } = await supabase.from('profiles').update({ full_name: fullName.trim() }).eq('id', user.id);
 
         if (error) {
             setNameError('Failed to update name. Try again.');
@@ -112,7 +105,7 @@ export default function ProfileSettings() {
         // Verify current password by logging in again
         const { error: signInError } = await supabase.auth.signInWithPassword({
             email: user.email,
-            password: currentPassword,
+            password: currentPassword
         });
 
         if (signInError) {
@@ -135,46 +128,41 @@ export default function ProfileSettings() {
         setSavingPassword(false);
     };
 
-    // ── Upload Image ──
-    const handleAvatarUpload = async (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        if (file.size > 2 * 1024 * 1024) {
-            setAvatarError('Image must be less than 2MB.');
-            return;
-        }
-
+    // Existing avatar storage path remains an object path; presets use auth profile metadata.
+    const handleSavePicture = async () => {
+        if (!user || !picture) return;
         setUploadingAvatar(true);
         setAvatarError('');
-
-        const fileExt = file.name.split('.').pop();
-        const filePath = `${user.id}/avatar.${fileExt}`;
-
-        // Upload image to Supabase Storage
-        const { error: uploadError } = await supabase.storage
-            .from('avatars')
-            .upload(filePath, file, { upsert: true });
-
-        if (uploadError) {
-            setAvatarError('Failed to upload image. Try again.');
+        setAvatarSuccess('');
+        try {
+            if (picture.file) await savePhoto(user.id, picture.file);
+            else if (picture.preset) await savePreset(user.id, picture.preset);
+            await loadProfile();
+            setPicture(null);
+            setAvatarSuccess('Your profile picture is saved.');
+        } catch (e) {
+            setAvatarError(e.message || 'Unable to save your picture.');
+        } finally {
             setUploadingAvatar(false);
-            return;
         }
-
-        // Save path in the profile
-        await supabase
-            .from('profiles')
-            .update({ avatar_path: filePath })
-            .eq('id', user.id);
-
-        // Display new image
-        const { data: urlData } = supabase.storage
-            .from('avatars')
-            .getPublicUrl(filePath);
-
-        setAvatarUrl(urlData.publicUrl + '?t=' + Date.now());
-        setUploadingAvatar(false);
+    };
+    const handleRemovePicture = async () => {
+        if (!user) return;
+        setUploadingAvatar(true);
+        setAvatarError('');
+        setAvatarSuccess('');
+        try {
+            const { error } = await supabase.from('profiles').update({ avatar_path: null }).eq('id', user.id).select('id').single();
+            if (error) throw error;
+            await savePreset(user.id, null);
+            await loadProfile();
+            setPicture(null);
+            setAvatarSuccess('Using your initials.');
+        } catch (e) {
+            setAvatarError(e.message || 'Unable to remove your picture.');
+        } finally {
+            setUploadingAvatar(false);
+        }
     };
 
     // ── Delete Account ──
@@ -210,8 +198,10 @@ export default function ProfileSettings() {
             {/* Header */}
             <header className="glass-nav-dark sticky top-0 z-50">
                 <div className="max-w-2xl mx-auto px-6 py-4 flex items-center gap-4">
-                    <button onClick={() => navigate(-1)}
-                        className="p-2 text-[var(--lx-text-sub)] hover:text-[var(--lx-text)] rounded-lg glass-panel transition">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="p-2 text-[var(--lx-text-sub)] hover:text-[var(--lx-text)] rounded-lg glass-panel transition"
+                    >
                         <ArrowLeft className="w-5 h-5" />
                     </button>
                     <div>
@@ -222,62 +212,50 @@ export default function ProfileSettings() {
             </header>
 
             <main className="max-w-2xl mx-auto px-6 py-8 space-y-6">
-
                 {/* ── Avatar Section ── */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                    className="glass-card p-6">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6">
                     <h2 className="text-lg font-bold text-[var(--lx-text)] mb-6 flex items-center gap-2">
                         <Camera className="w-5 h-5 text-[var(--lx-accent)]" /> Profile Picture
                     </h2>
 
-                    <div className="flex items-center gap-6">
-                        {/* Avatar Preview */}
-                        <div className="relative flex-shrink-0">
-                            <div className="w-24 h-24 rounded-2xl overflow-hidden bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center">
-                                {avatarUrl ? (
-                                    <img src={avatarUrl} alt="avatar"
-                                        className="w-full h-full object-cover" />
-                                ) : (
-                                    <span className="text-3xl font-black text-white">
-                                        {displayName?.[0]?.toUpperCase()}
-                                    </span>
-                                )}
-                            </div>
-                            {uploadingAvatar && (
-                                <div className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center">
-                                    <Loader2 className="w-6 h-6 text-white animate-spin" />
-                                </div>
-                            )}
+                    <div
+                        className="px-ui"
+                        style={{
+                            minHeight: 0,
+                            background: 'transparent',
+                            padding: 8,
+                            borderRadius: 12
+                        }}
+                    >
+                        <div className="flex items-center gap-4 mb-4">
+                            <Avatar user={user} profile={profile} name={displayName} size={72} />
+                            <p className="px-muted">Choose a preset or a private photo. Optional · 2 MB maximum.</p>
                         </div>
 
-                        <div className="flex-1">
-                            <p className="text-[var(--lx-text-sub)] text-sm mb-3">
-                                Upload a profile picture. Max size: 2MB.
-                            </p>
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={handleAvatarUpload}
-                            />
-                            <button
-                                onClick={() => fileInputRef.current?.click()}
-                                disabled={uploadingAvatar}
-                                className="liquid-btn-ghost flex items-center gap-2 px-4 py-2 text-sm disabled:opacity-50">
-                                <Camera className="w-4 h-4" />
-                                {uploadingAvatar ? 'Uploading...' : 'Choose Photo'}
+                        <AvatarPicker value={picture} onChange={setPicture} disabled={uploadingAvatar} />
+                        <div className="flex flex-wrap gap-3">
+                            <button className="px-button" disabled={!picture || uploadingAvatar} onClick={handleSavePicture}>
+                                {uploadingAvatar ? 'Saving…' : 'Save picture'}
                             </button>
-                            {avatarError && (
-                                <p className="text-[var(--lx-danger)] text-xs mt-2">{avatarError}</p>
-                            )}
+                            <button className="px-text-button" disabled={uploadingAvatar} onClick={handleRemovePicture}>
+                                Remove picture
+                            </button>
                         </div>
+                        {avatarError && (
+                            <p className="px-error" role="alert">
+                                {avatarError}
+                            </p>
+                        )}
+                        {avatarSuccess && (
+                            <p className="px-success" role="status">
+                                {avatarSuccess}
+                            </p>
+                        )}
                     </div>
                 </motion.div>
 
                 {/* ── Name Section ── */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                    className="glass-card p-6">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-6">
                     <h2 className="text-lg font-bold text-[var(--lx-text)] mb-6 flex items-center gap-2">
                         <User className="w-5 h-5 text-[var(--lx-accent)]" /> Full Name
                     </h2>
@@ -308,7 +286,8 @@ export default function ProfileSettings() {
                         <button
                             onClick={handleSaveName}
                             disabled={savingName || !fullName.trim()}
-                            className="liquid-btn-accent flex items-center gap-2 px-6 py-2.5 text-sm font-bold disabled:opacity-50">
+                            className="liquid-btn-accent flex items-center gap-2 px-6 py-2.5 text-sm font-bold disabled:opacity-50"
+                        >
                             {savingName ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                             Save Name
                         </button>
@@ -316,8 +295,7 @@ export default function ProfileSettings() {
                 </motion.div>
 
                 {/* ── Password Section ── */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                    className="glass-card p-6">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-6">
                     <h2 className="text-lg font-bold text-[var(--lx-text)] mb-6 flex items-center gap-2">
                         <Lock className="w-5 h-5 text-[var(--lx-warning)]" /> Change Password
                     </h2>
@@ -334,9 +312,11 @@ export default function ProfileSettings() {
                                     className="glass-input-dark w-full pr-12"
                                     placeholder="••••••••"
                                 />
-                                <button type="button"
+                                <button
+                                    type="button"
                                     onClick={() => setShowCurrentPw(!showCurrentPw)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition">
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition"
+                                >
                                     {showCurrentPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
@@ -353,9 +333,11 @@ export default function ProfileSettings() {
                                     className="glass-input-dark w-full pr-12"
                                     placeholder="Min 6 characters"
                                 />
-                                <button type="button"
+                                <button
+                                    type="button"
                                     onClick={() => setShowNewPw(!showNewPw)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition">
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--lx-text-muted)] hover:text-[var(--lx-text)] transition"
+                                >
                                     {showNewPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
@@ -387,7 +369,8 @@ export default function ProfileSettings() {
                         <button
                             onClick={handleChangePassword}
                             disabled={savingPassword || !currentPassword || !newPassword || !confirmPassword}
-                            className="liquid-btn-accent flex items-center gap-2 px-6 py-2.5 text-sm font-bold disabled:opacity-50">
+                            className="liquid-btn-accent flex items-center gap-2 px-6 py-2.5 text-sm font-bold disabled:opacity-50"
+                        >
                             {savingPassword ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
                             Update Password
                         </button>
@@ -395,8 +378,12 @@ export default function ProfileSettings() {
                 </motion.div>
 
                 {/* ── Delete Account Section ── */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                    className="glass-card border border-red-500/20 p-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="glass-card border border-red-500/20 p-6"
+                >
                     <h2 className="text-lg font-bold text-[var(--lx-text)] mb-2 flex items-center gap-2">
                         <Trash2 className="w-5 h-5 text-[var(--lx-danger)]" /> Delete Account
                     </h2>
@@ -407,15 +394,13 @@ export default function ProfileSettings() {
                     {!showDeleteConfirm ? (
                         <button
                             onClick={() => setShowDeleteConfirm(true)}
-                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/30 text-[var(--lx-danger)] hover:bg-red-500/10 text-sm transition">
+                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/30 text-[var(--lx-danger)] hover:bg-red-500/10 text-sm transition"
+                        >
                             <Trash2 className="w-4 h-4" />
                             Delete My Account
                         </button>
                     ) : (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            className="space-y-4">
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-4">
                             <div className="flex items-start gap-3 glass-card border border-red-500/20 p-4">
                                 <AlertTriangle className="w-5 h-5 text-[var(--lx-danger)] flex-shrink-0 mt-0.5" />
                                 <div>
@@ -437,20 +422,24 @@ export default function ProfileSettings() {
                                 <button
                                     onClick={handleDeleteAccount}
                                     disabled={deleteInput !== 'DELETE' || deletingAccount}
-                                    className="flex items-center gap-2 bg-red-500 hover:bg-red-400 text-white font-bold px-6 py-2.5 rounded-xl transition disabled:opacity-40 text-sm">
+                                    className="flex items-center gap-2 bg-red-500 hover:bg-red-400 text-white font-bold px-6 py-2.5 rounded-xl transition disabled:opacity-40 text-sm"
+                                >
                                     {deletingAccount ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                                     Confirm Delete
                                 </button>
                                 <button
-                                    onClick={() => { setShowDeleteConfirm(false); setDeleteInput(''); }}
-                                    className="liquid-btn-ghost px-6 py-2.5 text-sm">
+                                    onClick={() => {
+                                        setShowDeleteConfirm(false);
+                                        setDeleteInput('');
+                                    }}
+                                    className="liquid-btn-ghost px-6 py-2.5 text-sm"
+                                >
                                     Cancel
                                 </button>
                             </div>
                         </motion.div>
                     )}
                 </motion.div>
-
             </main>
         </div>
     );
