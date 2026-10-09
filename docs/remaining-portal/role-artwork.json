@@ -1,0 +1,56 @@
+[
+  {
+    "path": "public/images/roles/biomedical_researcher.webp",
+    "bytes": 132246,
+    "sha256": "57fdab2fd389b926e2b0272190a0c1cc07b2b15e28548cef43f740f913b2fa83",
+    "origin": "Generated for this redesign; fictional role mentor; optimized WebP"
+  },
+  {
+    "path": "public/images/roles/energy_engineer.webp",
+    "bytes": 132368,
+    "sha256": "950dddce625ad19e8e944d2249942ec18cd1e4b59560683594816ee4228341b9",
+    "origin": "Generated for this redesign; fictional role mentor; optimized WebP"
+  },
+  {
+    "path": "public/images/roles/environmental_scientist.webp",
+    "bytes": 237282,
+    "sha256": "f63eda0e173d9f747c1f61916849317151f5ad2850ac2289c374c74c9a3b7c54",
+    "origin": "Generated for this redesign; fictional role mentor; optimized WebP"
+  },
+  {
+    "path": "public/images/roles/fertilizer_engineer.webp",
+    "bytes": 187456,
+    "sha256": "9ee7566d13a2ca26e9e2af56f077c2865c26e571890af280c0753e3ed50b8148",
+    "origin": "Generated for this redesign; fictional role mentor; optimized WebP"
+  },
+  {
+    "path": "public/images/roles/geologist.webp",
+    "bytes": 235204,
+    "sha256": "8e5710af52e5bc425b9fd9ca09cc703e9836106f8860f4b31cf2306f691d8fd0",
+    "origin": "Generated for this redesign; fictional role mentor; optimized WebP"
+  },
+  {
+    "path": "public/images/roles/industrial_chemist.webp",
+    "bytes": 203088,
+    "sha256": "5c5fb908353bd76c0b303643011ae049abc5cbc8022afea79d74c6004279d969",
+    "origin": "Generated for this redesign; fictional role mentor; optimized WebP"
+  },
+  {
+    "path": "public/images/roles/pharmaceutical_scientist.webp",
+    "bytes": 130080,
+    "sha256": "30d2c4c2ef646606d6cbd81060094b1b79dd8fe87e35df24dbe8623be6630315",
+    "origin": "Generated for this redesign; fictional role mentor; optimized WebP"
+  },
+  {
+    "path": "public/images/roles/process_safety_engineer.webp",
+    "bytes": 169588,
+    "sha256": "f2a27914a009a741f09fc5cf6fffaede366707441630994185b75474d3be7e8c",
+    "origin": "Generated for this redesign; fictional role mentor; optimized WebP"
+  },
+  {
+    "path": "public/images/roles/space_mission_chemist.webp",
+    "bytes": 232332,
+    "sha256": "6742b114e6bc1f1eb57d64bb4790623765467bb668076e3d2aec0ba438c6867b",
+    "origin": "Generated for this redesign; fictional role mentor; optimized WebP"
+  }
+]
