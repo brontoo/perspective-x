@@ -4,6 +4,8 @@ Branch: `feature/approved-ui-handoff-2026-10`. Base: `b27bc0b44244193ff5caa88c50
 
 The four internal pages use scoped React/CSS and optimized, UI-free illustrations reconstructed from the approved references. The original five approved PNGs passed SHA-256, byte-size and dimension checks outside the repository and remain unchanged. No full-page screenshot is used as application UI. Illustration fidelity still requires owner visual review; these reconstructed illustrations and portraits are not pixel-identical crops of the references.
 
+[Complete added/modified file list](FILES.md). No files removed.
+
 ## Screenshots
 
 All pictured identities, rankings and records below are **synthetic browser fixtures**, not live student data. Screenshots demonstrate the actual React implementation; fixtures exist only in tests. Full PNG evidence at all viewports is generated under ignored `test-results/screenshots/`. The WebP review copies below reduce download size.
