@@ -167,6 +167,7 @@ export default function Home() {
               </button>
             </div>
           </header>
+          <div className="home-scene">
           <HeroSection onStart={enterPortal} isLoading={account.loading} />
           <div className="home-bottom">
             <footer className="home-footer">
@@ -198,19 +199,11 @@ export default function Home() {
             <section className="home-stats" aria-label="Platform statistics">
               <div>
                 <strong>{Object.keys(SCENARIOS).length}</strong>
-                <span>
-                  Live
-                  <br />
-                  Scenarios
-                </span>
+                <span>Live Scenarios</span>
               </div>
               <div>
                 <strong>{Object.keys(ROLES).length}</strong>
-                <span>
-                  Role
-                  <br />
-                  Paths
-                </span>
+                <span>Role Paths</span>
               </div>
               <div>
                 <strong>{students ?? "—"}</strong>
@@ -221,6 +214,7 @@ export default function Home() {
                 </span>
               </div>
             </section>
+          </div>
           </div>
         </div>
       </div>

@@ -10,6 +10,13 @@ for (const [width,height] of [[1676,927],[1920,1080],[1440,900],[1366,768],[1280
   for(const selector of ['.home-nav','.home-hero h1','.home-description','.home-actions','.home-footer','.home-stats']) {
    const box=await page.locator(selector).boundingBox();expect(box.y).toBeGreaterThanOrEqual(0);expect(box.y+box.height).toBeLessThanOrEqual(height+1);
   }
+  const nav=await page.locator('.home-nav').boundingBox();const scene=await page.locator('.home-scene').boundingBox();
+  expect(scene.y).toBeGreaterThanOrEqual(nav.y+nav.height-1);
+  await expect(page.locator('.home-stats br')).toHaveCount(0);
+  for(const label of await page.locator('.home-stats span').all()) {
+   const dimensions=await label.evaluate(element=>({width:element.clientWidth,content:element.scrollWidth}));
+   expect(dimensions.content).toBeLessThanOrEqual(dimensions.width+1);
+  }
   const hero=await page.locator('.home-hero').boundingBox();const actions=await page.locator('.home-actions').boundingBox();const bottom=await page.locator('.home-bottom').boundingBox();
   expect(actions.y+actions.height).toBeLessThanOrEqual(bottom.y+1);
   expect((await page.locator('.home-title-rule').boundingBox()).y).toBeGreaterThanOrEqual(hero.y);
