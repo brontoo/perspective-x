@@ -776,17 +776,10 @@ export default function TeacherDashboard() {
                                 timeZone: 'Asia/Dubai'
                             }).format(new Date())}
                         </p>
-                        <div className="px-focus-columns">
-                            <div>
-                                <h2>Your students</h2>
-                                <p>{students.length} {students.length === 1 ? 'student' : 'students'} in your authorized view.</p>
-                                <p>{totalScenarios} scientific missions available.</p>
-                            </div>
-                            <div>
-                                <h2>Today’s focus</h2>
-                                <p>Review the latest work, prepare your missions, and guide your students.</p>
-                                <p>Choose a section below to get started.</p>
-                            </div>
+                        <div className="teacher-focus-summary">
+                            <h2>Today’s focus</h2>
+                            <p>Review the latest work, prepare your missions, and guide your students.</p>
+                            <p>Choose a section below to get started.</p>
                         </div>
                     </aside>
                 </section>
