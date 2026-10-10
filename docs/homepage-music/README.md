@@ -1,7 +1,7 @@
 # Homepage soundtrack and account navigation review
 
 Baseline: latest main, `61b1e0c7a0d9483178126a999efaca896a0bd107`.
-Branch: `feat/homepage-soundtrack`. The separate Our Story PR #11 is not included or merged by this work.
+Original review branch: `feat/homepage-soundtrack`, reviewed independently of Our Story PR #11. The authorized production release combines PRs #11–#13; see [release notes](../releases/2026-10-10-approved-updates.md).
 
 ## Implemented behavior
 
@@ -15,7 +15,7 @@ Hiding the tab pauses playback and releases ownership; visible/cached-page resto
 
 The track loops natively with one stream. Its final second tapers toward silence, and the next loop fades in. Opening Our Story keeps the same player. There is no global sound provider and no change to mission audio, narration or videos.
 
-The current user request supersedes the older ZIP's initially-off and 18% recommendations. No main merge or production publication is authorized by this delivery.
+The soundtrack requirements supersede the older ZIP's initially-off and 18% recommendations. The original delivery was Preview-only; the user subsequently authorized publishing all approved updates to the existing production site on October 10, 2026.
 
 ## Files
 
@@ -48,7 +48,7 @@ Mobile names remain visible, with ellipsis when needed and a full accessible nam
 - Unsupported media, an actual missing-asset response, rapid toggles, preference persistence, late startup cancellation and immediate navigation reset were checked.
 - Desktop/tablet/mobile screenshots reviewed at 1440 × 900, 768 × 1024 and 390 × 844.
 
-Physical-device listening quality, native mobile-browser autoplay behavior and authenticated live Supabase QA remain unverified. Preview listening is the requested review step. The homepage artwork, original hero typography and layout, existing Our Story implementation on main, dashboards, sign-in, scientific assessments and mission media remain unchanged. Header changes consist of the discreet music control and the requested account/navigation update.
+Physical-device listening quality, native mobile-browser autoplay behavior and authenticated live Supabase QA remain unverified. The soundtrack/account changes preserve the homepage artwork, original hero typography and layout, dashboards, sign-in, scientific assessments and mission media. Header changes consist of the discreet music control and the requested account/navigation update. The production release also includes the separately approved Our Story dialog and teacher focus panel.
 
 ## Screenshots from the compiled app
 

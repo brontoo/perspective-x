@@ -5,10 +5,12 @@ import fs from "node:fs/promises";
 for (const [width, height] of [[1440, 900], [768, 1024], [390, 844]]) {
   test(`Our Story is readable, scrollable and restores the homepage at ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
+    // Keep the screenshot comparison stable; native music playback has its own coverage.
+    await page.addInitScript(() => localStorage.setItem("px-home-music-muted", "true"));
     await setup(page, { guest: true });
     await page.goto("/");
     const trigger = page.getByRole("button", { name: "Our Story", exact: true });
-    await expect(page.getByRole("button", { name: "Enter Portal", exact: true })).toBeEnabled();
+    await expect(page.getByRole("link", { name: "Sign In", exact: true })).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     const before = await page.screenshot();
     await trigger.click();
