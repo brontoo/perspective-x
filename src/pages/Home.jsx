@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { ROLES, SCENARIOS } from "@/components/scenarios/scenarioData";
@@ -31,6 +31,7 @@ function ApprovedMark({ className, label, viewBox }) {
 
 export default function Home() {
   const navigate = useNavigate();
+  const storyDialog = useRef(null);
   const [account, setAccount] = useState({
     user: null,
     profile: null,
@@ -139,11 +140,11 @@ export default function Home() {
               <span>Perspective X</span>
             </Link>
             <nav aria-label="Main navigation">
-              <a href="#roles-section">Roles</a>
+              <Link to="/Roles">Roles</Link>
               <Link to="/LearningPath">Learning Paths</Link>
-              <a href="#roles-section">Worlds &amp; Missions</a>
+              <Link to="/Roles">Worlds &amp; Missions</Link>
               <Link to="/TeacherDashboard">Teacher Dashboard</Link>
-              <a href="#our-story">Our Story</a>
+              <button type="button" onClick={() => storyDialog.current.showModal()}>Our Story</button>
             </nav>
             <div className="home-account">
               {account.user && (
@@ -223,48 +224,12 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <section
-        id="roles-section"
-        className="home-roles"
-        aria-labelledby="home-roles-title"
-      >
-        <p className="home-eyebrow">A world of possibilities</p>
-        <h2 id="home-roles-title">Choose your perspective</h2>
-        <p>
-          Step into a scientific role. Explore its missions, investigate the
-          evidence, and make a difference.
-        </p>
-        <div className="home-role-grid">
-          {Object.values(ROLES).map((role) => (
-            <Link
-              key={role.id}
-              to={account.user ? `/RoleHub?role=${role.id}` : "/SignIn"}
-              className="home-role-card"
-            >
-              <span aria-hidden="true">{role.icon}</span>
-              <h3>{role.title}</h3>
-              <p>{role.description}</p>
-              <span>
-                {role.scenarios.filter((id) => SCENARIOS[id]).length} missions{" "}
-                <span aria-hidden="true">→</span>
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-      <section id="our-story" className="home-story">
-        <p className="home-eyebrow">Our story</p>
-        <h2>Real science. Meaningful choices.</h2>
-        <p>
-          Perspective X invites learners to explore immersive scientific roles,
-          tackle real-world challenges, and shape a more sustainable future for
-          the UAE and beyond.
-        </p>
+      <dialog ref={storyDialog} className="home-story-dialog" aria-labelledby="home-story-title">
+        <h2 id="home-story-title">Real science. Meaningful choices.</h2>
+        <p>Perspective X invites learners to explore immersive scientific roles, tackle real-world challenges, and shape a more sustainable future for the UAE and beyond.</p>
         <p>Um Al Emarat School · Riham Saleh — Portal Creator</p>
-        <button onClick={enterPortal} disabled={account.loading}>
-          Enter Portal <span aria-hidden="true">→</span>
-        </button>
-      </section>
+        <form method="dialog"><button>Close</button></form>
+      </dialog>
     </main>
   );
 }

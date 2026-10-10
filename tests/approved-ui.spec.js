@@ -448,7 +448,8 @@ test('cinematic homepage uses interactive reference layout and guest portal rout
   await expect(page.locator('.home-stats')).toContainText('Registered Students');
   await expect(page.getByRole('img', { name: 'Ministry of Education', exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'Explore Roles', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Choose your perspective' })).toBeInViewport();
+  await expect(page).toHaveURL(/\/SignIn$/);
+  await page.goto('/');
   await page.getByRole('button', { name: 'Start Your Mission', exact: true }).click();
   await expect(page).toHaveURL(/\/SignIn$/);
 });

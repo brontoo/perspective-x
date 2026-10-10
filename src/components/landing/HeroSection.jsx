@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function HeroSection({ onStart, isLoading = false }) {
   return (
@@ -14,7 +15,7 @@ export default function HeroSection({ onStart, isLoading = false }) {
         <button onClick={onStart} disabled={isLoading}>
           Start Your Mission <ArrowRight size={21} aria-hidden="true" />
         </button>
-        <a href="#roles-section">Explore Roles</a>
+        <Link to="/Roles">Explore Roles</Link>
       </div>
     </section>
   );
