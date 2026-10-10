@@ -54,6 +54,13 @@ for (const width of [1440, 768, 390]) {
     await page.goto("/TeacherDashboard");
     await fs.mkdir("test-results/teacher-workspace",{recursive:true});
     await expect(page.getByRole("tab",{name:"Overview",exact:true})).toBeVisible();
+    const focus = page.locator('.px-teacher-focus');
+    await expect(focus.getByRole('heading', {name:'Today’s focus',exact:true})).toBeVisible();
+    await expect(focus.getByRole('heading')).toHaveCount(1);
+    await expect(focus).not.toContainText('Your students');
+    await expect(focus).not.toContainText('authorized view');
+    await expect(focus).not.toContainText('scientific missions available');
+    await expect(focus.locator(':scope > p')).toHaveText(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), /);
     await noOverflow(page);
     await page.screenshot({path:`test-results/teacher-workspace/overview-${width}.png`,fullPage:true});
     for (const section of ["Missions", "Students", "Feedback", "Analytics", "Class Debate"]) {
