@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { ROLES, SCENARIOS } from "@/components/scenarios/scenarioData";
 import { Avatar } from "@/components/perspective/Portal";
 import HeroSection from "@/components/landing/HeroSection";
+import HomepageSoundtrack from "@/components/landing/HomepageSoundtrack";
 import "@/components/landing/homepage.css";
 
 function ApprovedMark({ className, label, viewBox }) {
@@ -158,6 +159,7 @@ export default function Home() {
                   <span>{name}</span>
                 </Link>
               )}
+              <HomepageSoundtrack />
               <button
                 className="home-enter"
                 disabled={account.loading}

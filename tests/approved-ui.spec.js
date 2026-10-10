@@ -392,11 +392,14 @@ test("a student outside the visible leaderboard page still sees the server-provi
 test("loading interior CSS leaves homepage computed styles unchanged", async ({
   page,
 }) => {
+  // Keep music status deterministic in this style-only comparison; playback has its own tests.
+  await page.addInitScript(() => localStorage.setItem("px-home-music-muted", "true"));
   await setup(page, { guest: true });
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
-  await page.waitForLoadState("networkidle");
-  await page.waitForTimeout(500);
+  // Streaming music can keep the network active; wait for the actual UI and fonts.
+  await expect(page.getByRole("button", { name: "Enter Portal", exact: true })).toBeEnabled();
+  await page.evaluate(() => document.fonts.ready);
   const readStyles = () =>
     [
       ...document.querySelectorAll(
@@ -430,8 +433,8 @@ test("loading interior CSS leaves homepage computed styles unchanged", async ({
     page.getByRole("heading", { name: /Welcome back/ }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Home", exact: true }).click();
-  await page.waitForLoadState("networkidle");
-  await page.waitForTimeout(500);
+  await expect(page.getByRole("button", { name: "Enter Portal", exact: true })).toBeEnabled();
+  await page.evaluate(() => document.fonts.ready);
   const after = await page.evaluate(readStyles);
   expect(after).toEqual(before);
   await page.screenshot({
