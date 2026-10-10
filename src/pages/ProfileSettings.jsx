@@ -37,7 +37,7 @@ export default function ProfileSettings() {
       }
       const { data: profile, error: p } = await supabase
         .from("profiles")
-        .select("id,full_name,role,avatar_path")
+        .select("*")
         .eq("id", user.id)
         .single();
       if (p) throw p;
@@ -91,13 +91,15 @@ export default function ProfileSettings() {
   }
   function removePicture() {
     return act("avatar", async () => {
-      const { error: e } = await supabase
-        .from("profiles")
-        .update({ avatar_path: null })
-        .eq("id", data.user.id)
-        .select("id")
-        .single();
-      if (e) throw e;
+      if (data.profile.avatar_path) {
+        const { error: e } = await supabase
+          .from("profiles")
+          .update({ avatar_path: null })
+          .eq("id", data.user.id)
+          .select("id")
+          .single();
+        if (e) throw e;
+      }
       await savePreset(data.user.id, null);
       await load();
       setPicture(null);

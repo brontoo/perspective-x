@@ -30,7 +30,7 @@ export default function usePortalData() {
       const results = await Promise.all([
         supabase
           .from("profiles")
-          .select("id,full_name,role,avatar_path")
+          .select("*")
           .eq("id", user.id)
           .single(),
         supabase.from("student_progress").select("*").eq("student_id", user.id),

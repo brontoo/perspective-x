@@ -92,6 +92,16 @@ export async function preparePhoto(file) {
 export async function savePhoto(userId, file) {
   const photo = await preparePhoto(file);
   await ownUser(userId);
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .single();
+  if (profileError) throw profileError;
+  if (!profile || !Object.hasOwn(profile, "avatar_path"))
+    throw new Error(
+      "Photo uploads are not configured for your profile yet. You can choose a preset avatar meanwhile.",
+    );
   // Fail closed: signed URLs alone do not make a public bucket private.
   const { data: bucket, error: bucketError } =
     await supabase.storage.getBucket("avatars");

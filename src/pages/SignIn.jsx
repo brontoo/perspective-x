@@ -97,7 +97,7 @@ export default function SignIn() {
       else localStorage.removeItem("px-remembered-email");
       let { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("id,role,full_name,avatar_path")
+        .select("*")
         .eq("id", authenticated.id)
         .maybeSingle();
       if (profileError)
