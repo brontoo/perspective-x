@@ -13,8 +13,8 @@
   },
   "motion": {
     "cycleSeconds": 48,
-    "maxHorizontalCssPixels": 1.4,
-    "maxVerticalCssPixels": 0.18,
+    "maxHorizontalCssPixels": 8,
+    "maxVerticalCssPixels": 0.45,
     "entryFadeSeconds": 3,
     "regions": [
       {
@@ -776,24 +776,24 @@
     "finalRendererCleanupRetestPassed": 11
   },
   "performance": {
-    "shaderSeconds": 52.8979,
-    "frames": 1814,
-    "wallSeconds": 53.08920000000018,
-    "averageFPS": 34.150071954371015,
-    "medianFrameMs": 27.5,
-    "p95FrameMs": 42.90000000037253,
+    "shaderSeconds": 52.71440000000001,
+    "frames": 1799,
+    "wallSeconds": 52.75410000000149,
+    "averageFPS": 34.08265897816377,
+    "medianFrameMs": 27.900000002235174,
+    "p95FrameMs": 42.100000001490116,
     "environment": "Headless Chromium 151 software WebGL in Codex cloud; not physical-device performance"
   },
   "video": {
-    "nativeDuration": 54.84,
-    "trimStart": 4.950799999999821,
-    "reviewDuration": 49.88920000000018
+    "nativeDuration": 54.68,
+    "trimStart": 4.9258999999985065,
+    "reviewDuration": 49.75410000000149,
+    "speed": "Natural recording speed; no amplified displacement or time acceleration"
   },
   "limits": [
     "Hair is deliberately static.",
     "Activating a GPU layer may change compositor rasterization of existing text shadows/subpixel edges; styles and geometry are unchanged. Static and consecutive-active-frame comparisons separate this from movement.",
-    "Headless recording performance is not physical-device GPU performance.",
-    "No production deployment is authorized for this feature."
+    "Headless recording performance is not physical-device GPU performance."
   ],
   "files": [
     "src/pages/Home.jsx",
@@ -809,5 +809,36 @@
     "docs/cinematic-motion/before-1440x900.png",
     "docs/cinematic-motion/active-1440x900.png",
     "docs/cinematic-motion/cinematic-preview.mp4"
-  ]
+  ],
+  "visibilityCorrection": {
+    "reason": "Original running renderer had imperceptible 1.4 CSS-pixel cloud drift at normal viewing scale",
+    "viewport": [
+      1440,
+      900
+    ],
+    "shaderPhasesSeconds": [
+      4,
+      12
+    ],
+    "contrastThresholdRgbLevels": 8,
+    "earlierProfilePixelsAboveThreshold": 4322,
+    "correctedProfilePixelsAboveThreshold": 36232,
+    "regressionFloorPixels": 15000,
+    "protectedRegions": "Original masks, source artwork, UI, character and skyline unchanged",
+    "baselineCommit": "76cce494ad5a618d878c0b72a11f64694ad66700",
+    "validation": {
+      "build": "passed",
+      "lint": "passed",
+      "unitTestsPassed": 12,
+      "motionAndStoryBrowserTestsPassed": 22,
+      "activePixelsChangedOutsideCloudMasks": 0,
+      "additionalReportedViewport": [
+        1227,
+        990
+      ],
+      "additionalReportedViewportPassed": true,
+      "distinctBrowserChecksPassed": 23
+    },
+    "publication": "Follow-up to the user-approved production deployment of PR #14."
+  }
 }

@@ -1,6 +1,6 @@
 # Homepage cinematic micro-motion review
 
-This work is on `feat/cinematic-home-micro-motion`. It is for pull-request and Vercel Preview review. It does not replace the production deployment.
+The original two-stage implementation was merged in PR #14. The visibility correction is on `fix/visible-homepage-cloud-motion`, using the same renderer, cloud masks and original artwork.
 
 ## Stage 1 — source inspection and cloud motion
 
@@ -22,9 +22,15 @@ These rectangles are rendering bounds, not rectangular masks. Inward feathering 
 
 The component reads the scene's real dimensions and computed background position. It maps the original image using CSS cover scaling and the percentage remaining-space rule. Current crop positions remain **50% 50%** on desktop, **59% 50%** at tablet width, and **60% 50%** at mobile width. A ResizeObserver and resize listener update registration without changing the background CSS.
 
-One transparent WebGL canvas samples the original artwork through the masks. A continuous 48-second texture field drifts at most **1.4 horizontal / 0.18 vertical CSS pixels**, with different cloud phases and a three-second entry fade. Only the cloud bounding boxes are shaded. The source is neither duplicated into moving rectangles nor edited, recompressed, replaced, or regenerated. There are no new runtime dependencies.
+One transparent WebGL canvas samples the original artwork through the masks. A continuous 48-second texture field drifts at most **8 horizontal / 0.45 vertical CSS pixels**, with different cloud phases and a three-second entry fade. Only the cloud bounding boxes are shaded. The source is neither duplicated into moving rectangles nor edited, recompressed, replaced, or regenerated. There are no new runtime dependencies.
 
 The canvas sits above the original CSS background and below existing interface content. Home.jsx adds only an import and a mount. Original hero markup, text, colors, navigation dimensions, typography, statistics, footer and soundtrack code are unchanged.
+
+## Visibility correction after production feedback
+
+The original 1.4-pixel horizontal displacement changed image pixels but was too difficult to perceive at ordinary viewing scale. The renderer was running in the supplied production screenshot. This correction increases only the displacement within the existing masks, retaining the 48-second cycle, three-second entry fade and static protected regions.
+
+A new browser check compares actual GPU output eight seconds apart at 1440 × 900 and 100% zoom. The earlier profile changed 4,322 pixels by at least eight RGB levels; the corrected profile changed 36,232. Its 15,000-pixel contrast/area floor rejects the old profile. This is a rendering regression check, supplemented by inspection of the natural-speed recording; it is not a claim about every visitor’s visual perception. UI geometry and pixels outside the cloud masks remain protected by the existing tests.
 
 ## Stage 2 — hair assessment and verification
 

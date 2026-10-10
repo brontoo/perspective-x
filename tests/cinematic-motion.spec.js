@@ -59,7 +59,7 @@ function localizedDifference(before, after, scene, width, height) {
   return { moved, outside };
 }
 
-for (const [width,height] of [[1920,1080],[1440,900],[768,1024],[390,844],[1366,600]]) {
+for (const [width,height] of [[1920,1080],[1440,900],[768,1024],[390,844],[1366,600],[1227,990]]) {
   test(`only the registered cloud islands move at ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -179,6 +179,29 @@ test("the GPU texture field closes continuously over its complete 48-second cycl
   let maximum = 0;
   for (let index = 0; index < before.data.length; index++) maximum = Math.max(maximum, Math.abs(before.data[index] - after.data[index]));
   expect(maximum).toBeLessThanOrEqual(1);
+});
+
+test("cloud drift is perceptible within eight seconds at normal desktop scale", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await prepare(page);
+  await expect(page.locator(".home-cinematic-motion")).toHaveAttribute("data-state", "running");
+  await page.evaluate(() => { window.motionObservation.overrideSeconds = 4; });
+  await expect.poll(() => page.evaluate(() => window.motionObservation.seconds)).toBe(4);
+  const before = await page.screenshot();
+  await page.evaluate(() => { window.motionObservation.overrideSeconds = 12; });
+  await expect.poll(() => page.evaluate(() => window.motionObservation.seconds)).toBe(12);
+  const after = await page.screenshot();
+  const scene = await page.locator(".home-scene").evaluate(element => ({ ...element.getBoundingClientRect().toJSON(), position: getComputedStyle(element).backgroundPosition }));
+  expect(localizedDifference(before, after, scene, 1440, 900).outside).toBe(0);
+  const first = PNG.sync.read(before), second = PNG.sync.read(after);
+  let visibleCloudPixels = 0;
+  for (let index = 0; index < first.data.length; index += 4) {
+    if (Math.max(...[0,1,2].map(channel => Math.abs(first.data[index + channel] - second.data[index + channel]))) >= 8) visibleCloudPixels++;
+  }
+  // The previous subpixel-looking effect also changed pixels, but could not
+  // reach this visible contrast/area floor at 100% zoom over this interval.
+  expect(visibleCloudPixels).toBeGreaterThan(15000);
 });
 
 test("one renderer follows live resizing through every crop breakpoint", async ({ page }) => {

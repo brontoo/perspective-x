@@ -27,9 +27,9 @@ const fragmentSource = `
     float phaseOffset = dot(islands, vec3(0.0, 1.2, 2.4)) / max(dot(islands, vec3(1.0)), 0.001);
     float phase = uTime * 6.28318530718 / ${CLOUD_CYCLE_SECONDS.toFixed(1)} + phaseOffset;
     float entry = smoothstep(0.0, 3.0, uTime);
-    // At most 1.4 horizontal and 0.18 vertical CSS pixels. The traveling
+    // At most 8 horizontal and 0.45 vertical CSS pixels. The traveling
     // texture field closes continuously after 48 seconds; no rectangular crop moves.
-    vec2 drift = vec2(1.4 * sin(phase - uv.x * 2.4 - uv.y * 1.5), 0.18 * sin(phase + 0.9));
+    vec2 drift = vec2(8.0 * sin(phase - uv.x * 2.4 - uv.y * 1.5), 0.45 * sin(phase + 0.9));
     vec2 sampleUV = (source + drift * entry / uCoverScale) / uSourceSize;
     gl_FragColor = vec4(texture2D(uArtwork, sampleUV).rgb, coverage);
   }
