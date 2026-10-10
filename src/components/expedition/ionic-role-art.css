@@ -1,0 +1,9 @@
+/* Only the new role uses the shared Hamad portrait over its location artwork. */
+.px-expedition.px-expedition
+  img[src="/images/roles/ionic_materials_specialist.webp"] {
+  object-fit: contain;
+  object-position: right bottom;
+  background:
+    linear-gradient(90deg, #12313e99, transparent),
+    url("/images/ionic/dessert-park.webp") center / cover;
+}

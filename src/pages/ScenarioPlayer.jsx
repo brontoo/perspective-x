@@ -40,6 +40,9 @@ import { useScenarioAudio } from "@/hooks/useScenarioAudio";
 const CinematicVideoIntro = lazy(
   () => import("@/components/scenario/CinematicVideoIntro"),
 );
+const IonicMission = lazy(
+  () => import("@/components/scenario/ionic/IonicMission"),
+);
 const SceneOne = lazy(() => import("@/components/scenario/SceneOne"));
 const SceneTwo = lazy(() => import("@/components/scenario/SceneTwo"));
 const ConsequenceViewer = lazy(
@@ -79,7 +82,7 @@ const WARM_THEME = {
   bg: "bg-rose-50",
   glow: "shadow-rose-200/20",
 };
-function resumePhase(record) {
+function resumePhase(record, interactiveIonic = false) {
   if (
     record.reflection &&
     record.scene2?.selectedOption &&
@@ -89,6 +92,7 @@ function resumePhase(record) {
   if (record.scene2?.selectedOption && record.scene1?.selectedOption)
     return "consequence";
   if (record.scene1?.selectedOption) return "scene2";
+  if (interactiveIonic && record.investigation) return "scene1";
   return "intro";
 }
 export default function ScenarioPlayer() {
@@ -204,7 +208,7 @@ export default function ScenarioPlayer() {
       draft.exitTicket
         ? "complete"
         : Object.keys(draft).length
-          ? resumePhase(draft)
+          ? resumePhase(draft, scenario.interactiveIonic)
           : "video",
     );
     if (draft.exitTicket) {
@@ -455,7 +459,8 @@ export default function ScenarioPlayer() {
                 : "Standard Mode"}
           </span>
           <small>
-            Role mentor: {ROLE_IDENTITIES[role.id].name} · Fictional character
+            {scenario.interactiveIonic ? "Your investigator" : "Role mentor"}:{" "}
+            {ROLE_IDENTITIES[role.id].name} · Fictional character
           </small>
         </div>
         <button className="px-outline-button" onClick={() => setNotebook(true)}>
@@ -534,94 +539,138 @@ export default function ScenarioPlayer() {
             </section>
           ) : (
             <>
-              {phase === "video" && (
-                <CinematicVideoIntro
-                  key={id}
-                  scenarioId={id}
-                  onComplete={() => setPhase("intro")}
-                  isTeacher={preview}
-                  theme={WARM_THEME}
-                />
-              )}{" "}
-              {phase === "intro" && (
-                <MissionBrief
-                  scenario={scenario}
-                  role={role}
-                  plan={plan}
-                  onStart={() => capture(null, null, "scene1")}
-                />
-              )}{" "}
-              {phase === "scene1" && (
-                <SceneOne
-                  scene={getAdaptedScene(scenario.scenes[0], mode)}
-                  scenarioId={id}
-                  scenarioTitle={scenario.title}
-                  onComplete={(value) => capture("scene1", value, "scene2")}
-                  isTeacher={preview}
-                  theme={WARM_THEME}
-                  difficultyMode={mode}
-                />
-              )}{" "}
-              {phase === "scene2" && (
-                <SceneTwo
-                  scene={scenario.scenes[1]}
-                  scenarioId={id}
-                  scenarioTitle={scenario.title}
-                  onComplete={(value) =>
-                    capture("scene2", value, "consequence")
-                  }
-                  isTeacher={preview}
-                  theme={WARM_THEME}
-                  difficultyMode={mode}
-                />
-              )}{" "}
-              {phase === "consequence" &&
-                (responses.scene2?.consequence ? (
-                  <ConsequenceViewer
+              {scenario.interactiveIonic ? (
+                phase !== "complete" && (
+                  <IonicMission
+                    key={`${id}:${phase}`}
                     scenario={scenario}
-                    consequenceKey={responses.scene2.consequence}
-                    onNext={() => capture(null, null, "reflection")}
+                    stage={
+                      phase === "video" || phase === "intro"
+                        ? "briefing"
+                        : phase === "scene1"
+                          ? "investigation"
+                          : phase === "scene2"
+                            ? "decision"
+                            : phase === "exit"
+                              ? "assessment"
+                              : "outcome"
+                    }
+                    responses={responses}
+                    mode={mode}
                     isTeacher={preview}
-                    theme={WARM_THEME}
+                    onDraft={(value) =>
+                      capture(
+                        phase === "exit" ? "assessmentDraft" : "investigation",
+                        value,
+                        phase,
+                      )
+                    }
+                    onComplete={(value) => {
+                      if (phase === "video" || phase === "intro")
+                        capture(null, null, "scene1");
+                      else if (phase === "scene1")
+                        capture("scene1", value, "scene2");
+                      else if (phase === "scene2")
+                        capture("scene2", value, "consequence");
+                      else if (phase === "exit") finish(value);
+                      else capture("reflection", value, "exit");
+                    }}
                   />
-                ) : (
-                  <div className="xp-empty">
-                    <h2>Make a decision to explore its consequences</h2>
-                    <button
-                      className="px-button"
-                      onClick={() => setPhase("scene2")}
-                    >
-                      Return to Make the Call
-                    </button>
-                  </div>
-                ))}{" "}
-              {phase === "reflection" && (
-                <ReflectionPrompt
-                  scenario={scenario}
-                  onComplete={(value) => capture("reflection", value, "exit")}
-                  isTeacher={preview}
-                  theme={WARM_THEME}
-                />
-              )}{" "}
-              {phase === "exit" && (
-                <ExitTicket
-                  exitTicket={scenario.exitTicket}
-                  scenarioTitle={scenario.title}
-                  theme={WARM_THEME}
-                  onComplete={finish}
-                  isTeacher={preview}
-                  missionResult={
-                    responses.scene2?.consequence
-                      ? evaluateScenarioOutcome(
-                          id,
-                          responses.scene2.consequence,
-                          scenario,
-                        )
-                      : null
-                  }
-                  scenarioId={id}
-                />
-              )}{" "}
+                )
+              ) : (
+                <>
+                  {phase === "video" && (
+                    <CinematicVideoIntro
+                      key={id}
+                      scenarioId={id}
+                      onComplete={() => setPhase("intro")}
+                      isTeacher={preview}
+                      theme={WARM_THEME}
+                    />
+                  )}{" "}
+                  {phase === "intro" && (
+                    <MissionBrief
+                      scenario={scenario}
+                      role={role}
+                      plan={plan}
+                      onStart={() => capture(null, null, "scene1")}
+                    />
+                  )}{" "}
+                  {phase === "scene1" && (
+                    <SceneOne
+                      scene={getAdaptedScene(scenario.scenes[0], mode)}
+                      scenarioId={id}
+                      scenarioTitle={scenario.title}
+                      onComplete={(value) => capture("scene1", value, "scene2")}
+                      isTeacher={preview}
+                      theme={WARM_THEME}
+                      difficultyMode={mode}
+                    />
+                  )}{" "}
+                  {phase === "scene2" && (
+                    <SceneTwo
+                      scene={scenario.scenes[1]}
+                      scenarioId={id}
+                      scenarioTitle={scenario.title}
+                      onComplete={(value) =>
+                        capture("scene2", value, "consequence")
+                      }
+                      isTeacher={preview}
+                      theme={WARM_THEME}
+                      difficultyMode={mode}
+                    />
+                  )}{" "}
+                  {phase === "consequence" &&
+                    (responses.scene2?.consequence ? (
+                      <ConsequenceViewer
+                        scenario={scenario}
+                        consequenceKey={responses.scene2.consequence}
+                        onNext={() => capture(null, null, "reflection")}
+                        isTeacher={preview}
+                        theme={WARM_THEME}
+                      />
+                    ) : (
+                      <div className="xp-empty">
+                        <h2>Make a decision to explore its consequences</h2>
+                        <button
+                          className="px-button"
+                          onClick={() => setPhase("scene2")}
+                        >
+                          Return to Make the Call
+                        </button>
+                      </div>
+                    ))}{" "}
+                  {phase === "reflection" && (
+                    <ReflectionPrompt
+                      scenario={scenario}
+                      onComplete={(value) =>
+                        capture("reflection", value, "exit")
+                      }
+                      isTeacher={preview}
+                      theme={WARM_THEME}
+                    />
+                  )}{" "}
+                  {phase === "exit" && (
+                    <ExitTicket
+                      exitTicket={scenario.exitTicket}
+                      scenarioTitle={scenario.title}
+                      theme={WARM_THEME}
+                      onComplete={finish}
+                      isTeacher={preview}
+                      missionResult={
+                        responses.scene2?.consequence
+                          ? evaluateScenarioOutcome(
+                              id,
+                              responses.scene2.consequence,
+                              scenario,
+                            )
+                          : null
+                      }
+                      scenarioId={id}
+                    />
+                  )}{" "}
+                </>
+              )}
               {phase === "complete" && (
                 <ScenarioComplete
                   scenario={scenario}
