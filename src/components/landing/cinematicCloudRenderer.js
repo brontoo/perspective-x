@@ -1,5 +1,7 @@
 import { HERO_SOURCE, CLOUD_REGIONS, CLOUD_CYCLE_SECONDS, coverGeometry, regionBounds, polygonCoverage } from "./cinematicMotionGeometry";
 
+const cloudBounds = CLOUD_REGIONS.map(({ points }) => regionBounds(points));
+
 const vertexSource = `
   attribute vec2 aPosition;
   void main() { gl_Position = vec4(aPosition, 0.0, 1.0); }
@@ -41,7 +43,7 @@ function createMask() {
   if (!context) throw new Error("Mask rendering unavailable");
   const pixels = context.createImageData(canvas.width, canvas.height);
   CLOUD_REGIONS.forEach(({ points }, channel) => {
-    const bounds = regionBounds(points);
+    const bounds = cloudBounds[channel];
     for (let y = bounds.y; y < bounds.bottom; y++) {
       for (let x = bounds.x; x < bounds.right; x++) {
         const index = (y * canvas.width + x) * 4;
@@ -81,6 +83,7 @@ export function startCloudMotion(canvas, scene) {
     image.onload = null;
     image.onerror = null;
     if (gl) {
+      gl.useProgram(null);
       textures.forEach(texture => gl.deleteTexture(texture));
       shaders.forEach(shader => gl.deleteShader(shader));
       if (buffer) gl.deleteBuffer(buffer);
@@ -140,8 +143,7 @@ export function startCloudMotion(canvas, scene) {
     gl.uniform1f(uniforms.uTime, elapsed / 1000);
     gl.enable(gl.SCISSOR_TEST);
     // Shade only the three cloud bounding boxes, not every scene pixel.
-    for (const { points } of CLOUD_REGIONS) {
-      const bounds = regionBounds(points);
+    for (const bounds of cloudBounds) {
       const xRatio = canvas.width / geometry.width, yRatio = canvas.height / geometry.height;
       const left = Math.max(0, Math.floor((bounds.x * geometry.scale + geometry.offsetX) * xRatio));
       const right = Math.min(canvas.width, Math.ceil((bounds.right * geometry.scale + geometry.offsetX) * xRatio));

@@ -1,0 +1,813 @@
+{
+  "source": {
+    "file": "public/images/perspective/home-cinematic.webp",
+    "width": 1448,
+    "height": 1086,
+    "sha256": "12f045eca29760bdddcb4bf6bdd6310d2378b52127f3c569b581fe55d3bc3203",
+    "baselineCommit": "4eddcd1f98c4baf9210716fdf004e63f2e4e9865"
+  },
+  "stages": {
+    "first": "Source inspection, baseline preservation and localized cloud implementation (commit a7e0c6a)",
+    "second": "Hair assessment, lifecycle/loop/crop verification and review artifacts",
+    "hair": "Static: no separated strand or clean background plate; no reconstruction attempted"
+  },
+  "motion": {
+    "cycleSeconds": 48,
+    "maxHorizontalCssPixels": 1.4,
+    "maxVerticalCssPixels": 0.18,
+    "entryFadeSeconds": 3,
+    "regions": [
+      {
+        "name": "western sunset clouds",
+        "points": [
+          [
+            20,
+            24
+          ],
+          [
+            592,
+            24
+          ],
+          [
+            627,
+            135
+          ],
+          [
+            628,
+            255
+          ],
+          [
+            615,
+            382
+          ],
+          [
+            549,
+            368
+          ],
+          [
+            473,
+            334
+          ],
+          [
+            391,
+            300
+          ],
+          [
+            312,
+            273
+          ],
+          [
+            221,
+            244
+          ],
+          [
+            120,
+            221
+          ],
+          [
+            20,
+            179
+          ]
+        ]
+      },
+      {
+        "name": "high central clouds",
+        "points": [
+          [
+            650,
+            18
+          ],
+          [
+            1110,
+            18
+          ],
+          [
+            1110,
+            151
+          ],
+          [
+            1002,
+            199
+          ],
+          [
+            950,
+            189
+          ],
+          [
+            882,
+            161
+          ],
+          [
+            778,
+            167
+          ],
+          [
+            689,
+            185
+          ],
+          [
+            648,
+            123
+          ]
+        ]
+      },
+      {
+        "name": "eastern cloud bank",
+        "points": [
+          [
+            1000,
+            232
+          ],
+          [
+            1430,
+            198
+          ],
+          [
+            1430,
+            314
+          ],
+          [
+            1360,
+            325
+          ],
+          [
+            1294,
+            325
+          ],
+          [
+            1275,
+            393
+          ],
+          [
+            1198,
+            400
+          ],
+          [
+            1118,
+            413
+          ],
+          [
+            1035,
+            400
+          ],
+          [
+            993,
+            353
+          ]
+        ]
+      }
+    ]
+  },
+  "staticComparisons": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "pngSha256": "8a737d479fe8e1fd351d2aeee7dbaca973124ae1c4f48bf4e736cb1c5d4fbc68",
+      "ui": [
+        {
+          "className": "home-nav",
+          "bounds": {
+            "x": 45,
+            "y": 38.796875,
+            "width": 1830,
+            "height": 99,
+            "top": 38.796875,
+            "right": 1875,
+            "bottom": 137.796875,
+            "left": 45
+          },
+          "text": "Perspective X\nRoles\nLearning Paths\nTeacher Dashboard\nOur Story\nHomepage music is paused.\nSign In"
+        },
+        {
+          "className": {},
+          "bounds": {
+            "x": 127.34375,
+            "y": 66.296875,
+            "width": 50,
+            "height": 43,
+            "top": 66.296875,
+            "right": 177.34375,
+            "bottom": 109.296875,
+            "left": 127.34375
+          }
+        },
+        {
+          "className": "home-hero",
+          "bounds": {
+            "x": 45,
+            "y": 137.796875,
+            "width": 1830,
+            "height": 738.625,
+            "top": 137.796875,
+            "right": 1875,
+            "bottom": 876.421875,
+            "left": 45
+          },
+          "text": "Perspective X\n\nReal Science. Real Choices. Real Impact.\n\nStep into immersive roles, tackle real-world challenges, and shape a more sustainable future for the UAE and beyond.\n\nStart Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-actions",
+          "bounds": {
+            "x": 127.34375,
+            "y": 647.296875,
+            "width": 427.484375,
+            "height": 62,
+            "top": 647.296875,
+            "right": 554.828125,
+            "bottom": 709.296875,
+            "left": 127.34375
+          },
+          "text": "Start Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-bottom",
+          "bounds": {
+            "x": 45,
+            "y": 876.421875,
+            "width": 1830,
+            "height": 164.78125,
+            "top": 876.421875,
+            "right": 1875,
+            "bottom": 1041.203125,
+            "left": 45
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE\nand around the world.\n\nRiham Saleh\nPortal Creator\n16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        },
+        {
+          "className": "home-footer",
+          "bounds": {
+            "x": 109.046875,
+            "y": 894.421875,
+            "width": 889.03125,
+            "height": 116.78125,
+            "top": 894.421875,
+            "right": 998.078125,
+            "bottom": 1011.203125,
+            "left": 109.046875
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE\nand around the world.\n\nRiham Saleh\nPortal Creator"
+        },
+        {
+          "className": "home-stats",
+          "bounds": {
+            "x": 1028.078125,
+            "y": 900.21875,
+            "width": 782.875,
+            "height": 110.984375,
+            "top": 900.21875,
+            "right": 1810.953125,
+            "bottom": 1011.203125,
+            "left": 1028.078125
+          },
+          "text": "16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        }
+      ],
+      "background": {
+        "bounds": {
+          "x": 45,
+          "y": 137.796875,
+          "width": 1830,
+          "height": 903.40625,
+          "top": 137.796875,
+          "right": 1875,
+          "bottom": 1041.203125,
+          "left": 45
+        },
+        "size": "cover",
+        "position": "50% 50%"
+      },
+      "disabledPngSha256": "8a737d479fe8e1fd351d2aeee7dbaca973124ae1c4f48bf4e736cb1c5d4fbc68",
+      "pixelsAndLayoutUnchanged": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "pngSha256": "6fd8ce8cacaa35a828009d137d0886fccede32d1ae266c646fac9d42d7b97ee7",
+      "ui": [
+        {
+          "className": "home-nav",
+          "bounds": {
+            "x": 34.109375,
+            "y": 32.5,
+            "width": 1371.78125,
+            "height": 99,
+            "top": 32.5,
+            "right": 1405.890625,
+            "bottom": 131.5,
+            "left": 34.109375
+          },
+          "text": "Perspective X\nRoles\nLearning Paths\nTeacher Dashboard\nOur Story\nHomepage music is paused.\nSign In"
+        },
+        {
+          "className": {},
+          "bounds": {
+            "x": 95.828125,
+            "y": 60,
+            "width": 50,
+            "height": 43,
+            "top": 60,
+            "right": 145.828125,
+            "bottom": 103,
+            "left": 95.828125
+          }
+        },
+        {
+          "className": "home-hero",
+          "bounds": {
+            "x": 34.109375,
+            "y": 131.5,
+            "width": 1371.78125,
+            "height": 571.21875,
+            "top": 131.5,
+            "right": 1405.890625,
+            "bottom": 702.71875,
+            "left": 34.109375
+          },
+          "text": "Perspective X\n\nReal Science. Real Choices. Real Impact.\n\nStep into immersive roles, tackle real-world challenges, and shape a more sustainable future for the UAE and beyond.\n\nStart Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-actions",
+          "bounds": {
+            "x": 95.828125,
+            "y": 540.71875,
+            "width": 427.484375,
+            "height": 62,
+            "top": 540.71875,
+            "right": 523.3125,
+            "bottom": 602.71875,
+            "left": 95.828125
+          },
+          "text": "Start Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-bottom",
+          "bounds": {
+            "x": 34.109375,
+            "y": 702.71875,
+            "width": 1371.78125,
+            "height": 164.78125,
+            "top": 702.71875,
+            "right": 1405.890625,
+            "bottom": 867.5,
+            "left": 34.109375
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE\nand around the world.\n\nRiham Saleh\nPortal Creator\n16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        },
+        {
+          "className": "home-footer",
+          "bounds": {
+            "x": 82.109375,
+            "y": 720.71875,
+            "width": 658.921875,
+            "height": 116.78125,
+            "top": 720.71875,
+            "right": 741.03125,
+            "bottom": 837.5,
+            "left": 82.109375
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE\nand around the world.\n\nRiham Saleh\nPortal Creator"
+        },
+        {
+          "className": "home-stats",
+          "bounds": {
+            "x": 771.03125,
+            "y": 729.640625,
+            "width": 586.859375,
+            "height": 107.859375,
+            "top": 729.640625,
+            "right": 1357.890625,
+            "bottom": 837.5,
+            "left": 771.03125
+          },
+          "text": "16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        }
+      ],
+      "background": {
+        "bounds": {
+          "x": 34.109375,
+          "y": 131.5,
+          "width": 1371.78125,
+          "height": 736,
+          "top": 131.5,
+          "right": 1405.890625,
+          "bottom": 867.5,
+          "left": 34.109375
+        },
+        "size": "cover",
+        "position": "50% 50%"
+      },
+      "disabledPngSha256": "6fd8ce8cacaa35a828009d137d0886fccede32d1ae266c646fac9d42d7b97ee7",
+      "pixelsAndLayoutUnchanged": true
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "pngSha256": "25f4f879a6d1eab145e5e4dd320b75648ec9fc4c18686918709357034f45d560",
+      "ui": [
+        {
+          "className": "home-nav",
+          "bounds": {
+            "x": 18.65625,
+            "y": 36.828125,
+            "width": 730.6875,
+            "height": 116,
+            "top": 36.828125,
+            "right": 749.34375,
+            "bottom": 152.828125,
+            "left": 18.65625
+          },
+          "text": "Perspective X\nRoles\nLearning Paths\nTeacher Dashboard\nOur Story\nHomepage music is paused.\nSign In"
+        },
+        {
+          "className": {},
+          "bounds": {
+            "x": 47.875,
+            "y": 56.328125,
+            "width": 50,
+            "height": 43,
+            "top": 56.328125,
+            "right": 97.875,
+            "bottom": 99.328125,
+            "left": 47.875
+          }
+        },
+        {
+          "className": "home-hero",
+          "bounds": {
+            "x": 18.65625,
+            "y": 152.828125,
+            "width": 730.6875,
+            "height": 606.671875,
+            "top": 152.828125,
+            "right": 749.34375,
+            "bottom": 759.5,
+            "left": 18.65625
+          },
+          "text": "Perspective X\n\nReal Science. Real Choices. Real Impact.\n\nStep into immersive roles, tackle real-world challenges, and shape a more sustainable future for the UAE and beyond.\n\nStart Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-actions",
+          "bounds": {
+            "x": 51.53125,
+            "y": 518.6875,
+            "width": 427.484375,
+            "height": 62,
+            "top": 518.6875,
+            "right": 479.015625,
+            "bottom": 580.6875,
+            "left": 51.53125
+          },
+          "text": "Start Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-bottom",
+          "bounds": {
+            "x": 18.65625,
+            "y": 759.5,
+            "width": 730.6875,
+            "height": 227.671875,
+            "top": 759.5,
+            "right": 749.34375,
+            "bottom": 987.171875,
+            "left": 18.65625
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE\nand around the world.\n\nRiham Saleh\nPortal Creator\n16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        },
+        {
+          "className": "home-footer",
+          "bounds": {
+            "x": 47.875,
+            "y": 876.796875,
+            "width": 672.25,
+            "height": 88.375,
+            "top": 876.796875,
+            "right": 720.125,
+            "bottom": 965.171875,
+            "left": 47.875
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE\nand around the world.\n\nRiham Saleh\nPortal Creator"
+        },
+        {
+          "className": "home-stats",
+          "bounds": {
+            "x": 47.875,
+            "y": 773.5,
+            "width": 672.25,
+            "height": 89.296875,
+            "top": 773.5,
+            "right": 720.125,
+            "bottom": 862.796875,
+            "left": 47.875
+          },
+          "text": "16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        }
+      ],
+      "background": {
+        "bounds": {
+          "x": 18.65625,
+          "y": 152.828125,
+          "width": 730.6875,
+          "height": 834.34375,
+          "top": 152.828125,
+          "right": 749.34375,
+          "bottom": 987.171875,
+          "left": 18.65625
+        },
+        "size": "cover",
+        "position": "59% 50%"
+      },
+      "disabledPngSha256": "25f4f879a6d1eab145e5e4dd320b75648ec9fc4c18686918709357034f45d560",
+      "pixelsAndLayoutUnchanged": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "pngSha256": "210054f04cccc5aeea74e2d56af2f9c8a6c3825342bec389674f359083d2fb9b",
+      "ui": [
+        {
+          "className": "home-nav",
+          "bounds": {
+            "x": 13,
+            "y": 13,
+            "width": 364,
+            "height": 123,
+            "top": 13,
+            "right": 377,
+            "bottom": 136,
+            "left": 13
+          },
+          "text": "Perspective X\nRoles\nLearning Paths\nTeacher Dashboard\nOur Story\nHomepage music is paused.\nSign In"
+        },
+        {
+          "className": {},
+          "bounds": {
+            "x": 25,
+            "y": 33,
+            "width": 30,
+            "height": 28,
+            "top": 33,
+            "right": 55,
+            "bottom": 61,
+            "left": 25
+          }
+        },
+        {
+          "className": "home-hero",
+          "bounds": {
+            "x": 13,
+            "y": 136,
+            "width": 364,
+            "height": 512.671875,
+            "top": 136,
+            "right": 377,
+            "bottom": 648.671875,
+            "left": 13
+          },
+          "text": "Perspective X\n\nReal Science. Real Choices. Real Impact.\n\nStep into immersive roles, tackle real-world challenges, and shape a more sustainable future for the UAE and beyond.\n\nStart Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-actions",
+          "bounds": {
+            "x": 29,
+            "y": 468.359375,
+            "width": 270.609375,
+            "height": 47,
+            "top": 468.359375,
+            "right": 299.609375,
+            "bottom": 515.359375,
+            "left": 29
+          },
+          "text": "Start Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-bottom",
+          "bounds": {
+            "x": 13,
+            "y": 648.671875,
+            "width": 364,
+            "height": 182.328125,
+            "top": 648.671875,
+            "right": 377,
+            "bottom": 831,
+            "left": 13
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE and around the world.\n\nRiham Saleh\nPortal Creator\n16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        },
+        {
+          "className": "home-footer",
+          "bounds": {
+            "x": 29,
+            "y": 745,
+            "width": 332,
+            "height": 70,
+            "top": 745,
+            "right": 361,
+            "bottom": 815,
+            "left": 29
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE and around the world.\n\nRiham Saleh\nPortal Creator"
+        },
+        {
+          "className": "home-stats",
+          "bounds": {
+            "x": 29,
+            "y": 660.671875,
+            "width": 332,
+            "height": 70.328125,
+            "top": 660.671875,
+            "right": 361,
+            "bottom": 731,
+            "left": 29
+          },
+          "text": "16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        }
+      ],
+      "background": {
+        "bounds": {
+          "x": 13,
+          "y": 136,
+          "width": 364,
+          "height": 695,
+          "top": 136,
+          "right": 377,
+          "bottom": 831,
+          "left": 13
+        },
+        "size": "cover",
+        "position": "60% 50%"
+      },
+      "disabledPngSha256": "210054f04cccc5aeea74e2d56af2f9c8a6c3825342bec389674f359083d2fb9b",
+      "pixelsAndLayoutUnchanged": true
+    },
+    {
+      "width": 1366,
+      "height": 600,
+      "pngSha256": "36a5e1de535b760384393cfe6b0beac7d493ad0eba568ba7a17de386abf76d88",
+      "ui": [
+        {
+          "className": "home-nav",
+          "bounds": {
+            "x": 32.40625,
+            "y": 13,
+            "width": 1301.1875,
+            "height": 71,
+            "top": 13,
+            "right": 1333.59375,
+            "bottom": 84,
+            "left": 32.40625
+          },
+          "text": "Perspective X\nRoles\nLearning Paths\nTeacher Dashboard\nOur Story\nHomepage music is paused.\nSign In"
+        },
+        {
+          "className": {},
+          "bounds": {
+            "x": 90.953125,
+            "y": 26.5,
+            "width": 50,
+            "height": 43,
+            "top": 26.5,
+            "right": 140.953125,
+            "bottom": 69.5,
+            "left": 90.953125
+          }
+        },
+        {
+          "className": "home-hero",
+          "bounds": {
+            "x": 32.40625,
+            "y": 84,
+            "width": 1301.1875,
+            "height": 388.484375,
+            "top": 84,
+            "right": 1333.59375,
+            "bottom": 472.484375,
+            "left": 32.40625
+          },
+          "text": "Perspective X\n\nReal Science. Real Choices. Real Impact.\n\nStep into immersive roles, tackle real-world challenges, and shape a more sustainable future for the UAE and beyond.\n\nStart Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-actions",
+          "bounds": {
+            "x": 90.953125,
+            "y": 339.25,
+            "width": 334.59375,
+            "height": 43,
+            "top": 339.25,
+            "right": 425.546875,
+            "bottom": 382.25,
+            "left": 90.953125
+          },
+          "text": "Start Your Mission\nExplore Roles"
+        },
+        {
+          "className": "home-bottom",
+          "bounds": {
+            "x": 32.40625,
+            "y": 472.484375,
+            "width": 1301.1875,
+            "height": 114.515625,
+            "top": 472.484375,
+            "right": 1333.59375,
+            "bottom": 587,
+            "left": 32.40625
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE\nand around the world.\n\nRiham Saleh\nPortal Creator\n16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        },
+        {
+          "className": "home-footer",
+          "bounds": {
+            "x": 77.9375,
+            "y": 496.828125,
+            "width": 623.46875,
+            "height": 78.171875,
+            "top": 496.828125,
+            "right": 701.40625,
+            "bottom": 575,
+            "left": 77.9375
+          },
+          "text": "Trusted by educators, schools, and partners across the UAE\nand around the world.\n\nRiham Saleh\nPortal Creator"
+        },
+        {
+          "className": "home-stats",
+          "bounds": {
+            "x": 731.40625,
+            "y": 482.484375,
+            "width": 556.65625,
+            "height": 92.515625,
+            "top": 482.484375,
+            "right": 1288.0625,
+            "bottom": 575,
+            "left": 731.40625
+          },
+          "text": "16\nLive Scenarios\n9\nRole Paths\n1\nRegistered Students"
+        }
+      ],
+      "background": {
+        "bounds": {
+          "x": 32.40625,
+          "y": 84,
+          "width": 1301.1875,
+          "height": 503,
+          "top": 84,
+          "right": 1333.59375,
+          "bottom": 587,
+          "left": 32.40625
+        },
+        "size": "cover",
+        "position": "50% 50%"
+      },
+      "disabledPngSha256": "36a5e1de535b760384393cfe6b0beac7d493ad0eba568ba7a17de386abf76d88",
+      "pixelsAndLayoutUnchanged": true
+    }
+  ],
+  "checks": {
+    "build": "passed",
+    "lint": "passed",
+    "typecheck": "passed",
+    "unitTests": 12,
+    "fullRegressionPassed": 93,
+    "finalFocusedPassed": 43,
+    "distinctBrowserCasesValidatedAcrossRuns": 106,
+    "allRequiredViewportsPassed": true,
+    "activeFramesChangedOutsideCloudMasks": 0,
+    "activeRgbTolerance": 1,
+    "seamRgbTolerance": 1,
+    "liveAuthenticatedQA": "unverified; authenticated checks use authorized synthetic fixtures",
+    "finalRendererCleanupRetestPassed": 11
+  },
+  "performance": {
+    "shaderSeconds": 52.8979,
+    "frames": 1814,
+    "wallSeconds": 53.08920000000018,
+    "averageFPS": 34.150071954371015,
+    "medianFrameMs": 27.5,
+    "p95FrameMs": 42.90000000037253,
+    "environment": "Headless Chromium 151 software WebGL in Codex cloud; not physical-device performance"
+  },
+  "video": {
+    "nativeDuration": 54.84,
+    "trimStart": 4.950799999999821,
+    "reviewDuration": 49.88920000000018
+  },
+  "limits": [
+    "Hair is deliberately static.",
+    "Activating a GPU layer may change compositor rasterization of existing text shadows/subpixel edges; styles and geometry are unchanged. Static and consecutive-active-frame comparisons separate this from movement.",
+    "Headless recording performance is not physical-device GPU performance.",
+    "No production deployment is authorized for this feature."
+  ],
+  "files": [
+    "src/pages/Home.jsx",
+    "src/components/landing/CinematicHeroMotion.jsx",
+    "src/components/landing/cinematic-motion.css",
+    "src/components/landing/cinematicCloudRenderer.js",
+    "src/components/landing/cinematicMotionGeometry.js",
+    "tests/cinematic-motion.spec.js",
+    "tests/cinematic-motion.test.mjs",
+    "tests/our-story.spec.js",
+    "docs/cinematic-motion/README.md",
+    "docs/cinematic-motion/validation.json",
+    "docs/cinematic-motion/before-1440x900.png",
+    "docs/cinematic-motion/active-1440x900.png",
+    "docs/cinematic-motion/cinematic-preview.mp4"
+  ]
+}

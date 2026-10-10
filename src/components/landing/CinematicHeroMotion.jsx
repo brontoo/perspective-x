@@ -24,5 +24,6 @@ export default function CinematicHeroMotion() {
       stop?.();
     };
   }, [pathname]);
+  if (pathname !== "/") return null;
   return <canvas ref={ref} className="home-cinematic-motion" aria-hidden="true" />;
 }

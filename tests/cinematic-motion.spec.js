@@ -21,7 +21,10 @@ async function prepare(page) {
     };
     const uniform = prototype.uniform1f;
     prototype.uniform1f = function (...args) {
-      if (this.canvas.classList.contains("home-cinematic-motion") && locations.get(args[0]) === "uTime") window.motionObservation.seconds = args[1];
+      if (this.canvas.classList.contains("home-cinematic-motion") && locations.get(args[0]) === "uTime") {
+        if (window.motionObservation.overrideSeconds != null) args[1] = window.motionObservation.overrideSeconds;
+        window.motionObservation.seconds = args[1];
+      }
       return uniform.apply(this, args);
     };
     const draw = prototype.drawArrays;
@@ -160,4 +163,59 @@ test("context loss falls back safely and high-DPR canvases remain capped", async
     await page.getByRole("link", { name: "Sign In", exact: true }).click();
     await expect(page).toHaveURL(/\/SignIn$/);
   } finally { await context.close(); }
+});
+
+test("the GPU texture field closes continuously over its complete 48-second cycle", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await prepare(page);
+  await expect(page.locator(".home-cinematic-motion")).toHaveAttribute("data-state", "running");
+  // Pin shader time in test instrumentation, after the three-second entry fade.
+  await page.evaluate(() => { window.motionObservation.overrideSeconds = 4; });
+  await expect.poll(() => page.evaluate(() => window.motionObservation.seconds)).toBe(4);
+  const before = PNG.sync.read(await page.screenshot());
+  await page.evaluate(() => { window.motionObservation.overrideSeconds = 52; });
+  await expect.poll(() => page.evaluate(() => window.motionObservation.seconds)).toBe(52);
+  const after = PNG.sync.read(await page.screenshot());
+  let maximum = 0;
+  for (let index = 0; index < before.data.length; index++) maximum = Math.max(maximum, Math.abs(before.data[index] - after.data[index]));
+  expect(maximum).toBeLessThanOrEqual(1);
+});
+
+test("one renderer follows live resizing through every crop breakpoint", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await prepare(page);
+  const canvas = page.locator(".home-cinematic-motion");
+  await expect(canvas).toHaveAttribute("data-state", "running");
+  for (const [width,height,position] of [[390,844,"60% 50%"],[768,1024,"59% 50%"],[1920,1080,"50% 50%"],[1366,600,"50% 50%"]]) {
+    await page.setViewportSize({width,height});
+    const scene = await page.locator(".home-scene").evaluate(element => ({ ...element.getBoundingClientRect().toJSON(), position: getComputedStyle(element).backgroundPosition }));
+    expect(scene.position).toBe(position);
+    const expected = coverGeometry(scene.width, scene.height, 1448, 1086, position);
+    await expect.poll(async () => {
+      const actual = await canvas.evaluate(element => {
+        const gl = element.getContext("webgl"), program = gl.getParameter(gl.CURRENT_PROGRAM);
+        const get = name => gl.getUniform(program, gl.getUniformLocation(program, name));
+        return { width: get("uContainer")[0], height: get("uContainer")[1], x: get("uOffset")[0], y: get("uOffset")[1], scale: get("uCoverScale") };
+      });
+      return Math.max(Math.abs(actual.width - expected.width), Math.abs(actual.height - expected.height), Math.abs(actual.x - expected.offsetX), Math.abs(actual.y - expected.offsetY), Math.abs(actual.scale - expected.scale));
+    }).toBeLessThan(.001);
+    await expect(canvas).toHaveCount(1);
+  }
+});
+
+test("leaving while the artwork is loading cancels late renderer initialization", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.addInitScript(() => localStorage.setItem("px-home-music-muted", "true"));
+  await setup(page, { guest: true });
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  await page.route("**/home-cinematic.webp", async route => { await gate; await route.continue(); });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator(".home-cinematic-motion")).toHaveAttribute("data-state", "loading");
+  await page.getByRole("link", { name: "Sign In", exact: true }).click();
+  await expect(page).toHaveURL(/\/SignIn$/);
+  release();
+  await page.waitForLoadState("networkidle");
+  await expect(page.locator(".home-cinematic-motion")).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: /Welcome back/ })).toBeVisible();
 });
