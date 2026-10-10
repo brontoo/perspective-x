@@ -1,3 +1,4 @@
+import { ROLES } from "../src/components/scenarios/scenarioData";
 import {test,expect} from '@playwright/test';
 import {setup} from './support/fixtures';
 import fs from 'node:fs/promises';
@@ -24,5 +25,5 @@ for (const [width,height] of [[1676,927],[1920,1080],[1440,900],[1366,768],[1280
  });
 }
 test('homepage navigation works without scrolling sections',async({page})=>{
- await setup(page);await page.goto('/');await page.getByRole('button',{name:'Our Story',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).not.toBeVisible();await page.getByRole('link',{name:'Explore Roles',exact:true}).click();await expect(page).toHaveURL(/\/Roles$/);await expect(page.locator('.xp-role-card')).toHaveCount(9);
+ await setup(page);await page.goto('/');await page.getByRole('button',{name:'Our Story',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).not.toBeVisible();await page.getByRole('link',{name:'Explore Roles',exact:true}).click();await expect(page).toHaveURL(/\/Roles$/);await expect(page.locator('.xp-role-card')).toHaveCount(Object.keys(ROLES).length);
 });

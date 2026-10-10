@@ -33,7 +33,13 @@ export default function ScenarioComplete({
         className={`xp-achievement ${passed ? "is-earned" : ""}`}
         aria-hidden="true"
       >
-        {passed ? scenario.badgeIcon : "↗"}
+        {passed && scenario.badgeArtwork ? (
+          <img src={scenario.badgeArtwork} alt="" width="82" height="82" />
+        ) : passed ? (
+          scenario.badgeIcon
+        ) : (
+          "↗"
+        )}
       </div>
       <h2>
         {passed ? "Mission accomplished" : "Keep building your expertise"}

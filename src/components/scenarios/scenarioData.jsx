@@ -1,4 +1,5 @@
-// Complete scenario database for all 16 role-play scenarios
+// Existing scenarios plus the additive Ionic Materials Specialist role.
+import { IONIC_ROLE, IONIC_SCENARIOS } from "@/data/ionicMissions.mjs";
 
 export const ROLES = {
     environmental_scientist: {
@@ -84,6 +85,7 @@ export const ROLES = {
         scenarios: ['gas_boyle_adnoc', 'gas_charles_aviation', 'gas_gaylussac_cylinder']
     },
 
+    ionic_materials_specialist: IONIC_ROLE,
 };
 
 export const SCENARIOS = {
@@ -2486,10 +2488,13 @@ export const SCENARIOS = {
             reflectionPrompt: 'How did understanding chemistry help you make a life-saving decision?',
             transferQuestion: 'If the carbon dioxide removal system also failed, what chemical principle would you use to address it?'
         }
-    }
+    },
+    ...IONIC_SCENARIOS,
 };
 
 export const BADGES = {
+    'Ionic Evidence Investigator': { icon: '🧪', color: 'amber', description: 'Identified ionic materials with independent evidence' },
+    'Marine Mineral Analyst': { icon: '💎', color: 'teal', description: 'Balanced ionic formulas and investigated mineral deposits' },
     'Water Safety Analyst': { icon: '💧', color: 'blue', description: 'Protected water quality through scientific analysis' },
     'Process Safety Expert': { icon: '🛡️', color: 'red', description: 'Managed chemical reactions safely' },
     'Atmosphere Guardian': { icon: '🌧️', color: 'purple', description: 'Defended against air pollution' },
@@ -2523,6 +2528,8 @@ export const SKILLS = {
 };
 
 export const SCENARIO_SKILLS_MAP = {
+    ionic_dessert_mystery: IONIC_SCENARIOS.ionic_dessert_mystery.skills,
+    ionic_aquarium_mystery: IONIC_SCENARIOS.ionic_aquarium_mystery.skills,
     water_contamination: ['data_interpretation', 'ethical_reasoning', 'communication', 'reflection'],
     reaction_gone_wrong: ['concept_application', 'risk_analysis', 'reflection'],
     acid_rain: ['data_interpretation', 'ethical_reasoning', 'risk_analysis'],

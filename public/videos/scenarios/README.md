@@ -29,3 +29,12 @@ Here is the exact list of files you should place in this directory:
 - **Aspect Ratio**: 16:9 (recommended widescreen)
 - **Resolution**: 1080p (recommended for web performance) or 720p
 - **Audio**: Include the voiceover/narration and background music mixed into the video file itself.
+
+## Reserved Ionic Materials Specialist introductions
+
+The user will create these videos. No videos have been generated for these missions.
+
+- `ionic_dessert_mystery.mp4`
+- `ionic_aquarium_mystery.mp4`
+
+Until uploaded, both use a playable static cinematic briefing. An available MP4 appears with native video controls without making viewing a prerequisite for proceeding.

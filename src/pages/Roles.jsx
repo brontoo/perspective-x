@@ -16,7 +16,7 @@ export default function Roles() {
         <p className="px-eyebrow">Your future starts with a perspective</p>
         <h1>Choose your role</h1>
         <p>
-          Nine scientific professions. Real evidence. Decisions that matter.
+          {Object.keys(ROLES).length} scientific professions. Real evidence. Decisions that matter.
         </p>
         <div className="xp-chips">
           <span>Explore authentic challenges</span>

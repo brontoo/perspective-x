@@ -13,13 +13,13 @@ const allPassed = Object.keys(SCENARIOS).map((scenario_id, i) => ({
   completed_at: "2026-10-10T10:00:00Z",
   answers: { exitTicket: { score: 100, passed: true } },
 }));
-test("nine role journeys and six pathways retain their scientific relationships", async ({
+test("all role journeys and six pathways retain their scientific relationships", async ({
   page,
 }) => {
   test.setTimeout(90000);
   await setup(page, { seedRows: allPassed });
   await page.goto("/Roles");
-  await expect(page.locator(".xp-role-card")).toHaveCount(9);
+  await expect(page.locator(".xp-role-card")).toHaveCount(Object.keys(ROLES).length);
   for (const role of Object.values(ROLES)) {
     await page.goto(`/RoleHub?role=${role.id}`);
     await expect(
@@ -60,7 +60,7 @@ test("teacher locks and prerequisites cannot be bypassed with preview query", as
   }
   expect(state.writes).toHaveLength(0);
 });
-for (const id of Object.keys(SCENARIOS))
+for (const id of Object.keys(SCENARIOS).filter(id => !SCENARIOS[id].interactiveIonic))
   test(`all five chapters preserve original assessment: ${id}`, async ({
     page,
   }) => {
@@ -173,7 +173,7 @@ for (const width of [1440, 1024, 768, 390, 375])
       await noOverflow(page);
     }
     await page.goto("/Roles");
-    await expect(page.locator(".xp-role-card")).toHaveCount(9);
+    await expect(page.locator(".xp-role-card")).toHaveCount(Object.keys(ROLES).length);
     await page.evaluate(async () => {
       await document.fonts.ready;
       await Promise.all(

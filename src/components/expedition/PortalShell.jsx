@@ -5,6 +5,7 @@ import {
   LoadState,
 } from "@/components/perspective/Portal";
 import "./expedition.css";
+import "./ionic-role-art.css";
 export function DataState({ data }) {
   return <LoadState error={data.error} onRetry={data.refresh} />;
 }

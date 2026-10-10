@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { answersOf } from "@/lib/perspective/progress.mjs";
+import { ionicHypothesisText } from "@/lib/expedition/ionicRecord.mjs";
 import "@/components/expedition/expedition.css";
 const SECTIONS = [
   ["evidenceNotes", "1. Scientific evidence"],
@@ -36,10 +37,30 @@ export default function MissionNotebook({
     scenario.scenes?.[2]?.consequences?.[
       record.scene2?.consequence || second?.consequence
     ];
+  const hypothesis =
+    scenario.interactiveIonic &&
+    ionicHypothesisText(
+      record.scene1?.identifications ||
+        record.investigation?.identities ||
+        record.investigation?.mineral,
+    );
+  const ionicEvidence =
+    scenario.interactiveIonic &&
+    [
+      record.investigation?.evidence
+        ?.map((e) => `${e.label}: ${e.observation}`)
+        .join("\n"),
+      hypothesis && `My compound hypothesis:\n${hypothesis}`,
+      record.scene1?.scientificFeedback,
+    ]
+      .filter(Boolean)
+      .join("\n\n");
   const collected = [
-    first
-      ? `${first.text}\n${record.scene1?.justification || ""}`
-      : record.scene1?.justification,
+    ionicEvidence
+      ? ionicEvidence
+      : first
+        ? `${first.text}\n${record.scene1?.justification || ""}`
+        : record.scene1?.justification,
     record.scene2?.justification,
     second?.text,
     consequence

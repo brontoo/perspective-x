@@ -37,6 +37,22 @@ import {
 } from 'lucide-react';
 
 const SCENARIO_METADATA = {
+    ionic_dessert_mystery: {
+        topic: 'Chapter 3 · Ion Formation, Ionic Bonding & Conductivity',
+        learningObjective: 'Model valence-electron transfer, distinguish mobile ions from neutral molecules, and identify candidate powders using independent evidence.',
+        priorKnowledge: 'Valence electrons, proton/electron counts, and controlled comparisons (textbook pp. 63–74).',
+        studentOutput: 'Nine sample readings, an electron-transfer model, compound hypotheses, cited recommendation, reflection, and five assessed MCQs.',
+        discussionQuestion: 'Why do independent tests support identity without certifying food suitability?',
+        skillsDeveloped: ['Ion Formation', 'Controlled Testing', 'Evidence Interpretation', 'Scientific Reasoning']
+    },
+    ionic_aquarium_mystery: {
+        topic: 'Chapter 3 · Crystal Structures, Formula Units & Polyatomic Ions',
+        learningObjective: 'Analyze complementary mineral evidence, construct a simplest neutral formula, explore ionic crystal coordination, and name polyatomic compounds.',
+        priorKnowledge: 'Ionic charges, formula units, and polyatomic ion names (textbook pp. 68–80). Mission 1 must be passed before student access.',
+        studentOutput: 'Mineral tests, drag/drop formula, 360° crystal exploration, qualitative water-trend experiment, cited decision, reflection, and five assessed MCQs.',
+        discussionQuestion: 'How can formula units and mineral properties support a response that addresses the cause?',
+        skillsDeveloped: ['Charge Balancing', 'Crystal Structure', 'Polyatomic Ions', 'Evidence Interpretation']
+    },
     water_contamination: {
         topic: 'Water Quality & Chemical Contamination',
         learningObjective: 'Identify nitrate contamination risks and evaluate chemical filtration strategies to protect municipal drinking water.',

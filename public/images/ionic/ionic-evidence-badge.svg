@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Ionic Evidence Investigator badge">
+  <defs><linearGradient id="gold" x2="1" y2="1"><stop stop-color="#ffdda5"/><stop offset="1" stop-color="#ba7c3a"/></linearGradient></defs>
+  <path fill="#173841" stroke="url(#gold)" stroke-width="4" d="M60 5 105 31v53l-45 31L15 84V31z"/>
+  <path fill="none" stroke="#edc486" d="m60 13 37 22v45l-37 26-37-26V35z"/>
+  <path fill="#2f7881" stroke="#ffe1aa" stroke-width="3" d="M45 30h30m-23 0v22L36 81q-3 7 5 7h38q8 0 5-7L68 52V30"/>
+  <path fill="#e6ae6c" d="m46 67-8 16h44l-8-16z"/>
+  <circle cx="55" cy="75" r="3" fill="#123743"/><circle cx="65" cy="61" r="3" fill="#ffdda5"/>
+  <path d="m84 38 5 5 11-12" fill="none" stroke="#8ef4d1" stroke-width="4" stroke-linecap="round"/>
+</svg>

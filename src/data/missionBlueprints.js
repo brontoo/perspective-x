@@ -3,6 +3,8 @@
  * This layer never changes existing video files, question keys or scenario IDs.
  */
 export const MISSION_BLUEPRINTS = {
+  ionic_dessert_mystery: { roleLead: "Hamad Al Zaabi", signal: "Final round · Ingredient verification", situation: "Three white powders have lost their labels in a fictional park competition.", stakes: "Unknown ingredients must stay out of food.", goal: "Combine independent evidence and verify a responsible ingredient decision.", focusQuestion: "What can conductivity establish—and what can it not establish?", outcomeLens: "Did the decision establish reliable identities and traceable ingredients?", reflectionPrompt: "Which independent measurements support your decision?", objectives: ["Model valence-electron transfer and ion formation.", "Explain mobile-ion conductivity.", "Identify candidate compounds using independent evidence."] },
+  ionic_aquarium_mystery: { roleLead: "Hamad Al Zaabi", signal: "Isolated demonstration loop · Mineral investigation", situation: "Cloudy water and white mineral deposits appear in a fictional educational aquarium simulation.", stakes: "An evidence-based response must protect animal systems and address the cause.", goal: "Analyze a mineral, balance its ionic formula and recommend qualified review.", focusQuestion: "Which combination of measurements supports a mineral identity?", outcomeLens: "Does the response address chemistry trends responsibly?", reflectionPrompt: "How do charge balance and mineral properties support your response?", objectives: ["Explore repeating ionic crystal structures.", "Build neutral formulas in the simplest ratio.", "Name polyatomic ionic compounds and justify a response."] },
   "water_contamination": {
     "roleLead": "Layan Mansour",
     "signal": "Water-quality alert",
@@ -246,6 +248,7 @@ export const MISSION_BLUEPRINTS = {
 };
 
 export const ROLE_LEADS = {
+  ionic_materials_specialist: "Hamad Al Zaabi",
   "environmental_scientist": "Layan Mansour",
   "biomedical_researcher": "Rayan Al Hassan",
   "space_mission_chemist": "Salim Haddad",

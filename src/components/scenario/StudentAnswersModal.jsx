@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { SCENARIOS } from "@/components/scenarios/scenarioData";
 import { UAE_SCENARIOS } from "@/components/scenarios/uaeScenarioData";
+import { ionicHypothesisText } from "@/lib/expedition/ionicRecord.mjs";
 import {
   answersOf,
   formatDate,
@@ -63,6 +64,31 @@ export default function StudentAnswersModal({
                 : "Unassessed draft"}
               <small>{formatDate(row.completed_at || a.meta?.updatedAt)}</small>
             </summary>
+            {s.interactiveIonic && a.investigation?.evidence?.length > 0 && (
+              <section className="xp-captured">
+                <h3>Interactive investigation evidence</h3>
+                {a.investigation.evidence.map((e) => (
+                  <p key={e.id}>
+                    <strong>{e.label}</strong>: {e.observation}
+                  </p>
+                ))}
+                {ionicHypothesisText(
+                  a.scene1?.identifications ||
+                    a.investigation.identities ||
+                    a.investigation.mineral,
+                ) && (
+                  <p>
+                    <strong>Learner’s compound hypothesis</strong>
+                    <br />
+                    {ionicHypothesisText(
+                      a.scene1?.identifications ||
+                        a.investigation.identities ||
+                        a.investigation.mineral,
+                    )}
+                  </p>
+                )}
+              </section>
+            )}
             {["scene1", "scene2", "scene3"].map(
               (key, i) =>
                 a[key] && (

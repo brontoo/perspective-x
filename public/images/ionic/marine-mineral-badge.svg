@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Marine Mineral Analyst badge">
+  <defs><linearGradient id="sea" x2="1" y2="1"><stop stop-color="#a6f5e5"/><stop offset="1" stop-color="#319bae"/></linearGradient></defs>
+  <path fill="#173041" stroke="url(#sea)" stroke-width="4" d="M60 5 105 31v53l-45 31L15 84V31z"/>
+  <path fill="none" stroke="#75c6d0" d="m60 13 37 22v45l-37 26-37-26V35z"/>
+  <path fill="#b6a0e9" stroke="#eee0ff" stroke-width="2" d="m60 28 23 20-23 32-23-32z"/>
+  <path d="m37 48 23 5 23-5M60 28v52" stroke="#f1e6ff" stroke-width="2" fill="none"/>
+  <path d="M29 86q8-9 16 0t16 0 16 0 16 0" stroke="#91eadb" stroke-width="3" fill="none"/>
+  <circle cx="28" cy="44" r="3" fill="#b0f8e4"/><circle cx="91" cy="63" r="3" fill="#b0f8e4"/>
+</svg>
