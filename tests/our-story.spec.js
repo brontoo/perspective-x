@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { setup } from "./support/fixtures";
 import fs from "node:fs/promises";
+import { createHash } from "node:crypto";
 
 for (const [width, height] of [[1440, 900], [768, 1024], [390, 844]]) {
   test(`Our Story is readable, scrollable and restores the homepage at ${width}x${height}`, async ({ page }) => {
@@ -12,7 +13,9 @@ for (const [width, height] of [[1440, 900], [768, 1024], [390, 844]]) {
     const trigger = page.getByRole("button", { name: "Our Story", exact: true });
     await expect(page.getByRole("link", { name: "Sign In", exact: true })).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
-    const before = await page.screenshot();
+    // Compare the fully painted homepage, including background artwork.
+    await page.waitForLoadState("networkidle");
+    const before = createHash("sha256").update(await page.screenshot()).digest("hex");
     await trigger.click();
     const dialog = page.getByRole("dialog", { name: "Real science. Meaningful choices." });
     await expect(dialog).toBeVisible();
@@ -51,7 +54,7 @@ for (const [width, height] of [[1440, 900], [768, 1024], [390, 844]]) {
     await expect(dialog).not.toBeVisible();
     await expect(trigger).toBeFocused();
     await trigger.evaluate(element => element.blur());
-    expect(await page.screenshot()).toEqual(before);
+    expect(createHash("sha256").update(await page.screenshot()).digest("hex")).toBe(before);
     await trigger.click();
     await page.keyboard.press("Escape");
     await expect(dialog).not.toBeVisible();
