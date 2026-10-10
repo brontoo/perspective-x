@@ -125,17 +125,14 @@ test("teacher operational controls and scenario locks remain available", async (
   await expect(
     page.getByRole("heading", { name: "Test Teacher!" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Missions", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Manage Scenarios", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "Missions", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Scenario Controls" }),
+    page.getByRole("heading", { name: "Mission controls" }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: /Lock|Unlock/ }).first(),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Feedback", exact: true }).click();
+  await page.getByRole("tab", { name: "Feedback", exact: true }).click();
   await expect(
     page.getByText("Send Feedback", { exact: true }).first(),
   ).toBeVisible();
