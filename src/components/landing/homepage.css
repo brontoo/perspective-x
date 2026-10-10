@@ -145,3 +145,29 @@
   .px-home .home-slogan { font-size: 16px; margin-bottom: 6px; }
   .px-home .home-description { font-size: 11px; margin-bottom: 8px; }
 }
+
+/* A separate header keeps every navigation item above the character artwork. */
+.px-home .home-cinema { background: #38213d; }
+.px-home .home-frame { background: transparent; }
+.px-home .home-nav { position: relative; z-index: 1; background: linear-gradient(110deg,#61354f,#34253f); border-bottom: 1px solid #fff2; }
+.px-home .home-scene { flex: 1; min-height: 0; display: flex; flex-direction: column; background: url('/images/perspective/home-cinematic.webp') center center/cover no-repeat; }
+.px-home .home-stats { padding: 16px 18px; }
+.px-home .home-stats span { white-space: nowrap; font-size: clamp(11px,.95vw,16px); }
+@media (max-width: 1200px) {
+  .px-home .home-stats { padding: 14px 10px; }
+  .px-home .home-stats > div { padding: 0 8px; }
+  .px-home .home-stats span { font-size: 10px; }
+}
+@media (max-width: 800px) {
+  .px-home .home-scene { background-position: 59% center; }
+}
+@media (max-width: 480px) {
+  .px-home .home-scene { background-position: 60% center; }
+  .px-home .home-stats { padding: 10px 4px; }
+  .px-home .home-stats > div { padding: 0 5px; }
+  .px-home .home-stats span { font-size: 9px; }
+}
+@media (max-height: 450px) and (min-width: 801px) {
+  .px-home .home-stats { padding: 10px; }
+  .px-home .home-stats span { font-size: 10px; }
+}
