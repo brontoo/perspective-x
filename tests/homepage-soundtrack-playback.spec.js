@@ -53,6 +53,14 @@ test("hidden-tab pause retains position; page hide resets and prevents late resu
   await page.evaluate(() => { window.dispatchEvent(new PageTransitionEvent("pagehide")); document.dispatchEvent(new Event("visibilitychange")); });
   expect((await audioState(page)).paused).toBe(true);
   expect((await audioState(page)).time).toBe(0);
+  const attempts = (await audioState(page)).attempts;
+  await page.evaluate(() => {
+    // Simulate a preference changed while the page was frozen, without a storage event.
+    localStorage.setItem("px-home-music-muted", "true");
+    window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: true }));
+  });
+  expect((await audioState(page)).paused).toBe(true);
+  expect((await audioState(page)).attempts).toBe(attempts);
 });
 
 test("real exclusive locks prevent simultaneous playback across two tabs and propagate mute", async ({ context, page }) => {

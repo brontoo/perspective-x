@@ -11,7 +11,7 @@ When playback is denied, the next trusted homepage pointer/keyboard interaction 
 
 Native Web Locks provide exclusive ownership across same-origin tabs in the same browser profile. If another tab owns playback, this tab stays quiet. Browsers without Web Locks fail closed with an accessible unavailable state rather than risk overlapping sound. Mute preference changes propagate through local storage when available.
 
-Hiding the tab pauses playback and releases ownership; returning attempts to resume only if manually unmuted and permitted by the browser. Navigation/unmount and pagehide immediately pause, silence and reset the element, cancel the fade, release ownership and abort/remove the media source. Pending play promises cannot leak sound onto another route or relinquish the lock while still starting.
+Hiding the tab pauses playback and releases ownership; visible/cached-page restoration re-reads the stored mute preference before any resume; returning attempts to resume only if manually unmuted and permitted by the browser. Navigation/unmount and pagehide immediately pause, silence and reset the element, cancel the fade, release ownership and abort/remove the media source. Pending play promises cannot leak sound onto another route or relinquish the lock while still starting.
 
 The track loops natively with one stream. Its final second tapers toward silence, and the next loop fades in. Opening Our Story keeps the same player. There is no global sound provider and no change to mission audio, narration or videos.
 
@@ -33,6 +33,7 @@ The current user request supersedes the older ZIP's initially-off and 18% recomm
 - `npm run test:unit`: 9 passed.
 - Initial full `npm run test:ui`: 82 passed, one old style-only test timed out waiting for network idle after audio was introduced. The readiness assumption was corrected and the affected test passed on rerun.
 - Final production-build verification: 25 passed, including all nine soundtrack tests, the corrected style comparison, homepage guest/authenticated routing, statistics, and ten viewport-fit checks.
+- After the final cached-page preference guard, build/lint/typecheck and all nine production-build soundtrack checks passed again.
 - The exact bundled MP3 was probed at 113.580406 seconds and decoded by the browser. Native playback, nonzero PCM samples, 15% fade target and a real end-of-track loop were checked; no substitute or silent placeholder is used.
 - Policy rejection and pending-play races use controlled failures/delays; successful playback and loops use the real MP3. Tab hiding is simulated through the visibility event, while cross-tab exclusivity uses real browser pages and Web Locks.
 - Unsupported media, an actual missing-asset response, rapid toggles, preference persistence, late startup cancellation and immediate navigation reset were checked.
@@ -47,3 +48,5 @@ Physical-device listening quality, native mobile-browser autoplay behavior and a
 ![Mobile](screenshots/home-390x844.png)
 
 See [license and original asset checksum](../homepage-music-license.md).
+
+Vercel Preview uses the existing team sign-in protection (HTTP 302 to Vercel SSO). Deployment readiness is checked through Vercel/GitHub status; deployed-page browser playback QA is not claimed.

@@ -7,9 +7,9 @@ const MUTE_KEY = "px-home-music-muted";
 const LOCK_NAME = "perspective-x-homepage-soundtrack";
 const TRACK = "/audio/homepage/hopeful-cinematic-journey.mp3";
 
-function readMute() {
+function readMute(fallback = false) {
   try { return localStorage.getItem(MUTE_KEY) === "true"; }
-  catch { return false; }
+  catch { return fallback; }
 }
 
 export default function HomepageSoundtrack() {
@@ -137,16 +137,26 @@ export default function HomepageSoundtrack() {
     }
     function visibility() {
       if (document.hidden) stop(muted ? "muted" : "paused");
-      else start();
+      else {
+        muted = readMute(muted);
+        if (muted) stop("muted");
+        else start();
+      }
     }
     function storage(event) {
       if (event.key !== MUTE_KEY && event.key !== null) return;
-      muted = readMute();
+      muted = readMute(muted);
       if (muted) stop("muted");
       else start();
     }
     function pageHide() { pageActive = false; stop(muted ? "muted" : "paused", true); }
-    function pageShow() { pageActive = true; start(); }
+    function pageShow() {
+      pageActive = true;
+      // A cached/frozen page may have missed another tab's preference event.
+      muted = readMute(muted);
+      if (muted) stop("muted");
+      else start();
+    }
     function mediaError() { stop("unavailable"); }
     function mediaPause() {
       if (audio.paused && currentStatus === "playing") stop(muted ? "muted" : "paused");
