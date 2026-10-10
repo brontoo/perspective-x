@@ -1,0 +1,69 @@
+.px-home .home-story-dialog {
+  width: min(1428px, 94vw);
+  max-width: none;
+  max-height: 90dvh;
+  padding: 0;
+  margin: auto;
+  overflow: auto;
+  color: #fff3ef;
+  background: #281b2e;
+  border: 1px solid #f9b5cf;
+  border-radius: 30px;
+  box-shadow: 0 0 3px 1px #ffe0cb, 0 0 28px #ee86ba55, 0 24px 100px #130b24bb;
+  scrollbar-color: #b67b99 #281b2e;
+}
+.px-home .home-story-dialog::backdrop { background: #211326b8; backdrop-filter: blur(16px); }
+.px-home .home-story-panel { position: relative; isolation: isolate; min-height: min(800px, 88dvh); }
+.px-home .home-story-scenery { position: absolute; inset: 0; z-index: -2; background: url('/images/perspective/our-story-museum.webp') right center / cover no-repeat; }
+.px-home .home-story-panel::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg,#201527e8 0%,#201527c9 36%,#20152742 62%,transparent 82%); pointer-events: none; }
+.px-home .home-story-content { padding: clamp(26px,4.5vw,76px); }
+.px-home .home-story-overline { display: flex; align-items: center; gap: 16px; margin: 0 0 24px; font-size: 15px; letter-spacing: .45em; text-transform: uppercase; color: #f9d7cd; }
+.px-home .home-story-overline span { width: 180px; height: 1px; background: linear-gradient(90deg,#ebd3c5,#ebd3c533); }
+.px-home .home-story-dialog h2 { margin: 0 0 24px; font: 400 clamp(46px,min(6vw,9vh),94px)/1.03 Georgia,'Times New Roman',serif; letter-spacing: -.025em; }
+.px-home .home-story-dialog h2 span { background: linear-gradient(90deg,#ee94b0,#ffe4bd); background-clip: text; color: transparent; }
+.px-home .home-story-copy { max-width: 630px; width: 57%; font-size: clamp(18px,1.9vw,30px); line-height: 1.45; letter-spacing: .015em; color: #efe4ee; margin: 0 0 24px; }
+.px-home .home-story-credit { width: fit-content; max-width: 76%; border-left: 4px solid #ef80ad; padding: 3px 0 3px 28px; margin: 0; font-size: clamp(14px,1.4vw,22px); line-height: 1.6; letter-spacing: .05em; }
+.px-home .home-story-journey { position: relative; width: 74%; max-width: 880px; margin: 28px 0 32px; }
+.px-home .home-story-journey ol { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: clamp(20px,3.5vw,54px); padding: 0; margin: 0; list-style: none; }
+.px-home .home-story-path { position: absolute; inset: 12px -30px -24px 0; width: calc(100% + 30px); height: 100%; overflow: visible; z-index: -1; fill: none; stroke: #ffd6a6; stroke-width: 1.5; filter: drop-shadow(0 0 5px #ff975d); }
+.px-home .home-story-step { --story-tone: #ff9eb9; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px 6px; min-height: 132px; border: 1px solid var(--story-tone); border-radius: 20px; background: linear-gradient(135deg,color-mix(in srgb,var(--story-tone) 25%,transparent),#271b2bb3); backdrop-filter: blur(8px); box-shadow: inset 0 0 16px color-mix(in srgb,var(--story-tone) 15%,transparent),0 0 12px #22102644; }
+.px-home .home-story-step-lavender { --story-tone: #cea4fc; }
+.px-home .home-story-step-gold { --story-tone: #ffcf99; }
+.px-home .home-story-step-mint { --story-tone: #ace6c3; }
+.px-home .home-story-step svg { width: 46px; height: 46px; color: var(--story-tone); }
+.px-home .home-story-step span { font: 400 clamp(18px,1.65vw,26px)/1.05 Georgia,'Times New Roman',serif; text-align: center; }
+.px-home .home-story-step::after { content: ''; width: 12px; height: 12px; position: absolute; left: calc(50% - 6px); bottom: -6px; border-radius: 50%; background: var(--story-tone); box-shadow: 0 0 12px var(--story-tone); }
+.px-home .home-story-close { display: inline-flex; align-items: center; justify-content: center; gap: 30px; min-width: 248px; min-height: 68px; padding: 10px 26px; color: #fff3ef; font: 400 30px/1.2 Georgia,'Times New Roman',serif; border: 1px solid #f6b4d0; border-radius: 40px; background: linear-gradient(120deg,#8f47776b,#47233b9c,#d4789670); box-shadow: inset 0 0 18px #ef83b650,0 0 18px #f190bb33; }
+.px-home .home-story-close svg { width: 30px; height: 30px; }
+.px-home .home-story-close:hover { background-color: #8f4777; }
+@media (max-width: 1000px) {
+  .px-home .home-story-copy { width: 66%; }
+  .px-home .home-story-credit { max-width: 90%; }
+  .px-home .home-story-journey { width: 90%; }
+  .px-home .home-story-journey ol { gap: 18px; }
+}
+@media (max-width: 800px) {
+  .px-home .home-story-dialog { border-radius: 24px; }
+  .px-home .home-story-panel { padding-top: 300px; }
+  .px-home .home-story-scenery { height: 320px; background-position: right center; }
+  .px-home .home-story-panel::before { background: linear-gradient(0deg,#281b2e 0%,#281b2e 62%,#281b2e00 92%); }
+  .px-home .home-story-content { padding: 24px 32px 32px; }
+  .px-home .home-story-dialog h2 { font-size: clamp(40px,7vw,58px); }
+  .px-home .home-story-copy { width: 100%; font-size: 20px; }
+  .px-home .home-story-credit { max-width: 100%; padding-left: 16px; }
+  .px-home .home-story-journey { width: 100%; }
+  .px-home .home-story-path { display: none; }
+  .px-home .home-story-journey ol { gap: 16px; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .px-home .home-story-step { min-height: 124px; }
+}
+@media (max-width: 480px) {
+  .px-home .home-story-panel { padding-top: 240px; }
+  .px-home .home-story-scenery { height: 260px; }
+  .px-home .home-story-content { padding: 20px 22px 28px; }
+  .px-home .home-story-overline { font-size: 12px; letter-spacing: .3em; gap: 12px; margin-bottom: 20px; }
+  .px-home .home-story-overline span { width: 80px; }
+  .px-home .home-story-dialog h2 { font-size: 39px; }
+  .px-home .home-story-copy { font-size: 18px; }
+  .px-home .home-story-credit { font-size: 14px; letter-spacing: .02em; }
+  .px-home .home-story-close { min-width: 208px; min-height: 58px; font-size: 27px; }
+}

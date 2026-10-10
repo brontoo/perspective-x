@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { ROLES, SCENARIOS } from "@/components/scenarios/scenarioData";
 import { Avatar } from "@/components/perspective/Portal";
 import HeroSection from "@/components/landing/HeroSection";
+import OurStoryDialog from "@/components/landing/OurStoryDialog";
 import "@/components/landing/homepage.css";
 
 function ApprovedMark({ className, label, viewBox }) {
@@ -144,7 +145,13 @@ export default function Home() {
               <Link to="/LearningPath">Learning Paths</Link>
               <Link to="/Roles">Worlds &amp; Missions</Link>
               <Link to="/TeacherDashboard">Teacher Dashboard</Link>
-              <button type="button" onClick={() => storyDialog.current.showModal()}>Our Story</button>
+              <button type="button" onClick={() => {
+                const dialog = storyDialog.current;
+                dialog.showModal();
+                // Keep the story opening visible rather than scrolling to Close on mobile.
+                dialog.focus({ preventScroll: true });
+                dialog.scrollTop = 0;
+              }}>Our Story</button>
             </nav>
             <div className="home-account">
               {account.user && (
@@ -218,12 +225,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <dialog ref={storyDialog} className="home-story-dialog" aria-labelledby="home-story-title">
-        <h2 id="home-story-title">Real science. Meaningful choices.</h2>
-        <p>Perspective X invites learners to explore immersive scientific roles, tackle real-world challenges, and shape a more sustainable future for the UAE and beyond.</p>
-        <p>Um Al Emarat School · Riham Saleh — Portal Creator</p>
-        <form method="dialog"><button>Close</button></form>
-      </dialog>
+      <OurStoryDialog ref={storyDialog} />
     </main>
   );
 }
