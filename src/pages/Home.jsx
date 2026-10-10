@@ -54,7 +54,7 @@ export default function Home() {
         }
         const { data: profile } = await supabase
           .from("profiles")
-          .select("id,full_name,role,avatar_path")
+          .select("*")
           .eq("id", user.id)
           .single();
         if (active && request === version)

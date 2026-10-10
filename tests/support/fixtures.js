@@ -76,6 +76,7 @@ async function setup(
     feedbackRows = [],
     settingsRows = null,
     failWrites = false,
+    missingAvatarColumn = false,
   } = {},
 ) {
   const user = { ...STUDENT, user_metadata: { ...STUDENT.user_metadata } };
@@ -84,6 +85,7 @@ async function setup(
     role: teacher ? "teacher" : "student",
     full_name: teacher ? "Test Teacher" : "Test Learner",
   };
+  if (missingAvatarColumn) delete profile.avatar_path;
   const progressRows = structuredClone(seedRows || (empty ? [] : HISTORY));
   const scenarioSettings = structuredClone(
     settingsRows ||
@@ -97,6 +99,11 @@ async function setup(
       const request = route.request(),
         url = new URL(request.url());
       requests.push(url.pathname);
+      if (missingAvatarColumn && url.pathname === "/rest/v1/profiles" &&
+          ((url.searchParams.get("select") || "").includes("avatar_path") ||
+           Object.hasOwn(request.postDataJSON?.() || {}, "avatar_path"))) {
+        return route.fulfill({status:400, contentType:"application/json", body:JSON.stringify({code:"42703", message:"column profiles.avatar_path does not exist"})});
+      }
       const body = request.postDataJSON?.();
       const json = (value, status = 200, headers = {}) =>
         route.fulfill({

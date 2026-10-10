@@ -41,7 +41,7 @@ export default function LeaderboardPage() {
           throw new Error("Please sign in to see the leaderboard.");
         const { data: profile, error: profileError } = await supabase
           .from("profiles")
-          .select("id,full_name,role,avatar_path")
+          .select("*")
           .eq("id", user.id)
           .single();
         if (profileError) throw profileError;
