@@ -171,3 +171,14 @@
   .px-home .home-stats { padding: 10px; }
   .px-home .home-stats span { font-size: 10px; }
 }
+/* Restore the original soft cinematic margin without moving the approved layout. */
+.px-home .home-cinema { position: relative; isolation: isolate; overflow: hidden; }
+.px-home .home-cinema::before {
+  content: '';
+  position: absolute;
+  inset: -24px;
+  z-index: -1;
+  pointer-events: none;
+  background: url('/images/perspective/home-cinematic.webp') center 75%/cover no-repeat;
+  filter: blur(16px);
+}
