@@ -1,5 +1,6 @@
 /* Teacher workspace only: the shared portal and student screens retain their styles. */
-.px-teacher-workspace .px-teacher-focus { align-self: end; }
+.px-teacher-workspace .px-teacher-focus,
+.px-teacher-workspace .px-hero-copy { align-self: end; }
 .px-teacher-workspace .teacher-focus-summary h2 { font-size: .85rem; margin-bottom: 10px; }
 .px-teacher-workspace .teacher-focus-summary p { font-size: .73rem; color: #f7e5f1; line-height: 1.6; }
 .px-teacher-workspace .teacher-workspace { margin: 24px 0; }

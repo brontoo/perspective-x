@@ -61,6 +61,11 @@ for (const width of [1440, 768, 390]) {
     await expect(focus).not.toContainText('authorized view');
     await expect(focus).not.toContainText('scientific missions available');
     await expect(focus.locator(':scope > p')).toHaveText(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), /);
+    if (width > 600) {
+      const welcome = await page.locator('.px-hero-copy').boundingBox();
+      const summary = await focus.boundingBox();
+      expect(Math.abs(welcome.y + welcome.height - summary.y - summary.height)).toBeLessThanOrEqual(1);
+    }
     await noOverflow(page);
     await page.screenshot({path:`test-results/teacher-workspace/overview-${width}.png`,fullPage:true});
     for (const section of ["Missions", "Students", "Feedback", "Analytics", "Class Debate"]) {
