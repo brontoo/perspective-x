@@ -67,10 +67,10 @@ test("real exclusive locks prevent simultaneous playback across two tabs and pro
   await observe(page); await page.goto("/");
   await expect(control(page)).toHaveAttribute("aria-pressed", "true");
   const second = await context.newPage(); await observe(second); await second.goto("/");
-  await expect(second.getByRole("status")).toContainText("another tab");
+  await expect(second.locator("#home-music-status")).toContainText("another tab");
   expect((await audioState(second)).attempts).toBe(0);
   await control(second).click();
-  await expect(second.getByRole("status")).toContainText("another tab");
+  await expect(second.locator("#home-music-status")).toContainText("another tab");
   expect((await audioState(second)).paused).toBe(true);
   expect((await audioState(page)).paused).toBe(false);
   await control(page).click();
@@ -115,7 +115,7 @@ test("pending playback cancellation cannot leak across navigation or release own
   await expect(page).toHaveURL(/\/Roles$/);
   expect((await audioState(page)).paused).toBe(true);
   const second = await context.newPage(); await observe(second); await second.goto("/");
-  await expect(second.getByRole("status")).toContainText("another tab");
+  await expect(second.locator("#home-music-status")).toContainText("another tab");
   await page.evaluate(() => window.settleHomePlay());
   await control(second).click();
   await expect(control(second)).toHaveAttribute("aria-pressed", "true");

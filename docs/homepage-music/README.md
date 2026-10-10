@@ -1,4 +1,4 @@
-# Homepage soundtrack review
+# Homepage soundtrack and account navigation review
 
 Baseline: latest main, `61b1e0c7a0d9483178126a999efaca896a0bd107`.
 Branch: `feat/homepage-soundtrack`. The separate Our Story PR #11 is not included or merged by this work.
@@ -19,16 +19,25 @@ The current user request supersedes the older ZIP's initially-off and 18% recomm
 
 ## Files
 
-- `src/pages/Home.jsx`: import and mount one control before Enter Portal.
+- `src/pages/Home.jsx`: mount one music control, remove Worlds & Missions, and replace Enter Portal with the signed-in visitor's own name/avatar account link.
+- `src/components/landing/homepage.css`: homepage-only account sizing, including visible mobile names with ellipsis for long names.
 - `src/components/landing/HomepageSoundtrack.jsx`: ownership, lifecycle and playback.
 - `src/components/landing/homepage-soundtrack.css`: homepage-scoped icon control and accessible status.
 - `public/audio/homepage/hopeful-cinematic-journey.mp3`: exact original downloaded asset, not re-encoded.
 - `docs/homepage-music-license.md`, retrieval metadata and license excerpt: creator/source/licensing record.
 - `tests/homepage-soundtrack*.spec.js`, `tests/support/homepageAudio.js`: playback coverage.
-- `tests/approved-ui.spec.js`: existing style comparison waits for UI/font readiness and uses a manual mute preference to keep dynamic music status deterministic; its style assertions remain intact.
+- `tests/approved-ui.spec.js`: guest sign-in and teacher/student account routing, plus the existing homepage style comparison.
+- `tests/homepage-account.spec.js`: both roles' long names, selected avatars, accessible full names and header fit at desktop/tablet/mobile sizes.
+
+## Account navigation update
+
+Worlds & Missions and Enter Portal are removed for guests, teachers and students. One name/avatar link occupies the rightmost account position formerly occupied by Enter Portal and opens the user's appropriate dashboard. The existing Avatar component resolves the visitor's selected picture; no creator identity or fixed mockup avatar is substituted. Signed-out visitors retain a Sign In link. Start Your Mission keeps its existing authentication and dashboard routing.
+
+Mobile names remain visible, with ellipsis when needed and a full accessible name/title. The approved header margin, blurred outer background, artwork and compact statistics are preserved. The music component and all internal pages are unchanged by this follow-up.
 
 ## Verification
 
+- Account-header follow-up: build, lint and typecheck passed; all 27 relevant production-build browser checks passed. These cover guest sign-in, both roles' account/dashboard routing, long-name/avatar fit down to 354px, ten complete viewport sizes, homepage style isolation and all nine soundtrack checks. Music-status test selectors were scoped to the music component after the new account loading status exposed an ambiguous selector; playback code is unchanged.
 - `npm run build`, `npm run lint`, `npm run typecheck`: passed, no lint failures.
 - `npm run test:unit`: 9 passed.
 - Initial full `npm run test:ui`: 82 passed, one old style-only test timed out waiting for network idle after audio was introduced. The readiness assumption was corrected and the affected test passed on rerun.
@@ -39,7 +48,7 @@ The current user request supersedes the older ZIP's initially-off and 18% recomm
 - Unsupported media, an actual missing-asset response, rapid toggles, preference persistence, late startup cancellation and immediate navigation reset were checked.
 - Desktop/tablet/mobile screenshots reviewed at 1440 × 900, 768 × 1024 and 390 × 844.
 
-Physical-device listening quality, native mobile-browser autoplay behavior and authenticated live Supabase QA remain unverified. Preview listening is the requested review step. The homepage artwork, original typography and layout, existing Our Story implementation on main, dashboards, sign-in, scientific assessments and mission media remain unchanged apart from the discreet new speaker control.
+Physical-device listening quality, native mobile-browser autoplay behavior and authenticated live Supabase QA remain unverified. Preview listening is the requested review step. The homepage artwork, original hero typography and layout, existing Our Story implementation on main, dashboards, sign-in, scientific assessments and mission media remain unchanged. Header changes consist of the discreet music control and the requested account/navigation update.
 
 ## Screenshots from the compiled app
 

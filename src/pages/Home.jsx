@@ -90,14 +90,12 @@ export default function Home() {
       subscription.unsubscribe();
     };
   }, []);
-  const enterPortal = () =>
-    navigate(
-      !account.user
-        ? "/SignIn"
-        : account.profile?.role === "teacher"
-          ? "/TeacherDashboard"
-          : "/Dashboard",
-    );
+  const portalPath = !account.user
+    ? "/SignIn"
+    : account.profile?.role === "teacher"
+      ? "/TeacherDashboard"
+      : "/Dashboard";
+  const enterPortal = () => navigate(portalPath);
   const name =
     account.profile?.full_name ||
     account.user?.user_metadata?.full_name ||
@@ -143,30 +141,31 @@ export default function Home() {
             <nav aria-label="Main navigation">
               <Link to="/Roles">Roles</Link>
               <Link to="/LearningPath">Learning Paths</Link>
-              <Link to="/Roles">Worlds &amp; Missions</Link>
               <Link to="/TeacherDashboard">Teacher Dashboard</Link>
               <button type="button" onClick={() => storyDialog.current.showModal()}>Our Story</button>
             </nav>
             <div className="home-account">
-              {account.user && (
-                <Link to="/ProfileSettings" className="home-profile">
+              <HomepageSoundtrack />
+              {account.loading ? (
+                <span className="home-account-loading" role="status">Loading…</span>
+              ) : account.user ? (
+                <Link
+                  to={portalPath}
+                  className="home-profile"
+                  aria-label={`${name} — Open your dashboard`}
+                  title={name}
+                >
                   <Avatar
                     user={account.user}
                     profile={account.profile}
                     name={name}
                     size={34}
                   />
-                  <span>{name}</span>
+                  <span className="home-profile-name">{name}</span>
                 </Link>
+              ) : (
+                <Link className="home-sign-in" to="/SignIn">Sign In</Link>
               )}
-              <HomepageSoundtrack />
-              <button
-                className="home-enter"
-                disabled={account.loading}
-                onClick={enterPortal}
-              >
-                {account.loading ? "Loading…" : "Enter Portal"}
-              </button>
             </div>
           </header>
           <div className="home-scene">

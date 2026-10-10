@@ -398,7 +398,7 @@ test("loading interior CSS leaves homepage computed styles unchanged", async ({
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   // Streaming music can keep the network active; wait for the actual UI and fonts.
-  await expect(page.getByRole("button", { name: "Enter Portal", exact: true })).toBeEnabled();
+  await expect(page.getByRole("link", { name: "Sign In", exact: true })).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
   const readStyles = () =>
     [
@@ -433,7 +433,7 @@ test("loading interior CSS leaves homepage computed styles unchanged", async ({
     page.getByRole("heading", { name: /Welcome back/ }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Home", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Enter Portal", exact: true })).toBeEnabled();
+  await expect(page.getByRole("link", { name: "Sign In", exact: true })).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
   const after = await page.evaluate(readStyles);
   expect(after).toEqual(before);
@@ -450,6 +450,11 @@ test('cinematic homepage uses interactive reference layout and guest portal rout
   await expect(page.locator('.home-slogan')).toHaveText('Real Science. Real Choices. Real Impact.');
   await expect(page.locator('.home-stats')).toContainText('Registered Students');
   await expect(page.getByRole('img', { name: 'Ministry of Education', exact: true })).toBeVisible();
+  await expect(page.getByText('Worlds & Missions', { exact: true })).toHaveCount(0);
+  await expect(page.getByText('Enter Portal', { exact: true })).toHaveCount(0);
+  await page.getByRole('link', { name: 'Sign In', exact: true }).click();
+  await expect(page).toHaveURL(/\/SignIn$/);
+  await page.goto('/');
   await page.getByRole('link', { name: 'Explore Roles', exact: true }).click();
   await expect(page).toHaveURL(/\/SignIn$/);
   await page.goto('/');
@@ -457,13 +462,17 @@ test('cinematic homepage uses interactive reference layout and guest portal rout
   await expect(page).toHaveURL(/\/SignIn$/);
 });
 
-for (const teacher of [false, true]) test(`homepage Enter Portal routes authenticated ${teacher ? 'teacher' : 'student'} with own identity`, async ({ page }) => {
+for (const teacher of [false, true]) test(`homepage account routes authenticated ${teacher ? 'teacher' : 'student'} with own identity`, async ({ page }) => {
   await setup(page, { teacher });
   await page.goto('/');
   await expect(page.locator('.home-profile')).toContainText(teacher ? 'Test Teacher' : 'Test Learner');
   await expect(page.locator('.home-profile .px-avatar')).toBeVisible();
   await expect(page.locator('.home-account')).not.toContainText('Riham Saleh');
-  await page.getByRole('button', { name: 'Enter Portal', exact: true }).first().click();
+  await expect(page.locator('.home-profile')).toHaveCount(1);
+  await expect(page.getByText('Worlds & Missions', { exact: true })).toHaveCount(0);
+  await expect(page.getByText('Enter Portal', { exact: true })).toHaveCount(0);
+  await expect(page.locator('.home-account > :last-child')).toHaveClass('home-profile');
+  await page.locator('.home-profile').click();
   await expect(page).toHaveURL(teacher ? /\/TeacherDashboard$/ : /\/Dashboard$/);
 });
 

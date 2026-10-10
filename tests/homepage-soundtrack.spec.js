@@ -4,7 +4,7 @@ test.use({ launchOptions: launch("document-user-activation-required") });
 
 test("blocked autoplay retries on a permitted homepage interaction and manual mute survives reload", async ({ page }) => {
   await observe(page, { blockUntilGesture: true }); await page.goto("/");
-  await expect(page.getByRole("status")).toContainText("interact with the homepage");
+  await expect(page.locator("#home-music-status")).toContainText("interact with the homepage");
   expect((await audioState(page)).attempts).toBe(1);
   expect(await page.evaluate(() => window.homeAudio[0].playRequests[0])).toEqual({ volume: 0.15, muted: false });
   await expect(control(page)).toHaveAttribute("aria-pressed", "false");
@@ -32,7 +32,7 @@ test("unsupported media and missing tab coordination fail truthfully", async ({ 
     await page.goto("/");
     await expect(control(page)).toBeDisabled();
     await expect(control(page)).toHaveAttribute("aria-pressed", "false");
-    await expect(page.getByRole("status")).toContainText("unavailable");
+    await expect(page.locator("#home-music-status")).toContainText("unavailable");
     expect((await audioState(page)).paused).toBe(true);
     await context.close();
   }
