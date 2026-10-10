@@ -3,8 +3,8 @@ import { setup } from "./support/fixtures";
 import fs from "node:fs/promises";
 import { createHash } from "node:crypto";
 
-for (const [width, height] of [[1440, 900], [768, 1024], [390, 844]]) {
-  test(`Our Story is readable, scrollable and restores the homepage at ${width}x${height}`, async ({ page }) => {
+for (const [width, height] of [[1920, 927], [1440, 900], [1366, 768], [1280, 720], [1024, 600], [768, 1024], [390, 844], [375, 667], [320, 568], [844, 390]]) {
+  test(`Our Story fits without scrolling and restores the homepage at ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     // Keep the screenshot comparison stable; native music playback has its own coverage.
     await page.addInitScript(() => localStorage.setItem("px-home-music-muted", "true"));
@@ -27,8 +27,21 @@ for (const [width, height] of [[1440, 900], [768, 1024], [390, 844]]) {
     for (const label of ["Choose a Role", "Enter a Mission", "Make a Decision", "See Your Impact"]) {
       await expect(dialog.getByRole("listitem").filter({ hasText: label })).toHaveCount(1);
     }
-    // The Close control is reachable even when mobile content needs internal scrolling.
+    // Every element, including Close, must fit without clipping or scrolling.
     const close = dialog.getByRole("button", { name: "Close", exact: true });
+    expect(await dialog.evaluate(element => element.scrollHeight <= element.clientHeight + 1)).toBe(true);
+    expect(await dialog.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+    const frame = await dialog.boundingBox();
+    for (const item of await dialog.locator('.home-story-overline, h2, .home-story-copy, .home-story-credit, .home-story-step, .home-story-close').all()) {
+      const bounds = await item.boundingBox();
+      expect(bounds.y).toBeGreaterThanOrEqual(frame.y);
+      expect(bounds.y + bounds.height).toBeLessThanOrEqual(frame.y + frame.height);
+      expect(bounds.x).toBeGreaterThanOrEqual(frame.x);
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(frame.x + frame.width);
+    }
+    await page.mouse.move(frame.x + frame.width / 2, frame.y + frame.height / 2);
+    await page.mouse.wheel(0, 500);
+    expect(await dialog.evaluate(element => element.scrollTop)).toBe(0);
     await page.keyboard.press("Tab");
     await expect(close).toBeFocused();
     await page.keyboard.press("Tab");
@@ -46,10 +59,6 @@ for (const [width, height] of [[1440, 900], [768, 1024], [390, 844]]) {
     expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(height);
     await fs.mkdir("test-results/our-story", { recursive: true });
     await page.screenshot({ path: `test-results/our-story/story-${width}x${height}.png` });
-    if (width <= 800) {
-      await dialog.evaluate(element => { element.scrollTop = element.scrollHeight; });
-      await page.screenshot({ path: `test-results/our-story/story-${width}x${height}-bottom.png` });
-    }
     await close.click();
     await expect(dialog).not.toBeVisible();
     await expect(trigger).toBeFocused();
