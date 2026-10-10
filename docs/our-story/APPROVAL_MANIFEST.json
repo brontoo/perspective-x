@@ -1,0 +1,16 @@
+{
+  "project": "Perspective X",
+  "design": "Our Story popup — Museum of the Future cinematic approved version",
+  "approval_status": "user-approved",
+  "source_repository": "https://github.com/brontoo/perspective-x",
+  "approved_reference": {
+    "path": "assets/OUR_STORY_APPROVED_REFERENCE.png",
+    "width": 1536,
+    "height": 1024,
+    "format": "PNG",
+    "bytes": 1967194,
+    "sha256": "072e4b103a2654994984dde1bb695a772a308df377a1a260c087accfa881bdc9"
+  },
+  "source_repo_changed": false,
+  "instructions": "CODEX_IMPLEMENT_OUR_STORY.md"
+}
