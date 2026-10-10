@@ -6,6 +6,8 @@ import { createHash } from "node:crypto";
 for (const [width, height] of [[1920, 927], [1440, 900], [1366, 768], [1280, 720], [1024, 600], [768, 1024], [390, 844], [375, 667], [320, 568], [844, 390]]) {
   test(`Our Story fits without scrolling and restores the homepage at ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
+    // Compare the approved static homepage while cinematic motion has its own coverage.
+    await page.emulateMedia({ reducedMotion: "reduce" });
     // Keep the screenshot comparison stable; native music playback has its own coverage.
     await page.addInitScript(() => localStorage.setItem("px-home-music-muted", "true"));
     await setup(page, { guest: true });
