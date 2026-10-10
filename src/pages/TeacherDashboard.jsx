@@ -1,9 +1,10 @@
 import { PortalHeader, PortalFooter, LoadState } from '@/components/perspective/Portal';
-import TeacherOverview, { TeachingJourney } from '@/components/perspective/TeacherOverview';
+import TeacherOverview from '@/components/perspective/TeacherOverview';
+import './TeacherDashboard.css';
 import { isAssessed } from '@/lib/perspective/progress.mjs';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
@@ -182,13 +183,12 @@ export default function TeacherDashboard() {
     const [students, setStudents] = useState([]);
     const [studentProgress, setStudentProgress] = useState([]);
     const [feedbacks, setFeedbacks] = useState([]);
-    const [activeTab, setActiveTab] = useState('overview');
-    const [toolsOpen, setToolsOpen] = useState(false);
-    const toolsRef = useRef(null);
+    const [missionSearch, setMissionSearch] = useState('');
+    const [missionAccess, setMissionAccess] = useState('all');
+    const [activeTab, setActiveTab] = useState('dashboard');
     const openTools = (tab) => {
         setActiveTab(tab);
-        setToolsOpen(true);
-        requestAnimationFrame(() => toolsRef.current?.scrollIntoView({ block: 'start' }));
+
     };
     const [expandedStudent, setExpandedStudent] = useState(null);
     const [feedbackForm, setFeedbackForm] = useState({
@@ -679,7 +679,7 @@ export default function TeacherDashboard() {
             text: 'text-purple-400'
         },
         {
-            label: 'Scenarios',
+            label: 'Missions',
             value: totalScenarios,
             Icon: BookOpen,
             from: 'from-teal-500/10',
@@ -689,7 +689,7 @@ export default function TeacherDashboard() {
             text: 'text-teal-400'
         },
         {
-            label: 'Completed Missions',
+            label: 'Passed assessments',
             value: studentProgress.filter((r) => isAssessed(r) && Number(r.score) >= 80).length,
             Icon: CheckCircle2,
             from: 'from-amber-500/10',
@@ -711,11 +711,12 @@ export default function TeacherDashboard() {
     ];
 
     const tabs = [
-        { key: 'overview', label: 'Class Overview', Icon: BarChart3 },
-        { key: 'scenarios', label: 'Manage Scenarios', Icon: Settings },
-        { key: 'students', label: 'Student Progress', Icon: Users },
-        { key: 'feedback', label: 'Feedback', Icon: MessageSquare },
-        { key: 'debate', label: 'Class Debate', Icon: Presentation }
+        { key: 'dashboard', label: 'Overview', Icon: BookOpen, description: 'Your students, recent submissions, and learning resources at a glance.' },
+        { key: 'students', label: 'Students', Icon: Users, description: 'Review student progress, open submitted work, and identify who needs support.' },
+        { key: 'scenarios', label: 'Missions', Icon: Settings, description: 'Set mission access and difficulty, explore teaching guides, and preview the student experience.' },
+        { key: 'feedback', label: 'Feedback', Icon: MessageSquare, description: 'Send guidance to students and manage your saved messages.' },
+        { key: 'overview', label: 'Analytics', Icon: BarChart3, description: 'Explore completion, assessment results, and scientific skills across your students.' },
+        { key: 'debate', label: 'Class Debate', Icon: Presentation, description: 'Choose a mission and scene to lead a focused classroom discussion.' }
     ];
     // ── Analytics Data ──
     const scenarioCompletionData = Object.entries(SCENARIOS).map(([id, scenario]) => {
@@ -749,18 +750,14 @@ export default function TeacherDashboard() {
     const PIE_COLORS = ['#14b8a6', '#f43f5e'];
 
     return (
-        <div className="px-ui px-teacher">
+        <div className="px-ui px-teacher px-teacher-workspace">
             <div className="px-scenic-shell">
                 <PortalHeader
                     user={user}
                     profile={profile}
                     teacherActions={[
                         { label: 'Home', to: '/' },
-                        { label: 'Dashboard', action: () => openTools('overview') },
-                        { label: 'Students', action: () => openTools('students') },
-                        { label: 'Missions', action: () => openTools('scenarios') },
-                        { label: 'Analytics', action: () => openTools('overview') },
-                        { label: 'Communications', action: () => openTools('feedback') },
+                        { label: 'Learning Paths', to: '/LearningPath' },
                         { label: 'Leaderboard', to: '/leaderboard' }
                     ]}
                 />
@@ -782,14 +779,13 @@ export default function TeacherDashboard() {
                         <div className="px-focus-columns">
                             <div>
                                 <h2>Your students</h2>
-                                <p>{students.length} students in your authorized view.</p>
-                                <p>Class schedules are not available yet.</p>
+                                <p>{students.length} {students.length === 1 ? 'student' : 'students'} in your authorized view.</p>
+                                <p>{totalScenarios} scientific missions available.</p>
                             </div>
                             <div>
                                 <h2>Today’s focus</h2>
-                                <button onClick={() => openTools('students')}>Review recent submissions →</button>
-                                <button onClick={() => openTools('feedback')}>Provide feedback →</button>
-                                <button onClick={() => openTools('scenarios')}>Prepare your next mission →</button>
+                                <p>Review the latest work, prepare your missions, and guide your students.</p>
+                                <p>Choose a section below to get started.</p>
                             </div>
                         </div>
                     </aside>
@@ -797,24 +793,50 @@ export default function TeacherDashboard() {
             </div>
 
             <main className="px-content">
-                <TeachingJourney />
-                <TeacherOverview
-                    students={students}
-                    progress={studentProgress}
-                    feedback={feedbacks}
-                    onTab={openTools}
-                    onReview={(student) => {
-                        setSelectedStudentForAnswers({
-                            name: student.full_name || 'Student',
-                            attempts: studentProgress.filter((row) => row.student_id === student.id)
-                        });
-                        setShowAnswersModal(true);
-                    }}
-                />
-                <details ref={toolsRef} open={toolsOpen} onToggle={(event) => setToolsOpen(event.currentTarget.open)} className="px-teacher-tools">
-                    <summary>Teaching tools · Review, feedback, mission controls & analytics</summary>
+                <section className="teacher-workspace" aria-label="Teacher workspace">
+                    <div className="teacher-section-tabs" role="tablist" aria-label="Teacher sections">
+                        {tabs.map((tab) => (
+                            <button
+                                key={tab.key}
+                                id={`teacher-tab-${tab.key}`}
+                                role="tab"
+                                aria-selected={activeTab === tab.key}
+                                aria-controls="teacher-section-panel"
+                                tabIndex={activeTab === tab.key ? 0 : -1}
+                                onClick={() => openTools(tab.key)}
+                                onKeyDown={(event) => {
+                                    const index = tabs.findIndex((item) => item.key === tab.key);
+                                    let next;
+                                    if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+                                    if (event.key === 'ArrowLeft') next = (index + tabs.length - 1) % tabs.length;
+                                    if (event.key === 'Home') next = 0;
+                                    if (event.key === 'End') next = tabs.length - 1;
+                                    if (next !== undefined) {
+                                        event.preventDefault();
+                                        openTools(tabs[next].key);
+                                        document.getElementById(`teacher-tab-${tabs[next].key}`)?.focus();
+                                    }
+                                }}
+                            >
+                                <tab.Icon size={19} aria-hidden="true" />
+                                <span>{tab.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                    <div id="teacher-section-panel" role="tabpanel" aria-labelledby={`teacher-tab-${activeTab}`} className="px-teacher-tools teacher-section-panel">
+                        <div className="teacher-section-heading">
+                            <div>
+                                <p className="teacher-section-eyebrow">Your teaching workspace</p>
+                                <h2>{tabs.find((tab) => tab.key === activeTab).label}</h2>
+                                <p>{tabs.find((tab) => tab.key === activeTab).description}</p>
+                            </div>
+                            {['overview', 'students'].includes(activeTab) && (
+                                <button onClick={exportCSV} className="px-button teacher-export">Export CSV</button>
+                            )}
+                        </div>
+                        {activeTab === 'dashboard' && <>
                     {/* Stats */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                    <div className="teacher-stats-grid grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                         {stats.map((stat, i) => (
                             <div key={i} className="glass-card p-6">
                                 <div className="flex items-center gap-4">
@@ -833,35 +855,31 @@ export default function TeacherDashboard() {
                         ))}
                     </div>
 
-                    {/* Tabs */}
+                            <TeacherOverview
+                                students={students}
+                                progress={studentProgress}
+                                onReview={(student) => {
+                                    setSelectedStudentForAnswers({
+                                        name: student.full_name || 'Student',
+                                        attempts: studentProgress.filter((row) => row.student_id === student.id)
+                                    });
+                                    setShowAnswersModal(true);
+                                }}
+                            />
+                        </>}
                     <div className="space-y-6">
-                        <div className="flex justify-between items-center mb-2">
-                            <div /> {/* spacer */}
-                            <button onClick={exportCSV} className="liquid-btn flex items-center gap-2 px-4 py-2 text-sm font-medium">
-                                Export CSV
-                            </button>
-                        </div>
-
-                        <div className="glass-tabs p-1 w-fit">
-                            {tabs.map((tab) => (
-                                <button
-                                    key={tab.key}
-                                    onClick={() => setActiveTab(tab.key)}
-                                    className={`glass-tab flex items-center gap-2 px-4 py-2 text-sm font-medium transition ${activeTab === tab.key ? 'active' : ''}`}
-                                >
-                                    <tab.Icon className="w-4 h-4" />
-                                    {tab.label}
-                                </button>
-                            ))}
-                        </div>
-
                         {/* ── Scenarios Tab ── */}
                         {activeTab === 'scenarios' && (
                             <>
                                 <div className="glass-card p-6">
-                                    <h2 className="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-2">Scenario Controls</h2>
+                                    <h2 className="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-2">Mission controls</h2>
+                                    <div className="teacher-mission-filters">
+                                        <label>Find a mission<input className="glass-input" type="search" value={missionSearch} onChange={(event) => setMissionSearch(event.target.value)} placeholder="Search title or subject" /></label>
+                                        <label>Mission access<select aria-label="Mission access" className="glass-input" value={missionAccess} onChange={(event) => setMissionAccess(event.target.value)}><option value="all">All missions</option><option value="open">Open missions</option><option value="locked">Locked missions</option></select></label>
+                                    </div>
+                                    {!Object.entries(SCENARIOS).some(([id, scenario]) => `${scenario.title} ${scenario.strand}`.toLowerCase().includes(missionSearch.toLowerCase()) && (missionAccess === 'all' || Boolean(scenarioSettings[id]?.is_locked) === (missionAccess === 'locked'))) && <p>No missions match your filters.</p>}
                                     <div className="space-y-4">
-                                        {Object.entries(SCENARIOS).map(([id, scenario]) => {
+                                        {Object.entries(SCENARIOS).filter(([id, scenario]) => `${scenario.title} ${scenario.strand}`.toLowerCase().includes(missionSearch.toLowerCase()) && (missionAccess === 'all' || Boolean(scenarioSettings[id]?.is_locked) === (missionAccess === 'locked'))).map(([id, scenario]) => {
                                             const settings = scenarioSettings[id] || {};
                                             const difficulty = settings.difficulty_override || 'on-level';
                                             const meta = SCENARIO_METADATA[id] || {};
@@ -915,13 +933,13 @@ export default function TeacherDashboard() {
                                                                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cyan-500/50 text-cyan-600 hover:bg-cyan-500/10 text-sm font-semibold transition"
                                                             >
                                                                 <Brain className="w-4 h-4 text-cyan-500" />{' '}
-                                                                {expandedPreviews[id] ? 'Hide Preview' : 'Teacher Preview'}
+                                                                {expandedPreviews[id] ? 'Hide teaching guide' : 'Teaching guide'}
                                                             </button>
                                                             <button
                                                                 onClick={() => navigate(`/ScenarioPlayer?scenario=${id}`)}
                                                                 className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-purple-500/50 text-purple-600 hover:bg-purple-500/10 text-sm font-semibold transition"
                                                             >
-                                                                <Eye className="w-4 h-4 text-purple-500" /> Preview as Student
+                                                                <Eye className="w-4 h-4 text-purple-500" /> Preview mission
                                                             </button>
                                                             <div className="flex items-center gap-2">
                                                                 <span className="text-[var(--lx-text-muted)] text-sm">Level:</span>
@@ -950,6 +968,7 @@ export default function TeacherDashboard() {
                                                                 </button>
                                                             </div>
                                                             <div className="flex items-center gap-2">
+                                                                <span className="text-sm text-[var(--lx-text-muted)]">{settings.is_locked ? 'Locked' : 'Open'}</span>
                                                                 {settings.is_locked ? (
                                                                     <Lock className="w-4 h-4 text-red-400" />
                                                                 ) : (
@@ -2027,7 +2046,8 @@ export default function TeacherDashboard() {
                             </div>
                         )}
                     </div>
-                </details>
+                    </div>
+                </section>
             </main>
             <PortalFooter />
             {/* Student Answers Modal */}

@@ -103,7 +103,7 @@ test("teacher mission controls and submission review retain original student ans
 }) => {
   await setup(page, { teacher: true });
   await page.goto("/TeacherDashboard");
-  await page.getByRole("button", { name: "Missions", exact: true }).click();
+  await page.getByRole("tab", { name: "Missions", exact: true }).click();
   await expect(
     page.getByRole("button", {
       name: "Lock The Invisible Threat",
@@ -132,7 +132,7 @@ test("teacher mission controls and submission review retain original student ans
     path: "docs/remaining-portal/teacher-tools-desktop.png",
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Students", exact: true }).click();
+  await page.getByRole("tab", { name: "Students", exact: true }).click();
   await page
     .locator(".px-teacher-tools")
     .getByText("Synthetic Peer", { exact: true })
