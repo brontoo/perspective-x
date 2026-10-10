@@ -1,0 +1,16 @@
+/* A negative child layer in this local stacking context sits above the original
+   scenic background and below all existing content, without changing geometry. */
+.px-home .home-scene:has(> .home-cinematic-motion) { position: relative; isolation: isolate; }
+.px-home .home-scene > .home-cinematic-motion {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  visibility: hidden;
+}
+.px-home .home-scene > .home-cinematic-motion:is([data-state="running"], [data-state="paused"]) { visibility: visible; }
+@media (prefers-reduced-motion: reduce) {
+  .px-home .home-scene > .home-cinematic-motion { visibility: hidden !important; }
+}

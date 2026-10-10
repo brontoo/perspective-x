@@ -6,6 +6,7 @@ import { Avatar } from "@/components/perspective/Portal";
 import HeroSection from "@/components/landing/HeroSection";
 import OurStoryDialog from "@/components/landing/OurStoryDialog";
 import HomepageSoundtrack from "@/components/landing/HomepageSoundtrack";
+import CinematicHeroMotion from "@/components/landing/CinematicHeroMotion";
 import "@/components/landing/homepage.css";
 
 function ApprovedMark({ className, label, viewBox }) {
@@ -176,6 +177,7 @@ export default function Home() {
             </div>
           </header>
           <div className="home-scene">
+          <CinematicHeroMotion />
           <HeroSection onStart={enterPortal} isLoading={account.loading} />
           <div className="home-bottom">
             <footer className="home-footer">
