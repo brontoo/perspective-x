@@ -10,6 +10,7 @@ import {
   CrystalExplorer,
   WaterSimulator,
 } from "./IonicModels";
+import { dessertCheckpointReady } from "@/data/cinematicMissions/runtime.mjs";
 export function evidenceText(record) {
   return (record?.evidence || [])
     .map((e) => `${e.label}: ${e.observation}`)
@@ -51,8 +52,10 @@ export default function IonicInvestigation({
   onDraft,
   onComplete,
   mode,
+  checkpoint = null,
 }) {
   const dessert = scenario.id === "ionic_dessert_mystery";
+  const cinematic = dessert && !!checkpoint;
   const [draft, setDraft] = useState(() => ({
     ...defaultRecord(scenario.id),
     ...initialRecord,
@@ -112,16 +115,37 @@ export default function IonicInvestigation({
       draft.formula.negatives === 1;
   function submit(e) {
     e.preventDefault();
-    if (ready) update({ submitted: true });
+    if (ready)
+      update({
+        submitted: true,
+        ...(cinematic
+          ? {
+              hypothesisHistory: [
+                ...(draft.hypothesisHistory || []),
+                {
+                  identities: { ...draft.identities },
+                  confidence: draft.confidence || "developing",
+                  submittedAt: new Date().toISOString(),
+                },
+              ],
+            }
+          : {}),
+      });
   }
   return (
     <div className="im-investigation">
       <header className="im-stage-header">
         <p className="im-eyebrow">Chapter 2 · Find the Clues</p>
-        <h2>
-          {dessert
-            ? "Evidence leaves a trail. Follow it."
-            : "A white deposit. A mineral story."}
+        <h2 tabIndex={-1}>
+          {cinematic
+            ? {
+                conductivity: "Begin with the evidence.",
+                electron: "Follow the electron.",
+                clues: "Combine independent clues.",
+              }[checkpoint]
+            : dessert
+              ? "Evidence leaves a trail. Follow it."
+              : "A white deposit. A mineral story."}
         </h2>
         <p>
           {dessert
@@ -147,97 +171,111 @@ export default function IonicInvestigation({
         <div className="im-stations">
           {dessert ? (
             <>
-              <section
-                className="im-instrument"
-                aria-label="Virtual conductivity testing"
-              >
-                <div className="im-instrument-title">
-                  <span className="im-station-number">01</span>
-                  <div>
-                    <h3>Three powders. No assumptions.</h3>
-                    <p>0.10 g / 100 mL water · 25°C · Simulated readings</p>
-                  </div>
-                </div>
-                <div className="im-actions">
-                  <button
-                    className="im-secondary"
-                    onClick={() =>
-                      collect(
-                        "control",
-                        "Water-only control",
-                        "2 μS/cm background reading",
-                        { calibrated: true },
-                      )
-                    }
-                  >
-                    {draft.calibrated
-                      ? "Control recorded"
-                      : "Calibrate with water-only control"}
-                  </button>
-                </div>
-                <div
-                  className="im-sample-tabs"
-                  aria-label="Choose powder sample"
+              {(!cinematic || checkpoint !== "electron") && (
+                <section
+                  className="im-instrument"
+                  aria-label="Virtual conductivity testing"
                 >
-                  {["A", "B", "C"].map((s) => (
-                    <button
-                      key={s}
-                      aria-pressed={sample === s}
-                      onClick={() => setSample(s)}
-                    >
-                      Sample {s}
-                      <span className="im-powder-jar" aria-hidden="true" />
-                    </button>
-                  ))}
-                </div>
-                <p>
-                  White appearance is shared by every candidate. Use fresh
-                  virtual aliquots for each test; never taste an unknown.
-                </p>
-                <div className="im-actions">
-                  <button
-                    disabled={!draft.calibrated}
-                    onClick={() => measure("conductivity")}
+                  <div className="im-instrument-title">
+                    <span className="im-station-number">01</span>
+                    <div>
+                      <h3>Three powders. No assumptions.</h3>
+                      <p>0.10 g / 100 mL water · 25°C · Simulated readings</p>
+                    </div>
+                  </div>
+                  <div className="im-actions">
+                    {(!cinematic || checkpoint === "conductivity") && (
+                      <button
+                        className="im-secondary"
+                        onClick={() =>
+                          collect(
+                            "control",
+                            "Water-only control",
+                            "2 μS/cm background reading",
+                            { calibrated: true },
+                          )
+                        }
+                      >
+                        {draft.calibrated
+                          ? "Control recorded"
+                          : "Calibrate with water-only control"}
+                      </button>
+                    )}
+                  </div>
+                  <div
+                    className="im-sample-tabs"
+                    aria-label="Choose powder sample"
                   >
-                    Measure conductivity
-                  </button>
-                  <button onClick={() => measure("pH")}>Measure pH</button>
-                  <button onClick={() => measure("fizz")}>
-                    Run isolated acid test
-                  </button>
-                </div>
-                <div className="im-measurements" aria-live="polite">
-                  {draft.evidence
-                    .filter((e) => e.id.startsWith(`${sample}-`))
-                    .map((e) => (
-                      <p key={e.id}>
-                        <strong>{e.label}</strong>
-                        <br />
-                        {e.observation}
-                      </p>
+                    {["A", "B", "C"].map((s) => (
+                      <button
+                        key={s}
+                        aria-pressed={sample === s}
+                        onClick={() => setSample(s)}
+                      >
+                        Sample {s}
+                        <span className="im-powder-jar" aria-hidden="true" />
+                      </button>
                     ))}
-                </div>
-                <small>
-                  Conductivity indicates mobile charge carriers, not a unique
-                  salt identity. Gas and pH tests are supporting evidence beyond
-                  the chapter’s core ionic-bond model. Readings are
-                  illustrative, not analytical specifications.
-                </small>
-              </section>
-              <ElectronTransfer
-                value={draft.electron}
-                onChange={(value) => {
-                  const pair = electronPair(value.kind, value.transferred);
-                  if (pair.complete)
-                    collect(
-                      "electron",
-                      "Ion formation model",
-                      `${pair.donor}: ${pair.protons[0]} protons, ${pair.electrons[0]} electrons; ${pair.acceptor}: ${pair.protons[1]} protons, ${pair.electrons[1]} electrons. Electron loss produces the cation; electron gain produces the anion.`,
-                      { electron: value },
-                    );
-                  else update({ electron: value, submitted: false });
-                }}
-              />
+                  </div>
+                  <p>
+                    White appearance is shared by every candidate. Use fresh
+                    virtual aliquots for each test; never taste an unknown.
+                  </p>
+                  <div className="im-actions">
+                    {(!cinematic || checkpoint === "conductivity") && (
+                      <button
+                        disabled={!draft.calibrated}
+                        onClick={() => measure("conductivity")}
+                      >
+                        Measure conductivity
+                      </button>
+                    )}
+                    {(!cinematic || checkpoint === "clues") && (
+                      <>
+                        <button onClick={() => measure("pH")}>
+                          Measure pH
+                        </button>
+                        <button onClick={() => measure("fizz")}>
+                          Run isolated acid test
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  <div className="im-measurements" aria-live="polite">
+                    {draft.evidence
+                      .filter((e) => e.id.startsWith(`${sample}-`))
+                      .map((e) => (
+                        <p key={e.id}>
+                          <strong>{e.label}</strong>
+                          <br />
+                          {e.observation}
+                        </p>
+                      ))}
+                  </div>
+                  <small>
+                    Conductivity indicates mobile charge carriers, not a unique
+                    salt identity. Gas and pH tests are supporting evidence
+                    beyond the chapter’s core ionic-bond model. Readings are
+                    illustrative, not analytical specifications.
+                  </small>
+                </section>
+              )}
+              {(!cinematic || checkpoint === "electron") && (
+                <ElectronTransfer
+                  value={draft.electron}
+                  onChange={(value) => {
+                    const pair = electronPair(value.kind, value.transferred);
+                    if (pair.complete)
+                      collect(
+                        "electron",
+                        "Ion formation model",
+                        `${pair.donor}: ${pair.protons[0]} protons, ${pair.electrons[0]} electrons; ${pair.acceptor}: ${pair.protons[1]} protons, ${pair.electrons[1]} electrons. Electron loss produces the cation; electron gain produces the anion.`,
+                        { electron: value },
+                      );
+                    else update({ electron: value, submitted: false });
+                  }}
+                />
+              )}
             </>
           ) : (
             <>
@@ -372,101 +410,144 @@ export default function IonicInvestigation({
               />
             </>
           )}
-          <form className="im-instrument" onSubmit={submit}>
-            <h3>Commit your scientific hypothesis.</h3>
-            {dessert ? (
-              ["A", "B", "C"].map((s) => (
-                <label key={s}>
-                  Proposed identity for Sample {s}
+          {(!cinematic || checkpoint === "clues") && (
+            <form className="im-instrument" onSubmit={submit}>
+              <h3>Commit your scientific hypothesis.</h3>
+              {dessert ? (
+                ["A", "B", "C"].map((s) => (
+                  <label key={s}>
+                    Proposed identity for Sample {s}
+                    <select
+                      value={draft.identities[s]}
+                      required
+                      disabled={draft.submitted}
+                      onChange={(e) =>
+                        update({
+                          identities: {
+                            ...draft.identities,
+                            [s]: e.target.value,
+                          },
+                        })
+                      }
+                    >
+                      <option value="">Choose from the candidate set</option>
+                      <option value="sugar">Sugar (sucrose)</option>
+                      <option value="sodium-chloride">Sodium chloride</option>
+                      <option value="hydrogen-carbonate">
+                        Sodium hydrogen carbonate
+                      </option>
+                    </select>
+                  </label>
+                ))
+              ) : (
+                <label>
+                  Proposed deposit identity
                   <select
-                    value={draft.identities[s]}
+                    value={draft.mineral}
                     required
                     disabled={draft.submitted}
-                    onChange={(e) =>
-                      update({
-                        identities: {
-                          ...draft.identities,
-                          [s]: e.target.value,
-                        },
-                      })
-                    }
+                    onChange={(e) => update({ mineral: e.target.value })}
                   >
-                    <option value="">Choose from the candidate set</option>
-                    <option value="sugar">Sugar (sucrose)</option>
+                    <option value="">Choose a mineral hypothesis</option>
                     <option value="sodium-chloride">Sodium chloride</option>
-                    <option value="hydrogen-carbonate">
-                      Sodium hydrogen carbonate
+                    <option value="calcium-carbonate">Calcium carbonate</option>
+                    <option value="calcium-sulfate">Calcium sulfate</option>
+                  </select>
+                </label>
+              )}
+              {cinematic && (
+                <label>
+                  Your hypothesis confidence
+                  <select
+                    value={draft.confidence || "developing"}
+                    disabled={draft.submitted}
+                    onChange={(e) => update({ confidence: e.target.value })}
+                  >
+                    <option value="developing">
+                      Developing — I would seek another check
+                    </option>
+                    <option value="confident">
+                      Confident — independent observations agree
+                    </option>
+                    <option value="uncertain">
+                      Uncertain — I need to revisit my evidence
                     </option>
                   </select>
                 </label>
-              ))
-            ) : (
-              <label>
-                Proposed deposit identity
-                <select
-                  value={draft.mineral}
-                  required
-                  disabled={draft.submitted}
-                  onChange={(e) => update({ mineral: e.target.value })}
-                >
-                  <option value="">Choose a mineral hypothesis</option>
-                  <option value="sodium-chloride">Sodium chloride</option>
-                  <option value="calcium-carbonate">Calcium carbonate</option>
-                  <option value="calcium-sulfate">Calcium sulfate</option>
-                </select>
-              </label>
-            )}
-            <p>
-              {dessert
-                ? "Collect all nine sample readings and complete one electron-transfer model."
-                : "Collect all four mineral tests, check a neutral formula, explore the crystal and run the water simulator."}
-            </p>
-            {!draft.submitted && (
-              <button type="submit" disabled={!ready}>
-                Submit identification
-              </button>
-            )}
-            {draft.submitted && (
-              <div className="im-feedback" role="status">
-                <strong>
-                  {identified
-                    ? "Your identification is supported."
-                    : "Your initial hypothesis needs revision."}
-                </strong>
-                <p>
-                  {dessert
-                    ? "In this candidate set, A is sugar; B is sodium hydrogen carbonate; C is sodium chloride. Sugar produces few mobile ions. Both salts conduct; B’s alkaline pH and carbon dioxide signal distinguish it. Identity evidence does not certify food suitability."
-                    : "The independent evidence supports calcium carbonate, CaCO₃. The 1:1 Ca²⁺ / CO₃²⁻ formula is neutral. Calcium screening, carbonate behaviour, limited solubility and the fingerprint work together; conductivity or appearance alone would be insufficient."}
-                </p>
-                <div className="im-actions">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      onComplete({
-                        selectedOption: identified ? "A" : "B",
-                        justification: evidenceText(draft),
-                        identifications: dessert
-                          ? draft.identities
-                          : draft.mineral,
-                        scientificFeedback: identified
-                          ? "Supported hypothesis"
-                          : "Initial hypothesis revised after feedback",
-                      })
-                    }
-                  >
-                    Continue to Make the Call →
-                  </button>
-                  <button
-                    type="button"
-                    className="im-secondary"
-                    onClick={() => update({ submitted: false })}
-                  >
-                    Revisit my hypothesis
-                  </button>
+              )}
+              <p>
+                {dessert
+                  ? "Collect all nine sample readings and complete one electron-transfer model."
+                  : "Collect all four mineral tests, check a neutral formula, explore the crystal and run the water simulator."}
+              </p>
+              {!draft.submitted && (
+                <button type="submit" disabled={!ready}>
+                  Submit identification
+                </button>
+              )}
+              {draft.submitted && (
+                <div className="im-feedback" role="status">
+                  <strong>
+                    {cinematic
+                      ? "Hypothesis recorded — keep the evidence in view."
+                      : identified
+                        ? "Your identification is supported."
+                        : "Your initial hypothesis needs revision."}
+                  </strong>
+                  <p>
+                    {cinematic
+                      ? "Your proposed identities and confidence are saved. The outcome will let you review what your evidence supports; no answer key is shown here."
+                      : dessert
+                        ? "In this candidate set, A is sugar; B is sodium hydrogen carbonate; C is sodium chloride. Sugar produces few mobile ions. Both salts conduct; B’s alkaline pH and carbon dioxide signal distinguish it. Identity evidence does not certify food suitability."
+                        : "The independent evidence supports calcium carbonate, CaCO₃. The 1:1 Ca²⁺ / CO₃²⁻ formula is neutral. Calcium screening, carbonate behaviour, limited solubility and the fingerprint work together; conductivity or appearance alone would be insufficient."}
+                  </p>
+                  <div className="im-actions">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onComplete({
+                          selectedOption: identified ? "A" : "B",
+                          justification: evidenceText(draft),
+                          identifications: dessert
+                            ? draft.identities
+                            : draft.mineral,
+                          scientificFeedback: cinematic
+                            ? "Hypothesis committed before consequence feedback"
+                            : identified
+                              ? "Supported hypothesis"
+                              : "Initial hypothesis revised after feedback",
+                        })
+                      }
+                    >
+                      Continue to Make the Call →
+                    </button>
+                    <button
+                      type="button"
+                      className="im-secondary"
+                      onClick={() => update({ submitted: false })}
+                    >
+                      Revisit my hypothesis
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </form>
+              )}
+            </form>
+          )}
+          {cinematic && checkpoint !== "clues" && (
+            <div className="im-checkpoint-actions">
+              <p>
+                {checkpoint === "conductivity"
+                  ? "Calibrate first, then record a reading for every sample."
+                  : "Complete the sodium–chlorine transfer: protons stay unchanged while Na⁺ and Cl⁻ form. Magnesium–oxygen is an optional extension."}
+              </p>
+              <button
+                disabled={!dessertCheckpointReady(checkpoint, draft)}
+                onClick={() => onComplete({ checkpoint })}
+              >
+                Continue investigation
+              </button>
+            </div>
+          )}
         </div>
         <aside className="im-evidence-ledger">
           <p className="im-eyebrow">Your evidence ledger</p>
