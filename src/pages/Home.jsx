@@ -6,6 +6,7 @@ import { Avatar } from "@/components/perspective/Portal";
 import HeroSection from "@/components/landing/HeroSection";
 import OurStoryDialog from "@/components/landing/OurStoryDialog";
 import HomepageSoundtrack from "@/components/landing/HomepageSoundtrack";
+import { HOME_REFERENCE_SCENE } from "@/components/landing/homeReferenceScene";
 import CinematicHeroMotion from "@/components/landing/CinematicHeroMotion";
 import "@/components/landing/homepage.css";
 
@@ -118,6 +119,15 @@ export default function Home() {
               values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1 1 1 0 -1.2"
             />
           </filter>
+          <filter
+            id="home-foundation-white-ink"
+            colorInterpolationFilters="sRGB"
+          >
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1 -1 -1 0 2.6"
+            />
+          </filter>
           <filter id="home-approved-logo-ink" colorInterpolationFilters="sRGB">
             <feColorMatrix
               type="matrix"
@@ -144,18 +154,25 @@ export default function Home() {
               <Link to="/Roles">Roles</Link>
               <Link to="/LearningPath">Learning Paths</Link>
               <Link to="/TeacherDashboard">Teacher Dashboard</Link>
-              <button type="button" onClick={() => {
-                const dialog = storyDialog.current;
-                dialog.showModal();
-                // Keep the story opening visible rather than scrolling to Close on mobile.
-                dialog.focus({ preventScroll: true });
-                dialog.scrollTop = 0;
-              }}>Our Story</button>
+              <button
+                type="button"
+                onClick={() => {
+                  const dialog = storyDialog.current;
+                  dialog.showModal();
+                  // Keep the story opening visible rather than scrolling to Close on mobile.
+                  dialog.focus({ preventScroll: true });
+                  dialog.scrollTop = 0;
+                }}
+              >
+                Our Story
+              </button>
             </nav>
             <div className="home-account">
               <HomepageSoundtrack />
               {account.loading ? (
-                <span className="home-account-loading" role="status">Loading…</span>
+                <span className="home-account-loading" role="status">
+                  Loading…
+                </span>
               ) : account.user ? (
                 <Link
                   to={portalPath}
@@ -167,64 +184,74 @@ export default function Home() {
                     user={account.user}
                     profile={account.profile}
                     name={name}
-                    size={34}
+                    size={40}
                   />
                   <span className="home-profile-name">{name}</span>
                 </Link>
               ) : (
-                <Link className="home-sign-in" to="/SignIn">Sign In</Link>
+                <Link className="home-sign-in" to="/SignIn">
+                  Sign In
+                </Link>
               )}
             </div>
           </header>
           <div className="home-scene">
-          <CinematicHeroMotion />
-          <HeroSection onStart={enterPortal} isLoading={account.loading} />
-          <div className="home-bottom">
-            <footer className="home-footer">
-              <p>
-                Trusted by educators, schools, and partners across the UAE
-                <br className="home-desktop-break" /> and around the world.
-              </p>
-              <div className="home-branding">
-                <ApprovedMark
-                  className="home-institution home-uae"
-                  label="UAE"
-                  viewBox="102.5 893.75 118.75 82.5"
-                />
-                <ApprovedMark
-                  className="home-institution home-ministry"
-                  label="Ministry of Education"
-                  viewBox="226.25 893.75 178.75 82.5"
-                />
-                <ApprovedMark
-                  className="home-institution home-school"
-                  label="Um Al Emarat School"
-                  viewBox="400 893.75 155 82.5"
-                />
-                <span>
-                  Riham Saleh<small>Portal Creator</small>
-                </span>
-              </div>
-            </footer>
-            <section className="home-stats" aria-label="Platform statistics">
-              <div>
-                <strong>{Object.keys(SCENARIOS).length}</strong>
-                <span>Live Scenarios</span>
-              </div>
-              <div>
-                <strong>{Object.keys(ROLES).length}</strong>
-                <span>Role Paths</span>
-              </div>
-              <div>
-                <strong>{students ?? "—"}</strong>
-                <span>
-                  {students == null
-                    ? "Student count unavailable"
-                    : "Registered Students"}
-                </span>
-              </div>
-            </section>
-          </div>
+            <CinematicHeroMotion artwork={HOME_REFERENCE_SCENE} />
+            <HeroSection onStart={enterPortal} isLoading={account.loading} />
+            <div className="home-bottom">
+              <footer className="home-footer">
+                <p>
+                  Trusted by educators, schools, and partners across the UAE.
+                  <br className="home-desktop-break" /> and around the world.
+                </p>
+                <div className="home-branding">
+                  <ApprovedMark
+                    className="home-institution home-uae"
+                    label="UAE"
+                    viewBox="109 908 83 49"
+                  />
+                  <ApprovedMark
+                    className="home-institution home-ministry"
+                    label="Ministry of Education"
+                    viewBox="232 906 135 52"
+                  />
+                  <svg
+                    className="home-institution home-foundation"
+                    viewBox="80 90 1600 760"
+                    role="img"
+                    aria-label="The Emirates Foundation"
+                  >
+                    <image
+                      href="/images/perspective/emirates-foundation-reference.png"
+                      width="1774"
+                      height="887"
+                      filter="url(#home-foundation-white-ink)"
+                    />
+                  </svg>
+                  <span>
+                    Riham Saleh<small>Portal Creator</small>
+                  </span>
+                </div>
+              </footer>
+              <section className="home-stats" aria-label="Platform statistics">
+                <div>
+                  <strong>{Object.keys(SCENARIOS).length}</strong>
+                  <span>Live Scenarios</span>
+                </div>
+                <div>
+                  <strong>{Object.keys(ROLES).length}</strong>
+                  <span>Role Paths</span>
+                </div>
+                <div>
+                  <strong>{students ?? "—"}</strong>
+                  <span>
+                    {students == null
+                      ? "Student count unavailable"
+                      : "Registered Students"}
+                  </span>
+                </div>
+              </section>
+            </div>
           </div>
         </div>
       </div>

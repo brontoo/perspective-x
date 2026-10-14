@@ -1,6 +1,17 @@
-import { HERO_SOURCE, CLOUD_REGIONS, CLOUD_CYCLE_SECONDS, coverGeometry, regionBounds, polygonCoverage } from "./cinematicMotionGeometry";
+import {
+  HERO_SOURCE,
+  CLOUD_REGIONS,
+  CLOUD_CYCLE_SECONDS,
+  coverGeometry,
+  regionBounds,
+  polygonCoverage,
+} from "./cinematicMotionGeometry";
 
-const cloudBounds = CLOUD_REGIONS.map(({ points }) => regionBounds(points));
+const DEFAULT_ARTWORK = {
+  url: "/images/perspective/home-cinematic.webp",
+  source: HERO_SOURCE,
+  regions: CLOUD_REGIONS,
+};
 
 const vertexSource = `
   attribute vec2 aPosition;
@@ -35,19 +46,21 @@ const fragmentSource = `
   }
 `;
 
-function createMask() {
+function createMask(source, regions, cloudBounds) {
   const canvas = document.createElement("canvas");
-  canvas.width = HERO_SOURCE.width;
-  canvas.height = HERO_SOURCE.height;
+  canvas.width = source.width;
+  canvas.height = source.height;
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Mask rendering unavailable");
   const pixels = context.createImageData(canvas.width, canvas.height);
-  CLOUD_REGIONS.forEach(({ points }, channel) => {
+  regions.forEach(({ points }, channel) => {
     const bounds = cloudBounds[channel];
     for (let y = bounds.y; y < bounds.bottom; y++) {
       for (let x = bounds.x; x < bounds.right; x++) {
         const index = (y * canvas.width + x) * 4;
-        pixels.data[index + channel] = Math.round(polygonCoverage(x + 0.5, y + 0.5, points) * 255);
+        pixels.data[index + channel] = Math.round(
+          polygonCoverage(x + 0.5, y + 0.5, points) * 255,
+        );
         pixels.data[index + 3] = 255;
       }
     }
@@ -58,14 +71,27 @@ function createMask() {
 
 // This function owns one player and returns its complete synchronous cleanup,
 // including when loading or graphics initialization has not finished yet.
-export function startCloudMotion(canvas, scene) {
-  let stopped = false, ready = false, frame = null, observer = null;
-  let gl = null, program = null, buffer = null, geometry = null;
-  let elapsed = 0, previousTime = null, lastDraw = -Infinity;
-  const shaders = [], textures = [];
+export function startCloudMotion(canvas, scene, artwork = DEFAULT_ARTWORK) {
+  const { source, regions, url } = artwork;
+  const cloudBounds = regions.map(({ points }) => regionBounds(points));
+  let stopped = false,
+    ready = false,
+    frame = null,
+    observer = null;
+  let gl = null,
+    program = null,
+    buffer = null,
+    geometry = null;
+  let elapsed = 0,
+    previousTime = null,
+    lastDraw = -Infinity;
+  const shaders = [],
+    textures = [];
   const image = new Image();
   const uniforms = {};
-  const setState = state => { canvas.dataset.state = state; };
+  const setState = (state) => {
+    canvas.dataset.state = state;
+  };
 
   function cancelFrame() {
     if (frame !== null) cancelAnimationFrame(frame);
@@ -84,16 +110,22 @@ export function startCloudMotion(canvas, scene) {
     image.onerror = null;
     if (gl) {
       gl.useProgram(null);
-      textures.forEach(texture => gl.deleteTexture(texture));
-      shaders.forEach(shader => gl.deleteShader(shader));
+      textures.forEach((texture) => gl.deleteTexture(texture));
+      shaders.forEach((shader) => gl.deleteShader(shader));
       if (buffer) gl.deleteBuffer(buffer);
       if (program) gl.deleteProgram(program);
     }
     setState("static");
     canvas.width = canvas.height = 1;
   }
-  function fallback() { stop(); setState("unavailable"); }
-  function contextLost(event) { event.preventDefault(); fallback(); }
+  function fallback() {
+    stop();
+    setState("unavailable");
+  }
+  function contextLost(event) {
+    event.preventDefault();
+    fallback();
+  }
 
   function shader(type, source) {
     const result = gl.createShader(type);
@@ -101,7 +133,8 @@ export function startCloudMotion(canvas, scene) {
     shaders.push(result);
     gl.shaderSource(result, source);
     gl.compileShader(result);
-    if (!gl.getShaderParameter(result, gl.COMPILE_STATUS)) throw new Error("Shader compilation unavailable");
+    if (!gl.getShaderParameter(result, gl.COMPILE_STATUS))
+      throw new Error("Shader compilation unavailable");
     return result;
   }
   function texture(source, unit, name) {
@@ -122,10 +155,24 @@ export function startCloudMotion(canvas, scene) {
     try {
       const { width, height } = scene.getBoundingClientRect();
       const style = getComputedStyle(scene);
-      if (style.backgroundSize !== "cover" || !style.backgroundImage.includes("/images/perspective/home-cinematic.webp")) throw new Error("Background sizing changed");
-      geometry = coverGeometry(width, height, image.naturalWidth, image.naturalHeight, style.backgroundPosition);
+      if (
+        style.backgroundSize !== "cover" ||
+        !style.backgroundImage.includes(url)
+      )
+        throw new Error("Background sizing changed");
+      geometry = coverGeometry(
+        width,
+        height,
+        image.naturalWidth,
+        image.naturalHeight,
+        style.backgroundPosition,
+      );
       // Mobile uses native CSS-pixel resolution; desktop caps DPR and total area.
-      const ratio = Math.min(window.devicePixelRatio || 1, width <= 800 ? 1 : 1.25, Math.sqrt(2400000 / (width * height)));
+      const ratio = Math.min(
+        window.devicePixelRatio || 1,
+        width <= 800 ? 1 : 1.25,
+        Math.sqrt(2400000 / (width * height)),
+      );
       canvas.width = Math.max(1, Math.round(width * ratio));
       canvas.height = Math.max(1, Math.round(height * ratio));
       gl.viewport(0, 0, canvas.width, canvas.height);
@@ -134,7 +181,9 @@ export function startCloudMotion(canvas, scene) {
       gl.uniform2f(uniforms.uOffset, geometry.offsetX, geometry.offsetY);
       gl.uniform1f(uniforms.uCoverScale, geometry.scale);
       if (!document.hidden) draw();
-    } catch { fallback(); }
+    } catch {
+      fallback();
+    }
   }
   function draw() {
     if (!geometry || stopped) return;
@@ -144,11 +193,24 @@ export function startCloudMotion(canvas, scene) {
     gl.enable(gl.SCISSOR_TEST);
     // Shade only the three cloud bounding boxes, not every scene pixel.
     for (const bounds of cloudBounds) {
-      const xRatio = canvas.width / geometry.width, yRatio = canvas.height / geometry.height;
-      const left = Math.max(0, Math.floor((bounds.x * geometry.scale + geometry.offsetX) * xRatio));
-      const right = Math.min(canvas.width, Math.ceil((bounds.right * geometry.scale + geometry.offsetX) * xRatio));
-      const top = Math.max(0, Math.floor((bounds.y * geometry.scale + geometry.offsetY) * yRatio));
-      const bottom = Math.min(canvas.height, Math.ceil((bounds.bottom * geometry.scale + geometry.offsetY) * yRatio));
+      const xRatio = canvas.width / geometry.width,
+        yRatio = canvas.height / geometry.height;
+      const left = Math.max(
+        0,
+        Math.floor((bounds.x * geometry.scale + geometry.offsetX) * xRatio),
+      );
+      const right = Math.min(
+        canvas.width,
+        Math.ceil((bounds.right * geometry.scale + geometry.offsetX) * xRatio),
+      );
+      const top = Math.max(
+        0,
+        Math.floor((bounds.y * geometry.scale + geometry.offsetY) * yRatio),
+      );
+      const bottom = Math.min(
+        canvas.height,
+        Math.ceil((bounds.bottom * geometry.scale + geometry.offsetY) * yRatio),
+      );
       if (right > left && bottom > top) {
         gl.scissor(left, canvas.height - bottom, right - left, bottom - top);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -158,10 +220,17 @@ export function startCloudMotion(canvas, scene) {
   function tick(timestamp) {
     frame = null;
     if (stopped || document.hidden) return;
-    if (gl.isContextLost()) { fallback(); return; }
-    if (previousTime !== null) elapsed += Math.min(100, timestamp - previousTime);
+    if (gl.isContextLost()) {
+      fallback();
+      return;
+    }
+    if (previousTime !== null)
+      elapsed += Math.min(100, timestamp - previousTime);
     previousTime = timestamp;
-    if (timestamp - lastDraw >= (geometry.width <= 800 ? 1000 / 30 : 1000 / 60) - 1) {
+    if (
+      timestamp - lastDraw >=
+      (geometry.width <= 800 ? 1000 / 30 : 1000 / 60) - 1
+    ) {
       draw();
       lastDraw = timestamp;
     }
@@ -171,36 +240,65 @@ export function startCloudMotion(canvas, scene) {
     cancelFrame();
     if (!ready || stopped) return;
     if (document.hidden) setState("paused");
-    else { setState("running"); frame = requestAnimationFrame(tick); }
+    else {
+      setState("running");
+      frame = requestAnimationFrame(tick);
+    }
   }
 
   setState("loading");
   image.onload = () => {
     if (stopped) return;
     try {
-      if (image.naturalWidth !== HERO_SOURCE.width || image.naturalHeight !== HERO_SOURCE.height) throw new Error("Artwork dimensions changed");
-      gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: false, antialias: false, depth: false, stencil: false, powerPreference: "low-power" });
-      if (!gl || gl.getParameter(gl.MAX_TEXTURE_SIZE) < HERO_SOURCE.width) throw new Error("Graphics unavailable");
+      if (
+        image.naturalWidth !== source.width ||
+        image.naturalHeight !== source.height
+      )
+        throw new Error("Artwork dimensions changed");
+      gl = canvas.getContext("webgl", {
+        alpha: true,
+        premultipliedAlpha: false,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        powerPreference: "low-power",
+      });
+      if (!gl || gl.getParameter(gl.MAX_TEXTURE_SIZE) < source.width)
+        throw new Error("Graphics unavailable");
       canvas.addEventListener("webglcontextlost", contextLost);
       program = gl.createProgram();
       if (!program) throw new Error("Program unavailable");
       gl.attachShader(program, shader(gl.VERTEX_SHADER, vertexSource));
       gl.attachShader(program, shader(gl.FRAGMENT_SHADER, fragmentSource));
       gl.linkProgram(program);
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error("Program linking unavailable");
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS))
+        throw new Error("Program linking unavailable");
       gl.useProgram(program);
       buffer = gl.createBuffer();
       if (!buffer) throw new Error("Buffer unavailable");
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+        gl.STATIC_DRAW,
+      );
       const position = gl.getAttribLocation(program, "aPosition");
       gl.enableVertexAttribArray(position);
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-      for (const name of ["uSourceSize", "uContainer", "uResolution", "uOffset", "uCoverScale", "uTime"]) uniforms[name] = gl.getUniformLocation(program, name);
-      gl.uniform2f(uniforms.uSourceSize, HERO_SOURCE.width, HERO_SOURCE.height);
+      for (const name of [
+        "uSourceSize",
+        "uContainer",
+        "uResolution",
+        "uOffset",
+        "uCoverScale",
+        "uTime",
+      ])
+        uniforms[name] = gl.getUniformLocation(program, name);
+      gl.uniform2f(uniforms.uSourceSize, source.width, source.height);
       texture(image, 0, "uArtwork");
-      texture(createMask(), 1, "uMask");
-      if (gl.getError() !== gl.NO_ERROR) throw new Error("Texture upload unavailable");
+      texture(createMask(source, regions, cloudBounds), 1, "uMask");
+      if (gl.getError() !== gl.NO_ERROR)
+        throw new Error("Texture upload unavailable");
       ready = true;
       measure();
       if (stopped) return;
@@ -209,9 +307,11 @@ export function startCloudMotion(canvas, scene) {
       window.addEventListener("resize", measure);
       document.addEventListener("visibilitychange", visibilityChanged);
       visibilityChanged();
-    } catch { fallback(); }
+    } catch {
+      fallback();
+    }
   };
   image.onerror = fallback;
-  image.src = "/images/perspective/home-cinematic.webp";
+  image.src = url;
   return stop;
 }

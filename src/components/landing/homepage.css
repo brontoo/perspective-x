@@ -1,180 +1,699 @@
-.px-home { color: #fff; background: #28172f; font-family: Arial, Helvetica, sans-serif; isolation: isolate; height: 100dvh; overflow: hidden; }
-.px-home * { box-sizing: border-box; }
-.px-home a { color: inherit; text-decoration: none; }
-.px-home button { font: inherit; cursor: pointer; }
-.px-home :is(a, button):focus-visible { outline: 3px solid #ffdfaa; outline-offset: 4px; }
-.px-home button:disabled { opacity: .6; cursor: wait; }
-.px-home .home-skip { position: absolute; top: 8px; left: 8px; z-index: 5; padding: 10px; background: #fff; color: #28172f; transform: translateY(-160%); }
-.px-home .home-skip:focus { transform: none; }
-.px-home .home-cinema { width: 100%; height: 100%; min-width: 0; display: flex; padding: clamp(12px,3.5vh,38px) clamp(12px,2.3vw,44px); background: url('/images/perspective/home-cinematic.webp') center center/cover no-repeat; }
-.px-home .home-frame { width: 100%; min-width: 0; min-height: 0; display: flex; flex-direction: column; border: 1px solid #ffebfa26; border-radius: 24px; background: linear-gradient(140deg,#52294b18,#232c512e 50%,#35112638); box-shadow: 0 20px 90px #23112324; }
-.px-home .home-nav { display: flex; align-items: center; flex-shrink: 0; gap: 26px; padding: 24px 4.5%; background: linear-gradient(110deg,#ffc2b412,#818dbd0c); }
-.px-home .home-brand { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 600; letter-spacing: -.8px; white-space: nowrap; }
-.px-home .home-logo { width: 50px; height: 43px; display: block; flex-shrink: 0; }
-.px-home .home-nav nav { display: flex; align-items: center; justify-content: center; gap: clamp(12px,2.2vw,38px); flex: 1; }
-.px-home .home-nav nav :is(a,button) { font-size: 14px; white-space: nowrap; }
-.px-home .home-nav nav button { padding: 0; border: 0; background: transparent; color: inherit; }
-.px-home .home-nav nav :is(a,button):hover { text-decoration: underline; text-underline-offset: 6px; }
-.px-home .home-account { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.px-home .home-sign-in { padding: 12px 18px; border: 1px solid #e4e5fa66; background: #28355728; white-space: nowrap; }
-.px-home .home-account-loading { font-size: 12px; }
-.px-home .home-profile { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 200px; min-height: 44px; padding: 4px 8px; font-size: 14px; border-radius: 24px; }
-.px-home .home-profile:hover { background: #ffffff12; }
-.px-home .home-profile-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.px-home .px-avatar { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 50%; overflow: hidden; background: #93516e; color: #fff; }
-.px-home .px-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.px-home .px-avatar-preset { background-image: url('/images/perspective/avatar-atlas.webp'); background-size: 500% 200%; }
-.px-home .home-hero { min-height: 0; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 16px 4.5%; text-shadow: 0 2px 18px #30112666; }
-.px-home .home-title-rule { width: 40px; height: 2px; flex-shrink: 0; background: #fff; margin-bottom: 18px; }
-.px-home .home-hero h1 { font-size: clamp(42px,4.6vw,76px); line-height: 1.08; letter-spacing: -2px; font-weight: 700; margin: 0 0 12px; }
-.px-home .home-slogan { font-size: clamp(18px,2vw,33px); line-height: 1.25; letter-spacing: -.6px; margin: 0 0 20px; }
-.px-home .home-description { font-size: clamp(16px,1.35vw,22px); line-height: 1.35; max-width: 450px; margin: 0 0 24px; }
-.px-home .home-actions { display: flex; gap: 18px; align-items: center; }
-.px-home .home-actions :is(button,a) { display: inline-flex; align-items: center; justify-content: center; gap: 25px; padding: 18px 30px; border-radius: 6px; font-size: 16px; border: 1px solid #fff; min-height: 59px; }
-.px-home .home-actions button { background: #fff; color: #211d25; font-weight: 600; }
-.px-home .home-actions a { background: #441c292c; }
-.px-home .home-actions :is(a,button):hover { box-shadow: 0 4px 24px #ffd2b344; }
-.px-home .home-bottom { display: flex; flex-shrink: 0; align-items: end; gap: 30px; padding: 18px 3.5% 30px; background: linear-gradient(0deg,#180d2477,transparent); }
-.px-home .home-footer { flex: 1; min-width: 0; }
-.px-home .home-footer p { font-size: 14px; line-height: 1.6; margin: 0 0 18px; }
-.px-home .home-branding { display: flex; align-items: center; }
-.px-home .home-institution { height: 54px; flex-shrink: 0; }
-.px-home .home-uae { width: 86px; }
-.px-home .home-ministry { width: 130px; }
-.px-home .home-school { width: 110px; }
-.px-home .home-branding > span { padding: 0 20px; font-size: 17px; line-height: 1.4; border-left: 1px solid #ead8dd77; }
-.px-home .home-branding small { display: block; font-size: 12px; }
-.px-home .home-stats { width: 46%; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); padding: 26px 18px; border: 1px solid #e2c9d866; backdrop-filter: blur(12px); background: linear-gradient(135deg,#cb73924d,#48304066); box-shadow: 0 10px 35px #240e3133; }
-.px-home .home-stats > div { padding: 0 20px; border-right: 1px solid #ddc4d366; }
-.px-home .home-stats > div:last-child { border: 0; }
-.px-home .home-stats strong { display: block; font-family: Georgia,serif; font-size: 42px; line-height: 1.2; font-weight: 400; }
-.px-home .home-stats span { display: block; font-size: 16px; line-height: 1.35; margin-top: 5px; }
-@media (max-width: 1200px) {
-  .px-home .home-nav { flex-wrap: wrap; gap: 12px; padding: 16px 4%; }
-  .px-home .home-nav nav { order: 3; flex-basis: 100%; justify-content: flex-start; gap: 20px; }
-  .px-home .home-account { margin-left: auto; }
-  .px-home .home-bottom { gap: 16px; padding: 14px 4% 22px; }
-  .px-home .home-institution { height: 42px; }
-  .px-home .home-uae { width: 68px; }
-  .px-home .home-ministry { width: 100px; }
-  .px-home .home-school { width: 86px; }
-  .px-home .home-branding > span { padding-left: 12px; font-size: 13px; }
-  .px-home .home-stats { padding: 20px 10px; }
-  .px-home .home-stats > div { padding: 0 12px; }
-  .px-home .home-stats strong { font-size: 34px; }
-  .px-home .home-stats span { font-size: 13px; }
+.px-home {
+  color: #fff;
+  background: #28172f;
+  font-family: Arial, Helvetica, sans-serif;
+  isolation: isolate;
+  height: 100dvh;
+  overflow: hidden;
 }
-@media (max-width: 800px) {
-  .px-home .home-cinema { background-position: 59% center; }
-  .px-home .home-bottom { flex-direction: column-reverse; align-items: stretch; gap: 14px; }
-  .px-home .home-stats { width: 100%; padding: 12px; }
-  .px-home .home-footer p { margin-bottom: 8px; font-size: 12px; }
-  .px-home .home-branding { justify-content: space-between; }
+.px-home * {
+  box-sizing: border-box;
 }
-@media (max-width: 480px) {
-  .px-home .home-cinema { padding: 12px; background-position: 60% center; }
-  .px-home .home-frame { border-radius: 18px; background: linear-gradient(90deg,#3a18387d,#321d3d18); }
-  .px-home .home-nav { padding: 12px; gap: 10px; }
-  .px-home .home-brand { font-size: 17px; gap: 6px; }
-  .px-home .home-logo { width: 30px; height: 28px; }
-  .px-home .home-sign-in { font-size: 11px; padding: 10px; }
-  .px-home .home-nav nav { flex-wrap: wrap; gap: 10px 16px; }
-  .px-home .home-nav nav :is(a,button) { font-size: 10px; }
-  .px-home .home-profile { max-width: 110px; gap: 6px; padding: 4px; font-size: 11px; }
-  .px-home .home-account { gap: 7px; }
-  .px-home .home-hero { padding: 12px 16px; }
-  .px-home .home-title-rule { margin-bottom: 12px; }
-  .px-home .home-hero h1 { font-size: 36px; letter-spacing: -1.5px; }
-  .px-home .home-slogan { font-size: 19px; max-width: 300px; margin-bottom: 14px; }
-  .px-home .home-description { font-size: 14px; max-width: 280px; margin-bottom: 16px; }
-  .px-home .home-actions { gap: 10px; }
-  .px-home .home-actions :is(button,a) { padding: 12px; min-height: 44px; font-size: 12px; gap: 8px; }
-  .px-home .home-bottom { padding: 12px 16px 16px; }
-  .px-home .home-stats strong { font-size: 26px; }
-  .px-home .home-stats span { font-size: 11px; }
-  .px-home .home-stats > div { padding: 0 8px; }
-  .px-home .home-institution { height: 30px; }
-  .px-home .home-uae { width: 44px; }
-  .px-home .home-ministry { width: 65px; }
-  .px-home .home-school { width: 54px; }
-  .px-home .home-branding > span { padding-left: 8px; font-size: 11px; }
-  .px-home .home-branding small { font-size: 9px; }
-  .px-home .home-footer p { font-size: 10px; }
-  .px-home .home-desktop-break { display: none; }
+.px-home a {
+  color: inherit;
+  text-decoration: none;
 }
-@media (max-height: 700px) and (min-width: 801px) {
-  .px-home .home-cinema { padding-top: 12px; padding-bottom: 12px; }
-  .px-home .home-nav { padding-top: 10px; padding-bottom: 10px; gap: 14px; }
-  .px-home .home-nav nav { gap: 14px; }
-  .px-home .home-nav nav :is(a,button) { font-size: 11px; }
-  .px-home .home-hero { padding-top: 8px; padding-bottom: 8px; }
-  .px-home .home-title-rule { margin-bottom: 10px; }
-  .px-home .home-hero h1 { font-size: clamp(34px,4vw,58px); margin-bottom: 8px; }
-  .px-home .home-slogan { font-size: 21px; margin-bottom: 10px; }
-  .px-home .home-description { font-size: 14px; max-width: 370px; margin-bottom: 12px; }
-  .px-home .home-actions :is(button,a) { min-height: 40px; padding: 10px 18px; font-size: 13px; }
-  .px-home .home-bottom { padding-top: 10px; padding-bottom: 12px; }
-  .px-home .home-footer p { font-size: 11px; margin-bottom: 8px; }
-  .px-home .home-institution { height: 34px; }
-  .px-home .home-branding > span { font-size: 13px; }
-  .px-home .home-stats { padding: 12px; }
-  .px-home .home-stats strong { font-size: 30px; }
-  .px-home .home-stats span { font-size: 12px; }
+.px-home button {
+  font: inherit;
+  cursor: pointer;
 }
-@media (prefers-reduced-motion: reduce) { .px-home * { transition: none !important; } }
-/* Keep the cinematic crop and vertical composition aligned with the approved wide view. */
-@media (min-width: 1201px) and (min-height: 701px) {
-  .px-home .home-cinema { background-position: center 75%; }
-  .px-home .home-hero { padding-top: clamp(16px,7vh,70px); }
+.px-home :is(a, button):focus-visible {
+  outline: 3px solid #ffdfaa;
+  outline-offset: 4px;
 }
-.px-home .home-frame { overflow: hidden; }
-@media (max-height: 450px) and (min-width: 801px) {
-  .px-home .home-description { font-size: 12px; max-width: 550px; }
-  .px-home .home-slogan { font-size: 18px; }
-  .px-home .home-nav { gap: 8px; padding-top: 6px; padding-bottom: 6px; }
-  .px-home .home-nav nav { gap: 12px; }
-  .px-home .home-bottom { padding-top: 6px; padding-bottom: 8px; }
+.px-home button:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
-@media (max-height: 450px) and (min-width: 801px) {
-  .px-home .home-hero h1 { font-size: 28px; margin-bottom: 6px; }
-  .px-home .home-title-rule { margin-bottom: 6px; }
-  .px-home .home-slogan { font-size: 16px; margin-bottom: 6px; }
-  .px-home .home-description { font-size: 11px; margin-bottom: 8px; }
+.px-home .home-skip {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 5;
+  padding: 10px;
+  background: #fff;
+  color: #28172f;
+  transform: translateY(-160%);
 }
-
-/* A separate header keeps every navigation item above the character artwork. */
-.px-home .home-cinema { background: #38213d; }
-.px-home .home-frame { background: transparent; }
-.px-home .home-nav { position: relative; z-index: 1; background: linear-gradient(110deg,#61354f,#34253f); border-bottom: 1px solid #fff2; }
-.px-home .home-scene { flex: 1; min-height: 0; display: flex; flex-direction: column; background: url('/images/perspective/home-cinematic.webp') center center/cover no-repeat; }
-.px-home .home-stats { padding: 16px 18px; }
-.px-home .home-stats span { white-space: nowrap; font-size: clamp(11px,.95vw,16px); }
-@media (max-width: 1200px) {
-  .px-home .home-stats { padding: 14px 10px; }
-  .px-home .home-stats > div { padding: 0 8px; }
-  .px-home .home-stats span { font-size: 10px; }
+.px-home .home-skip:focus {
+  transform: none;
 }
-@media (max-width: 800px) {
-  .px-home .home-scene { background-position: 59% center; }
+.px-home .home-cinema {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  padding: clamp(4px, 0.5vh, 6px) 16px clamp(64px, 10.5vh, 108px);
+  background: #38213d;
 }
-@media (max-width: 480px) {
-  .px-home .home-scene { background-position: 60% center; }
-  .px-home .home-stats { padding: 10px 4px; }
-  .px-home .home-stats > div { padding: 0 5px; }
-  .px-home .home-stats span { font-size: 9px; }
-}
-@media (max-height: 450px) and (min-width: 801px) {
-  .px-home .home-stats { padding: 10px; }
-  .px-home .home-stats span { font-size: 10px; }
-}
-/* Restore the original soft cinematic margin without moving the approved layout. */
-.px-home .home-cinema { position: relative; isolation: isolate; overflow: hidden; }
 .px-home .home-cinema::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -24px;
   z-index: -1;
   pointer-events: none;
-  background: url('/images/perspective/home-cinematic.webp') center 75%/cover no-repeat;
+  background: url("/images/perspective/home-hijab-reference.png") center 75% /
+    cover no-repeat;
   filter: blur(16px);
+}
+.px-home .home-frame {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #ffebfa26;
+  border-radius: 26px;
+  background: transparent;
+  box-shadow: 0 20px 90px #23112324;
+}
+.px-home .home-nav {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 26px;
+  min-height: clamp(86px, 11.3vh, 106px);
+  padding: 22px 3% 22px 4.7%;
+  background: linear-gradient(110deg, #553544, #30253c);
+  border-bottom: 1px solid #fff2;
+}
+.px-home .home-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.8px;
+  white-space: nowrap;
+}
+.px-home .home-logo {
+  width: 52px;
+  height: 44px;
+  display: block;
+  flex-shrink: 0;
+}
+.px-home .home-nav nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(15px, 2.1vw, 35px);
+  flex: 1;
+}
+.px-home .home-nav nav :is(a, button) {
+  font-size: 16px;
+  white-space: nowrap;
+}
+.px-home .home-nav nav button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+.px-home .home-nav nav :is(a, button):hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.px-home .home-account {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+.px-home .home-sign-in {
+  padding: 12px 18px;
+  border: 1px solid #e4e5fa66;
+  background: #28355728;
+  white-space: nowrap;
+}
+.px-home .home-account-loading {
+  font-size: 12px;
+}
+.px-home .home-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  max-width: 200px;
+  min-height: 44px;
+  padding: 4px 8px;
+  font-size: 16px;
+  border-radius: 24px;
+}
+.px-home .home-profile:hover {
+  background: #ffffff12;
+}
+.px-home .home-profile-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.px-home .px-avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #93516e;
+  color: #fff;
+  border: 2px solid #fff;
+}
+.px-home .px-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.px-home .px-avatar-preset {
+  background-image: url("/images/perspective/avatar-atlas.webp");
+  background-size: 500% 200%;
+}
+.px-home .home-scene {
+  position: relative;
+  isolation: isolate;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: url("/images/perspective/home-hijab-reference.png") center
+    center/cover no-repeat;
+}
+.px-home .home-hero {
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(25px, 4.9vh, 46px) 4.6% 16px;
+  text-shadow: 0 2px 18px #30112655;
+}
+.px-home .home-title-rule {
+  width: 44px;
+  height: 2px;
+  flex-shrink: 0;
+  background: #fff;
+  margin-bottom: 24px;
+}
+.px-home .home-hero h1 {
+  font-size: clamp(42px, 4.8vw, 80px);
+  line-height: 1.08;
+  letter-spacing: -2px;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+.px-home .home-slogan {
+  font-size: clamp(20px, 2.1vw, 35px);
+  line-height: 1.25;
+  letter-spacing: -0.6px;
+  margin: 0 0 24px;
+}
+.px-home .home-description {
+  font-size: clamp(16px, 1.43vw, 24px);
+  line-height: 1.36;
+  max-width: 530px;
+  margin: 0 0 28px;
+}
+.px-home .home-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.px-home .home-actions :is(button, a) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  padding: 20px 32px;
+  border-radius: 6px;
+  font-size: 18px;
+  border: 1px solid #fff;
+  min-height: 70px;
+}
+.px-home .home-actions button {
+  min-width: 282px;
+  background: #fff;
+  color: #211d25;
+  font-weight: 600;
+}
+.px-home .home-actions a {
+  min-width: 185px;
+  background: #441c292c;
+}
+.px-home .home-actions :is(a, button):hover {
+  box-shadow: 0 4px 24px #ffd2b344;
+}
+.px-home .home-bottom {
+  display: flex;
+  flex-shrink: 0;
+  align-items: end;
+  gap: 30px;
+  padding: 18px 1.7% 32px 3.5%;
+}
+.px-home .home-footer {
+  flex: 1;
+  min-width: 0;
+  text-shadow: 0 1px 8px #29122755;
+}
+.px-home .home-footer p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 22px;
+}
+.px-home .home-branding {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.px-home .home-institution {
+  height: 48px;
+  flex-shrink: 0;
+}
+.px-home .home-uae {
+  width: 88px;
+  padding: 0 18px 0 5px;
+  border-right: 1px solid #ead8dd77;
+}
+.px-home .home-ministry {
+  width: 140px;
+  padding: 0 18px;
+}
+.px-home .home-foundation {
+  width: 144px;
+  object-fit: contain;
+  padding: 0 18px;
+  border-left: 1px solid #ead8dd77;
+}
+.px-home .home-branding > span {
+  padding: 0 22px;
+  font-size: 18px;
+  line-height: 1.4;
+  border-left: 1px solid #ead8dd77;
+}
+.px-home .home-branding small {
+  display: block;
+  font-size: 14px;
+}
+.px-home .home-stats {
+  width: 46%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 17px 20px;
+  border: 1px solid #e2c9d866;
+  backdrop-filter: blur(12px);
+  background: linear-gradient(135deg, #bd627a77, #48304099);
+  box-shadow: 0 10px 35px #240e3133;
+}
+.px-home .home-stats > div {
+  padding: 0 22px;
+  border-right: 1px solid #ddc4d366;
+}
+.px-home .home-stats > div:last-child {
+  border: 0;
+}
+.px-home .home-stats strong {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 50px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+.px-home .home-stats span {
+  display: block;
+  font-size: clamp(11px, 0.96vw, 16px);
+  line-height: 1.35;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+@media (max-width: 1200px) {
+  .px-home .home-cinema {
+    padding: 12px 16px 50px;
+  }
+  .px-home .home-nav {
+    min-height: 0;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 4%;
+  }
+  .px-home .home-brand {
+    font-size: 22px;
+  }
+  .px-home .home-nav nav {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: flex-start;
+    gap: 20px;
+  }
+  .px-home .home-nav nav :is(a, button) {
+    font-size: 14px;
+  }
+  .px-home .home-account {
+    margin-left: auto;
+  }
+  .px-home .home-hero {
+    padding: 18px 4.5%;
+  }
+  .px-home .home-slogan {
+    font-size: clamp(20px, 2.4vw, 30px);
+    margin-bottom: 18px;
+  }
+  .px-home .home-description {
+    font-size: 18px;
+    max-width: 450px;
+    margin-bottom: 22px;
+  }
+  .px-home .home-actions :is(button, a) {
+    min-height: 54px;
+    padding: 15px 22px;
+    font-size: 16px;
+  }
+  .px-home .home-actions button {
+    min-width: 230px;
+  }
+  .px-home .home-actions a {
+    min-width: 160px;
+  }
+  .px-home .home-bottom {
+    gap: 16px;
+    padding: 14px 4% 22px;
+  }
+  .px-home .home-footer p {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .px-home .home-institution {
+    height: 42px;
+  }
+  .px-home .home-uae {
+    width: 68px;
+    padding: 0 10px 0 3px;
+  }
+  .px-home .home-ministry {
+    width: 100px;
+    padding: 0 12px;
+  }
+  .px-home .home-foundation {
+    width: 108px;
+    padding: 0 10px;
+  }
+  .px-home .home-branding > span {
+    padding-left: 12px;
+    font-size: 13px;
+  }
+  .px-home .home-branding small {
+    font-size: 11px;
+  }
+  .px-home .home-stats {
+    padding: 14px 10px;
+  }
+  .px-home .home-stats > div {
+    padding: 0 8px;
+  }
+  .px-home .home-stats strong {
+    font-size: 34px;
+  }
+  .px-home .home-stats span {
+    font-size: 10px;
+  }
+}
+@media (max-width: 800px) {
+  .px-home .home-cinema {
+    padding: 12px;
+  }
+  .px-home .home-scene {
+    background-position: 59% center;
+  }
+  .px-home .home-bottom {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .px-home .home-stats {
+    width: 100%;
+    padding: 12px;
+  }
+  .px-home .home-footer p {
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+  .px-home .home-branding {
+    justify-content: space-between;
+  }
+}
+@media (max-width: 480px) {
+  .px-home .home-cinema {
+    padding: 12px;
+  }
+  .px-home .home-frame {
+    border-radius: 18px;
+  }
+  .px-home .home-scene {
+    background-position: 60% center;
+  }
+  .px-home .home-hero {
+    background: linear-gradient(90deg, #3a183857, #321d3d08);
+  }
+  .px-home .home-nav {
+    padding: 12px;
+    gap: 10px;
+  }
+  .px-home .home-brand {
+    font-size: 17px;
+    gap: 6px;
+  }
+  .px-home .home-logo {
+    width: 30px;
+    height: 28px;
+  }
+  .px-home .home-sign-in {
+    font-size: 11px;
+    padding: 10px;
+  }
+  .px-home .home-nav nav {
+    flex-wrap: wrap;
+    gap: 10px 16px;
+  }
+  .px-home .home-nav nav :is(a, button) {
+    font-size: 10px;
+  }
+  .px-home .home-profile {
+    max-width: 110px;
+    gap: 6px;
+    padding: 4px;
+    font-size: 11px;
+  }
+  .px-home .home-profile .px-avatar {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .px-home .home-account {
+    gap: 7px;
+  }
+  .px-home .home-hero {
+    padding: 12px 16px;
+  }
+  .px-home .home-title-rule {
+    margin-bottom: 12px;
+  }
+  .px-home .home-hero h1 {
+    font-size: 36px;
+    letter-spacing: -1.5px;
+    margin-bottom: 12px;
+  }
+  .px-home .home-slogan {
+    font-size: 19px;
+    max-width: 300px;
+    margin-bottom: 14px;
+  }
+  .px-home .home-description {
+    font-size: 14px;
+    max-width: 280px;
+    margin-bottom: 16px;
+  }
+  .px-home .home-actions {
+    gap: 10px;
+  }
+  .px-home .home-actions :is(button, a) {
+    min-width: 0;
+    padding: 12px;
+    min-height: 44px;
+    font-size: 12px;
+    gap: 8px;
+  }
+  .px-home .home-bottom {
+    padding: 12px 16px 16px;
+  }
+  .px-home .home-stats {
+    padding: 10px 4px;
+  }
+  .px-home .home-stats strong {
+    font-size: 26px;
+  }
+  .px-home .home-stats span {
+    font-size: 9px;
+  }
+  .px-home .home-stats > div {
+    padding: 0 5px;
+  }
+  .px-home .home-institution {
+    height: 30px;
+  }
+  .px-home .home-uae {
+    width: 44px;
+    padding: 0 7px 0 2px;
+  }
+  .px-home .home-ministry {
+    width: 65px;
+    padding: 0 7px;
+  }
+  .px-home .home-foundation {
+    width: 64px;
+    padding: 0 6px;
+  }
+  .px-home .home-branding > span {
+    padding-left: 8px;
+    padding-right: 0;
+    font-size: 11px;
+  }
+  .px-home .home-branding small {
+    font-size: 9px;
+  }
+  .px-home .home-footer p {
+    font-size: 10px;
+  }
+  .px-home .home-desktop-break {
+    display: none;
+  }
+}
+@media (max-height: 700px) and (min-width: 801px) {
+  .px-home .home-cinema {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .px-home .home-nav {
+    min-height: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    gap: 14px;
+  }
+  .px-home .home-nav nav {
+    gap: 14px;
+  }
+  .px-home .home-nav nav :is(a, button) {
+    font-size: 11px;
+  }
+  .px-home .home-hero {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .px-home .home-title-rule {
+    margin-bottom: 10px;
+  }
+  .px-home .home-hero h1 {
+    font-size: clamp(34px, 4vw, 58px);
+    margin-bottom: 8px;
+  }
+  .px-home .home-slogan {
+    font-size: 21px;
+    margin-bottom: 10px;
+  }
+  .px-home .home-description {
+    font-size: 14px;
+    max-width: 370px;
+    margin-bottom: 12px;
+  }
+  .px-home .home-actions :is(button, a) {
+    min-width: 0;
+    min-height: 40px;
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+  .px-home .home-bottom {
+    padding-top: 10px;
+    padding-bottom: 12px;
+  }
+  .px-home .home-footer p {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  .px-home .home-institution {
+    height: 34px;
+  }
+  .px-home .home-branding > span {
+    font-size: 13px;
+  }
+  .px-home .home-stats {
+    padding: 12px;
+  }
+  .px-home .home-stats strong {
+    font-size: 30px;
+  }
+  .px-home .home-stats span {
+    font-size: 12px;
+  }
+}
+@media (max-height: 450px) and (min-width: 801px) {
+  .px-home .home-nav {
+    gap: 8px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .px-home .home-nav nav {
+    gap: 12px;
+  }
+  .px-home .home-hero h1 {
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+  .px-home .home-title-rule {
+    margin-bottom: 6px;
+  }
+  .px-home .home-slogan {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  .px-home .home-description {
+    font-size: 11px;
+    max-width: 550px;
+    margin-bottom: 8px;
+  }
+  .px-home .home-bottom {
+    padding-top: 6px;
+    padding-bottom: 8px;
+  }
+  .px-home .home-stats {
+    padding: 10px;
+  }
+  .px-home .home-stats span {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .px-home * {
+    transition: none !important;
+  }
+}
+.px-home .home-account .home-music-control {
+  width: 48px;
+  height: 48px;
+}
+.px-home .home-account .home-music-control svg {
+  width: 20px;
+  height: 20px;
+}
+@media (max-width: 480px) {
+  .px-home .home-account .home-music-control {
+    width: 32px;
+    height: 32px;
+  }
+  .px-home .home-account .home-music-control svg {
+    width: 16px;
+    height: 16px;
+  }
 }
