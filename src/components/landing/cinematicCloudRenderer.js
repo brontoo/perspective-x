@@ -167,11 +167,12 @@ export function startCloudMotion(canvas, scene, artwork = DEFAULT_ARTWORK) {
         image.naturalHeight,
         style.backgroundPosition,
       );
-      // Mobile uses native CSS-pixel resolution; desktop caps DPR and total area.
+      // Mobile keeps its existing pixel budget. Desktop supports Retina clarity
+      // without unbounded allocations on very large or high-DPR displays.
       const ratio = Math.min(
         window.devicePixelRatio || 1,
-        width <= 800 ? 1 : 1.25,
-        Math.sqrt(2400000 / (width * height)),
+        width <= 800 ? 1 : 2,
+        Math.sqrt(8300000 / (width * height)),
       );
       canvas.width = Math.max(1, Math.round(width * ratio));
       canvas.height = Math.max(1, Math.round(height * ratio));

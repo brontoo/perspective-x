@@ -20,7 +20,7 @@ function ApprovedMark({ className, label, viewBox }) {
       aria-hidden={label ? undefined : true}
     >
       <image
-        href="/images/perspective/home-branding-source.webp"
+        href="/images/perspective/home-branding-source-lossless.png"
         width="1448"
         height="1086"
         filter={
@@ -119,15 +119,6 @@ export default function Home() {
               values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1 1 1 0 -1.2"
             />
           </filter>
-          <filter
-            id="home-foundation-white-ink"
-            colorInterpolationFilters="sRGB"
-          >
-            <feColorMatrix
-              type="matrix"
-              values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1 -1 -1 0 2.6"
-            />
-          </filter>
           <filter id="home-approved-logo-ink" colorInterpolationFilters="sRGB">
             <feColorMatrix
               type="matrix"
@@ -215,19 +206,11 @@ export default function Home() {
                     label="Ministry of Education"
                     viewBox="232 906 135 52"
                   />
-                  <svg
-                    className="home-institution home-foundation"
-                    viewBox="80 90 1600 760"
-                    role="img"
-                    aria-label="The Emirates Foundation"
-                  >
-                    <image
-                      href="/images/perspective/emirates-foundation-reference.png"
-                      width="1774"
-                      height="887"
-                      filter="url(#home-foundation-white-ink)"
-                    />
-                  </svg>
+                  <ApprovedMark
+                    className="home-institution home-school"
+                    label="Um Al Emarat School"
+                    viewBox="411 893 103 68"
+                  />
                   <span>
                     Riham Saleh<small>Portal Creator</small>
                   </span>

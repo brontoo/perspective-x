@@ -290,8 +290,9 @@ test("context loss falls back safely and high-DPR canvases remain capped", async
       height: element.height,
       cssWidth: element.clientWidth,
     }));
-    expect(pixels.width).toBeLessThanOrEqual(Math.ceil(pixels.cssWidth * 1.25));
-    expect(pixels.width * pixels.height).toBeLessThanOrEqual(2403000);
+    expect(pixels.width).toBeGreaterThanOrEqual(Math.floor(pixels.cssWidth * 1.99));
+    expect(pixels.width).toBeLessThanOrEqual(Math.ceil(pixels.cssWidth * 2));
+    expect(pixels.width * pixels.height).toBeLessThanOrEqual(8310000);
     await canvas.evaluate((element) =>
       element
         .getContext("webgl")
@@ -457,7 +458,7 @@ test("leaving while the artwork is loading cancels late renderer initialization"
   const gate = new Promise((resolve) => {
     release = resolve;
   });
-  await page.route("**/home-hijab-reference.png", async (route) => {
+  await page.route("**/home-hijab-reference-hd.png", async (route) => {
     await gate;
     await route.continue();
   });
