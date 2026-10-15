@@ -34,3 +34,32 @@ test("homepage flyaway retouch preserves every pixel outside its local masks and
   assert.ok(changed > 0, "The asset must contain the actual cleanup");
   assert.ok(changed < before.width * before.height * 0.06, "Cleanup must remain local to the flyaways");
 });
+
+test("remaining crown, temple, and scarf strands are cleaned without altering face or unrelated pixels", async () => {
+  const source = new URL("../public/images/perspective/home-hijab-retouched.png", import.meta.url);
+  assert.equal(createHash("sha256").update(await readFile(source)).digest("hex"), "7d610f1e5d4f5b52e2d3dd8a93641047304727415b31f29d1009be80ea035794");
+  const [before, after, mask, face] = await Promise.all([
+    load("../public/images/perspective/home-hijab-retouched.png"),
+    load("../public/images/perspective/home-hijab-clean.png"),
+    load("../docs/homepage-retouch/remaining-strands-selection-mask.png"),
+    load("../docs/homepage-retouch/protected-face-mask.png"),
+  ]);
+  for (const image of [before, after, mask, face]) assert.deepEqual([image.width, image.height], [1888, 833]);
+  const allowed = [[880, 0, 1280, 345], [765, 325, 965, 525]];
+  const protectedAreas = [[1050, 350, 1410, 750], [800, 512, 1015, 740]];
+  let changed = 0;
+  for (let y = 0; y < before.height; y++) for (let x = 0; x < before.width; x++) {
+    const index = (y * before.width + x) * 4;
+    if (mask.data[index] > 0) {
+      assert.ok(allowed.some(rect => inside(x, y, rect)), `Cleanup escaped the head/scarf at ${x},${y}`);
+      assert.equal(face.data[index], 0, `Cleanup touches the original face at ${x},${y}`);
+      assert.ok(!protectedAreas.some(rect => inside(x, y, rect)), `Cleanup touches body or tablet at ${x},${y}`);
+    }
+    if ([0, 1, 2, 3].some(channel => before.data[index + channel] !== after.data[index + channel])) {
+      changed++;
+      assert.ok(mask.data[index] > 0, `Unrelated pixel changed at ${x},${y}`);
+      assert.equal(face.data[index], 0, `Facial pixel changed at ${x},${y}`);
+    }
+  }
+  assert.ok(changed > 0 && changed < before.width * before.height * 0.08);
+});

@@ -458,7 +458,7 @@ test("leaving while the artwork is loading cancels late renderer initialization"
   const gate = new Promise((resolve) => {
     release = resolve;
   });
-  await page.route("**/home-hijab-retouched.png", async (route) => {
+  await page.route("**/home-hijab-clean.png", async (route) => {
     await gate;
     await route.continue();
   });

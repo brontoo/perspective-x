@@ -1,7 +1,7 @@
 // Lossless, detail-restored photographic layer from the October 14 reference.
 // Conservative masks stay entirely in the sky, above the hijab, sun and buildings.
 export const HOME_REFERENCE_SCENE = {
-  url: "/images/perspective/home-hijab-retouched.png",
+  url: "/images/perspective/home-hijab-clean.png",
   source: { width: 1888, height: 833 },
   regions: [
     {

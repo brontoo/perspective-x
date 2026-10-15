@@ -19,14 +19,14 @@ Captured from the production build at 100% browser zoom, with reduced motion and
 
 ## Artwork quality and display resolution
 
-The restored scenic master is a lossless 1888 × 833 PNG with refined cloud, landscape, cloth, and flower detail. The active version also includes a [localized flyaway cleanup](../homepage-retouch/README.md) that preserves every pixel outside two small retouch selections, with explicit protection for the face, body, and tablet. This is the image tool's output resolution; it is not a native 4K photograph. Text, controls, and layout remain native browser elements that render at the display's pixel density. The original 1448 × 1086 approved PNG supplies the exact branding marks without additional lossy compression. Original artwork files remain available.
+The restored scenic master is a lossless 1888 × 833 PNG with refined cloud, landscape, cloth, and flower detail. The active version also includes a [localized flyaway cleanup](../homepage-retouch/README.md) that preserves every pixel outside the localized head/scarf corrections, with explicit protection for the original face, body, and tablet. This is the image tool's output resolution; it is not a native 4K photograph. Text, controls, and layout remain native browser elements that render at the display's pixel density. The original 1448 × 1086 approved PNG supplies the exact branding marks without additional lossy compression. Original artwork files remain available.
 
 The cloud layer now uses up to 2× desktop pixel density instead of the previous 1.25× cap, with an 8.3-million-pixel limit. This avoids a softer animated overlay on Retina displays while keeping allocations bounded. The 4K screenshot demonstrates viewport fit and interface rendering, not additional native photographic pixels.
 
 ## Validation
 
 - Production build, ESLint, and TypeScript checks passed.
-- 19 unit tests passed.
+- 20 unit tests passed.
 - 69 affected browser tests passed, covering viewport fit, signed-in account details, soundtrack playback and cross-tab ownership, cinematic motion and static fallbacks, Our Story, and the four previously approved internal pages.
 - The high-DPR regression verifies a 2× desktop animation buffer with a bounded 8.3-million-pixel allocation and safe graphics fallback. Mobile keeps its existing 1× animation budget.
 - Desktop, tablet, phone, Retina, and 4K viewport captures passed with no scrolling or page errors.
