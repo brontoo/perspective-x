@@ -2,7 +2,7 @@ import { ROLES } from "../src/components/scenarios/scenarioData";
 import {test,expect} from '@playwright/test';
 import {setup} from './support/fixtures';
 import fs from 'node:fs/promises';
-for (const [width,height] of [[1676,927],[1920,1080],[1440,900],[1366,768],[1280,720],[1024,768],[768,1024],[390,844],[375,667],[844,390]]) {
+for (const [width,height] of [[3840,2160],[1676,927],[1920,1080],[1440,900],[1366,768],[1280,720],[1024,768],[768,1024],[390,844],[375,667],[844,390]]) {
  test(`homepage fits one complete viewport at ${width}x${height}`,async({page})=>{
   await page.setViewportSize({width,height});await setup(page);await page.goto('/');
   await expect(page.locator('.home-profile')).toBeVisible();
