@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { HAMAD } from "@/data/ionicMissions.mjs";
 import { gradeIonic } from "@/data/ionicScience.mjs";
 import IonicInvestigation from "./IonicInvestigation";
+import IonicStory from "./IonicStory";
 import "./ionic-missions.css";
 function Briefing({ scenario, onComplete }) {
   const [videoReady, setVideoReady] = useState(false),
@@ -48,6 +49,7 @@ function Briefing({ scenario, onComplete }) {
           <span className="im-fiction-chip">Fictional educational mission</span>
         </div>
       </div>
+      <IonicStory scenario={scenario} stage="briefing" />
       <div className="im-brief-grid">
         <section>
           <p className="im-eyebrow">Your assignment</p>
@@ -376,6 +378,7 @@ export default function IonicMission({
       {stage === "briefing" && (
         <Briefing scenario={scenario} onComplete={onComplete} />
       )}
+      {stage !== "briefing" && <IonicStory scenario={scenario} stage={stage} responses={responses} />}
       {stage === "investigation" && (
         <IonicInvestigation
           scenario={scenario}
