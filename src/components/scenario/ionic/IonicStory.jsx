@@ -58,10 +58,15 @@ export default function IonicStory({ scenario, stage = "briefing", responses = {
   function next() {
     stopVoice();
     if (index < lines.length - 1) {
+      const following = lines[index + 1];
       setIndex(n => n + 1);
       setSelected("");
       setShowFeedback(false);
-    } else setIndex(0);
+      if (voiceOn) speak(following);
+    } else {
+      setIndex(0);
+      if (voiceOn) speak(lines[0]);
+    }
   }
   function chooseLine(n) {
     stopVoice();
@@ -88,7 +93,7 @@ export default function IonicStory({ scenario, stage = "briefing", responses = {
           </div>
           <div className="ivn-tools">
             <button type="button" className="ivn-tool" aria-expanded={logOpen} onClick={() => setLogOpen(v => !v)}>{logOpen ? "Close log" : "Conversation log"}</button>
-            <button type="button" className="ivn-tool" onClick={() => {stopVoice();setVoiceOn(v => !v);}} aria-label={voiceOn ? "Disable voice" : "Enable voice"}>{voiceOn ? "Voice on" : "Voice off"}</button>
+            <button type="button" className="ivn-tool" onClick={() => {if (voiceOn) stopVoice(); else speak(); setVoiceOn(v => !v);}} aria-label={voiceOn ? "Disable voice" : "Enable voice"}>{voiceOn ? "Voice on" : "Voice off"}</button>
             <label className="ivn-speed">Speed <select aria-label="Voice speed" value={speed} onChange={e => setSpeed(Number(e.target.value))}><option value="0.8">0.8×</option><option value="1">1×</option><option value="1.2">1.2×</option></select></label>
           </div>
         </header>
