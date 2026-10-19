@@ -519,3 +519,138 @@
 .od-novel .od-workspace .im-water-vial span {
   color: #e5f5fa;
 }
+/* Start is the only gesture needed to authorize synchronized story playback. */
+.od-start-screen {
+  position: relative;
+  align-self: center;
+  margin: auto 24px;
+  padding: 30px;
+  max-width: 560px;
+  color: #edfaff;
+  background: #082c40ed;
+  border: 1px solid #91dde0;
+  border-radius: 22px;
+  box-shadow: 0 20px 60px #03172388;
+  backdrop-filter: blur(12px);
+}
+.od-novel .od-start-screen h3 {
+  color: white;
+  font-size: 30px;
+}
+.od-start-screen p {
+  color: #c9e5ee;
+}
+.od-start-screen .od-eyebrow {
+  color: #91e6e2;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+}
+.od-view-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.od-novel .od-view-controls button {
+  padding: 6px 12px;
+  min-height: 36px;
+  font-size: 12px;
+  background: #143e50;
+  color: #e4f6fc;
+  border-color: #76b9c6;
+}
+.od-novel [hidden] {
+  display: none !important;
+}
+.od-session.is-expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+.od-session.is-fullscreen {
+  width: 100%;
+  height: 100dvh;
+  overflow: auto;
+  color: #e6f7fb;
+  background: #082331;
+}
+.od-session.is-fullscreen .od-novel {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  border-radius: 0;
+}
+.od-session.is-fullscreen .od-viewport.im-cinema {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+.od-session.is-fullscreen :is(.od-history, .od-ledger, .im-disclaimer) {
+  display: none;
+}
+.od-session.is-fullscreen .od-controls {
+  flex-shrink: 0;
+  padding: 10px 20px;
+}
+.od-session.is-fullscreen .od-workspace {
+  max-height: calc(100% - 220px);
+}
+.od-session.is-fullscreen .od-dialogue {
+  margin-bottom: 16px;
+  padding: 15px 22px;
+}
+.od-session.is-fullscreen .od-audio-status {
+  flex-basis: auto;
+}
+.od-session.is-fullscreen .od-scene-label {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.od-session.is-fullscreen .od-scene-label h2 {
+  font-size: 22px;
+}
+@media (max-width: 600px) {
+  .od-start-screen {
+    padding: 22px;
+    margin: 35px 15px;
+  }
+  .od-session.is-fullscreen .od-viewport.im-cinema {
+    min-height: 250px;
+    overflow: auto;
+  }
+  .od-session.is-fullscreen .od-workspace {
+    flex-shrink: 0;
+    max-height: 42dvh;
+  }
+  .od-session.is-fullscreen .od-dialogue {
+    flex-shrink: 0;
+    padding: 12px;
+  }
+  .od-session.is-fullscreen .od-view-controls > span {
+    display: none;
+  }
+  .od-session.is-fullscreen .od-voice {
+    gap: 6px;
+  }
+  .od-session.is-fullscreen .od-controls {
+    padding: 8px;
+  }
+  .od-session.is-fullscreen .od-scene-label h2 {
+    font-size: 18px;
+  }
+}
+.od-completion-exit {
+  position: sticky;
+  z-index: 5;
+  top: 12px;
+  float: right;
+  margin: 12px;
+  padding: 10px 18px;
+  border: 1px solid #8edbe0;
+  border-radius: 10px;
+  color: #e5f9fc;
+  background: #103e50;
+}

@@ -1,12 +1,24 @@
 import { test, expect } from "@playwright/test";
-import { setup, noOverflow, ID, OTHER, HISTORY } from "./support/fixtures";
+import {
+  setup as portalSetup,
+  noOverflow,
+  ID,
+  OTHER,
+  HISTORY,
+} from "./support/fixtures";
 import { IONIC_SCENARIOS } from "../src/data/ionicMissions.mjs";
 import { mkdirSync } from "node:fs";
 import {
+  installOceanPlayback,
+  oceanAssessmentReady,
   oceanTask,
   oceanBriefing,
   oceanStartInvestigation,
 } from "./support/ocean-flow";
+async function setup(page, options) {
+  await installOceanPlayback(page);
+  return portalSetup(page, options);
+}
 const D = "ionic_dessert_mystery",
   A = "ionic_aquarium_mystery";
 const snapshotDir = "docs/ionic-materials/screenshots";
@@ -284,15 +296,13 @@ async function aquariumInvestigation(page) {
   await expect(page.locator(".od-caption")).toContainText(
     "combined evidence supports",
   );
-  await page
-    .getByRole("button", { name: "Next dialogue →", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Next dialogue →", exact: true })
-    .click();
+  await oceanTask(page, "professional-decision");
 }
 async function decisionAndReflection(page, id, choice, teacher = false) {
-  await page.getByRole("button", { name: "Continue to Make the Call" }).click();
+  if (id !== A)
+    await page
+      .getByRole("button", { name: "Continue to Make the Call" })
+      .click();
   if (id === A) await oceanTask(page, "professional-decision");
   const s = IONIC_SCENARIOS[id],
     selected = s.scenes[1].options.find((o) => o.id === choice);
@@ -343,10 +353,7 @@ async function assess(page, id, wrong = 0) {
     .getByRole("button", { name: "Submit final assessment", exact: true })
     .click();
   await expect(page.locator(".im-feedback")).toHaveCount(5);
-  if (id === A && wrong < 2)
-    await page
-      .getByRole("button", { name: "Next dialogue →", exact: true })
-      .click();
+  if (id === A) await oceanAssessmentReady(page);
   await page
     .getByRole("button", {
       name: wrong < 2 ? "Complete Mission" : "Save result and review",

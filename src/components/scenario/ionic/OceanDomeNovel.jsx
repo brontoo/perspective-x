@@ -83,18 +83,41 @@ export default function OceanDomeNovel({
     ? feedback[flow.feedbackIndex]
     : step?.lines[flow.line];
   const caption = review || active;
-  const voice = useOceanVoice(caption);
+
   const art = step ? storyImage(scenario.id, step.art) : scenario.artwork;
   const [failedArt, setFailedArt] = useState("");
   const lastLine = feedback.length
     ? flow.feedbackIndex === feedback.length - 1
     : flow.line === (step?.lines.length || 0) - 1;
+  const nextStepData =
+    steps[flow.step + 1] ||
+    (stage === "briefing" ? OCEAN_INVESTIGATION[0] : null);
+  const nextLine = review
+    ? null
+    : feedback.length
+      ? !lastLine
+        ? feedback[flow.feedbackIndex + 1]
+        : flow.done
+          ? nextStepData?.lines[0]
+          : step?.lines[flow.line]
+      : !lastLine
+        ? step?.lines[flow.line + 1]
+        : !step?.task || flow.done
+          ? nextStepData?.lines[0]
+          : null;
+  const voice = useOceanVoice(caption, nextLine);
   const canAct =
-    lastLine && !voice.waiting && !review && !feedback.length && !flow.done;
+    voice.started &&
+    !voice.paused &&
+    lastLine &&
+    voice.finished &&
+    !review &&
+    !feedback.length &&
+    !flow.done;
   const speaker = OCEAN_SPEAKERS[caption?.speakerCode];
 
   useEffect(() => {
-    if (!active) return;
+    if (!active || !voice.started) return;
     setHistory((previous) =>
       previous.at(-1)?.id === active.id
         ? previous
@@ -109,7 +132,7 @@ export default function OceanDomeNovel({
           ],
     );
     setReview(null);
-  }, [active?.id]);
+  }, [active?.id, voice.started]);
   // Story cursor is stored alongside, never in place of, the existing evidence.
   useEffect(() => {
     if (stage !== "investigation") return;
@@ -127,7 +150,7 @@ export default function OceanDomeNovel({
     }));
   }
   function advance() {
-    if (voice.waiting || review || !step) return;
+    if (voice.waiting || voice.paused || review || !step) return;
     if (feedback.length) {
       if (!lastLine)
         setFlow((previous) => ({
@@ -140,11 +163,54 @@ export default function OceanDomeNovel({
           feedback: [],
           feedbackIndex: 0,
         }));
-      else nextStep();
+      else if (stage === "investigation" && step.task === "identity")
+        onComplete({
+          selectedOption: "A",
+          justification: (record.current.evidence || [])
+            .map((item) => `${item.label}: ${item.observation}`)
+            .join("\n"),
+          identifications: record.current.mineral,
+          scientificFeedback: "Supported hypothesis",
+        });
+      else if (stage !== "assessment") nextStep();
     } else if (!lastLine)
       setFlow((previous) => ({ ...previous, line: previous.line + 1 }));
-    else if (!step.task || flow.done) nextStep();
+    else if (!step.task || flow.done) {
+      if (stage === "briefing" && flow.step === steps.length - 1) onComplete();
+      else nextStep();
+    }
   }
+  const consumed = useRef(null);
+  useEffect(() => {
+    if (
+      !voice.started ||
+      voice.paused ||
+      !voice.finished ||
+      review ||
+      !active ||
+      !step
+    )
+      return;
+    const token = `${step.id}:${active.id}:${flow.feedbackIndex}:${flow.done}`;
+    if (consumed.current === token) return;
+    consumed.current = token;
+    advance();
+  }, [
+    voice.started,
+    voice.paused,
+    voice.finished,
+    review,
+    active?.id,
+    flow.step,
+    flow.line,
+    flow.feedbackIndex,
+    flow.done,
+  ]);
+  useEffect(() => {
+    if (!voice.started || !nextStepData || !lastLine || review) return;
+    const image = new Image();
+    image.src = storyImage(scenario.id, nextStepData.art);
+  }, [voice.started, nextStepData?.id, lastLine, review, scenario.id]);
   function nextStep() {
     setNotice("");
     if (flow.step < steps.length - 1)
@@ -205,8 +271,18 @@ export default function OceanDomeNovel({
   const endOfFeedback =
     !!feedback.length && lastLine && !voice.waiting && flow.done;
   const allowFormCompletion =
-    !voice.waiting && !review && (canAct || endOfFeedback || flow.done);
-  const showForm = step?.task && (canAct || (flow.done && !feedback.length));
+    voice.started &&
+    !voice.paused &&
+    !voice.waiting &&
+    !review &&
+    (canAct || endOfFeedback || flow.done);
+  const showForm =
+    voice.started &&
+    step?.task &&
+    lastLine &&
+    voice.finished &&
+    !review &&
+    !feedback.length;
   const station =
     showForm &&
     [
@@ -223,20 +299,32 @@ export default function OceanDomeNovel({
       : "none";
   const filmKey = step?.video;
   const movie = filmKey && OCEAN_VIDEOS[filmKey];
-  const finishLabel =
-    stage === "briefing" ? "Accept assignment →" : "Continue story →";
 
   return (
     <section
       className="im-mission im-aquarium od-novel"
       aria-label="Ocean Dome illustrated visual novel"
+      data-started={voice.started ? "true" : "false"}
     >
       <div className="od-storybar">
         <span>
           Ocean Dome <b> / </b> Chapter {chapterNumber[stage]} ·{" "}
           {chapterTitle[stage]}
         </span>
-        <span>{active?.sceneId || "Teacher preview"} · Al Qana, Abu Dhabi</span>
+        <div className="od-view-controls">
+          <span>
+            {active?.sceneId || "Teacher preview"} · Al Qana, Abu Dhabi
+          </span>
+          {voice.fullscreen && (
+            <button onClick={voice.onNotebook}>Mission Notebook</button>
+          )}
+          <button
+            onClick={voice.toggleFullscreen}
+            aria-pressed={voice.fullscreen}
+          >
+            {voice.fullscreen ? "Exit full screen" : "Full screen"}
+          </button>
+        </div>
       </div>
       <div
         className={`od-viewport im-cinema ${showForm ? "has-workspace" : ""}`}
@@ -262,7 +350,7 @@ export default function OceanDomeNovel({
           <p>Separate demonstration loop · Animal exhibits unaffected</p>
         </div>
         {!step && (
-          <div className="od-workspace">
+          <div className="od-workspace" inert={voice.paused ? "" : undefined}>
             <h3>A decision is needed before its outcome can unfold.</h3>
             <p>
               Return to Make the Call in teacher preview and select one
@@ -270,9 +358,24 @@ export default function OceanDomeNovel({
             </p>
           </div>
         )}
+        {!voice.started && (
+          <div className="od-start-screen">
+            <p className="od-eyebrow">Your scientific adventure awaits</p>
+            <h3>Step into Ocean Dome</h3>
+            <p>
+              Start the story with synchronized character voices. The story will
+              pause whenever your investigation needs a decision.
+            </p>
+            <button onClick={voice.start}>Start scenario</button>
+          </div>
+        )}
         {/* The investigation remains mounted, preserving the original instruments and draft. */}
         {stage === "investigation" && (
-          <div className="od-workspace" hidden={station === "none"}>
+          <div
+            className="od-workspace"
+            inert={voice.paused ? "" : undefined}
+            hidden={station === "none"}
+          >
             <IonicInvestigation
               scenario={scenario}
               initialRecord={record.current}
@@ -306,7 +409,10 @@ export default function OceanDomeNovel({
           </div>
         )}
         {showForm && step.task === "first" && (
-          <div className="od-workspace od-choice-workspace">
+          <div
+            className="od-workspace od-choice-workspace"
+            inert={voice.paused ? "" : undefined}
+          >
             <h3>How should we begin?</h3>
             {IONIC_STORIES[scenario.id].firstChoices.map((choice) => (
               <button key={choice.id} onClick={() => firstChoice(choice.id)}>
@@ -316,7 +422,10 @@ export default function OceanDomeNovel({
           </div>
         )}
         {showForm && step.task === "interpret" && (
-          <div className="od-workspace od-choice-workspace">
+          <div
+            className="od-workspace od-choice-workspace"
+            inert={voice.paused ? "" : undefined}
+          >
             <h3>Interpret the isolated gas observation.</h3>
             <p>Use this result with the other independent tests.</p>
             <button
@@ -341,17 +450,17 @@ export default function OceanDomeNovel({
           </div>
         )}
         {showForm && step.task === "decision" && (
-          <div className="od-workspace">
+          <div className="od-workspace" inert={voice.paused ? "" : undefined}>
             {renderDecision(allowFormCompletion)}
           </div>
         )}
         {showForm && step.task === "reflection" && (
-          <div className="od-workspace">
+          <div className="od-workspace" inert={voice.paused ? "" : undefined}>
             {renderOutcome(allowFormCompletion)}
           </div>
         )}
-        {stage === "assessment" && (canAct || !!assessmentResult) && (
-          <div className="od-workspace">
+        {stage === "assessment" && (showForm || !!assessmentResult) && (
+          <div className="od-workspace" inert={voice.paused ? "" : undefined}>
             {renderAssessment(
               grade,
               allowFormCompletion && (!assessmentResult || endOfFeedback),
@@ -359,6 +468,7 @@ export default function OceanDomeNovel({
           </div>
         )}
         <div
+          hidden={!voice.started}
           className={`od-dialogue ${caption?.speakerCode === "NAR" ? "is-narrator" : ""}`}
           aria-live="polite"
           aria-atomic="true"
@@ -390,64 +500,11 @@ export default function OceanDomeNovel({
           {notice}
         </p>
       )}
-      <div className="od-controls">
+      <div className="od-controls" hidden={!voice.started}>
         {voice.controls}
-        <div className="od-progress-controls">
-          {review ? (
-            <button onClick={() => setReview(null)}>
-              Return to current dialogue
-            </button>
-          ) : (
-            <>
-              {(!lastLine || feedback.length || !step?.task || flow.done) &&
-                step &&
-                !(stage === "assessment" && lastLine) &&
-                !(
-                  stage === "investigation" &&
-                  step.task === "identity" &&
-                  endOfFeedback
-                ) && (
-                  <button
-                    className="od-next"
-                    onClick={
-                      stage === "briefing" &&
-                      flow.step === steps.length - 1 &&
-                      lastLine
-                        ? onComplete
-                        : advance
-                    }
-                    disabled={voice.waiting}
-                  >
-                    {lastLine &&
-                    !feedback.length &&
-                    stage === "briefing" &&
-                    flow.step === steps.length - 1
-                      ? finishLabel
-                      : "Next dialogue →"}
-                  </button>
-                )}
-              {stage === "investigation" &&
-                step?.task === "identity" &&
-                endOfFeedback && (
-                  <button
-                    className="od-next"
-                    onClick={() =>
-                      onComplete({
-                        selectedOption: "A",
-                        justification: (record.current.evidence || [])
-                          .map((e) => `${e.label}: ${e.observation}`)
-                          .join("\n"),
-                        identifications: record.current.mineral,
-                        scientificFeedback: "Supported hypothesis",
-                      })
-                    }
-                  >
-                    Continue to Make the Call →
-                  </button>
-                )}
-            </>
-          )}
-        </div>
+        {review && (
+          <button onClick={() => setReview(null)}>Return to story</button>
+        )}
       </div>
       <details className="od-history">
         <summary>Conversation history · {history.length} lines</summary>
@@ -458,8 +515,14 @@ export default function OceanDomeNovel({
                 {entry.sceneId} · {entry.speaker}
               </span>
               <p>{entry.line}</p>
-              <button onClick={() => setReview(oceanLine(entry.id))}>
-                Replay this line
+              <button
+                onClick={() => {
+                  setReview(oceanLine(entry.id));
+                  voice.setPaused(false);
+                  voice.replay();
+                }}
+              >
+                Play this line
               </button>
             </li>
           ))}

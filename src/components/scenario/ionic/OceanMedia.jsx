@@ -1,9 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { OceanSessionContext } from "./OceanSession";
 
-// One player per mounted chapter. Replacing a caption releases its source before
-// another recording can start; no Web Speech fallback changes the approved voice.
-export function useOceanVoice(line) {
-  const player = useRef(null);
+export function useOceanVoice(line, nextLine) {
+  const session = useContext(OceanSessionContext);
+  const {
+    player,
+    started,
+    setStarted,
+    paused,
+    setPaused,
+    enabled,
+    setEnabled,
+  } = session;
   const saved = (key) => {
     try {
       return sessionStorage.getItem(key);
@@ -11,149 +19,194 @@ export function useOceanVoice(line) {
       return null;
     }
   };
-  const [enabled, setEnabled] = useState(
-    () => saved("px-ocean-voices") === "on",
-  );
   const [muted, setMuted] = useState(() => saved("px-ocean-muted") === "on");
   const [rate, setRate] = useState(() => Number(saved("px-ocean-rate")) || 1);
-  const [status, setStatus] = useState("off");
+  const [state, setState] = useState({ id: null, status: "off" });
   const [replay, setReplay] = useState(0);
+  const completed = useRef(false);
+  const status = state.id === line?.id ? state.status : "loading";
+  const current = useRef({ line, started, enabled, paused });
+  current.current = { line, started, enabled, paused };
   useEffect(() => {
     const audio = player.current;
-    if (!audio || !enabled || !line?.audio) {
-      setStatus(enabled ? "unavailable" : "off");
-      return;
-    }
+    if (!audio || !line) return;
     let disposed = false;
-    const state = (value) => {
-      if (!disposed) setStatus(value);
+    const update = (status) => {
+      if (!disposed) setState({ id: line.id, status });
     };
-    const ended = () => state("ended");
-    const error = () => state("unavailable");
-    const pause = () => {
-      if (!audio.ended && !audio.error) state("paused");
+    const ended = () => {
+      completed.current = true;
+      update("ended");
     };
-    const playing = () => state("playing");
-    const hidden = () => {
-      if (document.hidden) audio.pause();
+    const failed = () => update("unavailable");
+    const playing = () => update("playing");
+    const stopped = () => {
+      if (!completed.current && !audio.error) update("paused");
     };
     audio.addEventListener("ended", ended);
-    audio.addEventListener("error", error);
-    audio.addEventListener("pause", pause);
+    audio.addEventListener("error", failed);
     audio.addEventListener("playing", playing);
-    document.addEventListener("visibilitychange", hidden);
-    audio.src = line.audio;
-    audio.preload = "auto"; // Only the active recording is requested.
-    state("loading");
-    if (document.hidden) state("paused");
-    else
-      audio.play().catch(() => state(audio.error ? "unavailable" : "blocked"));
+    audio.addEventListener("pause", stopped);
+    completed.current = false;
+    audio.dataset.dialogueId = line.id;
+    audio.preload = "none";
+    if (line.audio) audio.src = line.audio;
+    update(line.audio ? "ready" : "unavailable");
     return () => {
       disposed = true;
-      document.removeEventListener("visibilitychange", hidden);
       audio.removeEventListener("ended", ended);
-      audio.removeEventListener("error", error);
-      audio.removeEventListener("pause", pause);
+      audio.removeEventListener("error", failed);
       audio.removeEventListener("playing", playing);
+      audio.removeEventListener("pause", stopped);
       audio.pause();
       audio.removeAttribute("src");
       audio.load();
     };
-  }, [line?.id, line?.audio, enabled, replay]);
+  }, [line?.id, line?.audio, replay, player]);
+  useEffect(() => {
+    const audio = player.current;
+    if (!audio || !line) return;
+    let disposed = false;
+    if (!started || paused || !enabled) audio.pause();
+    else if (!completed.current && !audio.error && line.audio) {
+      audio.preload = "auto";
+      audio.play().catch(() => {
+        if (!disposed)
+          setState({
+            id: line.id,
+            status: audio.error ? "unavailable" : "blocked",
+          });
+      });
+    }
+    return () => {
+      disposed = true;
+    };
+  }, [line?.id, replay, started, paused, enabled, player]);
+  const reading = !enabled || status === "unavailable" || !line?.audio;
+  useEffect(() => {
+    if (!started || paused || !reading || !line || document.hidden) return;
+    const delay = Math.max(
+      2400,
+      Math.min(20000, line.line.split(/\s+/).length * 330),
+    );
+    const timer = setTimeout(() => {
+      completed.current = true;
+      setState({ id: line.id, status: "read" });
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [line?.id, started, paused, reading]);
+  // Fetch just the next known recording into the browser cache while the current
+  // line plays. No speculative decision/assessment answers are preloaded.
+  useEffect(() => {
+    if (!started || !enabled || paused || !nextLine?.audio) return;
+    const abort = new AbortController();
+    fetch(nextLine.audio, { cache: "force-cache", signal: abort.signal }).catch(
+      () => {},
+    );
+    return () => abort.abort();
+  }, [nextLine?.audio, started, enabled, paused]);
   useEffect(() => {
     if (player.current) {
       player.current.defaultPlaybackRate = rate;
       player.current.playbackRate = rate;
+      player.current.muted = muted;
     }
-  }, [rate, line?.id, replay, enabled]);
-  useEffect(() => {
-    if (player.current) player.current.muted = muted;
-  }, [muted]);
-  useEffect(() => {
     try {
-      sessionStorage.setItem("px-ocean-voices", enabled ? "on" : "off");
       sessionStorage.setItem("px-ocean-muted", muted ? "on" : "off");
       sessionStorage.setItem("px-ocean-rate", String(rate));
     } catch {
-      /* Playback still works when browser storage is unavailable. */
+      /* Optional preference storage. */
     }
-  }, [enabled, muted, rate]);
-  const resume = () => player.current?.play().catch(() => setStatus("blocked"));
+  }, [rate, muted, line?.id, player]);
+  function play() {
+    const audio = player.current;
+    if (!audio || !line?.audio) return;
+    audio.preload = "auto";
+    audio.play().catch(() => {
+      if (current.current.line?.id === line.id)
+        setState({
+          id: line.id,
+          status: audio.error ? "unavailable" : "blocked",
+        });
+    });
+  }
+  function start() {
+    setEnabled(true);
+    setPaused(false);
+    setStarted(true);
+    play();
+  }
+  function resume() {
+    setPaused(false);
+    if (status === "blocked" || status === "paused") play();
+  }
+  const finished =
+    started && state.id === line?.id && ["ended", "read"].includes(status);
   return {
+    ...session,
     player,
-    enabled,
     muted,
     rate,
     status,
-    // Loading/error and autoplay denial always expose an explicit text-only path.
-    waiting:
-      enabled && !!line?.audio && !["ended", "unavailable"].includes(status),
-    controls: (
-      <div className="od-voice" aria-label="Dialogue audio controls">
-        <audio
-          ref={player}
-          data-dialogue-id={line?.id}
-          aria-label="Approved character recording"
-        />
-        {!enabled ? (
-          <button onClick={() => setEnabled(true)}>
-            Enable character voices
-          </button>
-        ) : (
-          <>
-            <button
-              onClick={
-                status === "playing" ? () => player.current?.pause() : resume
-              }
-            >
-              {status === "playing" ? "Pause voice" : "Resume voice"}
-            </button>
-            <button onClick={() => setMuted((v) => !v)} aria-pressed={muted}>
-              {muted ? "Unmute voice" : "Mute voice"}
-            </button>
-          </>
-        )}
+    finished,
+    waiting: !finished,
+    start,
+    replay: () => setReplay((value) => value + 1),
+    controls: started && (
+      <div className="od-voice" aria-label="Playback controls">
         <button
-          disabled={!line?.audio}
-          onClick={() => {
-            setEnabled(true);
-            setReplay((v) => v + 1);
-          }}
+          onClick={
+            paused || status === "blocked"
+              ? resume
+              : () => {
+                  setPaused(true);
+                  player.current?.pause();
+                }
+          }
         >
-          Replay voice
+          {paused || status === "blocked" ? "Resume" : "Pause"}
+        </button>
+        <button
+          onClick={() => setMuted((value) => !value)}
+          aria-pressed={muted}
+        >
+          {muted ? "Unmute" : "Mute"}
         </button>
         <label>
-          Voice speed{" "}
+          Speed{" "}
           <select
-            aria-label="Voice speed"
+            aria-label="Playback speed"
             value={rate}
-            onChange={(e) => setRate(Number(e.target.value))}
+            onChange={(event) => setRate(Number(event.target.value))}
           >
-            {[0.75, 1, 1.25, 1.5].map((speed) => (
-              <option key={speed} value={speed}>
-                {speed}×
+            {[0.75, 1, 1.25, 1.5].map((value) => (
+              <option key={value} value={value}>
+                {value}×
               </option>
             ))}
           </select>
         </label>
-        {enabled && (
-          <button onClick={() => setEnabled(false)}>
-            Continue without voice
-          </button>
-        )}
+        <button
+          aria-pressed={!enabled}
+          onClick={() => setEnabled((value) => !value)}
+        >
+          {enabled ? "Captions only" : "Enable audio"}
+        </button>
         <span className="od-audio-status" role="status">
-          {
-            {
-              off: "Voices off · read at your own pace",
-              loading: "Loading recording…",
-              playing: "Character speaking…",
-              paused: "Voice paused",
-              ended: "Recording complete",
-              blocked:
-                "Playback needs permission. Resume or continue without voice.",
-              unavailable: "Recording unavailable · continue with the caption",
-            }[status]
-          }
+          {!enabled
+            ? "Captions · automatic playback"
+            : paused
+              ? "Paused"
+              : {
+                  loading: "Loading…",
+                  ready: "Ready",
+                  playing: "Playing",
+                  ended: "Waiting for your response",
+                  read: "Captions",
+                  blocked:
+                    "Select Resume to allow playback, or use captions only.",
+                  unavailable: "Audio unavailable · continuing with captions",
+                }[status]}
         </span>
       </div>
     ),
@@ -161,6 +214,7 @@ export function useOceanVoice(line) {
 }
 
 export function OceanFilm({ src, poster, label }) {
+  const session = useContext(OceanSessionContext);
   const player = useRef(null);
   const [status, setStatus] = useState("loading");
   useEffect(() => {
@@ -178,6 +232,16 @@ export function OceanFilm({ src, poster, label }) {
       }
     };
   }, []);
+  useEffect(() => {
+    const video = player.current;
+    if (!video) return;
+    if (session.paused || !session.started) video.pause();
+    else if (
+      status === "ready" &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      video.play().catch(() => {});
+  }, [session.paused, session.started, status]);
   function stop(status) {
     const video = player.current;
     if (video) {
@@ -210,6 +274,8 @@ export function OceanFilm({ src, poster, label }) {
           setStatus("ready");
           if (
             !document.hidden &&
+            session.started &&
+            !session.paused &&
             !window.matchMedia("(prefers-reduced-motion: reduce)").matches
           )
             player.current?.play().catch(() => {});

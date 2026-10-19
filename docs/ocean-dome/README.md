@@ -44,13 +44,15 @@ Fictional incidents at a real venue are labeled explicitly. The educational loop
 
 ## Playback and loading
 
-- Voices start only after student permission. Caption progression waits for recording completion when enabled; a visible text-only option always releases that wait.
-- One active recording; scene changes, replay and navigation pause and release its source. History replay displays the replayed caption without advancing the investigation.
-- Pause, replay, mute and 0.75×–1.5× speed; the tab remembers voice choices across chapters. Hidden tabs pause playback and require explicit resumption.
-- Missing recordings release progression with readable captions. Autoplay denial offers Resume or Continue without voice; no browser-generated substitute speech.
-- Only current artwork, active portrait, active recording and required film load. There is no bulk audio/video preload.
-- Films play once at their original speed and duration, independently of longer voice lines. They keep native controls and a still-image option. Their embedded sound is muted to prevent overlapping the approved dialogue.
-- Reduced-motion mode removes camera movement and leaves films paused for manual playback. Hidden tabs pause films. Missing films retain the illustration and accessible captions.
+- **Start scenario** is the explicit playback gesture. It starts approved recorded narration and synchronized HTML captions; no sound plays before Start.
+- Dialogue advances automatically on the current recording’s `ended` event, including chapter transitions. There is no Next dialogue button or artificial transition timer. The story stops for scientific activities, decisions, justification, reflection and the assessment.
+- A single audio element survives chapter changes. Previous recordings are stopped and reset before changing lines; only the next known recording and scene image are prefetched. No speculative answer/outcome recordings are preloaded.
+- Controls use **Mute / Unmute** and **Pause / Resume**, with playback speed and a captions-only option. Pause freezes narration, automatic progression and scene films. Hidden tabs pause until Resume is selected.
+- Missing recordings continue automatically with a readable caption interval. A blocked browser request offers Resume or captions only; no browser-generated voice substitutes the approved recordings.
+- **Full screen** uses the browser Fullscreen API, with a fixed-viewport fallback when unsupported. The host persists across chapters; Exit full screen/Escape restores the page. Notebook access remains available, and desktop/tablet/mobile layouts keep controls within the immersive view.
+- Student inputs survive pause/resume. Interactive activities, evidence capture, 80% passing, teacher restrictions and assessment saving retain their existing scientific rules.
+- Current artwork, the active portrait and required film load on demand. Films keep their original speed/duration and remain muted behind the approved dialogue. Still-image and missing-film fallbacks preserve the story.
+- Reduced-motion mode removes camera movement and leaves films available for manual playback.
 
 ## Remaining media limitations
 
@@ -58,8 +60,8 @@ The supplied films are ten seconds, although the request estimated five seconds.
 
 Live authenticated Supabase QA remains unverified. Browser QA uses the authorized synthetic identities and records. Chromium desktop/tablet/mobile layouts are covered; physical Safari/iOS playback is unverified.
 
-No GitHub push, merge, Vercel Preview or production deployment is performed. This task requests local development-branch commits, and pushing this GitHub-linked branch can trigger deployment automatically.
+The development branch is published for review through [PR #20](https://github.com/brontoo/perspective-x/pull/20) and its linked Vercel Preview. Main and production require separate user approval; these playback changes are published only to the review branch.
 
 ## Validation and screenshots
 
-See [validation report](VALIDATION.md) for final command results. Browser captures are in [screenshots](screenshots/), covering the opening, incident, formula/crystal workbench, each ending, assessment feedback, tablet and mobile.
+See [validation report](VALIDATION.md) for current command results. Latest captures: [desktop full screen](screenshots/fullscreen-desktop.png), [tablet](screenshots/fullscreen-820.png), [mobile](screenshots/fullscreen-390.png), and [Start screen](screenshots/start-390.png). Earlier manual-dialogue screenshots are retained as initial-integration evidence. Browser captures are in [screenshots](screenshots/), covering the opening, incident, formula/crystal workbench, each ending, assessment feedback, tablet and mobile.

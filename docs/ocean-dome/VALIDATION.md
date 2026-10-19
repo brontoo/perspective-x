@@ -1,4 +1,23 @@
-# Validation — 2026-10-19
+# Current playback validation — 2026-10-20
+
+| Command | Result | Evidence |
+| --- | --- | --- |
+| `npm run test:unit` | **27 passed**, 0 failed | [Output](validation/auto-unit.txt) |
+| `npm run lint` | Passed | [Output](validation/auto-lint.txt) |
+| `npm run build` | Passed | [Output](validation/auto-build.txt) |
+| `npm run test:ui` | **136 passed**, 0 failed/skipped | [Output](validation/auto-ui.txt) |
+
+The current tests exercise Start-triggered **real MP3** playback and automatic ordered captions with no Next dialogue button. Controlled media events cover activity/decision gates, pause/resume, preserving typed input, hidden-tab pause, source cleanup, all four endings and automatic graded feedback. The full mission still saves evidence and passes/fails at the existing 80% threshold.
+
+Native full screen is tested across a chapter transition, with notebook access and explicit exit. A denied Fullscreen API uses a viewport fallback with Escape and scroll restoration. Desktop/tablet/mobile captures verify readable controls without horizontal overflow. Blocked playback, missing recordings, missing illustrations and missing films retain accessible continuation.
+
+Current captures: [desktop full screen](screenshots/fullscreen-desktop.png), [tablet full screen](screenshots/fullscreen-820.png), [mobile full screen](screenshots/fullscreen-390.png), [mobile Start](screenshots/start-390.png). Earlier manual-dialogue captures below are retained as historical integration evidence.
+
+The review branch and Vercel Preview are published for review only. No merge or production deployment. Live authenticated Supabase QA and physical Safari/iOS playback remain unverified. Approved media files and scientific source data remain unchanged.
+
+---
+
+## Initial media integration — 2026-10-19
 
 | Command | Result | Evidence |
 | --- | --- | --- |
