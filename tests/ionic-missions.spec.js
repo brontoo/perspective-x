@@ -1,10 +1,16 @@
 import { test, expect } from "@playwright/test";
 import { setup, noOverflow, ID, OTHER, HISTORY } from "./support/fixtures";
 import { IONIC_SCENARIOS } from "../src/data/ionicMissions.mjs";
+import {
+  reachCheckpoint,
+  startStory,
+  openMission,
+  dessertInvestigation,
+} from "./support/ionicCinema";
 import { mkdirSync } from "node:fs";
 const D = "ionic_dessert_mystery",
   A = "ionic_aquarium_mystery";
-const snapshotDir = "docs/ionic-materials/screenshots";
+const snapshotDir = "docs/ionic-cinematic/screenshots";
 const priorPass = {
   id: "dessert-pass",
   student_id: ID,
@@ -133,49 +139,6 @@ test("teachers can review new investigation evidence and individual MCQ results"
     "Question 1: A · Needs review",
   );
 });
-async function openMission(page, id) {
-  await page.goto(`/ScenarioPlayer?scenario=${id}`);
-  await expect(page.locator(".im-cinema")).toBeVisible();
-  await expect(page.locator(".im-hamad")).toHaveAttribute(
-    "src",
-    "/images/ionic/hamad-al-zaabi.webp",
-  );
-  await expect(page.locator(".xp-chapters li")).toHaveCount(5);
-  await expect(page.locator(".im-mission video")).toHaveCount(0);
-  await page.getByRole("button", { name: "Accept assignment" }).click();
-}
-async function dessertInvestigation(page) {
-  await page
-    .getByRole("button", { name: "Calibrate with water-only control" })
-    .click();
-  for (const s of ["A", "B", "C"]) {
-    await page
-      .getByRole("button", { name: `Sample ${s}`, exact: true })
-      .click();
-    for (const label of [
-      "Measure conductivity",
-      "Measure pH",
-      "Run isolated acid test",
-    ])
-      await page.getByRole("button", { name: label, exact: true }).click();
-  }
-  await page.getByRole("button", { name: "Transfer one electron" }).click();
-  for (const [s, v] of [
-    ["A", "sugar"],
-    ["B", "hydrogen-carbonate"],
-    ["C", "sodium-chloride"],
-  ])
-    await page.getByLabel(`Proposed identity for Sample ${s}`).selectOption(v);
-  await expect(
-    page.getByText("Your identification is supported.", { exact: true }),
-  ).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Submit identification", exact: true })
-    .click();
-  await expect(
-    page.getByText("Your identification is supported.", { exact: true }),
-  ).toBeVisible();
-}
 async function aquariumInvestigation(page) {
   for (const name of [
     "Run calcium screening",
@@ -186,9 +149,26 @@ async function aquariumInvestigation(page) {
     await page.getByRole("button", { name, exact: true }).click();
   const formula = page.getByRole("region", { name: "Ionic formula builder" });
   // Exercise real native drag-and-drop; buttons provide the same operation for touch/keyboard.
-  await formula
-    .getByRole("button", { name: "Choose carbonate ion", exact: true })
-    .dragTo(formula.getByLabel("Anion drop zone"));
+  const source = formula.getByRole("button", {
+    name: "Choose carbonate ion",
+    exact: true,
+  });
+  const target = formula.getByLabel("Anion drop zone");
+  await source.scrollIntoViewIfNeeded();
+  await target.scrollIntoViewIfNeeded();
+  const from = await source.boundingBox(),
+    to = await target.boundingBox();
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(
+    from.x + from.width / 2 + 12,
+    from.y + from.height / 2,
+    { steps: 4 },
+  );
+  await page.mouse.move(to.x + to.width / 2, to.y + to.height / 2, {
+    steps: 12,
+  });
+  await page.mouse.up();
   await formula
     .getByRole("button", { name: "Check charge balance", exact: true })
     .click();
@@ -249,6 +229,7 @@ async function aquariumInvestigation(page) {
 }
 async function decisionAndReflection(page, id, choice, teacher = false) {
   await page.getByRole("button", { name: "Continue to Make the Call" }).click();
+  await reachCheckpoint(page, "decision");
   const s = IONIC_SCENARIOS[id],
     selected = s.scenes[1].options.find((o) => o.id === choice);
   await expect(page.locator(".im-feedback")).toHaveCount(0);
@@ -268,9 +249,17 @@ async function decisionAndReflection(page, id, choice, teacher = false) {
       "The independent test observations support my recommendation. I will retain the evidence and ask qualified staff to verify the remaining uncertainty.",
     );
   await page.getByRole("button", { name: "Commit my decision" }).click();
-  await expect(page.locator(".im-outcome")).toContainText(
+  await expect(page.locator(".cm-player")).toHaveAttribute(
+    "data-scene",
+    selected.consequence,
+  );
+  await reachCheckpoint(page, "reflection");
+  await expect(page.locator(".cm-outcome-feedback")).toContainText(
     s.scenes[2].consequences[selected.consequence].outcome,
   );
+  await page
+    .getByLabel("Observation supporting your reflection")
+    .selectOption({ index: 1 });
   await page
     .getByLabel(
       "What did the consequence teach you about your evidence and decision?",
@@ -316,6 +305,7 @@ test("both complete missions persist notebook, 80%/100% assessments and sequenti
   );
   mkdirSync(snapshotDir, { recursive: true });
   await page.screenshot({
+    animations: "disabled",
     path: `${snapshotDir}/role-journey-desktop.png`,
     fullPage: true,
   });
@@ -340,12 +330,12 @@ test("both complete missions persist notebook, 80%/100% assessments and sequenti
     "Ionic Evidence Investigator",
   );
   await page.screenshot({
+    animations: "disabled",
     path: `${snapshotDir}/dessert-completion-desktop.png`,
     fullPage: true,
   });
   await page.getByRole("button", { name: "Next available mission" }).click();
-  await expect(page.locator(".im-cinema")).toBeVisible();
-  await page.getByRole("button", { name: "Accept assignment" }).click();
+  await startStory(page, A);
   await aquariumInvestigation(page);
   await decisionAndReflection(page, A, "B");
   await assess(page, A);
@@ -358,6 +348,7 @@ test("both complete missions persist notebook, 80%/100% assessments and sequenti
     "Marine Mineral Analyst",
   );
   await page.screenshot({
+    animations: "disabled",
     path: `${snapshotDir}/aquarium-completion-desktop.png`,
     fullPage: true,
   });
@@ -482,17 +473,18 @@ for (const viewport of [
     mkdirSync(snapshotDir, { recursive: true });
     for (const id of [D, A]) {
       await page.goto(`/ScenarioPlayer?scenario=${id}`);
-      await expect(page.locator(".im-cinema")).toBeVisible();
+      await expect(page.locator(".cm-player")).toBeVisible();
       await noOverflow(page);
-      const portrait = page.locator(".im-hamad");
+      const portrait = page.locator(".cm-shot img");
       expect(
         await portrait.evaluate((img) => img.complete && img.naturalWidth > 0),
       ).toBe(true);
       await page.screenshot({
+        animations: "disabled",
         path: `${snapshotDir}/${id}-briefing-${viewport.width}.png`,
         fullPage: true,
       });
-      await page.getByRole("button", { name: "Accept assignment" }).click();
+      await startStory(page, id);
       await expect(page.locator(".im-investigation")).toBeVisible();
       await noOverflow(page);
       if (id === A) {
@@ -568,6 +560,7 @@ for (const viewport of [
           .click();
       }
       await page.screenshot({
+        animations: "disabled",
         path: `${snapshotDir}/${id}-investigation-${viewport.width}.png`,
         fullPage: true,
       });

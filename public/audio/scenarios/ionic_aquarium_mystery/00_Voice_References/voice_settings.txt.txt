@@ -1,0 +1,746 @@
+# OCEAN DOME — COMPLETE VOICEOVER PRODUCTION SHEET
+
+## A. GLOBAL VOICEOVER REQUIREMENTS
+
+PROJECT:
+Perspective X — Ocean Dome: The Water Is Turning White!
+
+LANGUAGE:
+English.
+
+DELIVERY:
+Premium cinematic educational storytelling, natural and emotionally engaging.
+
+AUDIENCE:
+Grade 10 Advanced Chemistry students.
+
+ACCENT:
+Clear international English with a natural, subtle UAE-English quality for the Emirati characters.
+
+Do not exaggerate or stereotype accents.
+
+FORMAT:
+Generate each spoken line as a separate audio file.
+
+Recommended output:
+WAV or high-quality MP3.
+
+Avoid background music within the voice recordings.
+
+Music and sound effects will be mixed separately.
+
+Keep dialogue clear and intelligible.
+
+Use consistent voice identities in every scene.
+
+Do not read stage directions aloud.
+
+---
+
+## B. VOICE CHARACTER PROMPTS
+
+### VOICE 01 — NARRATOR
+
+Generate a warm, cinematic English narrator voice.
+
+Voice identity:
+Adult male, approximately 35–45 years old.
+
+Tone:
+Rich, inviting, confident, intelligent and emotionally expressive.
+
+Delivery:
+Smooth medium pace with natural pauses.
+
+Emotional range:
+Wonder, curiosity, suspense, discovery and hopeful resolution.
+
+The narrator should feel like an experienced storyteller guiding an animated adventure.
+
+Avoid sounding like a documentary announcer, robotic text reader or classroom lecturer.
+
+Suggested delivery speed:
+0.95× normal conversational pace.
+
+### VOICE 02 — HAMAD AL ZAABI
+
+Generate a natural young Emirati male English voice.
+
+Age impression:
+27 years old.
+
+Tone:
+Calm, intelligent, analytical, friendly and reassuring.
+
+Personality:
+A confident young scientist who encourages students to discover evidence rather than giving answers immediately.
+
+Delivery:
+Clear medium pace with natural warmth.
+
+Emotional range:
+Curiosity, professional caution, encouraging support and quiet satisfaction.
+
+Use a subtle natural UAE-English accent.
+
+Keep this exact voice consistent across all Perspective X scenarios featuring Hamad.
+
+### VOICE 03 — NOORA AL MANSOORI
+
+Generate a natural young Emirati female English voice.
+
+Age impression:
+Late twenties.
+
+Tone:
+Warm, responsible, professional and expressive.
+
+Personality:
+An enthusiastic marine educator who cares about scientific accuracy and a safe learning environment.
+
+Delivery:
+Clear, friendly and confident.
+
+Emotional range:
+Initial excitement, concern, surprise, investigative curiosity and relief.
+
+Use a subtle natural UAE-English accent.
+
+### VOICE 04 — KHALID AL SUWAIDI
+
+Generate a natural adult Emirati male English voice distinct from Hamad.
+
+Age impression:
+Early thirties.
+
+Tone:
+Practical, observant, alert and sincere.
+
+Personality:
+A helpful technical supervisor who is comfortable with equipment but becomes concerned when unexpected observations appear.
+
+Delivery:
+Natural conversational pace.
+
+Emotional range:
+Routine confidence, surprise, uncertainty, curiosity, reflection and professional relief.
+
+Use a subtle natural UAE-English accent.
+
+---
+
+## C. COMPLETE SCENE-BY-SCENE VOICEOVER SCRIPT
+
+### SCENE 01 — THE MARINE WORLD
+
+VISUAL:
+01_aquarium.webp
+
+NARRATOR:
+"Inside The National Aquarium Abu Dhabi, a special marine-science demonstration is about to begin."
+
+NARRATOR:
+"Everything appears calm. But inside a separate educational water system, an unusual mystery is waiting to be discovered."
+
+MOOD:
+Wonder and anticipation.
+
+### SCENE 02 — FINAL PREPARATIONS
+
+VISUAL:
+02_preparations.webp
+
+NOORA:
+"The students will be here soon. Khalid, is our demonstration ready?"
+
+KHALID:
+"Almost. The circulation is working, and the water looks perfectly clear."
+
+NOORA:
+"Excellent. This should be a fascinating lesson."
+
+MOOD:
+Energetic, warm and confident.
+
+### SCENE 03 — THE WATER TURNS WHITE
+
+VIDEO:
+video_01_water_turns_white.mp4
+
+0–4 SECONDS
+
+NARRATOR:
+"Then, without warning, something changes."
+
+4–9 SECONDS
+
+KHALID:
+"Noora! Look—the water is turning white!"
+
+9–14 SECONDS
+
+NOORA:
+"Stop the demonstration. Keep the loop isolated."
+
+MOOD:
+Sudden surprise and controlled suspense.
+
+### SCENE 04 — IMMEDIATE RESPONSE
+
+VISUAL:
+04_staff.webp
+
+KHALID:
+"The chamber was clear just a moment ago. Now there's a white deposit on the panel."
+
+NOORA:
+"Keep the system isolated. We need to understand the cause before making changes."
+
+KHALID:
+"The animal exhibits are separate and unaffected. I'll preserve the monitoring records."
+
+MOOD:
+Professional concern and responsibility.
+
+### SCENE 05 — HAMAD ARRIVES
+
+VISUAL:
+05_hamad.webp
+
+NARRATOR:
+"Hamad Al Zaabi, an applied chemistry investigator, arrives to examine the mysterious deposit."
+
+NOORA:
+"Hamad, the demonstration water suddenly became cloudy. We don't know why."
+
+HAMAD:
+"A white deposit is a clue, not a diagnosis."
+
+HAMAD:
+"We need to investigate what the material is and understand the conditions that allowed it to form."
+
+MOOD:
+The situation becomes a scientific mystery.
+
+### SCENE 06 — HAMAD NEEDS THE STUDENT
+
+VISUAL:
+05_hamad.webp
+
+HAMAD:
+"I need a Junior Marine Water Chemistry Investigator."
+
+HAMAD:
+"Someone who can collect evidence, examine ions and make a responsible scientific decision."
+
+HAMAD:
+"Are you ready to help?"
+
+NARRATOR:
+"From this moment, the investigation depends on your decisions."
+
+MOOD:
+Confident, encouraging and hopeful.
+
+### SCENE 07 — FIRST INVESTIGATION DECISION
+
+VISUAL:
+06_evidence.webp
+
+HAMAD:
+"How should we begin? Do we rely on appearances, change the water, or investigate the isolated mineral sample?"
+
+INTERACTIVE CHOICES:
+A. Collect independent scientific evidence.
+B. Assume the white material is table salt.
+C. Add more salt to the demonstration.
+D. Add acid to an animal exhibit.
+
+CORRECT CHOICE — A
+
+HAMAD:
+"Good thinking. We investigate the material before deciding how to respond."
+
+WRONG CHOICE — B
+
+NOORA:
+"But several minerals can look white."
+
+HAMAD:
+"Exactly. Appearance alone cannot identify an ionic compound."
+
+WRONG CHOICE — C
+
+KHALID:
+"Adding salt could change the water conditions without solving the problem."
+
+HAMAD:
+"Correct. We need evidence before changing the system."
+
+WRONG CHOICE — D
+
+HAMAD:
+"Stop. Never apply a laboratory identification test directly to an animal habitat."
+
+NARRATOR:
+"The unsafe proposal is prevented. The investigation must continue using isolated samples."
+
+After unsupported choices, let students revise their answer.
+
+### SCENE 08 — THE MINERAL INVESTIGATION
+
+VISUAL:
+06_evidence.webp
+
+HAMAD:
+"Let's collect four independent observations."
+
+HAMAD:
+"First, we'll investigate whether calcium is present."
+
+AFTER CALCIUM SCREENING
+
+NOORA:
+"The screening shows calcium ions."
+
+HAMAD:
+"Useful evidence. But calcium appears in more than one mineral."
+
+BEFORE SOLUBILITY TEST
+
+HAMAD:
+"Now investigate how readily the solid dissolves in water."
+
+AFTER SOLUBILITY TEST
+
+KHALID:
+"Very little of it dissolves."
+
+HAMAD:
+"Another clue. Record it in your evidence notebook."
+
+BEFORE CARBONATE TEST
+
+HAMAD:
+"Next, we'll investigate the mineral's behaviour in a controlled virtual acid test on a separate sample."
+
+BEFORE REFERENCE FINGERPRINT
+
+HAMAD:
+"Finally, compare the mineral's reference fingerprint with the candidate library."
+
+AFTER REFERENCE COMPARISON
+
+NOORA:
+"The observations are beginning to support one candidate more strongly than the others."
+
+HAMAD:
+"Good. Independent clues become more convincing when they agree."
+
+MOOD:
+Investigation, curiosity and discovery.
+
+### SCENE 09 — THE CARBONATE REACTION
+
+VIDEO:
+video_02_carbonate_reaction.mp4
+
+0–4 SECONDS
+
+NARRATOR:
+"A controlled virtual reaction begins."
+
+4–9 SECONDS
+
+NOORA:
+"Look! The isolated sample is producing bubbles!"
+
+9–14 SECONDS
+
+HAMAD:
+"Carbon dioxide supports carbonate evidence. Compare it with our other tests."
+
+AFTER THE VIDEO
+
+HAMAD:
+"What does that gas observation suggest about the mineral?"
+
+The student must interpret the result before advancing.
+
+### SCENE 10 — THE FORMULA CHALLENGE
+
+VISUAL:
+08_formula.webp
+
+NOORA:
+"The evidence suggests calcium and carbonate. How do their charges combine?"
+
+HAMAD:
+"Calcium forms a two-positive ion. Carbonate is a two-negative polyatomic ion."
+
+HAMAD:
+"Use the formula builder to make a neutral compound in its simplest ratio."
+
+IF THE STUDENT USES AN INCORRECT RATIO
+
+HAMAD:
+"Check the total charge. The formula unit must be electrically neutral."
+
+IF THE STUDENT USES A NEUTRAL BUT NON-SIMPLIFIED RATIO
+
+HAMAD:
+"The charge balances, but is this the simplest whole-number ratio?"
+
+AFTER CORRECT COMPLETION
+
+HAMAD:
+"Excellent. One calcium ion and one carbonate ion produce the neutral formula CaCO3."
+
+MOOD:
+Intellectual challenge and achievement.
+
+### SCENE 11 — INSIDE THE CRYSTAL
+
+VISUAL:
+09_crystal.webp
+
+NARRATOR:
+"The evidence has revealed the ionic composition. Now the investigation moves inside the solid."
+
+HAMAD:
+"Ionic compounds contain ordered arrangements of charged particles."
+
+HAMAD:
+"Explore the sodium chloride lattice, then compare it with the calcite structure."
+
+KHALID:
+"So two white minerals can have different crystal structures?"
+
+HAMAD:
+"Exactly. Crystal structure helps explain why their properties differ."
+
+AFTER SUCCESSFUL EXPLORATION
+
+HAMAD:
+"Remember, ions are fixed in the solid crystal. They can carry electrical charge when mobile in a melt or suitable solution."
+
+MOOD:
+Wonder and scientific discovery.
+
+### SCENE 12 — INVESTIGATING WATER CONDITIONS
+
+VISUAL:
+10_water.webp
+
+KHALID:
+"We know which mineral the evidence supports. But why did it begin forming?"
+
+HAMAD:
+"Let's investigate the water conditions that may favour precipitation."
+
+HAMAD:
+"Adjust pH, calcium concentration and alkalinity in the virtual model."
+
+AFTER THE STUDENT EXPLORES THE SIMULATION
+
+NOORA:
+"So changing the water conditions can change the model's tendency to form deposits?"
+
+HAMAD:
+"Yes. This is a qualitative scientific model, not a dosing guide for an aquarium."
+
+HAMAD:
+"Record the trends before making your final recommendation."
+
+MOOD:
+Analytical and thoughtful.
+
+### SCENE 13 — THE MINERAL IDENTIFICATION
+
+VISUAL:
+06_evidence.webp
+
+HAMAD:
+"We have four observations. Calcium is present, the solid has limited solubility, the carbonate test produces gas, and the mineral fingerprint matches a reference."
+
+HAMAD:
+"Which candidate best fits all four clues?"
+
+The student selects from:
+- Sodium chloride.
+- Calcium carbonate.
+- Calcium sulfate.
+
+IF SODIUM CHLORIDE IS SELECTED
+
+HAMAD:
+"Check the calcium and carbonate evidence. Does sodium chloride explain those observations?"
+
+IF CALCIUM SULFATE IS SELECTED
+
+HAMAD:
+"Calcium sulfate contains calcium, but it does not match the complete carbonate evidence and reference fingerprint."
+
+IF CALCIUM CARBONATE IS SELECTED
+
+HAMAD:
+"Excellent. The combined evidence supports calcium carbonate."
+
+NOORA:
+"So the white deposit was a mineral formed from ions?"
+
+HAMAD:
+"Exactly. Calcium and carbonate ions can combine to form a solid mineral."
+
+MOOD:
+Scientific discovery and confidence.
+
+### SCENE 14 — THE FINAL DECISION
+
+VISUAL:
+11_decision.webp
+
+KHALID:
+"The demonstration loop is still isolated. What should we do next?"
+
+NOORA:
+"We need a responsible recommendation before the educational demonstration can resume."
+
+HAMAD:
+"Our evidence supports a mineral identity. But knowing the compound is not the same as knowing the safest treatment."
+
+HAMAD:
+"Investigator, what should qualified staff do now?"
+
+INTERACTIVE FINAL CHOICES:
+
+A. Add more salt to the loop.
+B. Keep the loop isolated and request qualified evidence-based water-chemistry review.
+C. Add acid directly to an animal exhibit.
+D. Remove the visible deposit and stop monitoring.
+
+The selected answer determines the outcome video.
+
+### ENDING A — THE SALT SHORTCUT
+
+VIDEO:
+ending-add-salt.mp4
+
+NARRATOR:
+"The fictional simulation changes the dissolved-ion load, but the mineral deposit remains."
+
+KHALID:
+"We changed the water, but the problem is still here."
+
+HAMAD:
+"We acted on an assumption instead of the mineral evidence."
+
+REFLECTION:
+"Why didn't adding salt solve the problem?"
+
+### ENDING B — THE MINERAL CASE
+
+VIDEO:
+ending-isolate-review.mp4
+
+NARRATOR:
+"The loop remains isolated while qualified staff review the mineral evidence and water conditions."
+
+NOORA:
+"We understand the likely mineral, and the team has a responsible plan."
+
+HAMAD:
+"Excellent work. The strongest decision follows evidence and respects uncertainty."
+
+REFLECTION:
+"Which observations support your recommendation?"
+
+### ENDING C — THE ACID PROPOSAL
+
+VIDEO:
+ending-acid-tank.mp4
+
+HAMAD:
+"Stop. A laboratory test is not permission to change animal-tank chemistry."
+
+KHALID:
+"Understood. No acid will be introduced."
+
+NARRATOR:
+"The unsafe proposal is prevented before any animal exhibit is affected."
+
+REFLECTION:
+"Why must laboratory evidence be separated from treatment decisions?"
+
+### ENDING D — THE APPEARANCE TRAP
+
+VIDEO:
+ending-appearance-only.mp4
+
+NARRATOR:
+"The deposit disappears briefly, but returns because the underlying conditions were never investigated."
+
+KHALID:
+"It's coming back. We only removed what we could see."
+
+HAMAD:
+"Exactly. Removing a symptom does not necessarily remove its cause."
+
+REFLECTION:
+"What additional evidence should the team monitor?"
+
+### SCENE 15 — THE FINAL REFLECTION
+
+VISUAL:
+12_outcome.webp
+
+NARRATOR:
+"The investigation began with a mysterious white deposit."
+
+NARRATOR:
+"But understanding the chemistry required much more than looking at the water."
+
+HAMAD:
+"You followed the ions, tested the evidence, explored crystal structures and investigated mineral formation."
+
+NOORA:
+"That is what makes science powerful. It helps us understand before we act."
+
+HAMAD:
+"Now it's time to prove your expertise."
+
+### SCENE 16 — THE FIVE-QUESTION EXIT TICKET
+
+VISUAL:
+12_outcome.webp with the assessment interface overlaid.
+
+NARRATOR:
+"Five questions will test what you've discovered. You need at least four correct answers to demonstrate your expertise."
+
+READ THE FOLLOWING QUESTIONS ON DEMAND:
+
+QUESTION 1:
+"Which simplest formula balances calcium two-positive and carbonate two-negative?"
+
+QUESTION 2:
+"What is the neutral formula for aluminium three-positive and sulfate two-negative?"
+
+QUESTION 3:
+"In the interior of a sodium chloride crystal, each sodium ion is surrounded by how many nearest chloride ions?"
+
+QUESTION 4:
+"Why does a typical solid ionic crystal not conduct electricity, while its melt can?"
+
+QUESTION 5:
+"What is the correct name for C A C O three?"
+
+The original five multiple-choice options for each question must remain in Perspective X and be read individually only when the student requests audio.
+
+Do not announce correct answers before submission.
+
+PASSING MESSAGE:
+
+HAMAD:
+"Outstanding! You've demonstrated your understanding of ionic compounds and mineral chemistry."
+
+NARRATOR:
+"Achievement unlocked: Marine Mineral Analyst."
+
+UNSUCCESSFUL ATTEMPT:
+
+HAMAD:
+"Review the evidence and try again. Every investigation helps you think more clearly."
+
+The portal must preserve its existing 80% passing threshold and mission-completion rules.
+
+---
+
+## D. SOUND DESIGN NOTES
+
+SCENE 01:
+Soft marine ambience and hopeful cinematic introduction.
+
+SCENE 02:
+Gentle technical equipment sounds.
+
+SCENE 03:
+Soft water movement, subtle suspense cue.
+
+SCENES 04–06:
+Quiet tension transitioning into a confident investigation theme.
+
+SCENES 07–13:
+Restrained scientific discovery music, occasional instrument cues.
+
+SCENE 14:
+Subtle suspense and decision tension.
+
+ENDING A:
+Thoughtful, unresolved musical transition.
+
+ENDING B:
+Warm, hopeful resolution.
+
+ENDING C:
+Brief safety-warning accent followed by calm reflection.
+
+ENDING D:
+Restrained, reflective musical cue.
+
+FINAL ASSESSMENT:
+Soft, unobtrusive ambient music suitable for concentration.
+
+Never allow background music to overpower spoken dialogue.
+
+---
+
+## E. AUDIO DELIVERY AND INTEGRATION
+
+Export each dialogue line as a separate audio asset.
+
+Use consistent speaker prefixes:
+
+NAR = Narrator
+HAM = Hamad
+NOO = Noora
+KHA = Khalid
+
+Example filenames:
+
+NAR_S01_01.mp3
+NAR_S01_02.mp3
+NOO_S02_01.mp3
+KHA_S02_01.mp3
+HAM_S05_01.mp3
+HAM_S05_02.mp3
+
+For branching responses, add the branch identifier:
+
+HAM_S07_CHOICE_A.mp3
+HAM_S07_CHOICE_B.mp3
+HAM_S07_CHOICE_C.mp3
+HAM_S07_CHOICE_D.mp3
+
+Use a separate audio file for each final-ending line.
+
+The Perspective X website must synchronize:
+
+1. Active scene artwork.
+2. Active speaker.
+3. Character dialogue panel.
+4. Corresponding voice recording.
+5. Captions.
+6. Scene continuation.
+
+When a voice recording finishes, allow the student to continue.
+
+Do not automatically skip required investigations.
+
+Students must be able to replay, pause or mute dialogue.
+
+Provide the option to continue without voice playback.
+
+Keep the mission accessible for EAL and SEN students.
+
+FINAL REQUIREMENT:
+The student must experience a continuous illustrated scientific adventure with consistent voices, clear dialogue, evidence-based decisions and meaningful cinematic consequences.

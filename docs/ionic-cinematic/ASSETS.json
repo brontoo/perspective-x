@@ -1,0 +1,162 @@
+[
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/01_park_establishing.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "b80c9e530b85ade8bf34cec09db004d343b3a5fdcce8483bed6bee8e8c652fd9",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/01_park_establishing.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/02_finalists_preparing.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "8f22d7d5b12f64bd34303e1e5f7d5c34aa233e051e485c9d5e4a737740846a53",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/02_finalists_preparing.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/03_lost_labels.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "8e53acf53f2e9510c9e9cab327bd4b17d432a1c76df73813b2ba2edd361c315c",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/03_lost_labels.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/04_three_unknowns.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "3587ade5b97cd6a2b48ae6cd01d8f26a06338a3abc657ec15097971023b0ac97",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/04_three_unknowns.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/05_stop_preparation.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "6715e2f1b9cf71f12b10fd61160fdaf1e19d9ee1e2b5349fd2bc490af96ae2ab",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/05_stop_preparation.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/06_hamad_entrance.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "2947c7dda6817b07356895be26ee1cb40d51a86715ead1bb0f35e243a33293ed",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/06_hamad_entrance.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/07_hamad_assignment.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "fe524264fbf0d30a911e78293f78c1db2ffc440dbb02b9f0a3486f508d1ecf0b",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/07_hamad_assignment.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/08_investigation_table.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "5ab840af6310021c80a12e69304c2c7b7062c034b6705ebf2661010dd8539b67",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/08_investigation_table.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/09_conductivity_clue.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "b8099c8f55a2ff7054a87c630e0dcb7a15ba2170978143e8b47b44474be69faa",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/09_conductivity_clue.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/10_electron_challenge.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "d7527c29e24ac7cf971a8a1b83a9e66f217f24741c2322289329ba6deed22a55",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/10_electron_challenge.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/11_second_test.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "9a0eb6c419a877f41b7789c00e7187c324ad82ddca4c6fb3d13aab59d462d3bd",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/11_second_test.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/12_final_decision.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "423791075ace2982ff27e9941f0983b56af9b6b2fefad1e15943e521c6721d2a",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/12_final_decision.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/13_evidence_rescue.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "c9302bf55645d981dcb8ce21e13079be5a15b81a65b53b214668d60c83decfe5",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/13_evidence_rescue.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/14_conductivity_only.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "4ce7f25bcb12bcc46848753862aef0f80088aa17de09544b7598b307ca4cf258",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/14_conductivity_only.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/15_unsafe_taste_stopped.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "138d9187ca6584610d44efc5d104dd287be6ed11248ec34152717bb9b15051fc",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/15_unsafe_taste_stopped.webp"
+  },
+  {
+    "source": "public/images/scenarios/ionic_aquarium_mystery/cinematic/16_appearance_guess.webp.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      2752,
+      1536
+    ],
+    "sha256": "d3c7fcb48f8b92e13ef23edee46c697aa456efd14d4034a84fa1a4236199a45f",
+    "optimized": "public/images/scenarios/ionic_dessert_mystery/cinematic/16_appearance_guess.webp"
+  }
+]
