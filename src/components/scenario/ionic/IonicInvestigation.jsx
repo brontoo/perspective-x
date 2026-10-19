@@ -51,6 +51,10 @@ export default function IonicInvestigation({
   onDraft,
   onComplete,
   mode,
+  station = "all",
+  embedded = false,
+  onInteraction,
+  canContinue = true,
 }) {
   const dessert = scenario.id === "ionic_dessert_mystery";
   const [draft, setDraft] = useState(() => ({
@@ -64,13 +68,15 @@ export default function IonicInvestigation({
     current.current = next;
     setDraft(next);
     onDraft(next);
+    return next;
   }
   function collect(id, label, observation, patch = {}) {
     const evidence = [
       ...current.current.evidence.filter((e) => e.id !== id),
       { id, label, observation, collectedAt: new Date().toISOString() },
     ];
-    update({ ...patch, evidence, submitted: false });
+    const record = update({ ...patch, evidence, submitted: false });
+    onInteraction?.({ type: id, record });
   }
   function measure(test) {
     const reading = POWDER_READINGS[sample];
@@ -112,23 +118,28 @@ export default function IonicInvestigation({
       draft.formula.negatives === 1;
   function submit(e) {
     e.preventDefault();
-    if (ready) update({ submitted: true });
+    if (ready) {
+      const record = update({ submitted: true });
+      onInteraction?.({ type: "identity", correct: identified, record });
+    }
   }
   return (
     <div className="im-investigation">
-      <header className="im-stage-header">
-        <p className="im-eyebrow">Chapter 2 · Find the Clues</p>
-        <h2>
-          {dessert
-            ? "Evidence leaves a trail. Follow it."
-            : "A white deposit. A mineral story."}
-        </h2>
-        <p>
-          {dessert
-            ? "Test each powder, investigate ion formation, then commit your own identification."
-            : "Collect independent mineral evidence, build your hypothesis and explore the reference structures."}
-        </p>
-      </header>
+      {!embedded && (
+        <header className="im-stage-header">
+          <p className="im-eyebrow">Chapter 2 · Find the Clues</p>
+          <h2>
+            {dessert
+              ? "Evidence leaves a trail. Follow it."
+              : "A white deposit. A mineral story."}
+          </h2>
+          <p>
+            {dessert
+              ? "Test each powder, investigate ion formation, then commit your own identification."
+              : "Collect independent mineral evidence, build your hypothesis and explore the reference structures."}
+          </p>
+        </header>
+      )}
       {mode === "beginner" && (
         <p className="im-guidance">
           Guided approach: collect an observation, explain what it supports,
@@ -241,252 +252,270 @@ export default function IonicInvestigation({
             </>
           ) : (
             <>
-              <section className="im-instrument" aria-label="Mineral analysis">
-                <div className="im-instrument-title">
-                  <span className="im-station-number">01</span>
-                  <div>
-                    <h3>What is the deposit telling you?</h3>
-                    <p>Isolated mineral sample · Not animal-tank testing</p>
+              {(station === "all" || Object.hasOwn(minerals, station)) && (
+                <section
+                  className="im-instrument"
+                  aria-label="Mineral analysis"
+                >
+                  <div className="im-instrument-title">
+                    <span className="im-station-number">01</span>
+                    <div>
+                      <h3>What is the deposit telling you?</h3>
+                      <p>Isolated mineral sample · Not animal-tank testing</p>
+                    </div>
                   </div>
-                </div>
-                <div className="im-actions">
-                  {Object.keys(minerals).map((key) => (
-                    <button
-                      key={key}
-                      onClick={() =>
-                        collect(
-                          key,
-                          `${key[0].toUpperCase() + key.slice(1)} test`,
-                          minerals[key],
-                        )
-                      }
-                    >
-                      {key === "calcium"
-                        ? "Run calcium screening"
-                        : key === "solubility"
-                          ? "Test water solubility"
-                          : key === "carbonate"
-                            ? "Run isolated carbonate test"
-                            : "Compare mineral fingerprint"}
-                    </button>
-                  ))}
-                </div>
-                <div className="im-measurements" aria-live="polite">
-                  {draft.evidence
-                    .filter((e) => Object.hasOwn(minerals, e.id))
-                    .map((e) => (
-                      <p key={e.id}>
-                        <strong>{e.label}</strong>
-                        <br />
-                        {e.observation}
-                      </p>
-                    ))}
-                </div>
-                <details>
-                  <summary>Candidate reference library</summary>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Candidate</th>
-                        <th>Composition / reference evidence</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Sodium chloride</td>
-                        <td>
-                          Na⁺ / Cl⁻; readily soluble; no carbonate gas signal;
-                          peaks 27.4°, 31.7°, 45.4°
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Calcium carbonate (calcite reference)</td>
-                        <td>
-                          Ca²⁺ / CO₃²⁻; low water solubility; carbonate gas
-                          signal; peaks 29.4°, 39.4°, 43.1°
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Calcium sulfate (gypsum reference)</td>
-                        <td>
-                          Calcium present; no carbonate gas signal; peaks 11.6°,
-                          20.7°, 23.4°
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <p>
-                    These are candidate comparisons, not the unknown’s
-                    identification. Chemistry and diffraction are simplified
-                    reference evidence.
-                  </p>
-                </details>
-                <small>
-                  Marine water’s conductivity cannot identify the solid; it
-                  already contains many dissolved ions. A calcium signal or acid
-                  reaction alone is also insufficient.
-                </small>
-              </section>
-              <FormulaBuilder
-                value={draft.formula}
-                onChange={(value) => {
-                  const r = formulaResult(
-                    value.cation,
-                    value.anion,
-                    value.positives,
-                    value.negatives,
-                  );
-                  if (value.checked)
-                    collect(
-                      "formula",
-                      "Constructed formula",
-                      `${r.formula}; net charge ${r.charge}; ${r.minimal ? "simplest ratio" : "ratio needs simplification"}`,
-                      { formula: value },
+                  <div className="im-actions">
+                    {Object.keys(minerals)
+                      .filter((key) => station === "all" || station === key)
+                      .map((key) => (
+                        <button
+                          key={key}
+                          onClick={() =>
+                            collect(
+                              key,
+                              `${key[0].toUpperCase() + key.slice(1)} test`,
+                              minerals[key],
+                            )
+                          }
+                        >
+                          {key === "calcium"
+                            ? "Run calcium screening"
+                            : key === "solubility"
+                              ? "Test water solubility"
+                              : key === "carbonate"
+                                ? "Run isolated carbonate test"
+                                : "Compare mineral fingerprint"}
+                        </button>
+                      ))}
+                  </div>
+                  <div className="im-measurements" aria-live="polite">
+                    {draft.evidence
+                      .filter((e) => Object.hasOwn(minerals, e.id))
+                      .map((e) => (
+                        <p key={e.id}>
+                          <strong>{e.label}</strong>
+                          <br />
+                          {e.observation}
+                        </p>
+                      ))}
+                  </div>
+                  <details>
+                    <summary>Candidate reference library</summary>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Candidate</th>
+                          <th>Composition / reference evidence</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Sodium chloride</td>
+                          <td>
+                            Na⁺ / Cl⁻; readily soluble; no carbonate gas signal;
+                            peaks 27.4°, 31.7°, 45.4°
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Calcium carbonate (calcite reference)</td>
+                          <td>
+                            Ca²⁺ / CO₃²⁻; low water solubility; carbonate gas
+                            signal; peaks 29.4°, 39.4°, 43.1°
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Calcium sulfate (gypsum reference)</td>
+                          <td>
+                            Calcium present; no carbonate gas signal; peaks
+                            11.6°, 20.7°, 23.4°
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <p>
+                      These are candidate comparisons, not the unknown’s
+                      identification. Chemistry and diffraction are simplified
+                      reference evidence.
+                    </p>
+                  </details>
+                  <small>
+                    Marine water’s conductivity cannot identify the solid; it
+                    already contains many dissolved ions. A calcium signal or
+                    acid reaction alone is also insufficient.
+                  </small>
+                </section>
+              )}
+              {(station === "all" || station === "formula") && (
+                <FormulaBuilder
+                  value={draft.formula}
+                  onChange={(value) => {
+                    const r = formulaResult(
+                      value.cation,
+                      value.anion,
+                      value.positives,
+                      value.negatives,
                     );
-                  else update({ formula: value, submitted: false });
-                }}
-              />
-              <CrystalExplorer
-                value={draft.crystal}
-                onChange={(value) =>
-                  collect(
-                    "crystal",
-                    "Crystal reference exploration",
-                    `${value.model === "NaCl" ? "Rock-salt lattice" : "Calcite carbonate groups"} explored; horizontal rotation ${Math.round(value.yaw)}°.`,
-                    { crystal: value },
-                  )
-                }
-              />
-              <WaterSimulator
-                value={draft.water}
-                onChange={(value) => {
-                  if (value.tested)
+                    if (value.checked)
+                      collect(
+                        "formula",
+                        "Constructed formula",
+                        `${r.formula}; net charge ${r.charge}; ${r.minimal ? "simplest ratio" : "ratio needs simplification"}`,
+                        { formula: value },
+                      );
+                    else update({ formula: value, submitted: false });
+                  }}
+                />
+              )}
+              {(station === "all" || station === "crystal") && (
+                <CrystalExplorer
+                  value={draft.crystal}
+                  onChange={(value) =>
                     collect(
-                      "water",
-                      "Virtual water chemistry",
-                      `pH ${value.pH}; calcium ${value.calcium} mg/L; alkalinity ${value.alkalinity} meq/L. Qualitative trend only.`,
-                      { water: value },
-                    );
-                  else update({ water: value, submitted: false });
-                }}
-              />
+                      "crystal",
+                      "Crystal reference exploration",
+                      `${value.model === "NaCl" ? "Rock-salt lattice" : "Calcite carbonate groups"} explored; horizontal rotation ${Math.round(value.yaw)}°.`,
+                      { crystal: value },
+                    )
+                  }
+                />
+              )}
+              {(station === "all" || station === "water") && (
+                <WaterSimulator
+                  value={draft.water}
+                  onChange={(value) => {
+                    if (value.tested)
+                      collect(
+                        "water",
+                        "Virtual water chemistry",
+                        `pH ${value.pH}; calcium ${value.calcium} mg/L; alkalinity ${value.alkalinity} meq/L. Qualitative trend only.`,
+                        { water: value },
+                      );
+                    else update({ water: value, submitted: false });
+                  }}
+                />
+              )}
             </>
           )}
-          <form className="im-instrument" onSubmit={submit}>
-            <h3>Commit your scientific hypothesis.</h3>
-            {dessert ? (
-              ["A", "B", "C"].map((s) => (
-                <label key={s}>
-                  Proposed identity for Sample {s}
+          {(dessert || station === "all" || station === "identity") && (
+            <form className="im-instrument" onSubmit={submit}>
+              <h3>Commit your scientific hypothesis.</h3>
+              {dessert ? (
+                ["A", "B", "C"].map((s) => (
+                  <label key={s}>
+                    Proposed identity for Sample {s}
+                    <select
+                      value={draft.identities[s]}
+                      required
+                      disabled={draft.submitted}
+                      onChange={(e) =>
+                        update({
+                          identities: {
+                            ...draft.identities,
+                            [s]: e.target.value,
+                          },
+                        })
+                      }
+                    >
+                      <option value="">Choose from the candidate set</option>
+                      <option value="sugar">Sugar (sucrose)</option>
+                      <option value="sodium-chloride">Sodium chloride</option>
+                      <option value="hydrogen-carbonate">
+                        Sodium hydrogen carbonate
+                      </option>
+                    </select>
+                  </label>
+                ))
+              ) : (
+                <label>
+                  Proposed deposit identity
                   <select
-                    value={draft.identities[s]}
+                    value={draft.mineral}
                     required
                     disabled={draft.submitted}
-                    onChange={(e) =>
-                      update({
-                        identities: {
-                          ...draft.identities,
-                          [s]: e.target.value,
-                        },
-                      })
-                    }
+                    onChange={(e) => update({ mineral: e.target.value })}
                   >
-                    <option value="">Choose from the candidate set</option>
-                    <option value="sugar">Sugar (sucrose)</option>
+                    <option value="">Choose a mineral hypothesis</option>
                     <option value="sodium-chloride">Sodium chloride</option>
-                    <option value="hydrogen-carbonate">
-                      Sodium hydrogen carbonate
-                    </option>
+                    <option value="calcium-carbonate">Calcium carbonate</option>
+                    <option value="calcium-sulfate">Calcium sulfate</option>
                   </select>
                 </label>
-              ))
-            ) : (
-              <label>
-                Proposed deposit identity
-                <select
-                  value={draft.mineral}
-                  required
-                  disabled={draft.submitted}
-                  onChange={(e) => update({ mineral: e.target.value })}
-                >
-                  <option value="">Choose a mineral hypothesis</option>
-                  <option value="sodium-chloride">Sodium chloride</option>
-                  <option value="calcium-carbonate">Calcium carbonate</option>
-                  <option value="calcium-sulfate">Calcium sulfate</option>
-                </select>
-              </label>
-            )}
-            <p>
-              {dessert
-                ? "Collect all nine sample readings and complete one electron-transfer model."
-                : "Collect all four mineral tests, check a neutral formula, explore the crystal and run the water simulator."}
-            </p>
-            {!draft.submitted && (
-              <button type="submit" disabled={!ready}>
-                Submit identification
-              </button>
-            )}
-            {draft.submitted && (
-              <div className="im-feedback" role="status">
-                <strong>
-                  {identified
-                    ? "Your identification is supported."
-                    : "Your initial hypothesis needs revision."}
-                </strong>
-                <p>
-                  {dessert
-                    ? "In this candidate set, A is sugar; B is sodium hydrogen carbonate; C is sodium chloride. Sugar produces few mobile ions. Both salts conduct; B’s alkaline pH and carbon dioxide signal distinguish it. Identity evidence does not certify food suitability."
-                    : "The independent evidence supports calcium carbonate, CaCO₃. The 1:1 Ca²⁺ / CO₃²⁻ formula is neutral. Calcium screening, carbonate behaviour, limited solubility and the fingerprint work together; conductivity or appearance alone would be insufficient."}
-                </p>
-                <div className="im-actions">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      onComplete({
-                        selectedOption: identified ? "A" : "B",
-                        justification: evidenceText(draft),
-                        identifications: dessert
-                          ? draft.identities
-                          : draft.mineral,
-                        scientificFeedback: identified
-                          ? "Supported hypothesis"
-                          : "Initial hypothesis revised after feedback",
-                      })
-                    }
-                  >
-                    Continue to Make the Call →
-                  </button>
-                  <button
-                    type="button"
-                    className="im-secondary"
-                    onClick={() => update({ submitted: false })}
-                  >
-                    Revisit my hypothesis
-                  </button>
+              )}
+              <p>
+                {dessert
+                  ? "Collect all nine sample readings and complete one electron-transfer model."
+                  : "Collect all four mineral tests, check a neutral formula, explore the crystal and run the water simulator."}
+              </p>
+              {!draft.submitted && (
+                <button type="submit" disabled={!ready}>
+                  Submit identification
+                </button>
+              )}
+              {draft.submitted && (
+                <div className="im-feedback" role="status">
+                  <strong>
+                    {identified
+                      ? "Your identification is supported."
+                      : "Your initial hypothesis needs revision."}
+                  </strong>
+                  <p>
+                    {dessert
+                      ? "In this candidate set, A is sugar; B is sodium hydrogen carbonate; C is sodium chloride. Sugar produces few mobile ions. Both salts conduct; B’s alkaline pH and carbon dioxide signal distinguish it. Identity evidence does not certify food suitability."
+                      : "The independent evidence supports calcium carbonate, CaCO₃. The 1:1 Ca²⁺ / CO₃²⁻ formula is neutral. Calcium screening, carbonate behaviour, limited solubility and the fingerprint work together; conductivity or appearance alone would be insufficient."}
+                  </p>
+                  <div className="im-actions">
+                    <button
+                      type="button"
+                      disabled={!canContinue || (embedded && !identified)}
+                      onClick={() =>
+                        onComplete({
+                          selectedOption: identified ? "A" : "B",
+                          justification: evidenceText(draft),
+                          identifications: dessert
+                            ? draft.identities
+                            : draft.mineral,
+                          scientificFeedback: identified
+                            ? "Supported hypothesis"
+                            : "Initial hypothesis revised after feedback",
+                        })
+                      }
+                    >
+                      Continue to Make the Call →
+                    </button>
+                    <button
+                      type="button"
+                      className="im-secondary"
+                      onClick={() => update({ submitted: false })}
+                    >
+                      Revisit my hypothesis
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </form>
-        </div>
-        <aside className="im-evidence-ledger">
-          <p className="im-eyebrow">Your evidence ledger</p>
-          <h3>{draft.evidence.length} observations collected</h3>
-          <p>
-            Captured in your Mission Notebook and saved through your account’s
-            existing mission record.
-          </p>
-          <ol>
-            {draft.evidence.map((e) => (
-              <li key={e.id}>
-                <strong>{e.label}</strong>
-                <p>{e.observation}</p>
-              </li>
-            ))}
-          </ol>
-          {!draft.evidence.length && (
-            <p>Start with a controlled measurement.</p>
+              )}
+            </form>
           )}
-        </aside>
+        </div>
+        {!embedded && (
+          <aside className="im-evidence-ledger">
+            <p className="im-eyebrow">Your evidence ledger</p>
+            <h3>{draft.evidence.length} observations collected</h3>
+            <p>
+              Captured in your Mission Notebook and saved through your account’s
+              existing mission record.
+            </p>
+            <ol>
+              {draft.evidence.map((e) => (
+                <li key={e.id}>
+                  <strong>{e.label}</strong>
+                  <p>{e.observation}</p>
+                </li>
+              ))}
+            </ol>
+            {!draft.evidence.length && (
+              <p>Start with a controlled measurement.</p>
+            )}
+          </aside>
+        )}
       </div>
     </div>
   );

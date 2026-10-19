@@ -67,6 +67,7 @@ const story={
   artMap:{laboratory:"06_laboratory.webp",ions:"07_ions.webp",second_test:"08_second_test.webp",decision:"09_decision.webp",outcome:"10_outcome.webp"},
   outcomeVideos:{"verify-replace":"ending-verify-replace.mp4","conductivity-only":"ending-conductivity-only.mp4",taste:"ending-taste.mp4",appearance:"ending-appearance.mp4"}
  },
+ // Approved Ocean Dome playback uses oceanDome.mjs; this descriptor retains shared choices and media maps.
  ionic_aquarium_mystery:{
   location:"The National Aquarium Abu Dhabi, Al Qana",
   accent:"#74e0e2",
@@ -78,8 +79,8 @@ const story={
    hamad:"/images/ionic/aquarium-lab.webp"
   },
   production:{
-   folder:"/images/scenarios/ionic_aquarium_mystery/story/",
-   scenes:["01_aquarium.webp","02_preparations.webp","03_clouding.webp","04_staff.webp","05_hamad.webp","06_evidence.webp","07_carbonate.webp","08_formula.webp","09_crystal.webp","10_water.webp","11_decision.webp","12_outcome.webp"]
+   folder:"/images/scenarios/ionic_aquarium_mystery/story/Ocean_Dome_images/",
+   scenes:["01_aquarium.webp.jpg","02_preparations.webp.jpg","03_clouding.webp.jpg","04_staff.webp.jpg","05_hamad.webp.jpg","06_evidence.webp.jpg","07_carbonate.webp.jpg","08_formula.webp.jpg","09_crystal.webp.jpg","10_water.webp.jpg","11_decision.webp.jpg","12_outcome.webp.jpg"]
   },
   investigation:[
    beat("question","evidence","Hamad","What should we do first? A white appearance alone cannot identify this mineral.",{title:"Find the clues"}),
@@ -108,7 +109,7 @@ const story={
    "appearance-only":[beat("fail","outcome","Narrator","The deposit is cleared superficially, but cloudiness later recurs while the original chemistry remains unexamined."),beat("hamad","outcome","Hamad","Removing the symptom without identifying its cause is not a complete response.")]
   },
   ending:[beat("reflect","outcome","Hamad","A cloudy sample was the clue, not the answer. You followed the ions, the crystal, and the evidence before making a professional decision.")],
-  artMap:{evidence:"06_evidence.webp",formula:"08_formula.webp",crystal:"09_crystal.webp",water:"10_water.webp",decision:"11_decision.webp",outcome:"12_outcome.webp"},
+  artMap:{aquarium:"01_aquarium.webp.jpg",loop:"02_preparations.webp.jpg",cloudy:"03_clouding.webp.jpg",staff:"04_staff.webp.jpg",hamad:"05_hamad.webp.jpg",evidence:"06_evidence.webp.jpg",carbonate:"07_carbonate.webp.jpg",formula:"08_formula.webp.jpg",crystal:"09_crystal.webp.jpg",water:"10_water.webp.jpg",decision:"11_decision.webp.jpg",outcome:"12_outcome.webp.jpg"},
   outcomeVideos:{"isolate-review":"ending-isolate-review.mp4","add-salt":"ending-add-salt.mp4","acid-tank":"ending-acid-tank.mp4","appearance-only":"ending-appearance-only.mp4"}
  }
 };
@@ -119,5 +120,5 @@ export function storyImage(scenarioId,art){
 }
 export function outcomeFilm(scenarioId,key){
  const s=story[scenarioId];const name=s?.outcomeVideos?.[key];
- return name?"/videos/scenarios/"+scenarioId+"/"+name:"";
+ return name?"/videos/scenarios/"+scenarioId+"/"+(scenarioId === "ionic_aquarium_mystery" ? "Ocean_Dome_video/"+name+".mp4" : name):"";
 }

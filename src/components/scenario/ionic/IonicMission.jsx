@@ -3,6 +3,7 @@ import { HAMAD } from "@/data/ionicMissions.mjs";
 import { gradeIonic } from "@/data/ionicScience.mjs";
 import IonicInvestigation from "./IonicInvestigation";
 import IonicStory from "./IonicStory";
+import OceanDomeNovel from "./OceanDomeNovel";
 import "./ionic-missions.css";
 function Briefing({ scenario, onComplete }) {
   const [videoReady, setVideoReady] = useState(false),
@@ -113,12 +114,19 @@ function Briefing({ scenario, onComplete }) {
     </>
   );
 }
-function MakeTheCall({ scenario, responses, onComplete, isTeacher }) {
+function MakeTheCall({
+  scenario,
+  responses,
+  onComplete,
+  isTeacher,
+  canComplete = true,
+}) {
   const [choice, setChoice] = useState(""),
     [reason, setReason] = useState(""),
     [cited, setCited] = useState([]);
   const evidence = responses.investigation?.evidence || [];
   const ready =
+    canComplete &&
     !!choice &&
     (isTeacher || (reason.trim().length >= 60 && cited.length >= 2));
   function submit(e) {
@@ -214,7 +222,13 @@ function MakeTheCall({ scenario, responses, onComplete, isTeacher }) {
     </form>
   );
 }
-function Outcome({ scenario, responses, onComplete }) {
+function Outcome({
+  scenario,
+  responses,
+  onComplete,
+  canComplete = true,
+  embedded = false,
+}) {
   const [reflection, setReflection] = useState("");
   const consequence =
     scenario.scenes[2].consequences[responses.scene2?.consequence];
@@ -239,7 +253,9 @@ function Outcome({ scenario, responses, onComplete }) {
         </h2>
       </header>
       <div className="im-outcome">
-        <img src={scenario.artwork} alt="Fictional mission location" />
+        {!embedded && (
+          <img src={scenario.artwork} alt="Fictional mission location" />
+        )}
         <div>
           <span className="im-fiction-chip">
             Fictional consequence ·{" "}
@@ -267,7 +283,7 @@ function Outcome({ scenario, responses, onComplete }) {
           attempt.
         </p>
         <button
-          disabled={reflection.trim().length < 40}
+          disabled={!canComplete || reflection.trim().length < 40}
           onClick={() => onComplete(reflection)}
         >
           Continue to Prove Your Expertise →
@@ -276,7 +292,14 @@ function Outcome({ scenario, responses, onComplete }) {
     </>
   );
 }
-function Assessment({ scenario, responses, onDraft, onComplete }) {
+function Assessment({
+  scenario,
+  responses,
+  onDraft,
+  onComplete,
+  onResult,
+  canComplete = true,
+}) {
   const questions = scenario.exitTicket.mcqs;
   const [answers, setAnswers] = useState(responses.assessmentDraft || {}),
     [result, setResult] = useState(null),
@@ -290,7 +313,11 @@ function Assessment({ scenario, responses, onDraft, onComplete }) {
   }
   function assess(e) {
     e.preventDefault();
-    if (ready && !result) setResult(gradeIonic(questions, answers));
+    if (ready && !result) {
+      const grade = gradeIonic(questions, answers);
+      setResult(grade);
+      onResult?.(grade);
+    }
   }
   return (
     <form onSubmit={assess}>
@@ -351,7 +378,7 @@ function Assessment({ scenario, responses, onDraft, onComplete }) {
           </p>
           <button
             type="button"
-            disabled={committed}
+            disabled={committed || !canComplete}
             onClick={() => {
               setCommitted(true);
               onComplete(result);
@@ -373,12 +400,53 @@ export default function IonicMission({
   mode,
   isTeacher,
 }) {
+  if (scenario.id === "ionic_aquarium_mystery")
+    return (
+      <OceanDomeNovel
+        scenario={scenario}
+        stage={stage}
+        responses={responses}
+        onDraft={onDraft}
+        onComplete={onComplete}
+        mode={mode}
+        renderDecision={(canComplete) => (
+          <MakeTheCall
+            scenario={scenario}
+            responses={responses}
+            onComplete={onComplete}
+            isTeacher={isTeacher}
+            canComplete={canComplete}
+          />
+        )}
+        renderOutcome={(canComplete) => (
+          <Outcome
+            scenario={scenario}
+            responses={responses}
+            onComplete={onComplete}
+            canComplete={canComplete}
+            embedded
+          />
+        )}
+        renderAssessment={(onResult, canComplete) => (
+          <Assessment
+            scenario={scenario}
+            responses={responses}
+            onDraft={onDraft}
+            onComplete={onComplete}
+            onResult={onResult}
+            canComplete={canComplete}
+          />
+        )}
+      />
+    );
   return (
     <section className={`im-mission im-${scenario.atmosphere}`}>
       {stage === "briefing" && (
         <Briefing scenario={scenario} onComplete={onComplete} />
       )}
-      {stage !== "briefing" && <IonicStory scenario={scenario} stage={stage} responses={responses} />}
+      {stage !== "briefing" && (
+        <IonicStory scenario={scenario} stage={stage} responses={responses} />
+      )}
       {stage === "investigation" && (
         <IonicInvestigation
           scenario={scenario}
