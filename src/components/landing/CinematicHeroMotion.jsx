@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { startCloudMotion } from "./cinematicCloudRenderer";
 import "./cinematic-motion.css";
 
-export default function CinematicHeroMotion() {
+export default function CinematicHeroMotion({ artwork }) {
   const ref = useRef(null);
   const { pathname } = useLocation();
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function CinematicHeroMotion() {
       stop?.();
       stop = null;
       if (preference.matches) canvas.dataset.state = "reduced";
-      else stop = startCloudMotion(canvas, canvas.parentElement);
+      else stop = startCloudMotion(canvas, canvas.parentElement, artwork);
     };
     preference.addEventListener("change", applyPreference);
     applyPreference();
@@ -23,7 +23,9 @@ export default function CinematicHeroMotion() {
       preference.removeEventListener("change", applyPreference);
       stop?.();
     };
-  }, [pathname]);
+  }, [pathname, artwork]);
   if (pathname !== "/") return null;
-  return <canvas ref={ref} className="home-cinematic-motion" aria-hidden="true" />;
+  return (
+    <canvas ref={ref} className="home-cinematic-motion" aria-hidden="true" />
+  );
 }
