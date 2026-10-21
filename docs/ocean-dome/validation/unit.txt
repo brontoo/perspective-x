@@ -1,0 +1,44 @@
+
+> base44-app@0.0.0 test:unit
+> node --test tests/*.test.mjs
+
+✔ drafts use new records and cannot award completion (13.862427ms)
+✔ queued saves update only the newly created owned unassessed draft with revision checks (25.172772ms)
+✔ rejected persistence reports failure and cannot claim a saved result (5.857047ms)
+✔ teacher preview performs no persistence calls (0.568792ms)
+✔ the approved source remains byte-for-byte intact (22.133547ms)
+✔ cover registration uses the CSS remaining-space rule on both crop axes (1.024739ms)
+✔ feathering stays inside the mask and all protected landmarks stay static (45.269739ms)
+✔ every ion pair has exactly one simplest neutral ratio, preserving polyatomic groups (11.376751ms)
+✔ electron transfer conserves electrons and nuclei and produces full outer levels (1.639608ms)
+✔ rock salt has a neutral 1:1 fragment and six unlike nearest neighbours in its interior (0.554241ms)
+✔ calcite is a 1:1 Ca/CO3 trigonal cell with planar intact carbonate and six oxygen neighbours (13.264414ms)
+✔ 360 degree projection returns to its original view; educational trends respond to each variable (5.143674ms)
+✔ two distinct fictional missions share one Hamad identity, four outcomes and five MCQs with 80% passing (0.698863ms)
+✔ both chemistry missions have complete visual-novel chapters and evidence-first scripts (3.831124ms)
+✔ aquarium remains fictional at Al Qana; success requires isolated evidence-based review (0.254663ms)
+✔ dessert keeps original jars sealed and the verified ingredient outcome (0.188636ms)
+✔ story widget is mounted at every ionic stage without changing assessment or decisions (9.131978ms)
+✔ all imported originals retain their audited bytes, magic and dimensions/durations (159.325144ms)
+✔ all twelve dedicated story images resolve including every early scene (0.664943ms)
+✔ 92 unique recordings match production scene/speaker order, actual paths and transcript audit (6.725868ms)
+✔ six films and all four endings map by consequence key, independent of choice lettering (0.652184ms)
+✔ the approved sequence reaches all 92 lines conditionally and gates experiments before feedback (0.99144ms)
+✔ notes, malformed scores and undated rows never award progress (2.709754ms)
+✔ deduplicates passing missions without treating failed attempts as passes (0.67638ms)
+✔ teacher locks win over passing history and sequential unlocks (0.286049ms)
+✔ malformed historical answers remain readable and do not crash (0.709388ms)
+✔ rank sorting uses points and stable ID, never screenshot order (21.60226ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 499.540978
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

@@ -1,7 +1,24 @@
 import { test, expect } from "@playwright/test";
-import { setup, noOverflow, ID, OTHER, HISTORY } from "./support/fixtures";
+import {
+  setup as portalSetup,
+  noOverflow,
+  ID,
+  OTHER,
+  HISTORY,
+} from "./support/fixtures";
 import { IONIC_SCENARIOS } from "../src/data/ionicMissions.mjs";
 import { mkdirSync } from "node:fs";
+import {
+  installOceanPlayback,
+  oceanAssessmentReady,
+  oceanTask,
+  oceanBriefing,
+  oceanStartInvestigation,
+} from "./support/ocean-flow";
+async function setup(page, options) {
+  await installOceanPlayback(page);
+  return portalSetup(page, options);
+}
 const D = "ionic_dessert_mystery",
   A = "ionic_aquarium_mystery";
 const snapshotDir = "docs/ionic-materials/screenshots";
@@ -136,6 +153,11 @@ test("teachers can review new investigation evidence and individual MCQ results"
 async function openMission(page, id) {
   await page.goto(`/ScenarioPlayer?scenario=${id}`);
   await expect(page.locator(".im-cinema")).toBeVisible();
+  if (id === A) {
+    await oceanBriefing(page);
+    await oceanStartInvestigation(page);
+    return;
+  }
   await expect(page.locator(".im-hamad")).toHaveAttribute(
     "src",
     "/images/ionic/hamad-al-zaabi.webp",
@@ -177,24 +199,37 @@ async function dessertInvestigation(page) {
   ).toBeVisible();
 }
 async function aquariumInvestigation(page) {
-  for (const name of [
-    "Run calcium screening",
-    "Test water solubility",
-    "Run isolated carbonate test",
-    "Compare mineral fingerprint",
-  ])
+  for (const [name, nextStation] of [
+    ["Run calcium screening", "solubility"],
+    ["Test water solubility", "controlled-test"],
+    ["Run isolated carbonate test", "fingerprint"],
+    ["Compare mineral fingerprint", "formula"],
+  ]) {
     await page.getByRole("button", { name, exact: true }).click();
+    if (name === "Run isolated carbonate test") {
+      await oceanTask(page, "reaction");
+      await page
+        .getByRole("button", {
+          name: "It supports carbonate evidence, to compare with other tests",
+          exact: true,
+        })
+        .click();
+    }
+    // Wait for the destination, not a briefly visible previous workspace.
+    await oceanTask(page, nextStation);
+  }
   const formula = page.getByRole("region", { name: "Ionic formula builder" });
-  // Exercise real native drag-and-drop; buttons provide the same operation for touch/keyboard.
+  // Touch and keyboard use the same ion-selection operation as native drag-and-drop.
   await formula
     .getByRole("button", { name: "Choose carbonate ion", exact: true })
-    .dragTo(formula.getByLabel("Anion drop zone"));
+    .click();
   await formula
     .getByRole("button", { name: "Check charge balance", exact: true })
     .click();
-  await expect(formula.locator(".im-reading")).toContainText(
-    "CaCO₃ · Net charge 0",
+  await expect(page.locator(".od-caption")).toContainText(
+    "neutral formula CaCO3",
   );
+  await oceanTask(page, "crystal");
   const crystal = page.getByRole("region", {
     name: "360 degree ionic crystal explorer",
   });
@@ -222,6 +257,11 @@ async function aquariumInvestigation(page) {
     "Six oxygen neighbours",
   );
   await page
+    .getByRole("button", { name: "Record crystal comparison →", exact: true })
+    .click();
+  await expect(page.locator(".od-caption")).toContainText("ions are fixed");
+  await oceanTask(page, "water");
+  await page
     .getByRole("button", { name: "Run virtual water test", exact: true })
     .click();
   const water = page.getByRole("region", { name: "Water chemistry simulator" });
@@ -237,18 +277,34 @@ async function aquariumInvestigation(page) {
   await expect(water.locator(".im-reading")).toContainText(
     "Lower precipitation tendency",
   );
+  mkdirSync("docs/ocean-dome/screenshots", { recursive: true });
+  await page.locator(".od-novel").screenshot({
+    path: `docs/ocean-dome/screenshots/05-water-${page.viewportSize().width}.png`,
+  });
+  await page
+    .getByRole("button", {
+      name: "Record water-chemistry trends →",
+      exact: true,
+    })
+    .click();
+  await oceanTask(page, "identification");
   await page
     .getByLabel("Proposed deposit identity")
     .selectOption("calcium-carbonate");
   await page
     .getByRole("button", { name: "Submit identification", exact: true })
     .click();
-  await expect(
-    page.getByText("Your identification is supported.", { exact: true }),
-  ).toBeVisible();
+  await expect(page.locator(".od-caption")).toContainText(
+    "combined evidence supports",
+  );
+  await oceanTask(page, "professional-decision");
 }
 async function decisionAndReflection(page, id, choice, teacher = false) {
-  await page.getByRole("button", { name: "Continue to Make the Call" }).click();
+  if (id !== A)
+    await page
+      .getByRole("button", { name: "Continue to Make the Call" })
+      .click();
+  if (id === A) await oceanTask(page, "professional-decision");
   const s = IONIC_SCENARIOS[id],
     selected = s.scenes[1].options.find((o) => o.id === choice);
   await expect(page.locator(".im-feedback")).toHaveCount(0);
@@ -268,6 +324,7 @@ async function decisionAndReflection(page, id, choice, teacher = false) {
       "The independent test observations support my recommendation. I will retain the evidence and ask qualified staff to verify the remaining uncertainty.",
     );
   await page.getByRole("button", { name: "Commit my decision" }).click();
+  if (id === A) await oceanTask(page, "reflection");
   await expect(page.locator(".im-outcome")).toContainText(
     s.scenes[2].consequences[selected.consequence].outcome,
   );
@@ -283,6 +340,7 @@ async function decisionAndReflection(page, id, choice, teacher = false) {
     .click();
 }
 async function assess(page, id, wrong = 0) {
+  if (id === A) await oceanTask(page, "expertise");
   const questions = IONIC_SCENARIOS[id].exitTicket.mcqs;
   await expect(page.locator(".im-feedback")).toHaveCount(0);
   for (const [i, q] of questions.entries()) {
@@ -296,6 +354,7 @@ async function assess(page, id, wrong = 0) {
     .getByRole("button", { name: "Submit final assessment", exact: true })
     .click();
   await expect(page.locator(".im-feedback")).toHaveCount(5);
+  if (id === A) await oceanAssessmentReady(page);
   await page
     .getByRole("button", {
       name: wrong < 2 ? "Complete Mission" : "Save result and review",
@@ -345,7 +404,8 @@ test("both complete missions persist notebook, 80%/100% assessments and sequenti
   });
   await page.getByRole("button", { name: "Next available mission" }).click();
   await expect(page.locator(".im-cinema")).toBeVisible();
-  await page.getByRole("button", { name: "Accept assignment" }).click();
+  await oceanBriefing(page);
+  await oceanStartInvestigation(page);
   await aquariumInvestigation(page);
   await decisionAndReflection(page, A, "B");
   await assess(page, A);
@@ -484,7 +544,7 @@ for (const viewport of [
       await page.goto(`/ScenarioPlayer?scenario=${id}`);
       await expect(page.locator(".im-cinema")).toBeVisible();
       await noOverflow(page);
-      const portrait = page.locator(".im-hamad");
+      const portrait = page.locator(id === A ? ".od-art" : ".im-hamad");
       expect(
         await portrait.evaluate((img) => img.complete && img.naturalWidth > 0),
       ).toBe(true);
@@ -492,7 +552,11 @@ for (const viewport of [
         path: `${snapshotDir}/${id}-briefing-${viewport.width}.png`,
         fullPage: true,
       });
-      await page.getByRole("button", { name: "Accept assignment" }).click();
+      if (id === A) {
+        await oceanBriefing(page);
+        await oceanStartInvestigation(page);
+      } else
+        await page.getByRole("button", { name: "Accept assignment" }).click();
       await expect(page.locator(".im-investigation")).toBeVisible();
       await noOverflow(page);
       if (id === A) {
@@ -536,36 +600,7 @@ for (const viewport of [
           });
         expect(contrast).toBeGreaterThanOrEqual(4.5);
 
-        await page
-          .getByRole("button", { name: "Choose aluminium ion", exact: true })
-          .focus();
-        await page.keyboard.press("Enter");
-        await page
-          .getByRole("button", { name: "Choose sulfate ion", exact: true })
-          .click();
-        await page
-          .getByRole("button", { name: "Add cation", exact: true })
-          .click();
-        await page
-          .getByRole("button", { name: "Add anion", exact: true })
-          .click();
-        await page
-          .getByRole("button", { name: "Add anion", exact: true })
-          .click();
-        await page
-          .getByRole("button", { name: "Check charge balance", exact: true })
-          .click();
-        await expect(
-          page
-            .getByRole("region", { name: "Ionic formula builder" })
-            .locator(".im-reading"),
-        ).toContainText("Al₂(SO₄)₃");
-        await page.getByLabel("Structure reference").selectOption("calcite");
-        await page.getByLabel("Horizontal rotation").focus();
-        await page.keyboard.press("ArrowRight");
-        await page
-          .getByRole("button", { name: "Show coordination", exact: true })
-          .click();
+        await aquariumInvestigation(page);
       }
       await page.screenshot({
         path: `${snapshotDir}/${id}-investigation-${viewport.width}.png`,
