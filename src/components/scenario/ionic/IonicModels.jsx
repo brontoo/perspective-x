@@ -8,8 +8,8 @@ import {
   calciteCoordination,
   calciteCartesian,
   projectAtom,
-  precipitationModel,
 } from "@/data/ionicScience.mjs";
+import WaterChemistryLab from "./WaterChemistryLab";
 const sub = (value) =>
   String(value).replace(/\d/g, (d) => "₀₁₂₃₄₅₆₇₈₉"[Number(d)]);
 const chargeLabel = (charge) =>
@@ -559,89 +559,6 @@ export function CrystalExplorer({
     </section>
   );
 }
-export function WaterSimulator({
-  value = { pH: 8.7, calcium: 610, alkalinity: 5.8, tested: false },
-  onChange,
-}) {
-  const result = precipitationModel(value);
-  return (
-    <section className="im-instrument" aria-label="Water chemistry simulator">
-      <div className="im-instrument-title">
-        <span className="im-station-number">04</span>
-        <div>
-          <h3>Test the trend, not the tank.</h3>
-          <p>Isolated virtual sample · Fictional measurements</p>
-        </div>
-      </div>
-      <div className="im-water-layout">
-        <div className="im-water-vial">
-          <div
-            style={{
-              background: `rgba(232,248,250,${0.12 + result.cloudiness * 0.7})`,
-            }}
-          />
-          <span>Virtual sample</span>
-        </div>
-        <div>
-          {[
-            ["pH", "pH", 7.8, 9.2, 0.1],
-            ["calcium", "Calcium (mg/L)", 200, 650, 10],
-            ["alkalinity", "Alkalinity (meq/L)", 2, 8, 0.2],
-          ].map(([key, label, min, max, step]) => (
-            <label key={key}>
-              {label} <output>{value[key]}</output>
-              <input
-                aria-label={label}
-                type="range"
-                min={min}
-                max={max}
-                step={step}
-                value={value[key]}
-                onChange={(e) =>
-                  onChange({
-                    ...value,
-                    [key]: Number(e.target.value),
-                    tested: false,
-                  })
-                }
-              />
-            </label>
-          ))}
-        </div>
-      </div>
-      <div className="im-actions">
-        <button onClick={() => onChange({ ...value, tested: true })}>
-          Run virtual water test
-        </button>
-        <button
-          className="im-secondary"
-          onClick={() =>
-            onChange({ pH: 8.1, calcium: 420, alkalinity: 2.4, tested: false })
-          }
-        >
-          Load starting reference
-        </button>
-        <button
-          className="im-secondary"
-          onClick={() =>
-            onChange({ pH: 8.7, calcium: 610, alkalinity: 5.8, tested: false })
-          }
-        >
-          Load incident sample
-        </button>
-      </div>
-      {value.tested && (
-        <p className="im-reading" role="status">
-          {result.description}. Relative tendency: {result.tendency.toFixed(2)}.
-          Sample pH {value.pH}; calcium {value.calcium} mg/L; alkalinity{" "}
-          {value.alkalinity} meq/L.
-        </p>
-      )}
-      <small>
-        A qualitative educational trend model, not a seawater saturation
-        calculation, dosing guide or animal-care tool. Reference readings belong
-        to this fictional simulation, not the real aquarium.
-      </small>
-    </section>
-  );
+export function WaterSimulator(props) {
+  return <WaterChemistryLab {...props} />;
 }

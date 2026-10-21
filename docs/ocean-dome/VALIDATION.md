@@ -1,3 +1,15 @@
+# Water activity redesign — 2026-10-21
+
+The former tiny-vial/three-slider activity is replaced with a guided experiment: fixed starting reference beside a fresh trial sample, visible suspended particles/deposits, one active factor with the other two readings held fixed, optional predictions and explanatory model feedback. A visible Run toolbar stays available while scrolling. Results reveal only on Run; pending settings never replace a previously measured result. The last six runs and their settings persist in the existing water draft, and the notebook observation includes the model trend and reference comparison. Editing settings disables recording until a new run is made.
+
+The existing qualitative `precipitationModel`, its ranges and reference conditions are unchanged. The model is explicitly distinguished from turbidity measurements, an aquarium saturation solver, real treatment or removal of existing precipitate. All tests use fresh isolated virtual samples. No assessment answers, recordings, mission sequence, authentication, teacher permissions, dependencies or platform configuration were changed.
+
+Validation: build/lint passed, **27 unit tests** passed, and the **33-test focused browser regression** passed. Five dedicated water-activity tests cover one-factor isolation, concealed results before Run, visible cloudy/clear differences, optional prediction feedback, stale-result protection, saved history/notebook restoration, and desktop/tablet/mobile fullscreen. The final Run-toolbar layout was also checked with those five tests. An older investigation helper now waits for an explicit next station rather than racing a briefly visible previous workspace.
+
+Captures: [instructions](screenshots/water-lab-instructions-1440.png), [desktop result](screenshots/water-lab-1440.png), [tablet result](screenshots/water-lab-820.png), [mobile result](screenshots/water-lab-390.png), [desktop fullscreen](screenshots/water-lab-fullscreen-1440.png), [mobile fullscreen](screenshots/water-lab-fullscreen-390.png). Captures use synthetic browser records. Live authenticated Supabase QA and physical Safari/iOS remain unverified. Review branch/Preview only; production is unchanged.
+
+---
+
 # Cinematic choice panels — 2026-10-21
 
 Ocean Dome's introductory responses, evidence interpretation, professional decisions and final assessment now share deep teal panels, restrained gold trim and explicit hover/focus/selection states. Numbered story choices retain their exact accessible answer names. Only Ocean Dome presentation files changed; handlers, science, scoring, media, timing and platform configuration are untouched. Reduced motion disables the short panel entrance.

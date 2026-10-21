@@ -3,6 +3,7 @@ import {
   POWDER_READINGS,
   electronPair,
   formulaResult,
+  precipitationModel,
 } from "@/data/ionicScience.mjs";
 import {
   ElectronTransfer,
@@ -387,7 +388,7 @@ export default function IonicInvestigation({
                       collect(
                         "water",
                         "Virtual water chemistry",
-                        `pH ${value.pH}; calcium ${value.calcium} mg/L; alkalinity ${value.alkalinity} meq/L. Qualitative trend only.`,
+                        `pH ${value.pH}; calcium ${value.calcium} mg/L; alkalinity ${value.alkalinity} meq/L. ${precipitationModel(value).description}; relative tendency ${precipitationModel(value).tendency.toFixed(2)} compared with starting reference 1.00. Qualitative trend only; each run uses a fresh isolated virtual sample.`,
                         { water: value },
                       );
                     else update({ water: value, submitted: false });

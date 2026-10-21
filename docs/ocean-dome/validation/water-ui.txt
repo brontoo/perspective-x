@@ -1,0 +1,51 @@
+
+Running 33 tests using 2 workers
+
+(node:409750) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:409751) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:409750) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:409751) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/ionic-missions.spec.js:33:1 › new teacher locks override a saved prerequisite and students cannot enable preview (1.4s)
+  ✓   3 tests/ionic-missions.spec.js:47:1 › new missions use the existing teacher controls and teaching guide (2.9s)
+  ✓   4 tests/ionic-missions.spec.js:101:1 › teachers can review new investigation evidence and individual MCQ results (3.0s)
+  ✓   2 tests/ocean-media.spec.js:112:1 › Start authorizes real MP3 playback; captions advance in order without Next (9.6s)
+  ✓   6 tests/ocean-media.spec.js:163:1 › ordered scene changes stop at scientific tasks, and transport pauses progression (6.1s)
+  ✓   7 tests/ocean-media.spec.js:226:1 › native full screen survives a chapter transition, keeps the notebook usable and exits (4.3s)
+  ✓   8 tests/ocean-media.spec.js:274:1 › unsupported full screen expands to the viewport and Escape restores the page (1.4s)
+  ✓   9 tests/ocean-media.spec.js:295:1 › pause preserves decision input, hidden tabs pause, and navigation releases the persistent audio (3.1s)
+  ✓   5 tests/ionic-missions.spec.js:366:1 › both complete missions persist notebook, 80%/100% assessments and sequential unlock without altering earlier work (17.7s)
+  ✓  10 tests/ocean-media.spec.js:333:1 › blocked playback offers Resume without skipping, and missing audio advances with readable captions (2.0s)
+  ✓  11 tests/ionic-missions.spec.js:438:1 › draft evidence restores mid-investigation, including personal notebook notes (2.8s)
+  ✓  12 tests/ocean-media.spec.js:365:1 › a missing recording automatically continues with readable captions (1.7s)
+  ✓  14 tests/ocean-media.spec.js:387:3 › automatic narration plays only the committed add-salt ending (3.5s)
+  ✓  13 tests/ionic-missions.spec.js:473:1 › 60% earns no badge or next mission; unsupported decision shows its own consequence (4.7s)
+  ✓  15 tests/ocean-media.spec.js:387:3 › automatic narration plays only the committed isolate-review ending (3.8s)
+  ✓  16 tests/ionic-missions.spec.js:492:1 › failed saves cannot unlock the second mission; teacher locks and preview permissions remain enforced (4.3s)
+  ✓  17 tests/ocean-media.spec.js:387:3 › automatic narration plays only the committed acid-tank ending (4.3s)
+  ✓  19 tests/ocean-media.spec.js:387:3 › automatic narration plays only the committed appearance-only ending (4.3s)
+  ✓  20 tests/ocean-media.spec.js:438:1 › formula feedback requires revision; successful identification advances chapters automatically (3.7s)
+  ✓  18 tests/ionic-missions.spec.js:513:1 › teacher dashboard includes both missions and preview creates no student records (12.1s)
+  ✓  21 tests/ocean-media.spec.js:502:3 › 80% earns badge after automatic graded feedback (2.8s)
+  ✓  23 tests/ocean-media.spec.js:502:3 › 60% earns no badge after automatic graded feedback (2.8s)
+  ✓  24 tests/ocean-media.spec.js:553:3 › Start and fullscreen fit at 820px without horizontal overflow (3.3s)
+  ✓  25 tests/ocean-media.spec.js:553:3 › Start and fullscreen fit at 390px without horizontal overflow (1.9s)
+  ✓  26 tests/ocean-media.spec.js:580:1 › missing scene image and film keep automatic narration and the fallback briefing usable (2.6s)
+  ✓  22 tests/ionic-missions.spec.js:536:3 › cinematic briefing and interactive models are accessible without horizontal overflow at 1440px (13.8s)
+  ✓  27 tests/ocean-water.spec.js:25:1 › one-factor trials reveal visible results only on Run and preserve the fixed reference (2.3s)
+  ✓  29 tests/ocean-water.spec.js:62:1 › calcium and alkalinity experiments isolate their factors; history and notebook survive reload (2.7s)
+  ✓  30 tests/ocean-water.spec.js:86:3 › water activity is legible and usable at 1440px, including fullscreen (4.1s)
+  ✓  31 tests/ocean-water.spec.js:86:3 › water activity is legible and usable at 820px, including fullscreen (4.0s)
+  ✓  28 tests/ionic-missions.spec.js:536:3 › cinematic briefing and interactive models are accessible without horizontal overflow at 820px (12.7s)
+  ✓  32 tests/ocean-water.spec.js:86:3 › water activity is legible and usable at 390px, including fullscreen (4.3s)
+  ✓  33 tests/ionic-missions.spec.js:536:3 › cinematic briefing and interactive models are accessible without horizontal overflow at 390px (9.1s)
+
+  33 passed (1.4m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

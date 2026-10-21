@@ -199,11 +199,11 @@ async function dessertInvestigation(page) {
   ).toBeVisible();
 }
 async function aquariumInvestigation(page) {
-  for (const name of [
-    "Run calcium screening",
-    "Test water solubility",
-    "Run isolated carbonate test",
-    "Compare mineral fingerprint",
+  for (const [name, nextStation] of [
+    ["Run calcium screening", "solubility"],
+    ["Test water solubility", "controlled-test"],
+    ["Run isolated carbonate test", "fingerprint"],
+    ["Compare mineral fingerprint", "formula"],
   ]) {
     await page.getByRole("button", { name, exact: true }).click();
     if (name === "Run isolated carbonate test") {
@@ -215,7 +215,8 @@ async function aquariumInvestigation(page) {
         })
         .click();
     }
-    await oceanTask(page);
+    // Wait for the destination, not a briefly visible previous workspace.
+    await oceanTask(page, nextStation);
   }
   const formula = page.getByRole("region", { name: "Ionic formula builder" });
   // Touch and keyboard use the same ion-selection operation as native drag-and-drop.

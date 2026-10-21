@@ -386,7 +386,7 @@ export default function OceanDomeNovel({
         {/* The investigation remains mounted, preserving the original instruments and draft. */}
         {stage === "investigation" && (
           <div
-            className="od-workspace"
+            className={`od-workspace ${station === "water" ? "od-water-workspace" : ""}`}
             inert={voice.paused ? "" : undefined}
             hidden={station === "none"}
           >
@@ -414,7 +414,7 @@ export default function OceanDomeNovel({
             )}
             {station === "water" && (
               <button
-                disabled={!flow.waterReady}
+                disabled={!flow.waterReady || !record.current.water?.tested}
                 onClick={() => feedbackLines(step.after, true)}
               >
                 Record water-chemistry trends →
