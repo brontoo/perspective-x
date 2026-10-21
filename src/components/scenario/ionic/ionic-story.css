@@ -1,0 +1,51 @@
+/* Cinematic illustrated visual novel, isolated from all other missions. */
+.ivn {--ivn-accent:#78dcd3; position:relative; margin:0 0 24px; color:#f6f2f7; font-size:15px;}
+.ivn-stage {position:relative; display:flex; flex-direction:column; justify-content:space-between; min-height:clamp(400px,52vw,620px); overflow:hidden; isolation:isolate; border-radius:18px; background:#152b3c; border:1px solid #ffffff25;}
+.ivn-art {position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; animation:ivn-gentle-zoom 22s ease-out both;}
+.ivn-scrim {position:absolute; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(180deg,#10162691 0%,transparent 30%,#0b121e70 58%,#080d17e8 100%);}
+.ivn-topline {display:flex; align-items:start; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:19px 22px;}
+.ivn-chapter {display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding:8px 13px; border-radius:22px; background:#10141dde; backdrop-filter:blur(10px); max-width:100%;}
+.ivn-chapter small {color:var(--ivn-accent); font-size:10px; letter-spacing:.16em; font-weight:800;}
+.ivn-chapter strong {font-family:Georgia,serif; font-size:17px; font-weight:600;}
+.ivn-tools {display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.im-mission .ivn button.ivn-tool {min-height:37px; padding:7px 11px; border:1px solid #ffffff53; border-radius:24px; background:#11121bd9; color:#f5f1fa; font-size:12px; font-weight:600;}
+.ivn-speed {display:flex !important; align-items:center; gap:6px; margin:0 !important; color:#fff; background:#11121bd9; padding:4px 10px; border-radius:24px; font-size:12px;}
+.im-mission .ivn-speed select {width:auto; margin:0; padding:3px 5px; min-height:29px; background:#131927; border-color:#ffffff50;}
+.ivn-hamad {position:absolute; bottom:114px; right:4%; width:clamp(95px,14vw,225px); max-height:49%; object-fit:contain; object-position:bottom; opacity:.97; filter:drop-shadow(0 9px 25px #070f18be); pointer-events:none;}
+.ivn-dialogue {position:relative; width:min(76%,780px); align-self:center; margin:auto 20px 20px; padding:21px 26px; background:#0b0b14e9; border:1px solid #b6a4c635; border-left:3px solid var(--ivn-accent); border-radius:18px; box-shadow:0 20px 50px #090c1c88; backdrop-filter:blur(14px);}
+.ivn-speaker {display:block; color:var(--ivn-accent); text-transform:uppercase; font-size:11px; font-weight:800; letter-spacing:.16em; margin-bottom:8px;}
+.ivn-dialogue p {font-family:Georgia,serif; font-size:clamp(17px,2vw,24px); line-height:1.45; margin:0 0 11px !important;}
+.ivn-dialogue small {margin:2px 0 !important; color:#c4ccd6;}
+.ivn-dialogue-actions {display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px; margin-top:12px;}
+.ivn-step {margin-right:auto; font-size:12px; color:#b6c1cd; font-variant-numeric:tabular-nums;}
+.ivn-log {position:relative; margin:8px 0 12px; padding:14px; background:#0a1422; border:1px solid #4b6071; border-radius:14px; max-height:330px; overflow:auto;}
+.ivn-log h3 {font-size:16px !important; margin-bottom:8px !important;}
+.im-mission .ivn-log button {display:block; width:100%; margin:5px 0; text-align:left; padding:10px 12px; background:#101f30; color:#f6effa; border-color:#3c5868;}
+.ivn-log strong {display:block; color:var(--ivn-accent); font-size:12px; margin-bottom:3px;}
+.ivn-log span {display:block; font-weight:400; font-size:14px;}
+.ivn-prompt {margin:12px 0; padding:18px; border:1px solid #6c85945c; border-radius:16px; background:#132535;}
+.ivn-prompt h3 {font-size:18px !important; margin:0 0 8px !important;}
+.ivn-prompt p {margin-bottom:10px !important;}
+.ivn-prompt fieldset {border:0; padding:0; margin:8px 0 16px;}
+.ivn-prompt legend {margin:0 0 9px; font-weight:700;}
+.ivn-prompt label {display:flex !important; align-items:center; gap:12px; background:#0f2030; border:1px solid #4c6678; border-radius:10px; padding:12px; margin:7px 0 !important;}
+.ivn-prompt label.chosen {border-color:var(--ivn-accent); background:#204451;}
+.ivn-prompt label input {accent-color:var(--ivn-accent);}
+.ivn-prompt label span {font-weight:500;}
+.ivn-response {margin-top:15px; padding:14px; background:#133b45; border-left:3px solid var(--ivn-accent); border-radius:10px;}
+.ivn-response p {margin:6px 0 0 !important;}
+.ivn-optional-video {margin:16px 0; border:1px solid #476679; border-radius:16px; padding:12px; background:#112536;}
+.ivn-optional-video p {font-size:13px; margin-bottom:8px !important;}
+.ivn-optional-video video {width:100%; max-height:480px; border-radius:11px; background:#09121c;}
+@keyframes ivn-gentle-zoom {from {transform:scale(1)} to {transform:scale(1.045)}}
+@media (max-width:760px){
+ .ivn-stage {min-height:470px;}
+ .ivn-topline {padding:12px;}
+ .ivn-tools {gap:5px;}
+ .ivn-dialogue {width:calc(100% - 20px); margin:75px 10px 10px; padding:14px 15px;}
+ .ivn-hamad {width:100px; right:10px; bottom:164px; max-height:30%;}
+ .ivn-dialogue p {font-size:17px;}
+ .ivn-chapter strong {font-size:14px;}
+ .im-mission .ivn button.ivn-tool {font-size:11px; padding:7px 9px;}
+}
+@media (prefers-reduced-motion:reduce){.ivn-art {animation:none !important;} .ivn * {transition:none !important; scroll-behavior:auto !important;}}

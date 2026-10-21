@@ -1,0 +1,155 @@
+/* Scoped to the Ocean Dome water activity; other instruments keep their styles. */
+.od-novel .od-workspace.od-water-workspace {
+  width: min(1060px, calc(100% - 44px));
+  padding: 0;
+  color: #e7f4f6;
+  background: #0a2836f5;
+  border-color: #79aeb6;
+  scrollbar-color: #6faab3 #102f3d;
+}
+.od-novel .od-workspace.od-water-workspace .wl-lab {
+  margin: 0;
+  padding: 20px;
+  color: #e7f4f6;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+.od-novel .od-workspace.od-water-workspace .wl-lab :is(p, label, small, summary, th, td, caption) {
+  color: #c7e0e6;
+}
+.od-novel .od-workspace.od-water-workspace .wl-lab :is(h3, h4, legend) {
+  color: #f0f9fa;
+}
+.od-novel .od-water-workspace .wl-header h3 {
+  font-size: clamp(21px, 2vw, 28px);
+  margin: 5px 0;
+}
+.od-novel .od-water-workspace .wl-header p {
+  margin: 0;
+  font-size: 13px;
+}
+.wl-eyebrow {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  color: #ebcd97;
+  font-size: 10px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.wl-steps {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 12px 0;
+  margin: 0 0 14px;
+  border-bottom: 1px solid #395d69;
+  font-size: 11px;
+  color: #c6e4e7;
+}
+.wl-steps li { display: flex; align-items: center; gap: 7px; }
+.wl-steps b {
+  display: grid;
+  place-items: center;
+  height: 22px;
+  width: 22px;
+  color: #f7dca7;
+  background: #21404b;
+  border: 1px solid #71877d;
+  border-radius: 50%;
+}
+.wl-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.wl-layout > div { min-width: 0; }
+.wl-observation { position: sticky; top: 70px; align-self: start; scroll-margin-top: 70px; }
+.wl-samples { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wl-sample {
+  margin: 0;
+  padding: 12px;
+  min-width: 0;
+  background: #103846;
+  border: 1px solid #58828b;
+  border-radius: 13px;
+}
+.wl-sample.is-trial { border-color: #c5b17d; }
+.wl-sample figcaption { display: flex; flex-wrap: wrap; gap: 5px; min-height: 28px; justify-content: space-between; align-items: center; font-size: 11px; }
+.wl-sample figcaption b { color: #f7d699; font-size: 19px; }
+.wl-lab .wl-sample svg { display: block; width: 100%; height: auto; margin: 0 auto; max-height: 170px; }
+.od-novel .od-water-workspace .wl-sample p { font-size: 11px; min-height: 34px; margin: 2px 0 8px; }
+.od-novel .od-water-workspace .wl-sample small { font-size: 10px; line-height: 1.5; margin-top: 8px; }
+.od-novel .od-water-workspace .wl-lab .wl-scale-note { color: #afcbd3; font-size: 10px; line-height: 1.5; margin: 10px 0; }
+.od-novel .od-workspace .wl-result.im-reading {
+  margin: 0;
+  padding: 13px;
+  color: #ecf8fa;
+  background: #153d48;
+  border: 1px solid #82b9b5;
+  border-radius: 12px;
+}
+.wl-result strong { font-size: 14px; }
+.od-novel .od-water-workspace .wl-result p { font-size: 12px; margin: 6px 0 0; }
+.od-novel .od-water-workspace .wl-result .wl-result-value { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 20px; font-weight: 700; color: #f6d59b; }
+.wl-result-value span { font-size: 11px; font-weight: 400; color: #d8ebee; }
+.od-novel .od-water-workspace .wl-lab .wl-fresh-note { font-size: 11px; margin: 10px 0 0; }
+.wl-experiment h4 { font-size: 14px; margin: 0 0 10px; }
+.wl-factor-buttons { display: flex; flex-wrap: wrap; gap: 7px; }
+.od-novel .od-water-workspace .wl-lab .wl-factor-buttons button { font-size: 11px; min-height: 38px; padding: 8px 10px; color: #e9f9fa; border-color: #7ca8b1; background: #153d4b; }
+.od-novel .od-water-workspace .wl-lab .wl-factor-buttons button[aria-pressed="true"] { border-color: #f3d099; color: #f9dda8; background: #28464e; }
+.od-novel .od-water-workspace .wl-lab .wl-factor-note { margin: 8px 0; min-height: 36px; font-size: 11px; color: #edcf9a; }
+.wl-control { margin-bottom: 10px; border-bottom: 1px solid #365762; padding-bottom: 8px; }
+.od-novel .od-water-workspace .wl-control label { display: grid; grid-template-columns: 1fr auto; gap: 0 10px; margin: 0; font-size: 12px; }
+.wl-control output { color: #f7dda8; font-size: 15px; }
+.od-novel .od-water-workspace .wl-control input[type="range"] { grid-column: 1 / -1; margin: 0; min-height: 30px; accent-color: #92e1d7; }
+.od-novel .od-water-workspace .wl-control p { font-size: 10px; line-height: 1.5; margin: 0; }
+.wl-fixed-readings { border: 1px solid #486975; border-radius: 10px; padding: 10px; margin: 0 0 12px; background: #102e3b; }
+.wl-fixed-readings > span { font-size: 10px; color: #b2cbd3; }
+.od-novel .od-water-workspace .wl-fixed-readings p { display: flex; justify-content: space-between; gap: 12px; font-size: 11px; margin: 4px 0 0; }
+.wl-fixed-readings output { color: #e2f4f6; }
+.wl-prediction { display: flex; flex-wrap: wrap; gap: 7px 12px; border: 0; padding: 0; margin: 8px 0 12px; min-width: 0; }
+.od-novel .od-water-workspace .wl-prediction legend { font-size: 11px; margin: 0 0 6px; }
+.wl-prediction legend span { color: #bad4dc; font-weight: 400; }
+.od-novel .od-water-workspace .wl-prediction label { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 11px; min-height: 36px; cursor: pointer; }
+.od-novel .od-water-workspace .wl-prediction input[type="radio"] { accent-color: #92e1d7; }
+.wl-run-actions { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 0; margin-bottom: 14px; background: #0a2836; border-bottom: 1px solid #476874; }
+.wl-run-actions > button { width: auto; flex-shrink: 0; }
+.od-novel .od-water-workspace .wl-run-actions p { font-size: 11px; margin: 6px 0 9px; }
+.wl-presets { display: flex; gap: 6px; flex-wrap: wrap; }
+.od-novel .od-water-workspace .wl-lab .wl-presets button { display: flex; align-items: center; gap: 6px; font-size: 10px; padding: 6px 8px; min-height: 36px; }
+.od-novel .od-workspace.od-water-workspace .wl-lab :is(.wl-history, .wl-explainer) { border: 1px solid #567e89; border-radius: 10px; margin: 14px 0 0; padding: 12px; background: #102f3e; color: #cbe5ea; }
+.od-novel .od-workspace.od-water-workspace .wl-lab :is(.wl-history, .wl-explainer) summary { font-size: 12px; color: #d3edf1; }
+.wl-explainer p { margin: 10px 0 0 !important; }
+.wl-table-scroll { overflow: auto; }
+.wl-history table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.od-novel .od-water-workspace .wl-history :is(th, td) { color: #d8e9ec; border-color: #43616b; padding: 8px 6px; }
+.wl-history caption { text-align: left; padding: 8px 0; font-size: 10px; }
+.wl-lab footer { font-size: 10px; color: #b4ced6; margin-top: 14px; }
+.od-water-workspace > button { margin: 0 20px 20px; }
+.wl-particle { animation: wl-drift 4s ease-in-out infinite alternate; }
+.wl-cloud { animation: wl-develop .8s ease-out; }
+.od-water-workspace[inert] :is(.wl-particle, .wl-cloud) { animation-play-state: paused; }
+@keyframes wl-drift { to { transform: translateY(5px); } }
+@keyframes wl-develop { from { opacity: 0; } }
+@media (max-width: 950px) {
+  .wl-layout { gap: 14px; }
+  .od-novel .od-workspace.od-water-workspace { width: calc(100% - 32px); margin-right: 16px; }
+}
+@media (max-width: 700px) {
+  .wl-layout { grid-template-columns: 1fr; }
+  .wl-observation { position: static; }
+  .wl-observation { scroll-margin-top: 110px; }
+  .wl-run-actions { gap: 2px; }
+  .wl-run-actions > button { width: 100%; }
+  .od-novel .od-workspace.od-water-workspace { width: calc(100% - 24px); margin-right: 12px; }
+  .od-novel .od-workspace.od-water-workspace .wl-lab { padding: 14px; }
+  .wl-steps { gap: 7px; }
+  .wl-sample { padding: 10px; }
+  .wl-sample figcaption { min-height: 38px; }
+  .wl-lab .wl-sample svg { height: 100px; }
+  .wl-sample figcaption b { font-size: 17px; }
+  .od-novel .od-workspace.od-water-workspace .wl-lab :is(button, input[type="range"]) { min-height: 44px; }
+  .od-novel .od-water-workspace .wl-prediction label { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wl-lab *, .wl-lab *::before, .wl-lab *::after { animation: none !important; transition: none !important; }
+}
