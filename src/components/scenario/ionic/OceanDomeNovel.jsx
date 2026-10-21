@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { IONIC_STORIES, storyImage } from "@/data/ionicStories.mjs";
 import { formulaResult } from "@/data/ionicScience.mjs";
 import {
@@ -40,6 +41,19 @@ const chapterNumber = {
   outcome: 4,
   assessment: 5,
 };
+
+// Presentation only: the existing response handlers and answer labels stay intact.
+function StoryChoice({ number, children, onClick }) {
+  return (
+    <button className="od-story-choice" onClick={onClick}>
+      <span className="od-choice-number" aria-hidden="true">
+        {String(number).padStart(2, "0")}
+      </span>
+      <span className="od-choice-copy">{children}</span>
+      <ArrowUpRight className="od-choice-arrow" size={18} aria-hidden="true" />
+    </button>
+  );
+}
 
 export default function OceanDomeNovel({
   scenario,
@@ -410,25 +424,36 @@ export default function OceanDomeNovel({
         )}
         {showForm && step.task === "first" && (
           <div
-            className="od-workspace od-choice-workspace"
+            className="od-workspace od-choice-panel od-choice-workspace"
             inert={voice.paused ? "" : undefined}
           >
+            <p className="od-choice-kicker">
+              Your move <span aria-hidden="true">/</span> Choose a response
+            </p>
             <h3>How should we begin?</h3>
-            {IONIC_STORIES[scenario.id].firstChoices.map((choice) => (
-              <button key={choice.id} onClick={() => firstChoice(choice.id)}>
+            {IONIC_STORIES[scenario.id].firstChoices.map((choice, index) => (
+              <StoryChoice
+                key={choice.id}
+                number={index + 1}
+                onClick={() => firstChoice(choice.id)}
+              >
                 {choice.label}
-              </button>
+              </StoryChoice>
             ))}
           </div>
         )}
         {showForm && step.task === "interpret" && (
           <div
-            className="od-workspace od-choice-workspace"
+            className="od-workspace od-choice-panel od-choice-workspace"
             inert={voice.paused ? "" : undefined}
           >
+            <p className="od-choice-kicker">
+              Your move <span aria-hidden="true">/</span> Interpret the evidence
+            </p>
             <h3>Interpret the isolated gas observation.</h3>
             <p>Use this result with the other independent tests.</p>
-            <button
+            <StoryChoice
+              number={1}
               onClick={() => {
                 setNotice(
                   "The gas observation supports carbonate behaviour; it does not identify the mineral alone.",
@@ -437,8 +462,9 @@ export default function OceanDomeNovel({
               }}
             >
               It supports carbonate evidence, to compare with other tests
-            </button>
-            <button
+            </StoryChoice>
+            <StoryChoice
+              number={2}
               onClick={() =>
                 setNotice(
                   "Revisit what was actually measured. Gas production does not establish that every white solid is table salt. Try again.",
@@ -446,11 +472,14 @@ export default function OceanDomeNovel({
               }
             >
               It proves every white deposit is sodium chloride
-            </button>
+            </StoryChoice>
           </div>
         )}
         {showForm && step.task === "decision" && (
-          <div className="od-workspace" inert={voice.paused ? "" : undefined}>
+          <div
+            className="od-workspace od-choice-panel"
+            inert={voice.paused ? "" : undefined}
+          >
             {renderDecision(allowFormCompletion)}
           </div>
         )}
@@ -460,7 +489,10 @@ export default function OceanDomeNovel({
           </div>
         )}
         {stage === "assessment" && (showForm || !!assessmentResult) && (
-          <div className="od-workspace" inert={voice.paused ? "" : undefined}>
+          <div
+            className="od-workspace od-choice-panel"
+            inert={voice.paused ? "" : undefined}
+          >
             {renderAssessment(
               grade,
               allowFormCompletion && (!assessmentResult || endOfFeedback),

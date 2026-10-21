@@ -315,15 +315,6 @@
   flex-direction: column;
   gap: 9px;
 }
-.od-novel .od-choice-workspace button {
-  text-align: left;
-  font-size: 13px;
-  color: #174658;
-  background: #e9f6f6;
-  border: 1px solid #8dbfc9;
-  padding: 12px;
-  border-radius: 9px;
-}
 .od-notice {
   margin: 0;
   padding: 14px 22px;
@@ -518,6 +509,134 @@
 }
 .od-novel .od-workspace .im-water-vial span {
   color: #e5f5fa;
+}
+/* Story decisions share the ocean palette without changing the lab instruments. */
+.od-novel .od-choice-panel {
+  color: #edf8fb;
+  padding: 24px;
+  border: 1px solid #7fb9bf;
+  border-top: 2px solid #dfc18b;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #123b49f5, #081e2cf7);
+  box-shadow: 0 18px 45px #010f1db3, inset 0 1px 0 #ffffff0d;
+  backdrop-filter: blur(16px);
+  scrollbar-color: #67a5ac #102e3b;
+  animation: od-choice-arrive 280ms ease-out both;
+}
+.od-novel .od-choice-panel :is(h2, h3, legend) {
+  color: #f4fafb;
+}
+.od-novel .od-choice-panel :is(p, label, small) {
+  color: #c7dfe5;
+}
+.od-novel .od-choice-panel .od-choice-kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 4px;
+  color: #ebcd97;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.od-choice-kicker span {
+  color: #6c9aa5;
+}
+.od-novel .od-choice-workspace h3 {
+  margin: 0 0 10px;
+  font-size: clamp(19px, 1.7vw, 25px);
+  letter-spacing: -0.02em;
+}
+.od-novel .od-choice-panel :is(.od-story-choice, .im-decision, .im-assessment label) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 56px;
+  padding: 13px 15px;
+  color: #edf8fb;
+  background: #153946;
+  border: 1px solid #517782;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: left;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+.od-choice-copy {
+  flex: 1;
+  min-width: 0;
+}
+.od-novel .od-choice-panel :is(.od-choice-number, .im-choice-letter) {
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  height: 30px;
+  color: #b8e6e8;
+  background: #0b2734;
+  border: 1px solid #527b85;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.od-choice-arrow {
+  flex-shrink: 0;
+  color: #bad8df;
+  font-size: 20px;
+}
+.od-novel .od-choice-panel :is(.od-story-choice, .im-decision, .im-assessment label):hover {
+  color: #f4fafb;
+  background: #204b57;
+  border-color: #9ddde0;
+  box-shadow: inset 3px 0 0 #9ddde0;
+}
+.od-novel .od-choice-panel :is(.od-story-choice:focus-visible, .im-decision:focus-within, .im-assessment label:focus-within) {
+  outline: 2px solid #f4d49a;
+  outline-offset: 3px;
+}
+.od-novel .od-choice-panel :is(.im-decision.is-selected, .im-assessment label:has(input:checked)) {
+  color: #f4fafb;
+  background: #20505b;
+  border-color: #a2e3dd;
+  box-shadow: inset 3px 0 0 #a2e3dd;
+}
+.od-novel .od-choice-panel input:is([type="radio"], [type="checkbox"]) {
+  accent-color: #8de8e8;
+}
+.od-novel .od-choice-panel .im-decisions {
+  margin: 18px 0 22px;
+}
+.od-novel .od-choice-panel :is(.im-instrument, .im-assessment, .im-assessment-result) {
+  color: #e5f4f7;
+  background: #0c2a38;
+  border-color: #4d7580;
+}
+.od-novel .od-choice-panel .im-assessment {
+  margin: 18px 0 24px;
+  padding: 14px;
+}
+.od-novel .od-choice-panel .im-feedback {
+  color: #e5f4f7;
+  background: #153d40;
+  border-color: #7fc2b5;
+}
+.od-novel .od-choice-panel :is(.im-feedback strong, .im-eyebrow) {
+  color: #b3ebe2;
+}
+@keyframes od-choice-arrive {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 600px) {
+  .od-novel .od-choice-panel { padding: 17px; }
+  .od-novel .od-choice-panel :is(.od-story-choice, .im-decision, .im-assessment label) {
+    padding: 12px;
+    gap: 10px;
+    font-size: 13px;
+  }
 }
 /* Start is the only gesture needed to authorize synchronized story playback. */
 .od-start-screen {

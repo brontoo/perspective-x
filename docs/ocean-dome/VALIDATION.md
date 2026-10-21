@@ -1,4 +1,14 @@
-# Current playback validation — 2026-10-20
+# Cinematic choice panels — 2026-10-21
+
+Ocean Dome's introductory responses, evidence interpretation, professional decisions and final assessment now share deep teal panels, restrained gold trim and explicit hover/focus/selection states. Numbered story choices retain their exact accessible answer names. Only Ocean Dome presentation files changed; handlers, science, scoring, media, timing and platform configuration are untouched. Reduced motion disables the short panel entrance.
+
+Validation: build and lint passed; **27 unit tests** and **28 focused browser tests** passed. Browser checks cover original narration/fullscreen, all four consequences, saved progress, teacher permissions, scientific models and 80%/60% assessment outcomes, including decision/assessment contrast checks. Desktop 1440px, tablet 820px and mobile 390px choice panels were visually inspected, with no horizontal overflow and visible keyboard focus.
+
+Screenshots: [desktop](screenshots/choices-1440.png), [tablet](screenshots/choices-820.png), [mobile](screenshots/choices-390.png), [keyboard focus detail](screenshots/choices-detail.png). These use synthetic browser fixtures. Live authenticated QA and physical Safari/iOS remain unverified. Preview only; no production publication.
+
+---
+
+# Playback validation — 2026-10-20
 
 | Command | Result | Evidence |
 | --- | --- | --- |
