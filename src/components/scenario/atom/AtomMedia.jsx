@@ -116,13 +116,13 @@ export function AtomFilm({ film, paused, onBusy, onStatus }) {
     video.current?.pause(); setEnded(true); onBusy(false); onStatus("skipped");
   }
   return (
-    <div className="ad-film" aria-label="Approved cinematic clip">
+    <div className="px-atom-film" aria-label="Approved cinematic clip">
       {ended && !failed ? <img src={film.definition.end} alt="Actual final frame of the approved clip" /> :
         requested && !failed ? <video ref={node => { video.current = node; if (node) lastVideo.current = node; }} src={film.definition.url} muted playsInline preload="auto"
           onPlaying={() => onStatus("played")}
           onEnded={() => { setEnded(true); onBusy(false); }}
           onError={() => { setFailed(true); onBusy(false); onStatus("unavailable"); }} /> : null}
-      <div className="ad-film-tools">
+      <div className="px-atom-film-tools">
         {failed ? <span>Clip unavailable · approved scene and captions remain available</span> :
           !requested && !ended ? <button onClick={() => setRequested(true)}>Play clip (optional)</button> :
             !ended ? <button onClick={skip}>Skip clip</button> : <span>Final frame · dialogue continues independently</span>}

@@ -2,7 +2,24 @@
 
 Implementation: `feature/atom-dive-implementation`. Existing main at start of review: `23dc8ffa15dc0a6bbfd82d14c63bbd1aefd49673`.
 
-## Executed checks
+## Preview follow-up: invisible Start button
+
+The user's preview screenshot showed a rendered briefing without its Start action. EasyList's actual generic cosmetic rules include `##.ad-primary` and `##.ad-footer`; applying those rules reproduced the missing Start button before the fix. This was missed by the initial extension-free browser checks.
+
+All ATOM DIVE DOM classes, CSS selectors and keyframes now use the project-specific `px-atom-` namespace. Start, Continue, scientific verification, assessment and footer elements remain visible under those rules. No advertising-filter override or browser-extension detection is used. Layout, dialogue pacing, source media, science validation, saved state and Ocean Dome behavior are preserved.
+
+The HTML manifest link also uses `crossorigin="use-credentials"`, allowing the browser to send existing Vercel cookies on the protected Preview's manifest request. This does not change authentication or deployment protection settings; an authenticated live Vercel session was not available to independently verify that request.
+
+Executed follow-up checks:
+
+- Confirmed the desktop Start test failed under the cosmetic rules before the fix.
+- New desktop (1227px, matching the narrowed screenshot viewport) and mobile (390px) tests passed with those rules. They use native, unmocked MP3 and MP4 playback: Start enables recorded speech, all three S01 lines finish, S02 starts the first approved clip, its playback clock advances, and its actual final frame is held. The clip is silent, normal speed and not looping. S01 deliberately remains the authored static briefing; no extra video was invented.
+- Both complete investigation-route tests now run with those rules, covering later scientific and assessment actions as well as Start.
+- Build, lint, typecheck and all 37 unit tests passed again.
+- `npx playwright test --config playwright.built.config.js tests/atom-dive.spec.js tests/atom-start.spec.js tests/ocean-media.spec.js`: **47 passed** (30 ATOM DIVE and 17 Ocean Dome cases).
+- Fresh native-playback screenshots inspected: [Desktop Start](screenshots/start-filters-1227.png), [mobile Start](screenshots/start-filters-390.png), [desktop playing clip](screenshots/playing-filters-1227.png), [mobile playing clip](screenshots/playing-filters-390.png).
+
+## Initial implementation checks
 
 | Check | Result |
 | --- | --- |

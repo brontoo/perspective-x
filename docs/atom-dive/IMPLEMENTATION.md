@@ -52,6 +52,8 @@ python scripts/audit-atom-dive.py
 
 `AtomDiveMission` is mounted once for an attempt, keeping one illustrated stage and one native speech player. Dialogue text is the exact text for the current recording. A user gesture starts audio; playback permission failures offer Resume or captions-only. Hidden tabs pause media, and navigation releases/reset sources. Only the current and next applicable speech files are requested, rather than preloading every error branch.
 
+Mission styling uses the `px-atom-` namespace. The earlier `ad-primary` class collided with an EasyList advertising selector and hid Start and other primary actions in the user's browser. The review fix reproduces those cosmetic rules in browser tests and renames the mission classes without changing its appearance or state. The application-manifest link sends existing credentials so protected Preview manifest requests can use the existing Vercel session; protection settings are unchanged.
+
 The existing `ScenarioPlayer` attempt writer and notebook remain responsible for authenticated saves. The new nested `atomDive` record stores scene/cursor, order, visited dialogue, video status, model choices, evidence, timestamped misconceptions and verified corrections, stable A/B placement, reflection, all five responses and grade. Notebook personal notes are merged independently and survive refresh. Teacher evidence/response review includes the scientific action history and all five MCQs.
 
 No migrations, security-policy changes, credentials, unrelated page redesigns or changes to original mission media are included.

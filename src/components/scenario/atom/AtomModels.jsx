@@ -1,5 +1,5 @@
 export function AtomSelect({ label, value, onChange, options, disabled = false }) {
-  return <label className="ad-field"><span>{label}</span><select aria-label={label} value={value} disabled={disabled} onChange={e => onChange(e.target.value)}>
+  return <label className="px-atom-field"><span>{label}</span><select aria-label={label} value={value} disabled={disabled} onChange={e => onChange(e.target.value)}>
     <option value="">Choose your explanation</option>
     {options.map(([id, text]) => <option key={id} value={id}>{text}</option>)}
   </select></label>;
@@ -13,7 +13,7 @@ export function StructureModel({ kind, grayscale = false, formed = true, label, 
   const electrons = cores.map(([x, y], i) => formed ? delocalizedPositions[i] : [x + 34, y - 24]);
   const description = metal ? `${count} positive 1+ ion cores, each including a nucleus and inner electrons; ${count} ${formed ? "delocalized" : "initially localized valence"} electrons remain inside the material. Overall charge is zero.`
     : "A two-dimensional slice of an extended three-dimensional ionic structure: equal numbers of alternating 1+ cations and 1− anions. No delocalized electron region.";
-  return <svg className={`ad-structure ${grayscale ? "is-grayscale" : ""}`} viewBox="0 0 420 270" role="img" aria-label={`${label || "Scientific model"}: ${description}`}>
+  return <svg className={`px-atom-structure ${grayscale ? "is-grayscale" : ""}`} viewBox="0 0 420 270" role="img" aria-label={`${label || "Scientific model"}: ${description}`}>
     <title>{label || "Scientific particle model"}</title><desc>{description}</desc>
     <rect x="12" y="12" width="396" height="246" rx="20" fill={grayscale ? "#30363b" : "#123d4d"} stroke={grayscale ? "#bec5ca" : "#92b6bd"} />
     {metal ? <>
@@ -23,7 +23,7 @@ export function StructureModel({ kind, grayscale = false, formed = true, label, 
         <circle cx={x} cy={y} r="18" fill="none" stroke="#172b3b" opacity=".35" />
         <text x={x} y={y + 5} textAnchor="middle" fontSize="15" fill="#112531">1+</text>
       </g>)}
-      {electrons.map(([x, y], i) => <g key={i} className={formed ? "ad-delocalized-electron" : ""} onClick={() => onInspect?.("electrons")}>
+      {electrons.map(([x, y], i) => <g key={i} className={formed ? "px-atom-delocalized-electron" : ""} onClick={() => onInspect?.("electrons")}>
         <circle cx={x} cy={y} r="13" fill={grayscale ? "#f1f3f4" : "#8cdbed"} stroke="#143546" />
         <text x={x} y={y + 4} textAnchor="middle" fontSize="11" fill="#102535">e−</text>
       </g>)}
@@ -38,14 +38,14 @@ export function StructureModel({ kind, grayscale = false, formed = true, label, 
 export function MetallicActivity({ value, send }) {
   const inspect = part => send({ type: "metalPatch", patch: { inspected: [...new Set([...value.inspected, part])] } });
   const ready = value.inspected.length === 2 && value.electrons && value.attraction && value.neutrality;
-  return <section aria-label="Metallic reconstruction" className="ad-lab">
-    <header><p className="ad-eyebrow">Atomic lens / Metallic reconstruction</p><h2>Build the explanation, one component at a time.</h2></header>
-    <div className="ad-lab-grid"><div>
+  return <section aria-label="Metallic reconstruction" className="px-atom-lab">
+    <header><p className="px-atom-eyebrow">Atomic lens / Metallic reconstruction</p><h2>Build the explanation, one component at a time.</h2></header>
+    <div className="px-atom-lab-grid"><div>
       <StructureModel kind="metallic" formed={value.electrons === "delocalized"} inspected={value.inspected} onInspect={inspect} />
-      <p className="ad-model-note">Simplified monovalent metal: four 1+ cores and four valence electrons. Cores include the nucleus and inner electrons; they are not bare nuclei.</p>
-      <div className="ad-actions"><button onClick={() => inspect("cores")} aria-pressed={value.inspected.includes("cores")}>Inspect ion cores</button>
+      <p className="px-atom-model-note">Simplified monovalent metal: four 1+ cores and four valence electrons. Cores include the nucleus and inner electrons; they are not bare nuclei.</p>
+      <div className="px-atom-actions"><button onClick={() => inspect("cores")} aria-pressed={value.inspected.includes("cores")}>Inspect ion cores</button>
         <button onClick={() => inspect("electrons")} aria-pressed={value.inspected.includes("electrons")}>Inspect valence electrons</button></div>
-      <div className="ad-inspection" aria-live="polite">
+      <div className="px-atom-inspection" aria-live="polite">
         {value.inspected.includes("cores") && <p><strong>Ion core:</strong> nucleus and inner electrons, with a net positive charge.</p>}
         {value.inspected.includes("electrons") && <p><strong>Valence electron:</strong> an outer electron. Account for all four inside the specimen.</p>}
       </div>
@@ -56,8 +56,8 @@ export function MetallicActivity({ value, send }) {
         options={[["positive-cores", "The positive cores attract one another alone"], ["cores-electrons", "Positive ion cores and delocalized negative electrons"]]} />
       <AtomSelect label="Explain the overall charge" value={value.neutrality} onChange={neutrality => send({ type: "metalPatch", patch: { neutrality } })}
         options={[["balanced", "Four 1+ cores and four electrons balance: net charge 0"], ["escape", "The electrons disappear, leaving the specimen positive"]]} />
-      <button className="ad-primary" disabled={!ready} onClick={() => send({ type: "metalVerify" })}>Verify metallic reconstruction</button>
-      <p className="ad-model-note">Inspect both components, reconstruct the model, then verify your reasoning. The scenic environment is an artistic simulation, not the particle diagram.</p>
+      <button className="px-atom-primary" disabled={!ready} onClick={() => send({ type: "metalVerify" })}>Verify metallic reconstruction</button>
+      <p className="px-atom-model-note">Inspect both components, reconstruct the model, then verify your reasoning. The scenic environment is an artistic simulation, not the particle diagram.</p>
     </div></div>
   </section>;
 }
@@ -74,7 +74,7 @@ export function TransferModel({ transferred, verified, attracting = false }) {
       <text x={x} y="208" textAnchor="middle" fill="#c7e3ec" fontSize="12">{protons} protons · {electrons} electrons</text>
     </g>;
   }
-  return <svg className="ad-structure" viewBox="0 0 500 230" role="img" aria-label={`Sodium: 11 protons, ${transferred ? 10 : 11} electrons. Chlorine: 17 protons, ${transferred ? 18 : 17} electrons. Nuclei unchanged.`}>
+  return <svg className="px-atom-structure" viewBox="0 0 500 230" role="img" aria-label={`Sodium: 11 protons, ${transferred ? 10 : 11} electrons. Chlorine: 17 protons, ${transferred ? 18 : 17} electrons. Nuclei unchanged.`}>
     {atom(125, "Na", 11, transferred ? 10 : 11)}{atom(375, "Cl", 17, transferred ? 18 : 17)}
     {!transferred && <path d="M220 95H280m-8-6 8 6-8 6" stroke="#f0cc90" fill="none" strokeWidth="2" />}
     {transferred && attracting && <path d="M207 95h32m-7-6 7 6-7 6M293 95h-32m7-6-7 6 7 6" stroke="#f0cc90" fill="none" strokeWidth="2" />}
@@ -85,36 +85,36 @@ export function IonicActivity({ task, value, send }) {
   const patch = next => send({ type: "ionicPatch", patch: next });
   function drag(event, particle) { event.dataTransfer.setData("application/x-atom-particle", particle); }
   function transfer(particle) { send({ type: "ionicTransfer", particle }); }
-  return <section aria-label="Ionic reconstruction" className="ad-lab">
-    <header><p className="ad-eyebrow">Atomic lens / Ionic reconstruction</p><h2>{task === "transfer" ? "Follow one electron. Keep the nuclei unchanged." : task === "charges" ? "Count first. Then verify each charge." : task === "attraction" ? "Ion formation and ionic bonding are different steps." : "One ion pair is not the whole solid."}</h2></header>
-    <div className="ad-lab-grid"><div>
+  return <section aria-label="Ionic reconstruction" className="px-atom-lab">
+    <header><p className="px-atom-eyebrow">Atomic lens / Ionic reconstruction</p><h2>{task === "transfer" ? "Follow one electron. Keep the nuclei unchanged." : task === "charges" ? "Count first. Then verify each charge." : task === "attraction" ? "Ion formation and ionic bonding are different steps." : "One ion pair is not the whole solid."}</h2></header>
+    <div className="px-atom-lab-grid"><div>
       {task === "lattice" && value.extended ? <StructureModel kind="ionic" /> : <TransferModel transferred={value.transferred} verified={value.chargesVerified} attracting={value.attraction === "opposite-ions"} />}
-      <p className="ad-model-note">Simplified Na/Cl formation model. Electron shells are a teaching representation; neutrons are not shown. The nucleus and proton count never move.</p>
-      <p className="ad-counts">Na: 11 p⁺ / {value.transferred ? 10 : 11} e⁻<br />Cl: 17 p⁺ / {value.transferred ? 18 : 17} e⁻</p>
+      <p className="px-atom-model-note">Simplified Na/Cl formation model. Electron shells are a teaching representation; neutrons are not shown. The nucleus and proton count never move.</p>
+      <p className="px-atom-counts">Na: 11 p⁺ / {value.transferred ? 10 : 11} e⁻<br />Cl: 17 p⁺ / {value.transferred ? 18 : 17} e⁻</p>
       {task === "lattice" && value.extended && <p>Two-dimensional slice of an extended three-dimensional lattice. Equal numbers of repeating positive and negative ions; not isolated NaCl molecules.</p>}
     </div><div>
       {task === "transfer" && <>
         <p>Drag the sodium valence electron to the chlorine target, or use the transfer button.</p>
-        <div className="ad-actions"><button draggable onDragStart={e => drag(e, "electron")} onClick={() => transfer("electron")}>Transfer one electron</button>
+        <div className="px-atom-actions"><button draggable onDragStart={e => drag(e, "electron")} onClick={() => transfer("electron")}>Transfer one electron</button>
           <button draggable onDragStart={e => drag(e, "proton")} onClick={() => transfer("proton")}>Try moving a proton</button></div>
-        <button className="ad-transfer-target" onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); transfer(e.dataTransfer.getData("application/x-atom-particle")); }} onClick={() => transfer("electron")}>Chlorine target · Accept one electron</button>
-        <p className="ad-model-note">Both transfer buttons perform the same one-electron operation. Dragging is optional.</p>
+        <button className="px-atom-transfer-target" onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); transfer(e.dataTransfer.getData("application/x-atom-particle")); }} onClick={() => transfer("electron")}>Chlorine target · Accept one electron</button>
+        <p className="px-atom-model-note">Both transfer buttons perform the same one-electron operation. Dragging is optional.</p>
       </>}
       {task === "charges" && <>
         <AtomSelect label="Sodium ion charge" value={value.sodium} onChange={sodium => patch({ sodium })} options={[["-1", "1−"], ["0", "0"], ["+1", "1+"]]} />
         <AtomSelect label="Chloride ion charge" value={value.chloride} onChange={chloride => patch({ chloride })} options={[["+1", "1+"], ["-1", "1−"], ["0", "0"]]} />
         <AtomSelect label="What happened to the nuclei?" value={value.nuclei} onChange={nuclei => patch({ nuclei })} options={[["changed", "Protons transferred between the nuclei"], ["unchanged", "11 and 17 protons remain; only electron counts changed"]]} />
-        <button className="ad-primary" disabled={!value.sodium || !value.chloride || !value.nuclei} onClick={() => send({ type: "chargesVerify" })}>Verify charges and nuclei</button>
+        <button className="px-atom-primary" disabled={!value.sodium || !value.chloride || !value.nuclei} onClick={() => send({ type: "chargesVerify" })}>Verify charges and nuclei</button>
       </>}
       {task === "attraction" && <>
         <AtomSelect label="What holds this ionic structure together?" value={value.attraction} onChange={attraction => patch({ attraction })}
           options={[["electron-sea", "Positive cores and a delocalized electron sea"], ["opposite-ions", "Electrostatic attraction between opposite ions"]]} />
-        <button className="ad-primary" disabled={!value.attraction} onClick={() => send({ type: "attractionVerify" })}>Verify ionic attraction</button>
+        <button className="px-atom-primary" disabled={!value.attraction} onClick={() => send({ type: "attractionVerify" })}>Verify ionic attraction</button>
       </>}
       {task === "lattice" && <>
         <p>Build the structure that represents the solid beyond the first sodium/chloride pair.</p>
         <button onClick={() => patch({ extended: true })} aria-pressed={value.extended}>Expand repeating lattice</button>
-        <button className="ad-primary" disabled={!value.extended} onClick={() => send({ type: "latticeVerify", extended: true })}>Verify extended structure</button>
+        <button className="px-atom-primary" disabled={!value.extended} onClick={() => send({ type: "latticeVerify", extended: true })}>Verify extended structure</button>
         <button onClick={() => send({ type: "latticeVerify", extended: false })}>Keep isolated NaCl molecules</button>
       </>}
     </div></div>
@@ -123,15 +123,15 @@ export function IonicActivity({ task, value, send }) {
 
 export function ComparisonActivity({ value, send }) {
   const patch = next => send({ type: "comparisonPatch", patch: next });
-  return <section aria-label="Grayscale final comparison" className="ad-lab">
-    <header><p className="ad-eyebrow">Evidence gate / Both investigations verified</p><h2>Which model matches ORBIT’s recording?</h2>
+  return <section aria-label="Grayscale final comparison" className="px-atom-lab">
+    <header><p className="px-atom-eyebrow">Evidence gate / Both investigations verified</p><h2>Which model matches ORBIT’s recording?</h2>
       <blockquote>“I am beside positive metal ion cores, with electrons delocalized throughout the surrounding structure.”</blockquote></header>
-    <div className="ad-comparison-models">{value.sides.map((kind, i) => <div key={i}>
+    <div className="px-atom-comparison-models">{value.sides.map((kind, i) => <div key={i}>
       <h3>Model {i === 0 ? "A" : "B"}</h3><StructureModel kind={kind} grayscale label={`Model ${i === 0 ? "A" : "B"}`} />
       <button aria-pressed={value.world === String(i + 1)} onClick={() => patch({ world: String(i + 1) })}>Choose Model {i === 0 ? "A" : "B"}</button>
     </div>)}</div>
-    <p className="ad-model-note">Unfamiliar monochrome models. Use charge signs and particle descriptions, not illustration colours. Model A/B positions stay fixed for this attempt.</p>
-    <div className="ad-lab-grid">
+    <p className="px-atom-model-note">Unfamiliar monochrome models. Use charge signs and particle descriptions, not illustration colours. Model A/B positions stay fixed for this attempt.</p>
+    <div className="px-atom-lab-grid">
       <AtomSelect label="Particle evidence for your location" value={value.particles} onChange={particles => patch({ particles })}
         options={[["opposite-ions", "A repeating arrangement of cations and anions"], ["cores-electrons", "Positive ion cores with delocalized electrons"], ["colour", "The illustration’s colour identifies the location"]]} />
       <AtomSelect label="Attractive interaction supporting your location" value={value.attraction} onChange={attraction => patch({ attraction })}
@@ -139,6 +139,6 @@ export function ComparisonActivity({ value, send }) {
       <AtomSelect label="Match: valence electrons become delocalized among positive cores" value={value.metalSequence} onChange={metalSequence => patch({ metalSequence })} options={[["1", "Model A"], ["2", "Model B"]]} />
       <AtomSelect label="Match: electron transfer forms opposite ions in a repeating lattice" value={value.ionicSequence} onChange={ionicSequence => patch({ ionicSequence })} options={[["1", "Model A"], ["2", "Model B"]]} />
     </div>
-    <button className="ad-primary" onClick={() => send({ type: "comparisonVerify" })}>Verify location and both formation matches</button>
+    <button className="px-atom-primary" onClick={() => send({ type: "comparisonVerify" })}>Verify location and both formation matches</button>
   </section>;
 }

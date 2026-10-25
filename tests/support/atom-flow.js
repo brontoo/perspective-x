@@ -2,38 +2,41 @@ import { expect } from "@playwright/test";
 import { setup } from "./fixtures";
 import { ATOM_STEPS } from "../../src/data/atomDive.mjs";
 
+// Real EasyList cosmetic selectors that must never hide learning controls.
+export const ATOM_COSMETIC_FILTER = ".ad-primary, .ad-footer { display: none !important; }";
+
 export async function atomSetup(page, options = {}) {
   await page.addInitScript(() => {
     window.__atomPlays = [];
     const play = HTMLMediaElement.prototype.play, pause = HTMLMediaElement.prototype.pause;
     HTMLMediaElement.prototype.play = function () {
-      if ((this.tagName === "AUDIO" && this.classList.contains("ad-voice-audio")) || (this.tagName === "VIDEO" && this.getAttribute("src")?.includes("atom_dive"))) {
+      if ((this.tagName === "AUDIO" && this.classList.contains("px-atom-voice-audio")) || (this.tagName === "VIDEO" && this.getAttribute("src")?.includes("atom_dive"))) {
         window.__atomPlays.push({ id: this.dataset.dialogueId, src: this.getAttribute("src"), op: "play" });
         this.dispatchEvent(new Event("playing")); return Promise.resolve();
       }
       return play.call(this);
     };
     HTMLMediaElement.prototype.pause = function () {
-      if (this.classList.contains("ad-voice-audio")) window.__atomPlays.push({ id: this.dataset.dialogueId, op: "pause" });
+      if (this.classList.contains("px-atom-voice-audio")) window.__atomPlays.push({ id: this.dataset.dialogueId, op: "pause" });
       return pause.call(this);
     };
   });
   return setup(page, { empty: true, ...options });
 }
 export async function atomStart(page) {
-  await expect(page.locator(".ad-adventure")).toBeVisible();
+  await expect(page.locator(".px-atom-adventure")).toBeVisible();
   const start = page.getByRole("button", { name: /^(Start ATOM DIVE|Resume mission)$/ });
   if (await start.count()) await start.click();
 }
 export async function atomContinue(page) {
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-  const button = page.locator(".ad-controls > .ad-primary");
+  const button = page.locator(".px-atom-controls > .px-atom-primary");
   const skip = page.getByRole("button", { name: "Skip clip", exact: true });
   if (await skip.count()) await skip.click();
   if (!(await button.isEnabled())) {
-    const id = await page.locator(".ad-dialogue").getAttribute("data-dialogue-id");
-    await expect(page.locator(".ad-voice-audio")).toHaveAttribute("data-dialogue-id", id);
-    await page.locator(".ad-voice-audio").evaluate(el => el.dispatchEvent(new Event("ended")));
+    const id = await page.locator(".px-atom-dialogue").getAttribute("data-dialogue-id");
+    await expect(page.locator(".px-atom-voice-audio")).toHaveAttribute("data-dialogue-id", id);
+    await page.locator(".px-atom-voice-audio").evaluate(el => el.dispatchEvent(new Event("ended")));
   }
   await button.click();
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -41,8 +44,8 @@ export async function atomContinue(page) {
 export async function atomReach(page, step) {
   await atomStart(page);
   for (let i = 0; i < 100; i++) {
-    if (await page.locator(".ad-adventure").getAttribute("data-step") === step &&
-        (!ATOM_STEPS[step].task || await page.locator(".ad-task").count())) return;
+    if (await page.locator(".px-atom-adventure").getAttribute("data-step") === step &&
+        (!ATOM_STEPS[step].task || await page.locator(".px-atom-task").count())) return;
     await atomContinue(page);
   }
   throw new Error(`Did not reach ATOM DIVE checkpoint ${step}`);
@@ -75,7 +78,7 @@ export async function atomIonic(page) {
 }
 export async function atomCompare(page) {
   await atomReach(page, "comparisonTask");
-  const models = page.locator(".ad-comparison-models > div");
+  const models = page.locator(".px-atom-comparison-models > div");
   const label = await models.first().getByRole("img").getAttribute("aria-label");
   const m = label.includes("delocalized electrons remain") ? "1" : "2", i = m === "1" ? "2" : "1";
   await page.getByRole("button", { name: `Choose Model ${m === "1" ? "A" : "B"}`, exact: true }).click();

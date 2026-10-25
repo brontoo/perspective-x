@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { ATOM_MEDIA, createAtomState } from "../src/data/atomDive.mjs";
-import { atomSetup, atomStart, atomContinue, atomReach, atomMetal, atomIonic, atomCompare } from "./support/atom-flow";
+import { ATOM_COSMETIC_FILTER, atomSetup, atomStart, atomContinue, atomReach, atomMetal, atomIonic, atomCompare } from "./support/atom-flow";
 import { action, checkpoint, draftFor } from "./support/atom-checkpoints.mjs";
 import { setup, ID, OTHER, noOverflow } from "./support/fixtures";
 const target = "/ScenarioPlayer?scenario=atom_dive";
@@ -10,6 +10,7 @@ for (const first of ["metallic", "ionic"]) {
     test.setTimeout(90000);
     const data = await atomSetup(page);
     await page.goto(target);
+    await page.addStyleTag({ content: ATOM_COSMETIC_FILTER });
     await atomReach(page, "order");
     await page.getByRole("button", { name: new RegExp(`^${first === "metallic" ? "Metallic" : "Ionic"} world first`) }).click();
     if (first === "metallic") { await atomMetal(page); await atomIonic(page); }
@@ -17,7 +18,7 @@ for (const first of ["metallic", "ionic"]) {
     await atomReach(page, "comparisonTask");
     await expect(page.getByText("2/2 investigations verified", { exact: true })).toBeVisible();
     mkdirSync("docs/atom-dive/screenshots", { recursive: true });
-    await page.locator(".ad-adventure").screenshot({ path: `docs/atom-dive/screenshots/comparison-${first}.png` });
+    await page.locator(".px-atom-adventure").screenshot({ path: `docs/atom-dive/screenshots/comparison-${first}.png` });
     await atomCompare(page);
     await atomReach(page, "reflection");
     await page.getByLabel("One difference in how the bonds form", { exact: true }).fill("Metal valence electrons delocalize; forming these ions involves electron transfer.");
@@ -82,12 +83,12 @@ for (const [condition, task] of feedbackCases) test(`recorded ${condition} feedb
     if (condition === "final-colour-only") await page.getByLabel("Particle evidence for your location", { exact: true }).selectOption("colour");
     await page.getByRole("button", { name: "Verify location and both formation matches", exact: true }).click();
   }
-  await expect(page.locator(".ad-caption")).toHaveText(feedback.text);
-  await expect(page.locator(".ad-voice-audio")).toHaveAttribute("src", feedback.audio);
+  await expect(page.locator(".px-atom-caption")).toHaveText(feedback.text);
+  await expect(page.locator(".px-atom-voice-audio")).toHaveAttribute("src", feedback.audio);
   const step = { metal: "metalTask", transfer: "ionicTransfer", charges: "ionicCharges", attraction: "ionicAttraction", lattice: "ionicLattice", comparison: "comparisonTask" }[task];
   await atomReach(page, step);
   await page.getByText(new RegExp(`^Verified evidence · ${initial.evidence.length} observations$`)).click();
-  await expect(page.locator(".ad-records")).toContainText("1 reconsideration attempts");
+  await expect(page.locator(".px-atom-records")).toContainText("1 reconsideration attempts");
   const draft = await page.evaluate(() => JSON.parse(localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive')));
   expect(draft.atomDive.evidence).toEqual(initial.evidence);
   expect(draft.atomDive.attempts.at(-1).condition).toBe(condition);
@@ -102,23 +103,23 @@ test("all actual media URLs resolve and the approved character references remain
   }
   await page.goto(target);
   await page.getByText("Meet the research team · Approved character references", { exact: true }).click();
-  await expect(page.locator(".ad-cast img")).toHaveCount(4);
-  for (const image of await page.locator(".ad-cast img").all()) await expect.poll(() => image.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+  await expect(page.locator(".px-atom-cast img")).toHaveCount(4);
+  for (const image of await page.locator(".px-atom-cast img").all()) await expect.poll(() => image.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
 });
 
 test("native MP3 starts on the user gesture, retains exact captions and waits for manual Continue", async ({ page }) => {
   await setup(page, { empty: true });
   await page.goto(target);
-  const audio = page.locator(".ad-voice-audio");
+  const audio = page.locator(".px-atom-voice-audio");
   await expect(audio).not.toHaveAttribute("src", /mp3/);
   await atomStart(page);
   await expect.poll(() => audio.evaluate(el => el.currentTime)).toBeGreaterThan(0);
-  await expect(page.locator(".ad-caption")).toHaveText(ATOM_MEDIA.dialogue[0].text);
-  await expect(page.locator(".ad-controls > .ad-primary")).toBeEnabled({ timeout: 15000 });
-  await expect(page.locator(".ad-dialogue")).toHaveAttribute("data-dialogue-id", "AD_S01_NAR_01");
+  await expect(page.locator(".px-atom-caption")).toHaveText(ATOM_MEDIA.dialogue[0].text);
+  await expect(page.locator(".px-atom-controls > .px-atom-primary")).toBeEnabled({ timeout: 15000 });
+  await expect(page.locator(".px-atom-dialogue")).toHaveAttribute("data-dialogue-id", "AD_S01_NAR_01");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await expect(page.locator(".ad-voice-audio")).toHaveAttribute("data-dialogue-id", "AD_S01_HAM_02");
-  await expect(page.locator(".ad-voice-audio")).toHaveCount(1);
+  await expect(page.locator(".px-atom-voice-audio")).toHaveAttribute("data-dialogue-id", "AD_S01_HAM_02");
+  await expect(page.locator(".px-atom-voice-audio")).toHaveCount(1);
   await page.getByRole("button", { name: "Pause", exact: true }).click();
   await expect(audio).toHaveJSProperty("paused", true);
   await page.getByRole("button", { name: "Resume", exact: true }).click();
@@ -127,18 +128,18 @@ test("native MP3 starts on the user gesture, retains exact captions and waits fo
 
 test("saved models, comparison randomization and notebook notes survive reload; conversation replay changes no evidence", async ({ page }) => {
   const { initial } = await atCheckpoint(page, "comparison", {}, true);
-  const labels = await page.locator(".ad-comparison-models svg").evaluateAll(items => items.map(el => el.getAttribute("aria-label")));
+  const labels = await page.locator(".px-atom-comparison-models svg").evaluateAll(items => items.map(el => el.getAttribute("aria-label")));
   await page.getByRole("button", { name: "Mission Notebook", exact: true }).first().click();
   await page.getByLabel("1. Scientific evidence — personal notes", { exact: true }).fill("Keep my comparison observations after refresh.");
   await page.getByLabel("Close notebook", { exact: true }).click();
   await expect.poll(() => page.evaluate(() => localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive'))).toContain("Keep my comparison observations");
   await page.reload();
   await atomStart(page);
-  await expect(page.locator(".ad-adventure")).toHaveAttribute("data-step", "comparisonTask");
-  expect(await page.locator(".ad-comparison-models svg").evaluateAll(items => items.map(el => el.getAttribute("aria-label")))).toEqual(labels);
+  await expect(page.locator(".px-atom-adventure")).toHaveAttribute("data-step", "comparisonTask");
+  expect(await page.locator(".px-atom-comparison-models svg").evaluateAll(items => items.map(el => el.getAttribute("aria-label")))).toEqual(labels);
   await page.getByText(/^Conversation history/).click();
   await page.getByRole("button", { name: "Replay this dialogue", exact: true }).first().click();
-  await expect(page.locator(".ad-caption")).toHaveText(ATOM_MEDIA.dialogue[0].text);
+  await expect(page.locator(".px-atom-caption")).toHaveText(ATOM_MEDIA.dialogue[0].text);
   await expect(page.getByRole("button", { name: "Return to current dialogue", exact: true })).toBeVisible();
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive')));
   expect(saved.atomDive.evidence).toEqual(initial.evidence);
@@ -153,14 +154,14 @@ test("missing scene, film and recording retain readable manual progression; hidd
   await page.route("**/audio/scenarios/atom_dive/**", route => route.fulfill({ status: 404, body: "" }));
   await page.goto(target);
   await atomStart(page);
-  await expect(page.locator(".ad-audio-status")).toContainText(/unavailable|captions/);
+  await expect(page.locator(".px-atom-audio-status")).toContainText(/unavailable|captions/);
   await atomReach(page, "order");
   await expect(page.getByRole("button", { name: /^Metallic world first/ })).toBeVisible();
   await page.evaluate(() => { Object.defineProperty(document, "hidden", { configurable: true, value: true }); document.dispatchEvent(new Event("visibilitychange")); });
   await expect(page.getByRole("button", { name: "Resume", exact: true })).toBeVisible();
-  await page.locator(".ad-voice-audio").evaluate(el => window.__lastAtomAudio = el);
+  await page.locator(".px-atom-voice-audio").evaluate(el => window.__lastAtomAudio = el);
   await page.getByRole("link", { name: "Perspective X — Home", exact: true }).first().click();
-  await expect(page.locator(".ad-adventure")).toHaveCount(0);
+  await expect(page.locator(".px-atom-adventure")).toHaveCount(0);
   expect(await page.evaluate(() => window.__lastAtomAudio.getAttribute("src"))).toBe(null);
 });
 
@@ -208,11 +209,11 @@ for (const width of [1440, 820, 390]) test(`scientific activity, keyboard contro
   await page.keyboard.press("Enter");
   await expect(page.getByRole("button", { name: "Inspect ion cores", exact: true })).toHaveAttribute("aria-pressed", "true");
   mkdirSync("docs/atom-dive/screenshots", { recursive: true });
-  await page.locator(".ad-adventure").screenshot({ path: `docs/atom-dive/screenshots/metallic-${width}.png` });
+  await page.locator(".px-atom-adventure").screenshot({ path: `docs/atom-dive/screenshots/metallic-${width}.png` });
   await page.getByRole("button", { name: "Full screen", exact: true }).click();
   await expect(page.getByRole("button", { name: "Exit full screen", exact: true })).toBeVisible();
   await noOverflow(page);
-  await page.locator(".ad-adventure").screenshot({ path: `docs/atom-dive/screenshots/fullscreen-${width}.png` });
+  await page.locator(".px-atom-adventure").screenshot({ path: `docs/atom-dive/screenshots/fullscreen-${width}.png` });
   await page.getByRole("button", { name: "Exit full screen", exact: true }).click();
 });
 
@@ -223,28 +224,28 @@ test("silent clip holds its true final frame without cutting dialogue; resume ho
   await atomSetup(page, { seedRows: [draftFor(state, ID)] });
   await page.goto(target);
   await atomStart(page);
-  const video = page.locator(".ad-film video");
+  const video = page.locator(".px-atom-film video");
   await expect(video).toBeVisible();
   expect(await video.evaluate(el => ({ muted: el.muted, loop: el.loop, rate: el.playbackRate }))).toEqual({ muted: true, loop: false, rate: 1 });
-  const caption = await page.locator(".ad-caption").textContent();
+  const caption = await page.locator(".px-atom-caption").textContent();
   await video.evaluate(el => el.dispatchEvent(new Event("ended")));
   await expect(page.getByAltText("Actual final frame of the approved clip", { exact: true })).toHaveAttribute("src", ATOM_MEDIA.videos["AD_V01_last_signal.mp4"].end);
-  await expect(page.locator(".ad-controls > .ad-primary")).toBeDisabled();
-  await expect(page.locator(".ad-caption")).toHaveText(caption);
+  await expect(page.locator(".px-atom-controls > .px-atom-primary")).toBeDisabled();
+  await expect(page.locator(".px-atom-caption")).toHaveText(caption);
   await atomContinue(page);
   await page.reload();
   await atomStart(page);
   await expect(page.getByAltText("Actual final frame of the approved clip", { exact: true })).toBeVisible();
-  await expect(page.locator(".ad-film video")).toHaveCount(0);
+  await expect(page.locator(".px-atom-film video")).toHaveCount(0);
 });
 
 test("V03 and V05 wait for scientific verification; clip skips never bypass a model", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await atCheckpoint(page, "metal");
-  await expect(page.locator(".ad-film video")).toHaveCount(0);
+  await expect(page.locator(".px-atom-film video")).toHaveCount(0);
   await atomMetal(page);
   await atomContinue(page); await atomContinue(page);
-  await expect(page.locator(".ad-film video")).toHaveAttribute("src", ATOM_MEDIA.videos["AD_V03_metallic_route.mp4"].url);
+  await expect(page.locator(".px-atom-film video")).toHaveAttribute("src", ATOM_MEDIA.videos["AD_V03_metallic_route.mp4"].url);
   await page.getByRole("button", { name: "Skip clip", exact: true }).click();
   await atomIonic(page);
   await atomReach(page, "comparisonTask");
@@ -252,7 +253,7 @@ test("V03 and V05 wait for scientific verification; clip skips never bypass a mo
   await expect(page.getByRole("button", { name: "Verify location and both formation matches", exact: true })).toBeVisible();
   await atomCompare(page);
   await atomContinue(page);
-  await expect(page.locator(".ad-film video")).toHaveAttribute("src", ATOM_MEDIA.videos["AD_V05_find_orbit.mp4"].url);
+  await expect(page.locator(".px-atom-film video")).toHaveAttribute("src", ATOM_MEDIA.videos["AD_V05_find_orbit.mp4"].url);
   await page.getByRole("button", { name: "Skip clip", exact: true }).click();
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive')));
   expect(saved.atomDive.evidence).toHaveLength(3);
@@ -270,7 +271,7 @@ test("repeating a misconception replays its recording, then the electron can be 
   await page.getByRole("button", { name: "Transfer one electron", exact: true }).dragTo(page.getByRole("button", { name: "Chlorine target · Accept one electron", exact: true }));
   await atomReach(page, "ionicCharges");
   await expect(page.getByRole("img", { name: /Sodium: 11 protons, 10 electrons/ })).toBeVisible();
-  await page.locator(".ad-adventure").screenshot({ path: "docs/atom-dive/screenshots/ionic-transfer.png" });
+  await page.locator(".px-atom-adventure").screenshot({ path: "docs/atom-dive/screenshots/ionic-transfer.png" });
 });
 
 test("60% saves without a badge and replay creates a new attempt without overwriting the result", async ({ page }) => {
@@ -282,7 +283,7 @@ test("60% saves without a badge and replay creates a new attempt without overwri
   await page.getByRole("button", { name: "Submit all five answers", exact: true }).click();
   await atomReach(page, "result");
   await expect(page.getByRole("heading", { name: "60% · Keep building your explanation", exact: true })).toBeVisible();
-  await page.locator(".ad-adventure").screenshot({ path: "docs/atom-dive/screenshots/assessment-review.png" });
+  await page.locator(".px-atom-adventure").screenshot({ path: "docs/atom-dive/screenshots/assessment-review.png" });
   await page.getByRole("button", { name: "Save result and finish mission", exact: true }).click();
   await expect(page.locator(".xp-completion")).toContainText("No badge or certificate is earned");
   await expect(page.getByRole("button", { name: "View certificate", exact: true })).toHaveCount(0);
@@ -300,33 +301,33 @@ test("blocked playback offers Resume or captions; mute and replay retain one voi
     const play = HTMLMediaElement.prototype.play;
     let blocked = false;
     HTMLMediaElement.prototype.play = function () {
-      if (this.classList.contains("ad-voice-audio") && !blocked) { blocked = true; return Promise.reject(new DOMException("Browser permission", "NotAllowedError")); }
+      if (this.classList.contains("px-atom-voice-audio") && !blocked) { blocked = true; return Promise.reject(new DOMException("Browser permission", "NotAllowedError")); }
       return play.call(this);
     };
     Element.prototype.requestFullscreen = () => Promise.reject(new Error("Native fullscreen unavailable"));
   });
   await page.goto(target);
-  await page.locator(".ad-adventure").screenshot({ path: "docs/atom-dive/screenshots/opening.png" });
+  await page.locator(".px-atom-adventure").screenshot({ path: "docs/atom-dive/screenshots/opening.png" });
   await atomStart(page);
-  await expect(page.locator(".ad-audio-status")).toContainText("permit audio");
+  await expect(page.locator(".px-atom-audio-status")).toContainText("permit audio");
   await page.getByRole("button", { name: "Resume", exact: true }).click();
-  await expect(page.locator(".ad-audio-status")).toContainText("Playing");
+  await expect(page.locator(".px-atom-audio-status")).toContainText("Playing");
   await page.getByRole("button", { name: "Mute", exact: true }).click();
-  await expect(page.locator(".ad-voice-audio")).toHaveJSProperty("muted", true);
+  await expect(page.locator(".px-atom-voice-audio")).toHaveJSProperty("muted", true);
   await page.getByRole("button", { name: "Replay", exact: true }).click();
-  await expect(page.locator(".ad-voice-audio")).toHaveCount(1);
-  await expect(page.locator(".ad-voice-audio")).toHaveJSProperty("muted", true);
+  await expect(page.locator(".px-atom-voice-audio")).toHaveCount(1);
+  await expect(page.locator(".px-atom-voice-audio")).toHaveJSProperty("muted", true);
   await page.getByRole("button", { name: "Captions only", exact: true }).click();
-  await expect(page.locator(".ad-voice-audio")).not.toHaveAttribute("src", /mp3/);
-  await expect(page.locator(".ad-controls > .ad-primary")).toBeEnabled();
+  await expect(page.locator(".px-atom-voice-audio")).not.toHaveAttribute("src", /mp3/);
+  await expect(page.locator(".px-atom-controls > .px-atom-primary")).toBeEnabled();
   await page.getByRole("button", { name: "Full screen", exact: true }).click();
-  await expect(page.locator(".ad-adventure")).toHaveClass(/is-expanded/);
-  await page.locator(".ad-adventure").getByRole("button", { name: "Mission Notebook", exact: true }).click();
+  await expect(page.locator(".px-atom-adventure")).toHaveClass(/is-expanded/);
+  await page.locator(".px-atom-adventure").getByRole("button", { name: "Mission Notebook", exact: true }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await expect(page.locator(".ad-adventure")).toHaveClass(/is-expanded/);
+  await expect(page.locator(".px-atom-adventure")).toHaveClass(/is-expanded/);
   await page.keyboard.press("Escape");
-  await expect(page.locator(".ad-adventure")).not.toHaveClass(/is-expanded/);
+  await expect(page.locator(".px-atom-adventure")).not.toHaveClass(/is-expanded/);
   expect(await page.evaluate(() => document.body.style.overflow)).not.toBe("hidden");
 });
