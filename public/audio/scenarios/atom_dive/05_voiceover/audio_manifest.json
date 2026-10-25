@@ -1,0 +1,612 @@
+[
+  {
+    "id": "AD_S01_NAR_01",
+    "scene": "S01",
+    "order": 1,
+    "speaker": "NAR",
+    "condition": "story",
+    "text": "At Masdar City, two ordinary specimens are about to reveal an extraordinary story.",
+    "audio": "audio/atom_dive/S01/AD_S01_NAR_01.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S01_HAM_02",
+    "scene": "S01",
+    "order": 2,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "A metal sample. A salt crystal. ORBIT explored both inside our scientific simulation.",
+    "audio": "audio/atom_dive/S01/AD_S01_HAM_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S01_RAS_03",
+    "scene": "S01",
+    "order": 3,
+    "speaker": "RAS",
+    "condition": "story",
+    "text": "Its observations are here, but part of its return map is missing.",
+    "audio": "audio/atom_dive/S01/AD_S01_RAS_03.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S02_ORB_01",
+    "scene": "S02",
+    "order": 1,
+    "speaker": "ORB",
+    "condition": "story",
+    "text": "My return route is incomplete.",
+    "audio": "audio/atom_dive/S02/AD_S02_ORB_01.mp3",
+    "video": "AD_V01_last_signal.mp4"
+  },
+  {
+    "id": "AD_S02_ALY_02",
+    "scene": "S02",
+    "order": 2,
+    "speaker": "ALY",
+    "condition": "story",
+    "text": "It left clues in both worlds. We can work out where it went.",
+    "audio": "audio/atom_dive/S02/AD_S02_ALY_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S02_HAM_03",
+    "scene": "S02",
+    "order": 3,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "ORBIT is a virtual explorer. Nobody has shrunk, and nothing has happened to the real samples.",
+    "audio": "audio/atom_dive/S02/AD_S02_HAM_03.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S02_HAM_04",
+    "scene": "S02",
+    "order": 4,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Your mission is to reconstruct the bonding models, compare the evidence, and restore its route.",
+    "audio": "audio/atom_dive/S02/AD_S02_HAM_04.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S03_NAR_01_ENTER_METALLIC",
+    "scene": "S03",
+    "order": 1,
+    "speaker": "NAR",
+    "condition": "enter-metallic",
+    "text": "An ordinary sample. An extraordinary hidden world.",
+    "audio": "audio/atom_dive/S03/AD_S03_NAR_01_ENTER_METALLIC.mp3",
+    "video": "AD_V02_enter_metallic.mp4"
+  },
+  {
+    "id": "AD_S03_HAM_02",
+    "scene": "S03",
+    "order": 2,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Choose which world to investigate first. You will need evidence from both.",
+    "audio": "audio/atom_dive/S03/AD_S03_HAM_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S03_ALY_03",
+    "scene": "S03",
+    "order": 3,
+    "speaker": "ALY",
+    "condition": "story",
+    "text": "Inspect before you decide. The first clue might not be the whole answer.",
+    "audio": "audio/atom_dive/S03/AD_S03_ALY_03.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S04_ORB_01",
+    "scene": "S04",
+    "order": 1,
+    "speaker": "ORB",
+    "condition": "story",
+    "text": "I recorded positive centres everywhere. Where was the negative charge?",
+    "audio": "audio/atom_dive/S04/AD_S04_ORB_01.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S04_HAM_02",
+    "scene": "S04",
+    "order": 2,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Use the atomic lens. Inspect the positive metal ion cores and the outer electrons in this simplified model.",
+    "audio": "audio/atom_dive/S04/AD_S04_HAM_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S04_ALY_03",
+    "scene": "S04",
+    "order": 3,
+    "speaker": "ALY",
+    "condition": "story",
+    "text": "The picture helps us explore, but the interactive model is where we test our explanation.",
+    "audio": "audio/atom_dive/S04/AD_S04_ALY_03.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S05_HAM_01",
+    "scene": "S05",
+    "order": 1,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Reconstruct the metallic structure. What happens to the valence electrons when the metal forms?",
+    "audio": "audio/atom_dive/S05/AD_S05_HAM_01.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S05_HAM_02",
+    "scene": "S05",
+    "order": 2,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Now identify the two charged components whose attraction holds this structure together.",
+    "audio": "audio/atom_dive/S05/AD_S05_HAM_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S05_HAM_03_METAL_COMPLETE",
+    "scene": "S05",
+    "order": 3,
+    "speaker": "HAM",
+    "condition": "metal-complete",
+    "text": "In this model, valence electrons are delocalized throughout the metal. Their attraction to positive metal ion cores is metallic bonding.",
+    "audio": "audio/atom_dive/S05/AD_S05_HAM_03_METAL_COMPLETE.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S05_HAM_04_METAL_COMPLETE",
+    "scene": "S05",
+    "order": 4,
+    "speaker": "HAM",
+    "condition": "metal-complete",
+    "text": "The electrons are still part of the material. Its positive and negative charges balance overall.",
+    "audio": "audio/atom_dive/S05/AD_S05_HAM_04_METAL_COMPLETE.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S05_HAM_05_METAL_COMPLETE",
+    "scene": "S05",
+    "order": 5,
+    "speaker": "HAM",
+    "condition": "metal-complete",
+    "text": "Your evidence restored part of ORBIT's route.",
+    "audio": "audio/atom_dive/S05/AD_S05_HAM_05_METAL_COMPLETE.mp3",
+    "video": "AD_V03_metallic_route.mp4"
+  },
+  {
+    "id": "AD_S05_HAM_90_METAL_TRANSFER_ERROR",
+    "scene": "S05",
+    "order": 90,
+    "speaker": "HAM",
+    "condition": "metal-transfer-error",
+    "text": "You created alternating positive and negative metal ions. Does that match the metallic model?",
+    "audio": "audio/atom_dive/S05/AD_S05_HAM_90_METAL_TRANSFER_ERROR.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S05_HAM_91_METAL_ELECTRONS_ESCAPE",
+    "scene": "S05",
+    "order": 91,
+    "speaker": "HAM",
+    "condition": "metal-electrons-escape",
+    "text": "The electrons have not left the specimen. How could its total charge remain neutral if they disappeared?",
+    "audio": "audio/atom_dive/S05/AD_S05_HAM_91_METAL_ELECTRONS_ESCAPE.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S05_HAM_92_METAL_FIXED_PAIR_ERROR",
+    "scene": "S05",
+    "order": 92,
+    "speaker": "HAM",
+    "condition": "metal-fixed-pair-error",
+    "text": "Check whether the electrons belong to fixed pairs, or are delocalized through the whole structure.",
+    "audio": "audio/atom_dive/S05/AD_S05_HAM_92_METAL_FIXED_PAIR_ERROR.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S05_ALY_93_METAL_ATTRACTION_ERROR",
+    "scene": "S05",
+    "order": 93,
+    "speaker": "ALY",
+    "condition": "metal-attraction-error",
+    "text": "Our model needs to show what attracts what. Two positive cores do not explain the bonding by themselves.",
+    "audio": "audio/atom_dive/S05/AD_S05_ALY_93_METAL_ATTRACTION_ERROR.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S06_HAM_01",
+    "scene": "S06",
+    "order": 1,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Save your explanation. Both formation models belong in the evidence record.",
+    "audio": "audio/atom_dive/S06/AD_S06_HAM_01.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S06_RAS_02",
+    "scene": "S06",
+    "order": 2,
+    "speaker": "RAS",
+    "condition": "story",
+    "text": "The map is becoming clearer. Keep the evidence, not just the picture.",
+    "audio": "audio/atom_dive/S06/AD_S06_RAS_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S07_NAR_01_ENTER_IONIC",
+    "scene": "S07",
+    "order": 1,
+    "speaker": "NAR",
+    "condition": "enter-ionic",
+    "text": "Another material. A different arrangement to explain.",
+    "audio": "audio/atom_dive/S07/AD_S07_NAR_01_ENTER_IONIC.mp3",
+    "video": "AD_V04_enter_ionic.mp4"
+  },
+  {
+    "id": "AD_S07_ORB_02",
+    "scene": "S07",
+    "order": 2,
+    "speaker": "ORB",
+    "condition": "story",
+    "text": "This recorded world contains positive and negative ions. The earlier description does not fit.",
+    "audio": "audio/atom_dive/S07/AD_S07_ORB_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S07_HAM_03",
+    "scene": "S07",
+    "order": 3,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Rewind the simplified formation model. Start with a sodium atom and a chlorine atom.",
+    "audio": "audio/atom_dive/S07/AD_S07_HAM_03.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S07_HAM_04",
+    "scene": "S07",
+    "order": 4,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Observe what changes when one electron moves from sodium to chlorine.",
+    "audio": "audio/atom_dive/S07/AD_S07_HAM_04.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S08_HAM_01_IONIC_TRANSFER_COMPLETE",
+    "scene": "S08",
+    "order": 1,
+    "speaker": "HAM",
+    "condition": "ionic-transfer-complete",
+    "text": "Check the particles and their charges. Have the nuclei changed, or only the numbers of electrons?",
+    "audio": "audio/atom_dive/S08/AD_S08_HAM_01_IONIC_TRANSFER_COMPLETE.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S08_HAM_02_IONIC_CHARGE_COMPLETE",
+    "scene": "S08",
+    "order": 2,
+    "speaker": "HAM",
+    "condition": "ionic-charge-complete",
+    "text": "Sodium loses one electron and becomes a positive sodium ion. Chlorine gains it and becomes a negative chloride ion.",
+    "audio": "audio/atom_dive/S08/AD_S08_HAM_02_IONIC_CHARGE_COMPLETE.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S08_HAM_03_IONIC_ATTRACTION_COMPLETE",
+    "scene": "S08",
+    "order": 3,
+    "speaker": "HAM",
+    "condition": "ionic-attraction-complete",
+    "text": "Electron transfer forms the ions in this example. Ionic bonding is the electrostatic attraction between the oppositely charged ions.",
+    "audio": "audio/atom_dive/S08/AD_S08_HAM_03_IONIC_ATTRACTION_COMPLETE.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S08_HAM_04_IONIC_LATTICE_COMPLETE",
+    "scene": "S08",
+    "order": 4,
+    "speaker": "HAM",
+    "condition": "ionic-lattice-complete",
+    "text": "Expand the view. Solid sodium chloride is an extended ionic lattice, not a collection of separate sodium chloride molecules.",
+    "audio": "audio/atom_dive/S08/AD_S08_HAM_04_IONIC_LATTICE_COMPLETE.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S08_ALY_05_BOTH_INVESTIGATIONS_COMPLETE",
+    "scene": "S08",
+    "order": 5,
+    "speaker": "ALY",
+    "condition": "both-investigations-complete",
+    "text": "We have two formation explanations. Now we can compare the structures they produce.",
+    "audio": "audio/atom_dive/S08/AD_S08_ALY_05_BOTH_INVESTIGATIONS_COMPLETE.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S08_HAM_90_IONIC_PROTON_ERROR",
+    "scene": "S08",
+    "order": 90,
+    "speaker": "HAM",
+    "condition": "ionic-proton-error",
+    "text": "Move an electron, not a proton. Changing the proton number would change the element.",
+    "audio": "audio/atom_dive/S08/AD_S08_HAM_90_IONIC_PROTON_ERROR.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S08_HAM_91_IONIC_CHARGE_ERROR",
+    "scene": "S08",
+    "order": 91,
+    "speaker": "HAM",
+    "condition": "ionic-charge-error",
+    "text": "Losing a negative electron makes the sodium ion positive. Check your charge calculation.",
+    "audio": "audio/atom_dive/S08/AD_S08_HAM_91_IONIC_CHARGE_ERROR.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S08_HAM_92_IONIC_ELECTRON_SEA_ERROR",
+    "scene": "S08",
+    "order": 92,
+    "speaker": "HAM",
+    "condition": "ionic-electron-sea-error",
+    "text": "An electron sea describes the metallic model. Which charged particles attract in this ionic structure?",
+    "audio": "audio/atom_dive/S08/AD_S08_HAM_92_IONIC_ELECTRON_SEA_ERROR.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S08_HAM_93_IONIC_MOLECULE_ERROR",
+    "scene": "S08",
+    "order": 93,
+    "speaker": "HAM",
+    "condition": "ionic-molecule-error",
+    "text": "One pair is not the complete solid. Show how the positive and negative ions repeat through the structure.",
+    "audio": "audio/atom_dive/S08/AD_S08_HAM_93_IONIC_MOLECULE_ERROR.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S09_NAR_01",
+    "scene": "S09",
+    "order": 1,
+    "speaker": "NAR",
+    "condition": "story",
+    "text": "The final recording arrives without a location label.",
+    "audio": "audio/atom_dive/S09/AD_S09_NAR_01.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S09_ORB_02",
+    "scene": "S09",
+    "order": 2,
+    "speaker": "ORB",
+    "condition": "story",
+    "text": "I am beside positive metal ion cores, with electrons delocalized throughout the surrounding structure.",
+    "audio": "audio/atom_dive/S09/AD_S09_ORB_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S09_HAM_03",
+    "scene": "S09",
+    "order": 3,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "The colours and names are hidden. Which model matches the recording? Support your decision with two observations.",
+    "audio": "audio/atom_dive/S09/AD_S09_HAM_03.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S09_ALY_04",
+    "scene": "S09",
+    "order": 4,
+    "speaker": "ALY",
+    "condition": "story",
+    "text": "Then match each formation sequence to its resulting structure. That will complete the route.",
+    "audio": "audio/atom_dive/S09/AD_S09_ALY_04.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S09_HAM_90_FINAL_WRONG_WORLD",
+    "scene": "S09",
+    "order": 90,
+    "speaker": "HAM",
+    "condition": "final-wrong-world",
+    "text": "The ionic lattice contains cations and anions. Compare that with the components in ORBIT's description.",
+    "audio": "audio/atom_dive/S09/AD_S09_HAM_90_FINAL_WRONG_WORLD.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S09_HAM_91_FINAL_SAME_BOND_ERROR",
+    "scene": "S09",
+    "order": 91,
+    "speaker": "HAM",
+    "condition": "final-same-bond-error",
+    "text": "Both bonding types involve electrostatic attraction, but they do not involve the same charged components.",
+    "audio": "audio/atom_dive/S09/AD_S09_HAM_91_FINAL_SAME_BOND_ERROR.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S09_ALY_92_FINAL_COLOUR_ONLY",
+    "scene": "S09",
+    "order": 92,
+    "speaker": "ALY",
+    "condition": "final-colour-only",
+    "text": "The colour is only an illustration choice. Use the particles and their attraction as evidence.",
+    "audio": "audio/atom_dive/S09/AD_S09_ALY_92_FINAL_COLOUR_ONLY.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S09_HAM_93_FINAL_NO_EVIDENCE",
+    "scene": "S09",
+    "order": 93,
+    "speaker": "HAM",
+    "condition": "final-no-evidence",
+    "text": "Your location choice needs an explanation. Identify the charged components and what attracts them.",
+    "audio": "audio/atom_dive/S09/AD_S09_HAM_93_FINAL_NO_EVIDENCE.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S09_HAM_05_FINAL_SUPPORTED",
+    "scene": "S09",
+    "order": 5,
+    "speaker": "HAM",
+    "condition": "final-supported",
+    "text": "Your evidence matches the metallic model. The complete comparison restores ORBIT's return map.",
+    "audio": "audio/atom_dive/S09/AD_S09_HAM_05_FINAL_SUPPORTED.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S10_ORB_01_FINAL_SUPPORTED",
+    "scene": "S10",
+    "order": 1,
+    "speaker": "ORB",
+    "condition": "final-supported",
+    "text": "You found me. Route confirmed.",
+    "audio": "audio/atom_dive/S10/AD_S10_ORB_01_FINAL_SUPPORTED.mp3",
+    "video": "AD_V05_find_orbit.mp4"
+  },
+  {
+    "id": "AD_S10_ALY_02",
+    "scene": "S10",
+    "order": 2,
+    "speaker": "ALY",
+    "condition": "story",
+    "text": "We found the explorer by understanding the world it described.",
+    "audio": "audio/atom_dive/S10/AD_S10_ALY_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S10_HAM_03",
+    "scene": "S10",
+    "order": 3,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Exactly. The models did not change the real substances. They changed what we could explain.",
+    "audio": "audio/atom_dive/S10/AD_S10_HAM_03.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S11_HAM_01",
+    "scene": "S11",
+    "order": 1,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "You found the route by understanding the bonds.",
+    "audio": "audio/atom_dive/S11/AD_S11_HAM_01.mp3",
+    "video": "AD_V06_homecoming.mp4"
+  },
+  {
+    "id": "AD_S11_RAS_02",
+    "scene": "S11",
+    "order": 2,
+    "speaker": "RAS",
+    "condition": "story",
+    "text": "The two specimens still look ordinary. Their structures do not.",
+    "audio": "audio/atom_dive/S11/AD_S11_RAS_02.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S11_NAR_03",
+    "scene": "S11",
+    "order": 3,
+    "speaker": "NAR",
+    "condition": "story",
+    "text": "Two hidden worlds. Two explanations. One journey completed through evidence.",
+    "audio": "audio/atom_dive/S11/AD_S11_NAR_03.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S11_HAM_04",
+    "scene": "S11",
+    "order": 4,
+    "speaker": "HAM",
+    "condition": "story",
+    "text": "Before you finish, explain one difference in how the bonds form and one difference in what holds the structures together.",
+    "audio": "audio/atom_dive/S11/AD_S11_HAM_04.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S12_NAR_01",
+    "scene": "S12",
+    "order": 1,
+    "speaker": "NAR",
+    "condition": "story",
+    "text": "Five questions check your understanding. Answer all five, then submit. Four correct answers earns the mission achievement.",
+    "audio": "audio/atom_dive/S12/AD_S12_NAR_01.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S12_HAM_02_QUESTION_1_READ",
+    "scene": "S12",
+    "order": 2,
+    "speaker": "HAM",
+    "condition": "question-1-read",
+    "text": "In the metallic model, what happens to the valence electrons?",
+    "audio": "audio/atom_dive/S12/AD_S12_HAM_02_QUESTION_1_READ.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S12_HAM_03_QUESTION_2_READ",
+    "scene": "S12",
+    "order": 3,
+    "speaker": "HAM",
+    "condition": "question-2-read",
+    "text": "Which attraction holds a metallic structure together?",
+    "audio": "audio/atom_dive/S12/AD_S12_HAM_03_QUESTION_2_READ.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S12_HAM_04_QUESTION_3_READ",
+    "scene": "S12",
+    "order": 4,
+    "speaker": "HAM",
+    "condition": "question-3-read",
+    "text": "A sodium atom transfers one electron to a chlorine atom. Which result is correct?",
+    "audio": "audio/atom_dive/S12/AD_S12_HAM_04_QUESTION_3_READ.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S12_HAM_05_QUESTION_4_READ",
+    "scene": "S12",
+    "order": 5,
+    "speaker": "HAM",
+    "condition": "question-4-read",
+    "text": "Which statement correctly separates electron transfer from ionic bonding?",
+    "audio": "audio/atom_dive/S12/AD_S12_HAM_05_QUESTION_4_READ.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S12_HAM_06_QUESTION_5_READ",
+    "scene": "S12",
+    "order": 6,
+    "speaker": "HAM",
+    "condition": "question-5-read",
+    "text": "Model X has positive metal ion cores and delocalized electrons. Model Y has a repeating arrangement of cations and anions. Which comparison is correct?",
+    "audio": "audio/atom_dive/S12/AD_S12_HAM_06_QUESTION_5_READ.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S12_HAM_07_ASSESSMENT_PASS",
+    "scene": "S12",
+    "order": 7,
+    "speaker": "HAM",
+    "condition": "assessment-pass",
+    "text": "Well done. You can explain metallic bonding and distinguish it from ionic bonding.",
+    "audio": "audio/atom_dive/S12/AD_S12_HAM_07_ASSESSMENT_PASS.mp3",
+    "video": null
+  },
+  {
+    "id": "AD_S12_HAM_08_ASSESSMENT_REVIEW",
+    "scene": "S12",
+    "order": 8,
+    "speaker": "HAM",
+    "condition": "assessment-review",
+    "text": "Revisit the model linked to your feedback. Then try again using the evidence.",
+    "audio": "audio/atom_dive/S12/AD_S12_HAM_08_ASSESSMENT_REVIEW.mp3",
+    "video": null
+  }
+]

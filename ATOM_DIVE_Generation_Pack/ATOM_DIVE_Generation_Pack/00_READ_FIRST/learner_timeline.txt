@@ -1,0 +1,11 @@
+TARGET LEARNER FLOW
+
+0:00-1:15  Research room, incomplete message, accept the mission (I01-I03; V01).
+1:15-4:15  Metallic investigation: enter, inspect, reconstruct, explain (I04; V02 and V03).
+4:15-7:15  Ionic investigation: electron transfer, charges, attraction, extended lattice (I05; V04).
+7:15-9:15  Compare grayscale models, attach evidence, match formation to structure (I06).
+9:15-10:00 Recover ORBIT and return to the studio (I07-I08; V05-V06).
+10:00-10:30 Brief reflection.
+10:30-13:00 Five-question exit ticket.
+
+Students may complete the two investigations in reverse order. The script avoids requiring the metallic branch to be first. No compulsory countdown or response timeout. Mistakes use the same still and a condition-specific spoken hint; they do not require new generated videos. This keeps the video total exactly SIX.

@@ -1,0 +1,11 @@
+Create one 16:9 cinematic 2D illustrated animation, exactly 5.0 seconds at export and never longer than 5 seconds. Match the supplied first frame at the beginning and supplied last frame at the end. Preserve character identity, costumes, geometry, lighting and drawing technique. Use one simple, continuous shot; no montage, jump cuts, face morphing or unexpected objects. Use the approved ATOM DIVE visual-novel style: fine outlines, expressive natural faces, soft cel shading, painted depth and restrained glow. No text, formulas, charge labels, UI or lip-synced speech. Generate silent footage; voices, music and effects are separate. Do not animate an unverified scientific model. The fictional journey is a simulation, and its route effects do not represent chemical mechanisms. Keep the final 0.5 seconds visually steady. Verify the downloaded duration rather than relying on the prompt alone.
+FIRST FRAME: AD_V03_START.png
+LAST FRAME: AD_V03_END.png
+OUTPUT: AD_V03_metallic_route.mp4
+PLAYBACK TRIGGER: Only after the student correctly reconstructs metallic bonding and identifies its attraction.
+
+0.0-1.0 s: Hold the metallic environment and its faint disconnected route overlay.
+1.0-4.0 s: Illuminate the small missing section of the navigation overlay. The overlay connects gently while the material background stays unchanged.
+4.0-5.0 s: Hold the completed route in the supplied end frame. No atomic motion, new negative metal ions or electrical current effects.
+CAMERA: Stationary. This is a software map confirmation, not an animation of a bonding mechanism.
+OPTIONAL SEPARATE SPOKEN LINE: Hamad - "Your evidence restored part of ORBIT's route."

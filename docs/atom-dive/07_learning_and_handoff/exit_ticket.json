@@ -1,0 +1,68 @@
+{
+  "passing_percent": 80,
+  "question_count": 5,
+  "options_per_question": 4,
+  "reveal_answers": "after all five are submitted",
+  "questions": [
+    {
+      "id": "AD_Q1",
+      "prompt": "In the metallic bonding model, what happens to the valence electrons?",
+      "options": {
+        "A": "They disappear from the material.",
+        "B": "They become delocalized throughout the metallic structure.",
+        "C": "They form a separate set of negative metal ions.",
+        "D": "Each electron is fixed between only two neighbouring cores."
+      },
+      "answer": "B",
+      "explanation": "Valence electrons are delocalized through the metallic structure; they remain part of the material."
+    },
+    {
+      "id": "AD_Q2",
+      "prompt": "Which attraction holds a metallic structure together?",
+      "options": {
+        "A": "Attraction between two positive metal ion cores alone.",
+        "B": "Attraction between negative metal ions and neutral atoms.",
+        "C": "Attraction between different nuclei after protons transfer.",
+        "D": "Electrostatic attraction between positive metal ion cores and delocalized electrons."
+      },
+      "answer": "D",
+      "explanation": "The positive cores and delocalized negative electrons are the charged components in this model."
+    },
+    {
+      "id": "AD_Q3",
+      "prompt": "A sodium atom transfers one electron to a chlorine atom. Which result is correct?",
+      "options": {
+        "A": "Na+ and Cl- form; their proton counts stay the same.",
+        "B": "Na- and Cl+ form; their proton counts stay the same.",
+        "C": "Both atoms become negative ions.",
+        "D": "The elements change because their nuclei exchange protons."
+      },
+      "answer": "A",
+      "explanation": "Sodium loses an electron and becomes positive; chlorine gains it and becomes negative. Their nuclei do not change."
+    },
+    {
+      "id": "AD_Q4",
+      "prompt": "Which statement correctly separates electron transfer from ionic bonding in the sodium-chlorine model?",
+      "options": {
+        "A": "The transfer itself is the only force keeping the completed solid together.",
+        "B": "Electron transfer makes neutral atoms that then share an electron sea.",
+        "C": "Transfer produces ions; electrostatic attraction between opposite ions is ionic bonding.",
+        "D": "Transfer removes all electrons from both atoms."
+      },
+      "answer": "C",
+      "explanation": "Forming charged ions and explaining the force between those ions are related but distinct steps."
+    },
+    {
+      "id": "AD_Q5",
+      "prompt": "Model X contains positive metal ion cores and delocalized electrons. Model Y contains repeating cations and anions. Which comparison is correct?",
+      "options": {
+        "A": "Both are ionic structures because both contain positive particles.",
+        "B": "X is metallic and Y is ionic; both involve electrostatic attraction between different charged components.",
+        "C": "X is ionic and Y is metallic.",
+        "D": "Both are metallic because all solids have an electron sea."
+      },
+      "answer": "B",
+      "explanation": "The particles involved and their arrangement distinguish the metallic and ionic models, not their illustration colours."
+    }
+  ]
+}

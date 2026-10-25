@@ -1,0 +1,170 @@
+{
+  "scenario_id": "atom_dive",
+  "title": "ATOM DIVE: Lost in the Invisible",
+  "target_minutes": [
+    10,
+    15
+  ],
+  "fiction": "Virtual exploration at a fictional learning studio in Masdar City; no actual shrinking or real material rescue.",
+  "scope": [
+    "Formation of metallic bonding",
+    "Comparison of ionic and metallic formation and resulting structures"
+  ],
+  "excluded": [
+    "Conductivity experiments",
+    "Melting or boiling",
+    "Hardness",
+    "Ductility",
+    "Malleability",
+    "Deformation",
+    "Alloys and engineering design"
+  ],
+  "story_sequence": [
+    {
+      "id": "S01",
+      "image": "AD_I01_lab.png",
+      "function": "Introduce specimens and cast"
+    },
+    {
+      "id": "S02",
+      "image": "AD_I02_lost_signal.png",
+      "video": "AD_V01_last_signal.mp4",
+      "function": "Reveal incomplete recorded route"
+    },
+    {
+      "id": "S03",
+      "image": "AD_I03_launch.png",
+      "interaction": "Choose investigation order; both branches required"
+    },
+    {
+      "id": "S04",
+      "image": "AD_I04_metallic_world.png",
+      "video": "AD_V02_enter_metallic.mp4",
+      "function": "Inspect metallic world"
+    },
+    {
+      "id": "S05",
+      "image": "AD_I04_metallic_world.png",
+      "interaction": "metallic_reconstruction",
+      "video_on_success": "AD_V03_metallic_route.mp4"
+    },
+    {
+      "id": "S06",
+      "image": "AD_I06_evidence_gate.png",
+      "function": "Retain evidence; visit other world if incomplete"
+    },
+    {
+      "id": "S07",
+      "image": "AD_I05_ionic_world.png",
+      "video": "AD_V04_enter_ionic.mp4",
+      "function": "Inspect ionic world"
+    },
+    {
+      "id": "S08",
+      "image": "AD_I05_ionic_world.png",
+      "interaction": "ionic_reconstruction"
+    },
+    {
+      "id": "S09",
+      "image": "AD_I06_evidence_gate.png",
+      "interaction": "final_comparison",
+      "requires": [
+        "metal_complete",
+        "ionic_complete"
+      ]
+    },
+    {
+      "id": "S10",
+      "image": "AD_I07_orbit_found.png",
+      "video": "AD_V05_find_orbit.mp4",
+      "requires": [
+        "final_supported"
+      ]
+    },
+    {
+      "id": "S11",
+      "image": "AD_I08_homecoming.png",
+      "video": "AD_V06_homecoming.mp4",
+      "function": "Resolution and short reflection"
+    },
+    {
+      "id": "S12",
+      "image": "AD_I08_homecoming.png",
+      "interaction": "five_mcq_exit_ticket"
+    }
+  ],
+  "routing": {
+    "S03": {
+      "metallic-first": "S04",
+      "ionic-first": "S07"
+    },
+    "S04": "S05",
+    "S05": {
+      "if_ionic_complete": "S09",
+      "otherwise": "S06"
+    },
+    "S06": "S07",
+    "S07": "S08",
+    "S08": {
+      "if_metal_complete": "S09",
+      "otherwise": "S04"
+    },
+    "S09": {
+      "supported": "S10",
+      "unsupported": "S09"
+    },
+    "S10": "S11",
+    "S11": "S12"
+  },
+  "interactions": {
+    "metallic_reconstruction": {
+      "student_actions": [
+        "Inspect cores and valence electrons",
+        "Choose electrons delocalized within the sample",
+        "Identify core-electron attraction",
+        "Explain overall charge neutrality"
+      ],
+      "branch_feedback": {
+        "one-to-one metal ion transfer": "metal-transfer-error",
+        "electrons disappear or leave sample": "metal-electrons-escape",
+        "localized electron pairs": "metal-fixed-pair-error",
+        "positive cores alone attract": "metal-attraction-error"
+      },
+      "success": "Store metallic explanation and evidence; play V03 once; continue to the other investigation or final comparison."
+    },
+    "ionic_reconstruction": {
+      "student_actions": [
+        "Move ONE electron, not a proton, from Na to Cl in a simplified atom model",
+        "Verify 11 protons/10 electrons for Na+ and 17 protons/18 electrons for Cl-",
+        "Identify opposite-ion attraction",
+        "Expand into an extended ionic lattice, not isolated NaCl molecules"
+      ],
+      "branch_feedback": {
+        "move proton": "ionic-proton-error",
+        "wrong sign": "ionic-charge-error",
+        "electron sea": "ionic-electron-sea-error",
+        "isolated molecule only": "ionic-molecule-error"
+      },
+      "success": "Store ionic explanation and evidence; do not require a seventh video."
+    },
+    "final_comparison": {
+      "display": "Two unlabeled grayscale scientifically rendered models, with randomized left/right placement. Charge signs and an accessible particle description remain available; palette is not evidence.",
+      "last_log": "Positive metal ion cores with electrons delocalized throughout the structure.",
+      "actions": [
+        "Choose the matching metallic model",
+        "Cite particles and attraction",
+        "Match both formation sequences to both structures"
+      ],
+      "branch_feedback": {
+        "select ionic world": "final-wrong-world",
+        "claim identical bonding components": "final-same-bond-error",
+        "colour-only rationale": "final-colour-only",
+        "no evidence": "final-no-evidence"
+      },
+      "success": "Set final_supported only after comparison evidence is complete; unlock V05."
+    }
+  },
+  "error_policy": "Supportive spoken feedback over current still, optional subtle UI cue, preserve evidence and allow retry. No extra video required. No humiliating failure or punitive countdown.",
+  "audio_policy": "Use one recorded line at a time. Branch lines play only when their explicit condition is triggered. Never sort the entire directory alphabetically and play it as one story.",
+  "video_policy": "Six separate MP4s, each <= 5.0 seconds. No looping for longer speech; hold end frame while the recording continues. Use provided END keyframe as a deterministic fallback."
+}
