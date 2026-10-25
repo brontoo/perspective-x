@@ -73,7 +73,8 @@ def main(prepare):
             item = {"path": relative(path), "url": url(path), "sha256": checksum(path),
                     "format": info["codec_name"], "width": info["width"], "height": info["height"]}
             inventory.append(item)
-            images[path.stem] = item
+            if "revisions" not in path.parts:
+                images[path.stem] = item
     assert len([k for k in images if k.startswith("AD_I")]) == 8
     for scene in story["story_sequence"]:
         key = pathlib.Path(scene["image"]).stem
@@ -155,7 +156,14 @@ def main(prepare):
             if path.is_file() and path.suffix.lower() in MEDIA_EXTENSIONS:
                 media_hashes.setdefault(checksum(path), []).append(relative(path))
     duplicate_media = [paths for paths in media_hashes.values() if len(paths) > 1]
-    manifest = {"scenario": "atom_dive", "sourceCommit": "15eb615ae67341e7dedfbeba4123580d898a0fa5",
+    presentation = json.loads((DOC / "presentation-policy.json").read_text())
+    revised = []
+    for scene, asset_url in presentation["stills"].items():
+        path = PUBLIC / asset_url.lstrip("/")
+        info = probe(path)["streams"][0]
+        revised.append({"scene": scene, "path": relative(path), "url": asset_url, "format": info["codec_name"], "width": info["width"], "height": info["height"], "sha256": checksum(path)})
+    assert len(videos) == 6 and set(presentation["withheldVideos"]).issubset(videos)
+    manifest = {"scenario": "atom_dive", "sourceCommit": "15eb615ae67341e7dedfbeba4123580d898a0fa5", "presentation": presentation,
                 "story": story, "assessment": exit_ticket, "images": images,
                 "characters": {key: images[key] for key in ["C_HAMAD", "C_ALYA", "C_RASHID", "C_ORBIT"]},
                 "videos": videos, "dialogue": lines}
@@ -164,12 +172,13 @@ def main(prepare):
     report = {"inventory": inventory, "audio": lines, "production_documents_relocated": moved,
               "image_extension_resolutions": resolutions, "duplicate_recording_hashes": duplicates,
               "duplicate_public_media_hashes": duplicate_media,
-              "unresolved": issues,
+              "unresolved": issues, "active_presentation": presentation, "revised_stills": revised,
+              "pending_visual_replacements": [{"video_id": key, "reason": reason, "runtime_status": "withheld; correct still/scientific renderer used"} for key, reason in presentation["withheldVideos"].items()],
               "limitations": ["Recordings are mapped by authored IDs and exact transcript sidecars; no independent acoustic transcription or speaker identification is claimed."]}
     (DOC / "asset-audit.json").write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     print(json.dumps({"storyImages": 8, "characters": 4, "runtimeVideos": len(videos),
                       "recordings": len(lines), "unresolved": issues, "duplicateRecordings": duplicates,
-                      "duplicatePublicMedia": duplicate_media}))
+                      "duplicatePublicMedia": duplicate_media, "revisedStills": len(revised), "withheldVideos": len(presentation["withheldVideos"])}))
 
 
 if __name__ == "__main__":

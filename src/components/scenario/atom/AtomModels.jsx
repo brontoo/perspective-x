@@ -1,3 +1,4 @@
+import CrystalView from "./CrystalView";
 export function AtomSelect({ label, value, onChange, options, disabled = false }) {
   return <label className="px-atom-field"><span>{label}</span><select aria-label={label} value={value} disabled={disabled} onChange={e => onChange(e.target.value)}>
     <option value="">Choose your explanation</option>
@@ -5,34 +6,8 @@ export function AtomSelect({ label, value, onChange, options, disabled = false }
   </select></label>;
 }
 
-export function StructureModel({ kind, grayscale = false, formed = true, label, inspected = [], onInspect }) {
-  const metal = kind === "metallic", count = grayscale ? 6 : 4;
-  const columns = grayscale ? 3 : 2;
-  const cores = Array.from({ length: count }, (_, i) => [grayscale ? 85 + i % columns * 115 : 115 + i % columns * 180, 85 + Math.floor(i / columns) * 100]);
-  const delocalizedPositions = [[55, 48], [190, 48], [335, 48], [135, 137], [265, 137], [365, 230]];
-  const electrons = cores.map(([x, y], i) => formed ? delocalizedPositions[i] : [x + 34, y - 24]);
-  const description = metal ? `${count} positive 1+ ion cores, each including a nucleus and inner electrons; ${count} ${formed ? "delocalized" : "initially localized valence"} electrons remain inside the material. Overall charge is zero.`
-    : "A two-dimensional slice of an extended three-dimensional ionic structure: equal numbers of alternating 1+ cations and 1− anions. No delocalized electron region.";
-  return <svg className={`px-atom-structure ${grayscale ? "is-grayscale" : ""}`} viewBox="0 0 420 270" role="img" aria-label={`${label || "Scientific model"}: ${description}`}>
-    <title>{label || "Scientific particle model"}</title><desc>{description}</desc>
-    <rect x="12" y="12" width="396" height="246" rx="20" fill={grayscale ? "#30363b" : "#123d4d"} stroke={grayscale ? "#bec5ca" : "#92b6bd"} />
-    {metal ? <>
-      {formed && <rect x="28" y="28" width="364" height="214" rx="16" fill={grayscale ? "#aab1b7" : "#70bcce"} opacity=".12" />}
-      {cores.map(([x, y], i) => <g key={i} onClick={() => onInspect?.("cores")}>
-        <circle cx={x} cy={y} r="27" fill={grayscale ? "#c3c8cb" : "#c8a86c"} stroke={inspected.includes("cores") ? "white" : "#a8bec5"} strokeWidth="2" />
-        <circle cx={x} cy={y} r="18" fill="none" stroke="#172b3b" opacity=".35" />
-        <text x={x} y={y + 5} textAnchor="middle" fontSize="15" fill="#112531">1+</text>
-      </g>)}
-      {electrons.map(([x, y], i) => <g key={i} className={formed ? "px-atom-delocalized-electron" : ""} onClick={() => onInspect?.("electrons")}>
-        <circle cx={x} cy={y} r="13" fill={grayscale ? "#f1f3f4" : "#8cdbed"} stroke="#143546" />
-        <text x={x} y={y + 4} textAnchor="middle" fontSize="11" fill="#102535">e−</text>
-      </g>)}
-    </> : Array.from({ length: 24 }, (_, i) => {
-      const positive = (Math.floor(i / 6) + i % 6) % 2 === 0, x = 51 + i % 6 * 64, y = 52 + Math.floor(i / 6) * 55;
-      return <g key={i}><circle cx={x} cy={y} r={positive ? 17 : 23} fill={grayscale ? positive ? "#b3bac0" : "#e4e7e9" : positive ? "#c9a4e8" : "#8edacc"} stroke="#748e9b" />
-        <text x={x} y={y + 5} fill="#132d38" textAnchor="middle" fontSize="14">{positive ? "1+" : "1−"}</text></g>;
-    })}
-  </svg>;
+export function StructureModel({ kind, grayscale = false, formed = true, label, inspected = [] }) {
+  return <CrystalView kind={kind} grayscale={grayscale} compact={!grayscale && kind === "metallic"} electrons={formed || inspected.includes("electrons")} localized={!formed} coreLabel={inspected.includes("cores")} label={label} />;
 }
 
 export function MetallicActivity({ value, send }) {
@@ -121,7 +96,7 @@ export function IonicActivity({ task, value, send }) {
   </section>;
 }
 
-export function ComparisonActivity({ value, send }) {
+export function ComparisonActivity({ value, send, showInputs = true, expanded = true }) {
   const patch = next => send({ type: "comparisonPatch", patch: next });
   return <section aria-label="Grayscale final comparison" className="px-atom-lab">
     <header><p className="px-atom-eyebrow">Evidence gate / Both investigations verified</p><h2>Which model matches ORBIT’s recording?</h2>
@@ -131,7 +106,7 @@ export function ComparisonActivity({ value, send }) {
       <button aria-pressed={value.world === String(i + 1)} onClick={() => patch({ world: String(i + 1) })}>Choose Model {i === 0 ? "A" : "B"}</button>
     </div>)}</div>
     <p className="px-atom-model-note">Unfamiliar monochrome models. Use charge signs and particle descriptions, not illustration colours. Model A/B positions stay fixed for this attempt.</p>
-    <div className="px-atom-lab-grid">
+    {showInputs && <details className="px-atom-comparison-response" open={expanded}><summary>Your comparison response</summary><div className="px-atom-lab-grid">
       <AtomSelect label="Particle evidence for your location" value={value.particles} onChange={particles => patch({ particles })}
         options={[["opposite-ions", "A repeating arrangement of cations and anions"], ["cores-electrons", "Positive ion cores with delocalized electrons"], ["colour", "The illustration’s colour identifies the location"]]} />
       <AtomSelect label="Attractive interaction supporting your location" value={value.attraction} onChange={attraction => patch({ attraction })}
@@ -139,6 +114,6 @@ export function ComparisonActivity({ value, send }) {
       <AtomSelect label="Match: valence electrons become delocalized among positive cores" value={value.metalSequence} onChange={metalSequence => patch({ metalSequence })} options={[["1", "Model A"], ["2", "Model B"]]} />
       <AtomSelect label="Match: electron transfer forms opposite ions in a repeating lattice" value={value.ionicSequence} onChange={ionicSequence => patch({ ionicSequence })} options={[["1", "Model A"], ["2", "Model B"]]} />
     </div>
-    <button className="px-atom-primary" onClick={() => send({ type: "comparisonVerify" })}>Verify location and both formation matches</button>
+    <button className="px-atom-primary" onClick={() => send({ type: "comparisonVerify" })}>Verify location and both formation matches</button></details>}
   </section>;
 }

@@ -1,4 +1,68 @@
-# ATOM DIVE validation — 25 October 2026
+# ATOM DIVE corrections validation — 25 October 2026
+
+Current correction work: `feature/atom-dive-experience-corrections`, based on implementation commit `831fe7bacbfeec3510f6475f8ad4e68b1a1709e2`. It updates the existing implementation PR #22 for Preview review. Main/production are not promoted. See [EXPERIENCE_CORRECTIONS.md](EXPERIENCE_CORRECTIONS.md) for the final behavior, changed-file map, media policy and exact pending replacement paths.
+
+## Final correction checks
+
+| Check | Result |
+| --- | --- |
+| `npm run lint` | Passed |
+| `npm run typecheck` | Passed |
+| `npm run build` | Passed |
+| `npm run test:unit` | **41 passed** |
+| Full production-bundle browser regression | **187 passed**, before the final replay-audio/mobile refinements |
+| Final production-bundle affected suites | **65 passed** after those refinements; command below |
+| Media audit | 8 original story images, 4 character references, 61 decoded original MP3s, 6 retained five-second silent runtime clips, 2 edited still candidates, 5 explicitly withheld clips awaiting replacements |
+
+```sh
+npx playwright test --config playwright.built.config.js   tests/atom-corrections.spec.js tests/atom-dive.spec.js   tests/atom-start.spec.js tests/ocean-media.spec.js
+```
+
+The final 65 comprise 18 correction cases, 28 existing ATOM DIVE cases, 2 native-media/ad-filter cases and 17 Ocean Dome cases. The complete regression run also exercised original mission assessments, Dessert, teacher/student controls, profile/authentication, homepage/Our Story/music and existing portal navigation. The final refinements were followed by the affected-suite run, not a second full regression run.
+
+Demonstrated correction coverage includes:
+
+- Automatic opening and both complete investigation orders, through all five unchanged exit-ticket questions and a single saved result.
+- Real native MP3 playback, actual V06 completion/final-frame handling, independent audio/video gates and rejection of stale completion callbacks. V01–V05 are withheld rather than falsely claimed as corrected.
+- Incorrect feedback retains the same mounted scientific models and inputs; editing returns automatically. S09 models appear during introduction and feedback, with stable grayscale A/B ordering and neutral labels.
+- Correct selected route, scene, recording sequence, effective video policy and first-person model after fresh selection and reload.
+- Timed captions, remaining-duration preservation, explicit/tab/notebook pause, blocked playback, reduced motion and appropriate missing-media fallback.
+- Previous scene on Atom, Ocean Dome, Dessert and original scenario players: actual visited history, read-only response review, early/automatic return, preserved inputs/notes/current voice position, no extra learning events or duplicate attempts.
+- Native embedded audio in original MP4 review, including Mute; original video content is unchanged.
+- Mobile original-player toolbar fit; desktop/tablet/mobile and fullscreen investigation layouts; source controls remain visible under the reproduced EasyList cosmetic selectors.
+- Rock-salt geometry has six nearest opposite-ion neighbors and twelve next-nearest same-type neighbors. Metallic fragments use identical positive ion cores and neutral delocalized electrons within the specimen.
+
+## Current screenshots
+
+Captured from the actual built React application using authorized synthetic fixtures:
+
+- [S02 hovering ORBIT](screenshots/corrections/s02-hovering-orbit.png)
+- [S03 neutral mirror](screenshots/corrections/s03-neutral-mirror.png)
+- [Metallic first-person route](screenshots/corrections/metallic-first-orbit-view.png)
+- [Ionic first-person route](screenshots/corrections/ionic-first-orbit-view.png)
+- [S09 models during corrective feedback](screenshots/corrections/s09-models-during-correction.png)
+- [Mobile fullscreen comparison](screenshots/corrections/s09-feedback-fullscreen-390.png)
+- [Tablet fullscreen comparison](screenshots/corrections/s09-feedback-fullscreen-820.png)
+- [Atom Previous scene](screenshots/corrections/atom-previous-scene.png)
+- [Ocean Dome Previous scene](screenshots/corrections/ocean-previous-scene.png)
+- [Dessert Previous scene](screenshots/corrections/dessert-previous-scene.png)
+- [Original player Previous scene](screenshots/corrections/legacy-previous-scene.png)
+
+Desktop S09, mobile fullscreen and shared-review screenshots were visually inspected for charge visibility, retained models, readable safe margins and scoped styling. Small screens stack models at readable sizes in the mission scroll region. Historical screenshot files below are preserved as historical captures rather than presented as the corrected UI.
+
+## Remaining dependencies and verification limits
+
+The review ZIP contains references and issue screenshots, not revised production media. Two localized still edits are included as review candidates. The incorrect I04/I05/I07 investigation/recovery artwork is replaced at runtime by explicit accurate code-rendered interim views. Five old compositions (V01–V05) and their old posters/held frames are withheld; no MP4 pixels were edited or regenerated. V06 is unchanged. [The replacement list](EXPERIENCE_CORRECTIONS.md#visual-scope-and-pending-media) names all five required clips and matching new final frames. The source audit's empty original-file unresolved list is separate from these five pending replacements.
+
+All 61 uploaded recording bytes, original scripts/voices, source videos, exact five MCQs and 80% pass rule are preserved. Audit attribution follows supplied manifests and sidecars; independent acoustic transcription/human listening review of every recording is not claimed.
+
+Live authenticated Supabase/RLS QA remains unverified; the user authorized synthetic browser fixtures. Production student data and deployment protection settings were not changed. The exact new Preview URL and commit will appear in PR #22 and the completion report; existing Vercel team authentication may be required. No main merge or production promotion is performed.
+
+---
+
+The sections below document earlier implementation checks; they do not override the automatic playback, revised media policy or current screenshots above.
+
+# Historical implementation validation
 
 Implementation: `feature/atom-dive-implementation`. Existing main at start of review: `23dc8ffa15dc0a6bbfd82d14c63bbd1aefd49673`.
 

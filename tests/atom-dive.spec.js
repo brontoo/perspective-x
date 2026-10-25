@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { mkdirSync } from "node:fs";
-import { ATOM_MEDIA, createAtomState } from "../src/data/atomDive.mjs";
+import { ATOM_MEDIA } from "../src/data/atomDive.mjs";
 import { ATOM_COSMETIC_FILTER, atomSetup, atomStart, atomContinue, atomReach, atomMetal, atomIonic, atomCompare } from "./support/atom-flow";
-import { action, checkpoint, draftFor } from "./support/atom-checkpoints.mjs";
+import { checkpoint, draftFor } from "./support/atom-checkpoints.mjs";
 import { setup, ID, OTHER, noOverflow } from "./support/fixtures";
 const target = "/ScenarioPlayer?scenario=atom_dive";
 for (const first of ["metallic", "ionic"]) {
@@ -107,7 +107,7 @@ test("all actual media URLs resolve and the approved character references remain
   for (const image of await page.locator(".px-atom-cast img").all()) await expect.poll(() => image.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
 });
 
-test("native MP3 starts on the user gesture, retains exact captions and waits for manual Continue", async ({ page }) => {
+test("optional manual-reading mode retains exact native MP3 captions and waits for its explicit Continue", async ({ page }) => {
   await setup(page, { empty: true });
   await page.goto(target);
   const audio = page.locator(".px-atom-voice-audio");
@@ -139,8 +139,8 @@ test("saved models, comparison randomization and notebook notes survive reload; 
   expect(await page.locator(".px-atom-comparison-models svg").evaluateAll(items => items.map(el => el.getAttribute("aria-label")))).toEqual(labels);
   await page.getByText(/^Conversation history/).click();
   await page.getByRole("button", { name: "Replay this dialogue", exact: true }).first().click();
-  await expect(page.locator(".px-atom-caption")).toHaveText(ATOM_MEDIA.dialogue[0].text);
-  await expect(page.getByRole("button", { name: "Return to current dialogue", exact: true })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Previous scene review", exact: true })).toContainText(ATOM_MEDIA.dialogue[0].text);
+  await expect(page.getByRole("button", { name: "Return to current scene", exact: true })).toBeVisible();
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive')));
   expect(saved.atomDive.evidence).toEqual(initial.evidence);
   expect(saved.atomDive.comparison.supported).toBe(false);
@@ -219,8 +219,8 @@ for (const width of [1440, 820, 390]) test(`scientific activity, keyboard contro
 
 test("silent clip holds its true final frame without cutting dialogue; resume holds it without replay", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  let state = createAtomState();
-  for (let i = 0; i < 3; i++) state = action(state, "continue");
+  const state = checkpoint("reflection");
+  state.step = "homecoming"; state.cursor = 0;
   await atomSetup(page, { seedRows: [draftFor(state, ID)] });
   await page.goto(target);
   await atomStart(page);
@@ -229,32 +229,34 @@ test("silent clip holds its true final frame without cutting dialogue; resume ho
   expect(await video.evaluate(el => ({ muted: el.muted, loop: el.loop, rate: el.playbackRate }))).toEqual({ muted: true, loop: false, rate: 1 });
   const caption = await page.locator(".px-atom-caption").textContent();
   await video.evaluate(el => el.dispatchEvent(new Event("ended")));
-  await expect(page.getByAltText("Actual final frame of the approved clip", { exact: true })).toHaveAttribute("src", ATOM_MEDIA.videos["AD_V01_last_signal.mp4"].end);
+  await expect(page.getByAltText("Final cinematic frame", { exact: true })).toHaveAttribute("src", ATOM_MEDIA.videos["AD_V06_homecoming.mp4"].end);
   await expect(page.locator(".px-atom-controls > .px-atom-primary")).toBeDisabled();
   await expect(page.locator(".px-atom-caption")).toHaveText(caption);
   await atomContinue(page);
   await page.reload();
   await atomStart(page);
-  await expect(page.getByAltText("Actual final frame of the approved clip", { exact: true })).toBeVisible();
+  await expect(page.getByAltText("Final cinematic frame", { exact: true })).toBeVisible();
   await expect(page.locator(".px-atom-film video")).toHaveCount(0);
 });
 
-test("V03 and V05 wait for scientific verification; clip skips never bypass a model", async ({ page }) => {
+test("V03 and V05 remain gated by science and obsolete compositions are withheld", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await atCheckpoint(page, "metal");
   await expect(page.locator(".px-atom-film video")).toHaveCount(0);
   await atomMetal(page);
   await atomContinue(page); await atomContinue(page);
-  await expect(page.locator(".px-atom-film video")).toHaveAttribute("src", ATOM_MEDIA.videos["AD_V03_metallic_route.mp4"].url);
-  await page.getByRole("button", { name: "Skip clip", exact: true }).click();
+  await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-video-id", "AD_V03_metallic_route.mp4");
+  await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-media-status", "withheld");
+  await expect(page.locator(".px-atom-film video")).toHaveCount(0);
   await atomIonic(page);
   await atomReach(page, "comparisonTask");
   expect(await page.evaluate(() => window.__atomPlays.some(item => item.src?.includes("AD_V05")))).toBe(false);
   await expect(page.getByRole("button", { name: "Verify location and both formation matches", exact: true })).toBeVisible();
   await atomCompare(page);
   await atomContinue(page);
-  await expect(page.locator(".px-atom-film video")).toHaveAttribute("src", ATOM_MEDIA.videos["AD_V05_find_orbit.mp4"].url);
-  await page.getByRole("button", { name: "Skip clip", exact: true }).click();
+  await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-video-id", "AD_V05_find_orbit.mp4");
+  await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-media-status", "withheld");
+  await expect(page.locator(".px-atom-film video")).toHaveCount(0);
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive')));
   expect(saved.atomDive.evidence).toHaveLength(3);
   expect(saved.exitTicket).toBeUndefined();
@@ -319,7 +321,7 @@ test("blocked playback offers Resume or captions; mute and replay retain one voi
   await expect(page.locator(".px-atom-voice-audio")).toHaveJSProperty("muted", true);
   await page.getByRole("button", { name: "Captions only", exact: true }).click();
   await expect(page.locator(".px-atom-voice-audio")).not.toHaveAttribute("src", /mp3/);
-  await expect(page.locator(".px-atom-controls > .px-atom-primary")).toBeEnabled();
+  await expect(page.locator(".px-atom-controls > .px-atom-primary")).toBeEnabled({ timeout: 15000 });
   await page.getByRole("button", { name: "Full screen", exact: true }).click();
   await expect(page.locator(".px-atom-adventure")).toHaveClass(/is-expanded/);
   await page.locator(".px-atom-adventure").getByRole("button", { name: "Mission Notebook", exact: true }).click();

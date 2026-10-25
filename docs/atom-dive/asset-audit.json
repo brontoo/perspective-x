@@ -33,6 +33,22 @@
       "height": 648
     },
     {
+      "path": "public/images/scenarios/atom_dive/revisions/AD_I02_lost_signal.png",
+      "url": "/images/scenarios/atom_dive/revisions/AD_I02_lost_signal.png",
+      "sha256": "6d594fa9babb3189c619ad0bfdbf72df233707b40c7044b2e59779cbafad0c90",
+      "format": "png",
+      "width": 1678,
+      "height": 937
+    },
+    {
+      "path": "public/images/scenarios/atom_dive/revisions/AD_I03_launch.png",
+      "url": "/images/scenarios/atom_dive/revisions/AD_I03_launch.png",
+      "sha256": "111be30aba016380dabbf3d01119f652357b66deeb2616090d64bd85ce506889",
+      "format": "png",
+      "width": 1678,
+      "height": 937
+    },
+    {
       "path": "public/images/scenarios/atom_dive/story/02_story_images/AD_I01_lab.jpg",
       "url": "/images/scenarios/atom_dive/story/02_story_images/AD_I01_lab.jpg",
       "sha256": "3037715cd3423136569599632a360334c763d70f966c0c5732b28ac0f66f9252",
@@ -1514,6 +1530,75 @@
   "duplicate_recording_hashes": [],
   "duplicate_public_media_hashes": [],
   "unresolved": [],
+  "active_presentation": {
+    "stills": {
+      "S02": "/images/scenarios/atom_dive/revisions/AD_I02_lost_signal.png",
+      "S03": "/images/scenarios/atom_dive/revisions/AD_I03_launch.png"
+    },
+    "withheldVideos": {
+      "AD_V01_last_signal.mp4": "Tablet-contained ORBIT conflicts with hovering projected presence.",
+      "AD_V02_enter_metallic.mp4": "Fantasy landscape conflicts with the ORBIT-view FCC metal model.",
+      "AD_V03_metallic_route.mp4": "Must match the revised metallic camera and verified reconstruction.",
+      "AD_V04_enter_ionic.mp4": "Must show the distinct rock-salt ionic view from ORBIT camera.",
+      "AD_V05_find_orbit.mp4": "Recovery environment must match the revised metallic fragment."
+    },
+    "scientificViews": {
+      "S04": "FCC metallic fragment from ORBIT camera",
+      "S05": "FCC motif and delocalization reconstruction",
+      "S07": "Rock-salt NaCl fragment from ORBIT camera",
+      "S08": "Na/Cl formation and repeating rock-salt lattice",
+      "S09": "Persistent grayscale comparison",
+      "S10": "Same FCC fragment with code-rendered virtual ORBIT recovery"
+    },
+    "provenance": "S02 and S03 are targeted image edits prepared for review from the approved originals. No MP4 pixels were changed. Five conflicting clips are withheld. Original illustrations, all six clips and all 61 recordings are preserved."
+  },
+  "revised_stills": [
+    {
+      "scene": "S02",
+      "path": "public/images/scenarios/atom_dive/revisions/AD_I02_lost_signal.png",
+      "url": "/images/scenarios/atom_dive/revisions/AD_I02_lost_signal.png",
+      "format": "png",
+      "width": 1678,
+      "height": 937,
+      "sha256": "6d594fa9babb3189c619ad0bfdbf72df233707b40c7044b2e59779cbafad0c90"
+    },
+    {
+      "scene": "S03",
+      "path": "public/images/scenarios/atom_dive/revisions/AD_I03_launch.png",
+      "url": "/images/scenarios/atom_dive/revisions/AD_I03_launch.png",
+      "format": "png",
+      "width": 1678,
+      "height": 937,
+      "sha256": "111be30aba016380dabbf3d01119f652357b66deeb2616090d64bd85ce506889"
+    }
+  ],
+  "pending_visual_replacements": [
+    {
+      "video_id": "AD_V01_last_signal.mp4",
+      "reason": "Tablet-contained ORBIT conflicts with hovering projected presence.",
+      "runtime_status": "withheld; correct still/scientific renderer used"
+    },
+    {
+      "video_id": "AD_V02_enter_metallic.mp4",
+      "reason": "Fantasy landscape conflicts with the ORBIT-view FCC metal model.",
+      "runtime_status": "withheld; correct still/scientific renderer used"
+    },
+    {
+      "video_id": "AD_V03_metallic_route.mp4",
+      "reason": "Must match the revised metallic camera and verified reconstruction.",
+      "runtime_status": "withheld; correct still/scientific renderer used"
+    },
+    {
+      "video_id": "AD_V04_enter_ionic.mp4",
+      "reason": "Must show the distinct rock-salt ionic view from ORBIT camera.",
+      "runtime_status": "withheld; correct still/scientific renderer used"
+    },
+    {
+      "video_id": "AD_V05_find_orbit.mp4",
+      "reason": "Recovery environment must match the revised metallic fragment.",
+      "runtime_status": "withheld; correct still/scientific renderer used"
+    }
+  ],
   "limitations": [
     "Recordings are mapped by authored IDs and exact transcript sidecars; no independent acoustic transcription or speaker identification is claimed."
   ]

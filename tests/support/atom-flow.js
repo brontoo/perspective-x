@@ -10,7 +10,7 @@ export async function atomSetup(page, options = {}) {
     window.__atomPlays = [];
     const play = HTMLMediaElement.prototype.play, pause = HTMLMediaElement.prototype.pause;
     HTMLMediaElement.prototype.play = function () {
-      if ((this.tagName === "AUDIO" && this.classList.contains("px-atom-voice-audio")) || (this.tagName === "VIDEO" && this.getAttribute("src")?.includes("atom_dive"))) {
+      if ((this.tagName === "AUDIO" && (this.classList.contains("px-atom-voice-audio") || this.classList.contains("px-atom-review-audio"))) || (this.tagName === "VIDEO" && this.getAttribute("src")?.includes("atom_dive"))) {
         window.__atomPlays.push({ id: this.dataset.dialogueId, src: this.getAttribute("src"), op: "play" });
         this.dispatchEvent(new Event("playing")); return Promise.resolve();
       }
@@ -27,6 +27,8 @@ export async function atomStart(page) {
   await expect(page.locator(".px-atom-adventure")).toBeVisible();
   const start = page.getByRole("button", { name: /^(Start ATOM DIVE|Resume mission)$/ });
   if (await start.count()) await start.click();
+  const mode = page.getByLabel("Story playback", { exact: true });
+  if (await mode.count()) await mode.selectOption("manual");
 }
 export async function atomContinue(page) {
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -45,6 +47,7 @@ export async function atomReach(page, step) {
   await atomStart(page);
   for (let i = 0; i < 100; i++) {
     if (await page.locator(".px-atom-adventure").getAttribute("data-step") === step &&
+        await page.locator(".px-atom-adventure").getAttribute("data-feedback") === "false" &&
         (!ATOM_STEPS[step].task || await page.locator(".px-atom-task").count())) return;
     await atomContinue(page);
   }
@@ -73,14 +76,14 @@ export async function atomIonic(page) {
   await page.getByRole("button", { name: "Verify ionic attraction", exact: true }).click();
   await atomReach(page, "ionicLattice");
   await page.getByRole("button", { name: "Expand repeating lattice", exact: true }).click();
-  await expect(page.getByRole("img", { name: /two-dimensional slice of an extended/i })).toBeVisible();
+  await expect(page.getByRole("img", { name: /three-dimensional rock-salt/i })).toBeVisible();
   await page.getByRole("button", { name: "Verify extended structure", exact: true }).click();
 }
 export async function atomCompare(page) {
   await atomReach(page, "comparisonTask");
   const models = page.locator(".px-atom-comparison-models > div");
   const label = await models.first().getByRole("img").getAttribute("aria-label");
-  const m = label.includes("delocalized electrons remain") ? "1" : "2", i = m === "1" ? "2" : "1";
+  const m = label.includes("delocalized valence electrons remain") ? "1" : "2", i = m === "1" ? "2" : "1";
   await page.getByRole("button", { name: `Choose Model ${m === "1" ? "A" : "B"}`, exact: true }).click();
   await page.getByLabel("Particle evidence for your location", { exact: true }).selectOption("cores-electrons");
   await page.getByLabel("Attractive interaction supporting your location", { exact: true }).selectOption("cores-electrons");

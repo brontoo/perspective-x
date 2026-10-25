@@ -2,6 +2,10 @@
 
 Scenario: `atom_dive` — **ATOM DIVE: Lost in the Invisible**.
 
+## Current experience corrections
+
+The latest behavior and media policy are documented in [EXPERIENCE_CORRECTIONS.md](EXPERIENCE_CORRECTIONS.md), with actual checks in [VALIDATION.md](VALIDATION.md). These corrections supersede the earlier playback/presentation descriptions below: narrative is automatic after Start, Previous scene is shared across players, scientific views use accurate 3D geometry, S09 models persist during feedback, and V01–V05 are withheld pending corrected compositions. Two localized still edits are candidates for review. V06, the source recordings, assessment rules and existing progress ownership are preserved. Main/production are not promoted.
+
 ## Where to play
 
 In an authorized student session, open **Roles → Atomic Bonding Investigator → ATOM DIVE**. The new role is appended to the catalog; every existing role, mission order and prerequisite is preserved.
@@ -19,18 +23,18 @@ This change is prepared on `feature/atom-dive-implementation`, starting from upl
 `src/data/atomDive.mjs` implements S01–S12 as explicit dialogue and scientific checkpoints. All supplied dialogue, speakers, normal sequences, conditional feedback, question reads and assessment feedback are retained. Twelve misconception conditions play only after the corresponding incorrect action. Both investigation orders are supported.
 
 1. Inspect the four positive monovalent metal ion cores and all four valence electrons; reconstruct delocalization, identify core/electron attraction and verify net neutrality. Cores include the nucleus and inner electrons. Electrons remain inside the specimen.
-2. Transfer one electron from sodium to chlorine using drag/drop or equivalent buttons. Verify Na: 11 protons/10 electrons/1+; Cl: 17 protons/18 electrons/1−; unchanged nuclei; opposite-ion attraction; then expand a repeating lattice. The diagram explicitly identifies its two-dimensional slice of a three-dimensional extended solid.
+2. Transfer one electron from sodium to chlorine using drag/drop or equivalent buttons. Verify Na: 11 protons/10 electrons/1+; Cl: 17 protons/18 electrons/1−; unchanged nuclei; opposite-ion attraction; then expand a repeating lattice. The formation diagram is distinct from the precise three-dimensional rock-salt fragment now used for inspection.
 3. Only after both verified models, compare unfamiliar grayscale structures. A/B placement is randomized once per attempt and stored on resume. Location, particles, attraction and both formation matches must agree before ORBIT recovery is available.
 
 Reflection and the exact supplied five MCQs follow recovery. Submission requires all five responses. Explanations and supported answers appear only after submission; at least four correct responses (80%) earn a pass. A 60% result receives review and no badge/certificate. Common platform replay creates a fresh attempt, preserving the earlier result.
 
 Media playback, elapsed time, Continue, video skips and conversation replay cannot grant scientific credit. Model validation is deterministic. No out-of-scope material-properties activities or additional endings were added.
 
-## Media audit and resolutions
+## Original media audit and preparation (historical)
 
 The machine-readable [asset audit](asset-audit.json) inventories paths, actual formats, dimensions, checksums, dialogue IDs, speaker/scene/condition mapping, duration, embedded audio, relocated production files and unresolved findings. The generated [runtime manifest](../../src/data/atomDiveMedia.json) is the single source of resolved URLs.
 
-- Eight actual story JPGs are used directly. Original authored PNG names remain documented as `authoredImage`; no extension was merely renamed.
+- Eight original story JPGs were resolved during initial implementation. The current presentation policy uses two edited stills and code-rendered scientific views where specified above. Original authored PNG names remain documented as `authoredImage`; no extension was merely renamed.
 - Four approved character references retain their real nested paths and formats (three JPGs and Rashid PNG). They appear in a collapsible research-team panel; portraits are not duplicated over scenes containing the same character.
 - All 61 unique ElevenLabs MP3s retain their uploaded bytes. Each dialogue ID is matched against the source audio manifest and archived transcript sidecar. All files decode successfully.
 - All six uploaded MP4 containers measured 6.016 seconds, with 6.0 seconds of video and an embedded AAC track. The six runtime derivatives retain the **last five seconds**, at normal speed, without any audio track. Leading 1.0 second is trimmed; no footage is generated, slowed or looped. Original MP4 bytes are preserved in `production-archive/original-videos/`.
@@ -46,7 +50,7 @@ python scripts/audit-atom-dive.py
 
 `--prepare` is the one-time relocation/derivative preparation option. Revalidation decodes the media, checks source transcript/manifest agreement and rewrites deterministic reports. Run it before browser testing so development hot reload does not restart a recording mid-test.
 
-**Unresolved assets: none. Duplicate MP3 recordings: none.** No acoustic speech-to-text verification or human listening review of all 61 recordings is claimed; speaker and transcript attribution follows the supplied authoritative manifest and matching text sidecars. Native browser MP3 playback is tested separately.
+**Original-file unresolved assets: none. Duplicate MP3 recordings: none. Five revised MP4 compositions remain pending; see the current presentation policy.** No acoustic speech-to-text verification or human listening review of all 61 recordings is claimed; speaker and transcript attribution follows the supplied authoritative manifest and matching text sidecars. Native browser MP3 playback is tested separately.
 
 ## Persistence and platform integration
 

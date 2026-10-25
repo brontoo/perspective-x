@@ -7,6 +7,8 @@ import {
 import { SCENARIOS } from '../scenarios/scenarioData';
 import { UAE_VIDEO_CONTENT, UAE_SCENARIOS } from '../scenarios/uaeScenarioData';
 import KenBurnsSlideshow from './KenBurnsSlideshow';
+import { PreviousSceneButton, useSceneReview, usePlaybackSuspended } from './playback/ScenarioReview';
+import usePausableTimers from './playback/usePausableTimers';
 
 const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
@@ -264,7 +266,9 @@ export default function CinematicVideoIntro({
     isTeacher = false,
     videoState = 'idle',
 }) {
-    const content = UAE_VIDEO_CONTENT[scenarioId] || buildFallbackVideoContent(scenarioId);
+    const sceneReview = useSceneReview(), suspended = usePlaybackSuspended();
+    const timers = usePausableTimers(suspended), heldRef = useRef(suspended); heldRef.current = suspended;
+    const content = useMemo(() => UAE_VIDEO_CONTENT[scenarioId] || buildFallbackVideoContent(scenarioId), [scenarioId]);
     const character = content?.character || UAE_SCENARIOS[scenarioId]?.character;
 
     const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
@@ -302,7 +306,7 @@ export default function CinematicVideoIntro({
 
     const onCompleteCalledRef = useRef(false);
     const safeOnComplete = useCallback(() => {
-        if (onCompleteCalledRef.current) return;
+        if (onCompleteCalledRef.current || heldRef.current) return;
         onCompleteCalledRef.current = true;
         onComplete?.();
     }, [onComplete]);
@@ -318,17 +322,17 @@ export default function CinematicVideoIntro({
         }
 
         if (progressTimerRef.current) {
-            clearInterval(progressTimerRef.current);
+            timers.clearInterval(progressTimerRef.current);
             progressTimerRef.current = null;
         }
 
         if (segmentTimerRef.current) {
-            clearInterval(segmentTimerRef.current);
+            timers.clearInterval(segmentTimerRef.current);
             segmentTimerRef.current = null;
         }
 
         if (autoAdvanceTimerRef.current) {
-            clearTimeout(autoAdvanceTimerRef.current);
+            timers.clearTimeout(autoAdvanceTimerRef.current);
             autoAdvanceTimerRef.current = null;
         }
     }, []);
@@ -342,7 +346,7 @@ export default function CinematicVideoIntro({
         }
 
         if (isIOS() && 'speechSynthesis' in window) {
-            iosKeepAliveRef.current = setInterval(() => {
+            iosKeepAliveRef.current = timers.setInterval(() => {
                 if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
                     window.speechSynthesis.pause();
                     window.speechSynthesis.resume();
@@ -355,7 +359,7 @@ export default function CinematicVideoIntro({
             stopAllPlayback();
 
             if (iosKeepAliveRef.current) {
-                clearInterval(iosKeepAliveRef.current);
+                timers.clearInterval(iosKeepAliveRef.current);
                 iosKeepAliveRef.current = null;
             }
         };
@@ -405,7 +409,7 @@ export default function CinematicVideoIntro({
             const videoProbe = document.createElement('video');
             let videoFound = false;
 
-            const videoTimeout = setTimeout(() => {
+            const videoTimeout = timers.setTimeout(() => {
                 if (cancelled) return;
                 // MP4 not found in time → TTS fallback
                 if (isMountedRef.current) {
@@ -418,7 +422,7 @@ export default function CinematicVideoIntro({
 
             const handleProbeCanPlay = () => {
                 videoFound = true;
-                clearTimeout(videoTimeout);
+                timers.clearTimeout(videoTimeout);
                 if (cancelled) return;
 
                 if (isMountedRef.current) {
@@ -430,7 +434,7 @@ export default function CinematicVideoIntro({
             };
 
             const handleProbeError = () => {
-                clearTimeout(videoTimeout);
+                timers.clearTimeout(videoTimeout);
                 if (cancelled || videoFound) return;
 
                 // MP4 missing → TTS fallback
@@ -477,12 +481,12 @@ export default function CinematicVideoIntro({
         loadVoices();
         window.speechSynthesis.onvoiceschanged = loadVoices;
 
-        const timeout = setTimeout(() => {
+        const timeout = timers.setTimeout(() => {
             if (isMountedRef.current) setVoiceReady(true);
         }, 2000);
 
         return () => {
-            clearTimeout(timeout);
+            timers.clearTimeout(timeout);
             window.speechSynthesis.onvoiceschanged = null;
         };
     }, [character]);
@@ -528,7 +532,7 @@ export default function CinematicVideoIntro({
         // Last scene: user must click BEGIN ANALYSIS — no auto-advance
         if (isLastScene) return;
 
-        autoAdvanceTimerRef.current = setTimeout(() => {
+        autoAdvanceTimerRef.current = timers.setTimeout(() => {
             if (!isMountedRef.current) return;
             setSubtitleSegments([]);
             setCurrentSegmentIndex(0);
@@ -544,7 +548,7 @@ export default function CinematicVideoIntro({
     }, [handleSceneComplete]);
 
     const playCurrentScene = useCallback(() => {
-        if (!isMountedRef.current || videoState === 'completed') return;
+        if (!isMountedRef.current || videoState === 'completed' || heldRef.current) return;
 
         if (useRealVideo) {
             const video = videoRef.current;
@@ -576,9 +580,9 @@ export default function CinematicVideoIntro({
         setSubtitleSegments(segments);
 
         let elapsed = 0;
-        progressTimerRef.current = setInterval(() => {
+        progressTimerRef.current = timers.setInterval(() => {
             if (!isMountedRef.current) {
-                clearInterval(progressTimerRef.current);
+                timers.clearInterval(progressTimerRef.current);
                 return;
             }
 
@@ -586,7 +590,7 @@ export default function CinematicVideoIntro({
             setProgress(Math.min((elapsed / duration) * 100, 100));
 
             if (elapsed >= duration) {
-                clearInterval(progressTimerRef.current);
+                timers.clearInterval(progressTimerRef.current);
                 progressTimerRef.current = null;
                 sceneCompleteRef.current.visual = true;
                 checkCompletion();
@@ -597,15 +601,15 @@ export default function CinematicVideoIntro({
             const segDuration = duration / segments.length;
             let segIdx = 0;
 
-            segmentTimerRef.current = setInterval(() => {
+            segmentTimerRef.current = timers.setInterval(() => {
                 if (!isMountedRef.current) {
-                    clearInterval(segmentTimerRef.current);
+                    timers.clearInterval(segmentTimerRef.current);
                     return;
                 }
 
                 segIdx++;
                 if (segIdx >= segments.length) {
-                    clearInterval(segmentTimerRef.current);
+                    timers.clearInterval(segmentTimerRef.current);
                     segmentTimerRef.current = null;
                     setCurrentSegmentIndex(segments.length - 1);
                 } else {
@@ -673,12 +677,12 @@ export default function CinematicVideoIntro({
             };
 
             if (isIOS()) {
-                setTimeout(speakUtterance, 250);
+                timers.setTimeout(speakUtterance, 250);
             } else {
                 speakUtterance();
             }
         } else {
-            setTimeout(() => {
+            timers.setTimeout(() => {
                 if (isMountedRef.current) {
                     sceneCompleteRef.current.narration = true;
                     checkCompletion();
@@ -819,7 +823,7 @@ export default function CinematicVideoIntro({
             setCurrentSegmentIndex(0);
             setPlaybackState('idle');
 
-            setTimeout(() => {
+            timers.setTimeout(() => {
                 if (isMountedRef.current) playCurrentScene();
             }, 100);
         }
@@ -839,8 +843,8 @@ export default function CinematicVideoIntro({
         } else {
             if (playbackState === 'playing') {
                 if ('speechSynthesis' in window) window.speechSynthesis.pause();
-                clearInterval(progressTimerRef.current);
-                clearInterval(segmentTimerRef.current);
+                timers.clearInterval(progressTimerRef.current);
+                timers.clearInterval(segmentTimerRef.current);
                 setPlaybackState('paused');
             } else if (playbackState === 'paused') {
                 if ('speechSynthesis' in window) window.speechSynthesis.resume();
@@ -904,7 +908,7 @@ export default function CinematicVideoIntro({
         // ── Wait for asset discovery to finish before doing anything.
         // If we don't wait, TTS might start playing before we even know if
         // Ken Burns mode is going to be activated!
-        if (videoLoading) return;
+        if (videoLoading || suspended) return;
 
         // ── Ken Burns mode: MP3 audio is handled by KenBurnsSlideshow.
         // Do NOT start speech synthesis or TTS — that would cause double audio.
@@ -912,13 +916,23 @@ export default function CinematicVideoIntro({
 
         const canStart = useRealVideo ? (playbackState === 'idle' && currentScene) : (voiceReady && playbackState === 'idle' && currentScene);
         if (canStart) {
-            const timer = setTimeout(() => {
+            const timer = timers.setTimeout(() => {
                 if (isMountedRef.current) playCurrentScene();
             }, 500);
 
-            return () => clearTimeout(timer);
+            return () => timers.clearTimeout(timer);
         }
-    }, [videoLoading, useKenBurns, useRealVideo, voiceReady, playbackState, currentSceneIndex, playCurrentScene, currentScene]);
+    }, [suspended, videoLoading, useKenBurns, useRealVideo, voiceReady, playbackState, currentSceneIndex, playCurrentScene, currentScene]);
+
+    useEffect(() => {
+        if (suspended || useKenBurns || videoLoading || !currentScene) return;
+        const first = getSceneStartTime(currentSceneIndex);
+        const last = getSceneStartTime(currentSceneIndex + 1);
+        const movie = useRealVideo && videoRef.current?.getAttribute('src');
+        sceneReview.recordScene({ key: `${scenarioId}:cinema:${currentSceneIndex}`, title: currentScene.visual || `Briefing ${currentSceneIndex + 1}` },
+            { id: `${scenarioId}:cinema:${currentSceneIndex}`, text: currentScene.narration, audio: null, speaker: 'Narrator',
+              video: movie ? { url: movie, startTime: first, endTime: last || null, hasSpeech: true, muted: isMuted } : null });
+    }, [scenarioId, currentSceneIndex, useRealVideo, useKenBurns, videoLoading, suspended, sceneReview.recordScene, progress, playbackState, isMuted]);
 
     /* ── Error / empty state ─────────────────────────────────────────────────── */
 
@@ -990,10 +1004,10 @@ export default function CinematicVideoIntro({
             <div className="absolute right-0 inset-y-0 w-px bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent pointer-events-none z-10" />
 
             {/* ─── TOP STATUS BAR ──────────────────────────────────────────────── */}
-            <div className="glass-nav relative z-10 flex items-center justify-between px-6 py-3 shrink-0">
+            <div className="glass-nav relative z-10 flex flex-wrap gap-2 items-center justify-between px-6 py-3 shrink-0">
 
                 {/* Left: brand + phase label */}
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                     <span className="text-xs font-mono text-[var(--lx-text-muted)] tracking-wider select-none">
                         Perspective X
@@ -1016,8 +1030,8 @@ export default function CinematicVideoIntro({
                 </div>
 
                 {/* Right: playback status + scene counter + skip */}
-                <div className="flex items-center gap-3">
-
+                <div className="flex flex-wrap items-center gap-3">
+                    <PreviousSceneButton />
                     {/* Playback status pill */}
                     <AnimatePresence mode="wait">
                         {playbackState === 'playing' && (

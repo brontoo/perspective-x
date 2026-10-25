@@ -177,7 +177,7 @@ export function atomAction(s, event) {
   if (event.type === "visit") {
     const current = activeAtomLine(s);
     if (!current || s.visited.at(-1)?.id === current.id) return s;
-    return { ...s, visited: [...s.visited, { id: current.id, at: new Date().toISOString() }] };
+    return { ...s, visited: [...s.visited, { id: current.id, scene: ATOM_STEPS[s.step].scene, at: new Date().toISOString() }] };
   }
   if (event.type === "video") {
     if (activeAtomLine(s)?.video !== event.id) return s;

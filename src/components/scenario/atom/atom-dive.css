@@ -86,7 +86,7 @@
 .px-atom-comparison-models { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
 .px-atom-comparison-models .px-atom-structure { background: #30363b; }
 .px-atom-structure.is-grayscale { filter: grayscale(1); }
-.px-atom-comparison-models button { width: 100%; }
+.px-atom-comparison-models > div > button { width: 100%; }
 .px-atom-adventure blockquote { padding: 13px 16px; margin: 15px 0 20px; border-left: 3px solid #d7ba84; background: #18384b; color: #dcebf1; font-size: 14px; }
 .px-atom-question { border: 1px solid #708b9c; border-radius: 12px; padding: 15px; margin: 20px 0; min-width: 0; }
 .px-atom-question legend { color: #ecf5f9; font-size: 14px; font-weight: 600; padding: 0 6px; }
@@ -156,3 +156,36 @@
 @media (prefers-reduced-motion: reduce) {
   .px-atom-adventure *, .px-atom-adventure *::before, .px-atom-adventure *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+/* The scientific layer stays mounted through narration and feedback. */
+.px-atom-response { border: 0; padding: 0; margin: 0; min-width: 0; }
+.px-atom-stage { gap: 14px; }
+.px-atom-world-view { position: relative; width: min(900px,calc(100% - 40px)); align-self: center; margin: 0 20px 12px; padding: 15px; background: #0b2538f5; border: 1px solid #7294a5; border-radius: 16px; }
+.px-atom-world-view > .px-atom-crystal > svg { max-height: min(420px,44dvh); }
+.px-atom-crystal { min-width: 0; }
+.px-atom-crystal svg { display: block; width: 100%; height: auto; max-height: 340px; touch-action: pan-y; border-radius: 12px; }
+.px-atom-crystal.is-grayscale { filter: grayscale(1); }
+.px-atom-crystal-controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 0; }
+.px-atom-adventure .px-atom-crystal-controls button { min-height: 40px; font-size: 11px; padding: 8px 10px; }
+.px-atom-recovered-orbit { position: absolute; width: 24%; right: 16%; top: 21%; filter: drop-shadow(0 12px 14px #0c1c2c99); }
+.px-atom-playback-option { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #d4e8ef; }
+.px-atom-adventure .px-atom-playback-option select { width: auto; padding: 9px; font-size: 11px; }
+.px-atom-comparison-models { align-items: start; }
+.px-atom-comparison-models .px-atom-crystal svg { max-height: 280px; min-height: 200px; }
+.px-atom-stage[data-world="comparison"] > .px-atom-task { margin-top: 0; }
+.px-atom-stage[data-world="comparison"] .px-atom-lab { padding-top: 18px; }
+.px-atom-speaker { overflow-wrap: anywhere; }
+.px-atom-dialogue { flex-shrink: 0; min-width: 0; }
+.px-atom-caption { overflow-wrap: anywhere; }
+.px-atom-stage[data-world="metallic"],.px-atom-stage[data-world="ionic"] { background: radial-gradient(ellipse at 45% 35%,#17445b,#071d30 75%); }
+@media(max-width:540px) {
+  .px-atom-world-view { width: calc(100% - 20px); margin: 0 10px; padding: 12px; }
+  .px-atom-crystal svg { min-height: 200px; }
+  .px-atom-comparison-models .px-atom-crystal svg { min-height: 200px; }
+  .px-atom-world-view > .px-atom-crystal > svg { max-height: none; }
+  .px-atom-top-actions .px-previous-scene { min-height: 44px; }
+  .px-atom-playback-option { flex-wrap: wrap; }
+}
+.px-atom-comparison-models { scroll-margin-top: 80px; }
+.px-atom-comparison-response { margin: 0; padding: 10px 0 0; border: 0; background: transparent; }
+.px-atom-comparison-response > summary { color: #dbeef5; font-weight: 600; font-size: 13px; margin-bottom: 14px; cursor: pointer; }
+.px-expedition .px-atom-adventure .px-atom-comparison-response { color: #dcecf5; background: transparent; border: 0; padding: 0; }
