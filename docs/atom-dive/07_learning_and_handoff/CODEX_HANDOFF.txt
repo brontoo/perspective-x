@@ -1,0 +1,21 @@
+PERSPECTIVE X - ATOM DIVE MEDIA HANDOFF
+
+Build a new mission from this production pack; do not silently change existing scenarios. This pack contains proposed source prompts and authored story data, not generated or verified playable media.
+
+Reuse the platform's illustrated visual-novel presentation: one persistent scene, active-speaker dialogue panel, distinct narrator treatment, collapsible log, audio replay, manual Continue and accessible investigation overlays. Keep current character identity locked to the latest ATOM DIVE mock-up. The optional scene illustrations are backgrounds, not scientific answer keys.
+
+Use the 8 images and 6 video filenames from the manifests. Produce verified optimized web copies of image masters without merely renaming extensions. Do not auto-upload raw masters, private voice IDs, API keys or production-only notes into public folders. Do not use obsolete Ocean Dome or dessert asset names.
+
+Implement the metallic and ionic models as deterministic interactive scientific components. Preserve all particles and charges as specified in the learning manifest. Do not model metallic formation as positive and negative metal ions, let electrons leave the specimen, identify ionic bonding as electron transfer alone, or represent solid NaCl as isolated molecules. Keep all material-property objectives outside this mission.
+
+The student chooses investigation order, but both required investigations must be completed before the grayscale final comparison unlocks. Use condition-keyed spoken feedback for errors. Do not play all branch recordings sequentially. Revising a choice must retain the evidence record and record the actual attempt; do not grant progress for merely watching a video.
+
+Use audio_manifest.json to connect each scene, speaker, exact line and branch. Play recorded files first. Never guess a line's branch from alphabetic order. When a file is missing, retain the readable text and flag the missing recording rather than claim it exists. Avoid duplicate voice tracks from video audio. Block overlapping narration; stop audio on exit, replay or navigation. Pause media on tab hide; resume only with appropriate controls.
+
+Each clip is at most 5.0 seconds. Measure actual duration and flag/trim a generation that exceeds the requirement while preserving its requested endpoint. Do not stretch, slow or loop a video to fit speech. At the end, hold the actual end frame, or the supplied END still, until the dialogue finishes and the student continues. Longer lines belong on still scenes. Silence is valid.
+
+Provide a clear Start button to enable audio, captions, optional voice, keyboard alternatives to dragging, touch support, replay, pause and reduced motion. Keep investigations untimed. The target completion time is 10-15 minutes, not a hard deadline. Render formula labels and all assessment options as accessible HTML/SVG. Final comparison must randomize left/right placement without allowing colour to reveal the answer.
+
+Use the five questions in exit_ticket.json, four options per question, 80% passing. Reveal answers after full submission, not during the story. Read question options on request if accessible audio is implemented. Record the 5-answer result and reuse existing teacher, notebook and progression infrastructure without unsupported claims of semantic AI grading.
+
+Validate all image formats, asset URLs, voice mappings, 5-second durations, branch paths, charge calculations, save/resume and reduced motion. Preserve all unrelated art, music, code and user records. Work in a separate development branch; do not merge or deploy without approval. Report what was actually verified and all missing assets.
