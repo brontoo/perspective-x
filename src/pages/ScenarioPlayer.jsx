@@ -38,6 +38,7 @@ import MissionNotebook from "@/components/scenario/MissionNotebook";
 import ScenarioComplete from "@/components/scenario/ScenarioComplete";
 import { useScenarioAudio } from "@/hooks/useScenarioAudio";
 import OceanSession from "@/components/scenario/ionic/OceanSession";
+import { atomNotebook } from "@/data/atomDive.mjs";
 const MissionContent = ({ children }) => children;
 const CinematicVideoIntro = lazy(
   () => import("@/components/scenario/CinematicVideoIntro"),
@@ -45,6 +46,7 @@ const CinematicVideoIntro = lazy(
 const IonicMission = lazy(
   () => import("@/components/scenario/ionic/IonicMission"),
 );
+const AtomDiveMission = lazy(() => import("@/components/scenario/atom/AtomDiveMission"));
 const SceneOne = lazy(() => import("@/components/scenario/SceneOne"));
 const SceneTwo = lazy(() => import("@/components/scenario/SceneTwo"));
 const ConsequenceViewer = lazy(
@@ -209,7 +211,9 @@ export default function ScenarioPlayer() {
     setPhase(
       draft.exitTicket
         ? "complete"
-        : Object.keys(draft).length
+        : scenario.interactiveAtom
+          ? "intro"
+          : Object.keys(draft).length
           ? resumePhase(draft, scenario.interactiveIonic)
           : "video",
     );
@@ -314,10 +318,10 @@ export default function ScenarioPlayer() {
     if (phase === "complete") audio.playChamberUnlock();
     else if (!["video", "intro"].includes(phase)) audio.playPhaseTransition();
   }, [phase]);
-  function capture(field, value, nextPhase) {
+  function capturePatch(patch, nextPhase) {
     const next = {
       ...responseRef.current,
-      ...(field ? { [field]: value } : {}),
+      ...patch,
       meta: {
         ...responseRef.current.meta,
         recordType: "mission_attempt",
@@ -328,6 +332,9 @@ export default function ScenarioPlayer() {
     setTouched(true);
     setRecord(next);
     setPhase(nextPhase);
+  }
+  function capture(field, value, nextPhase) {
+    capturePatch(field ? { [field]: value } : {}, nextPhase);
   }
   function changeNotes(notes) {
     capture("notebook", notes, phase);
@@ -463,7 +470,7 @@ export default function ScenarioPlayer() {
                 : "Standard Mode"}
           </span>
           <small>
-            {scenario.interactiveIonic ? "Your investigator" : "Role mentor"}:{" "}
+            {scenario.interactiveIonic || scenario.interactiveAtom ? "Your investigator" : "Role mentor"}:{" "}
             {ROLE_IDENTITIES[role.id].name} · Fictional character
           </small>
         </div>
@@ -474,7 +481,7 @@ export default function ScenarioPlayer() {
       {preview && (
         <div className="xp-preview-banner">
           <strong>Teacher preview — no student progress is saved</strong>
-          <div className="xp-actions">
+          {!scenario.interactiveAtom && <div className="xp-actions">
             <button
               className="px-outline-button"
               onClick={() =>
@@ -497,7 +504,8 @@ export default function ScenarioPlayer() {
             >
               Next stage
             </button>
-          </div>
+          </div>}
+          {scenario.interactiveAtom && <button className="px-outline-button" onClick={replay}>Restart preview</button>}
         </div>
       )}
       {reviewId && (
@@ -505,7 +513,7 @@ export default function ScenarioPlayer() {
           Reviewing a preserved attempt. Responses are read-only.
         </p>
       )}
-      <ol className="xp-chapters" aria-label="Five-chapter mission progress">
+      {!scenario.interactiveAtom && <ol className="xp-chapters" aria-label="Five-chapter mission progress">
         {MISSION_CHAPTERS.map((chapter, i) => (
           <li
             key={chapter.id}
@@ -519,7 +527,7 @@ export default function ScenarioPlayer() {
             </strong>
           </li>
         ))}
-      </ol>
+      </ol>}
       <div className="xp-mission-workspace" data-phase={phase}>
         <WorkspaceSession
           key={id}
@@ -548,7 +556,15 @@ export default function ScenarioPlayer() {
               </section>
             ) : (
               <>
-                {scenario.interactiveIonic ? (
+                {scenario.interactiveAtom ? (
+                  phase !== "complete" && <AtomDiveMission
+                    key={`${id}:${attemptCount}`}
+                    value={responses.atomDive}
+                    onDraft={value => capturePatch(atomNotebook(value), "intro")}
+                    onComplete={finish}
+                    onNotebook={() => setNotebook(true)}
+                  />
+                ) : scenario.interactiveIonic ? (
                   phase !== "complete" && (
                     <IonicMission
                       key={`${id}:${phase}`}

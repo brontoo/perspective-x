@@ -60,7 +60,8 @@ test("teacher locks and prerequisites cannot be bypassed with preview query", as
   }
   expect(state.writes).toHaveLength(0);
 });
-for (const id of Object.keys(SCENARIOS).filter(id => !SCENARIOS[id].interactiveIonic))
+// Dedicated cinematic missions exercise their authored checkpoints in their own suites.
+for (const id of Object.keys(SCENARIOS).filter(id => !SCENARIOS[id].interactiveIonic && !SCENARIOS[id].interactiveAtom))
   test(`all five chapters preserve original assessment: ${id}`, async ({
     page,
   }) => {

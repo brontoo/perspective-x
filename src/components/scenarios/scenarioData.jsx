@@ -1,5 +1,6 @@
 // Existing scenarios plus the additive Ionic Materials Specialist role.
 import { IONIC_ROLE, IONIC_SCENARIOS } from "@/data/ionicMissions.mjs";
+import { ATOM_ROLE, ATOM_SCENARIO } from "@/data/atomDive.mjs";
 
 export const ROLES = {
     environmental_scientist: {
@@ -86,6 +87,7 @@ export const ROLES = {
     },
 
     ionic_materials_specialist: IONIC_ROLE,
+    atomic_bonding_investigator: ATOM_ROLE,
 };
 
 export const SCENARIOS = {
@@ -2490,6 +2492,7 @@ export const SCENARIOS = {
         }
     },
     ...IONIC_SCENARIOS,
+    atom_dive: ATOM_SCENARIO,
 };
 
 export const BADGES = {
@@ -2528,6 +2531,7 @@ export const SKILLS = {
 };
 
 export const SCENARIO_SKILLS_MAP = {
+    atom_dive: ATOM_SCENARIO.skills,
     ionic_dessert_mystery: IONIC_SCENARIOS.ionic_dessert_mystery.skills,
     ionic_aquarium_mystery: IONIC_SCENARIOS.ionic_aquarium_mystery.skills,
     water_contamination: ['data_interpretation', 'ethical_reasoning', 'communication', 'reflection'],

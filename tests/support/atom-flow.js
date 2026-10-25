@@ -1,0 +1,87 @@
+import { expect } from "@playwright/test";
+import { setup } from "./fixtures";
+import { ATOM_STEPS } from "../../src/data/atomDive.mjs";
+
+export async function atomSetup(page, options = {}) {
+  await page.addInitScript(() => {
+    window.__atomPlays = [];
+    const play = HTMLMediaElement.prototype.play, pause = HTMLMediaElement.prototype.pause;
+    HTMLMediaElement.prototype.play = function () {
+      if ((this.tagName === "AUDIO" && this.classList.contains("ad-voice-audio")) || (this.tagName === "VIDEO" && this.getAttribute("src")?.includes("atom_dive"))) {
+        window.__atomPlays.push({ id: this.dataset.dialogueId, src: this.getAttribute("src"), op: "play" });
+        this.dispatchEvent(new Event("playing")); return Promise.resolve();
+      }
+      return play.call(this);
+    };
+    HTMLMediaElement.prototype.pause = function () {
+      if (this.classList.contains("ad-voice-audio")) window.__atomPlays.push({ id: this.dataset.dialogueId, op: "pause" });
+      return pause.call(this);
+    };
+  });
+  return setup(page, { empty: true, ...options });
+}
+export async function atomStart(page) {
+  await expect(page.locator(".ad-adventure")).toBeVisible();
+  const start = page.getByRole("button", { name: /^(Start ATOM DIVE|Resume mission)$/ });
+  if (await start.count()) await start.click();
+}
+export async function atomContinue(page) {
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  const button = page.locator(".ad-controls > .ad-primary");
+  const skip = page.getByRole("button", { name: "Skip clip", exact: true });
+  if (await skip.count()) await skip.click();
+  if (!(await button.isEnabled())) {
+    const id = await page.locator(".ad-dialogue").getAttribute("data-dialogue-id");
+    await expect(page.locator(".ad-voice-audio")).toHaveAttribute("data-dialogue-id", id);
+    await page.locator(".ad-voice-audio").evaluate(el => el.dispatchEvent(new Event("ended")));
+  }
+  await button.click();
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+}
+export async function atomReach(page, step) {
+  await atomStart(page);
+  for (let i = 0; i < 100; i++) {
+    if (await page.locator(".ad-adventure").getAttribute("data-step") === step &&
+        (!ATOM_STEPS[step].task || await page.locator(".ad-task").count())) return;
+    await atomContinue(page);
+  }
+  throw new Error(`Did not reach ATOM DIVE checkpoint ${step}`);
+}
+export async function atomMetal(page) {
+  await atomReach(page, "metalTask");
+  await page.getByRole("button", { name: "Inspect ion cores", exact: true }).click();
+  await page.getByRole("button", { name: "Inspect valence electrons", exact: true }).click();
+  await page.getByLabel("Where do the valence electrons belong?", { exact: true }).selectOption("delocalized");
+  await page.getByLabel("Which components attract?", { exact: true }).selectOption("cores-electrons");
+  await page.getByLabel("Explain the overall charge", { exact: true }).selectOption("balanced");
+  await page.getByRole("button", { name: "Verify metallic reconstruction", exact: true }).click();
+}
+export async function atomIonic(page) {
+  await atomReach(page, "ionicTransfer");
+  await page.getByRole("button", { name: "Transfer one electron", exact: true }).click();
+  await atomReach(page, "ionicCharges");
+  await expect(page.getByRole("img", { name: /Sodium: 11 protons, 10 electrons/ })).toBeVisible();
+  await page.getByLabel("Sodium ion charge", { exact: true }).selectOption("+1");
+  await page.getByLabel("Chloride ion charge", { exact: true }).selectOption("-1");
+  await page.getByLabel("What happened to the nuclei?", { exact: true }).selectOption("unchanged");
+  await page.getByRole("button", { name: "Verify charges and nuclei", exact: true }).click();
+  await atomReach(page, "ionicAttraction");
+  await page.getByLabel("What holds this ionic structure together?", { exact: true }).selectOption("opposite-ions");
+  await page.getByRole("button", { name: "Verify ionic attraction", exact: true }).click();
+  await atomReach(page, "ionicLattice");
+  await page.getByRole("button", { name: "Expand repeating lattice", exact: true }).click();
+  await expect(page.getByRole("img", { name: /two-dimensional slice of an extended/i })).toBeVisible();
+  await page.getByRole("button", { name: "Verify extended structure", exact: true }).click();
+}
+export async function atomCompare(page) {
+  await atomReach(page, "comparisonTask");
+  const models = page.locator(".ad-comparison-models > div");
+  const label = await models.first().getByRole("img").getAttribute("aria-label");
+  const m = label.includes("delocalized electrons remain") ? "1" : "2", i = m === "1" ? "2" : "1";
+  await page.getByRole("button", { name: `Choose Model ${m === "1" ? "A" : "B"}`, exact: true }).click();
+  await page.getByLabel("Particle evidence for your location", { exact: true }).selectOption("cores-electrons");
+  await page.getByLabel("Attractive interaction supporting your location", { exact: true }).selectOption("cores-electrons");
+  await page.getByLabel("Match: valence electrons become delocalized among positive cores", { exact: true }).selectOption(m);
+  await page.getByLabel("Match: electron transfer forms opposite ions in a repeating lattice", { exact: true }).selectOption(i);
+  await page.getByRole("button", { name: "Verify location and both formation matches", exact: true }).click();
+}

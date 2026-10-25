@@ -45,7 +45,7 @@ export default function MissionNotebook({
         record.investigation?.mineral,
     );
   const ionicEvidence =
-    scenario.interactiveIonic &&
+    (scenario.interactiveIonic || scenario.interactiveAtom) &&
     [
       record.investigation?.evidence
         ?.map((e) => `${e.label}: ${e.observation}`)
