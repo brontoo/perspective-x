@@ -13,7 +13,7 @@ const allPassed = Object.keys(SCENARIOS).map((scenario_id, i) => ({
   completed_at: "2026-10-10T10:00:00Z",
   answers: { exitTicket: { score: 100, passed: true } },
 }));
-test("all role journeys and six pathways retain their scientific relationships", async ({
+test("all role journeys and learning pathways retain their scientific relationships", async ({
   page,
 }) => {
   test.setTimeout(90000);
@@ -31,7 +31,7 @@ test("all role journeys and six pathways retain their scientific relationships",
     await noOverflow(page);
   }
   await page.goto("/LearningPath");
-  await expect(page.locator(".xp-path-card")).toHaveCount(6);
+  await expect(page.locator(".xp-path-card")).toHaveCount(Object.keys(LEARNING_PATHS).length);
   for (const path of Object.values(LEARNING_PATHS)) {
     await page.goto(`/LearningPath?path=${path.id}`);
     await expect(

@@ -35,6 +35,34 @@ export const LEARNING_PATHS = {
         completionNote: 'Complete all 5 Chemistry missions to earn the Master Chemist distinction.',
     },
 
+    materials_bonding: {
+        id: 'materials_bonding',
+        title: 'Materials & Bonding Path',
+        emoji: '⚛️',
+        color: 'teal',
+        colorClasses: {
+            bg: 'bg-teal-50',
+            border: 'border-teal-200',
+            badge: 'bg-teal-100 text-teal-700 border-teal-200',
+            bar: 'from-teal-500 to-cyan-400',
+            icon: 'bg-teal-100 text-teal-600',
+            heading: 'text-teal-700',
+            button: 'bg-teal-600 hover:bg-teal-700 text-white',
+            soft: 'bg-teal-50/60 border-teal-100',
+        },
+        description: 'Identify mystery ingredients, investigate marine mineral deposits, and explore metallic and ionic bonding across three cinematic chemistry missions.',
+        difficulty: 'Advanced',
+        estimatedMinutes: 43,
+        scenarios: [
+            'ionic_dessert_mystery',
+            'ionic_aquarium_mystery',
+            'atom_dive',
+        ],
+        skills: ['scientific_reasoning', 'concept_application', 'data_interpretation', 'decision_making', 'communication'],
+        completionBadge: '⚛️ Materials & Bonding Specialist',
+        completionNote: 'Complete all 3 Materials & Bonding missions to earn the Materials & Bonding Specialist distinction.',
+    },
+
     biology: {
         id: 'biology',
         title: 'Biology Path',
