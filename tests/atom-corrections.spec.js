@@ -9,8 +9,9 @@ import { installOceanPlayback, oceanBriefing } from "./support/ocean-flow";
 const target = "/ScenarioPlayer?scenario=atom_dive";
 const root = page => page.locator(".px-atom-adventure");
 const paint = page => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-async function start(page) { await page.getByRole("button", { name: /^(Start ATOM DIVE|Resume mission)$/ }).click(); await paint(page); }
+async function start(page) { await page.getByRole("button", { name: /^(Start ATOM DIVE|Resume mission)$/ }).click(); await paint(page); await expect(page.locator(".px-atom-model-intro")).toBeHidden({ timeout: 10000 }); }
 async function beat(page) {
+  await expect(page.locator(".px-atom-model-intro")).toBeHidden({ timeout: 10000 });
   await paint(page);
   await page.locator(".px-atom-voice-audio").evaluate(el => el.dispatchEvent(new Event("ended")));
   await paint(page);
@@ -57,8 +58,23 @@ test("one Start automatically plays the authored briefing, revised hovering ORBI
 
 for (const world of ["metallic","ionic"]) test(`fresh ${world}-first route controls state, narration, camera, model and withheld video ID on resume`, async ({ page }) => {
   await atomSetup(page); await page.goto(target); await start(page); await reach(page, "order");
+  if (world === "metallic") await page.clock.install();
   await page.getByRole("button", { name: new RegExp(`^${world === "metallic" ? "Metallic" : "Ionic"} world first`) }).click();
   await paint(page);
+  if (world === "metallic") {
+    const intro = page.locator(".px-atom-model-intro");
+    await expect(intro.getByRole("heading", { name: "Metallic structure model" })).toBeVisible();
+    await expect(page.locator(".px-atom-world-view")).toHaveCount(0);
+    const plays = await page.evaluate(() => window.__atomPlays.filter(row => row.op === "play").length);
+    await shot(page, "metallic-model-introduction");
+    await page.getByRole("button", { name: "Pause", exact: true }).click();
+    await page.clock.runFor(8000);
+    await expect(intro).toBeVisible();
+    expect(await page.evaluate(() => window.__atomPlays.filter(row => row.op === "play").length)).toBe(plays);
+    await page.getByRole("button", { name: "Resume", exact: true }).click();
+    await page.clock.runFor(4000);
+    await expect(intro).toBeHidden();
+  } else await expect(page.locator(".px-atom-model-intro")).toHaveCount(0);
   await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-world", world);
   await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-video-id", world === "metallic" ? "AD_V02_enter_metallic.mp4" : "AD_V04_enter_ionic.mp4");
   await expect(page.locator(".px-atom-world-view .px-atom-crystal")).toHaveAttribute("data-world", world);
@@ -79,26 +95,28 @@ for (const world of ["metallic","ionic"]) test(`fresh ${world}-first route contr
   await noOverflow(page);
 });
 
-test("comparison models are mounted during narration, scored choice, error feedback and automatic return", async ({ page }) => {
+test("comparison stays visible as a narrated review and advances without selection or verification", async ({ page }) => {
   const { state } = await at(page, "comparison", value => { value.step = "comparisonBrief"; value.cursor = 0; });
   const models = page.locator(".px-atom-comparison-models svg");
   await expect(models).toHaveCount(2);
-  await expect(page.locator(".px-atom-comparison-models")).not.toContainText("Na⁺ / Cl⁻");
   await models.first().evaluate(el => window.__retainedComparison = el);
   await reach(page, "comparisonTask");
-  const wrong = state.comparison.sides[0] === "ionic" ? "A" : "B";
-  await page.getByRole("button", { name: `Choose Model ${wrong}`, exact: true }).click();
-  await page.getByRole("button", { name: "Verify location and both formation matches", exact: true }).click();
-  await expect(root(page)).toHaveAttribute("data-feedback", "true");
-  await expect(models).toHaveCount(2);
-  await expect(page.getByRole("button", { name: "Verify location and both formation matches", exact: true, includeHidden: true })).toBeDisabled();
-  expect(await models.first().evaluate(el => el === window.__retainedComparison)).toBe(true);
-  await shot(page, "s09-models-during-correction");
+  await expect(page.getByRole("heading", { name: "Metallic structure", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ionic structure", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Choose Model/ })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Verify location and both formation matches", exact: true })).toHaveCount(0);
+  await expect(page.locator(".px-atom-task select")).toHaveCount(0);
+  await shot(page, "s09-narrated-comparison");
   await beat(page);
-  await expect(root(page)).toHaveAttribute("data-feedback", "false");
-  await expect(page.getByRole("button", { name: `Choose Model ${wrong}`, exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(models).toHaveCount(2);
   expect(await models.first().evaluate(el => el === window.__retainedComparison)).toBe(true);
+  await reach(page, "recovery");
+  const draft = await page.evaluate(() => JSON.parse(localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive')));
+  expect(draft.atomDive.evidence).toEqual(state.evidence);
+  expect(draft.atomDive.attempts).toEqual(state.attempts);
+  expect(draft.atomDive.comparison.reviewed).toBe(true);
+  expect(draft.atomDive.comparison.supported).toBe(false);
+  expect(draft.atomDive.corrections.some(row => row.condition === "final-supported")).toBe(false);
 });
 
 test("speech and film finish independently; duplicate and stale completion callbacks never double-advance", async ({ page }) => {
@@ -123,15 +141,13 @@ test("speech and film finish independently; duplicate and stale completion callb
   await expect(page.locator(".px-atom-dialogue")).toHaveAttribute("data-dialogue-id", "AD_S11_RAS_02");
 });
 
-test("previous visited scene review preserves comparison choices, notes, randomization and the assessed attempt count", async ({ page }) => {
-  const { state, data } = await at(page, "comparison");
-  await page.getByRole("button", { name: "Choose Model A", exact: true }).click();
-  await page.getByLabel("Particle evidence for your location", { exact: true }).selectOption("cores-electrons");
-  await page.getByLabel("Attractive interaction supporting your location", { exact: true }).selectOption("opposite-ions");
+test("previous scene preserves narrated comparison, historical inputs, notes and assessed attempts", async ({ page }) => {
+  const { state, data } = await at(page, "comparison", value => { value.comparison.world = "2"; value.comparison.particles = "colour"; });
+  await page.getByRole("button", { name: "Pause", exact: true }).click();
   await page.getByRole("button", { name: "Mission Notebook", exact: true }).first().click();
-  await page.getByLabel("1. Scientific evidence — personal notes", { exact: true }).fill("Retain my unsubmitted comparison observations.");
+  await page.getByLabel("1. Scientific evidence — personal notes", { exact: true }).fill("Retain my comparison observations.");
   await page.getByLabel("Close notebook", { exact: true }).click();
-  await expect.poll(() => data.progressRows.some(row => row.scenario_id === "atom_dive" && row.answers.notebook?.evidenceNotes?.includes("Retain my unsubmitted"))).toBe(true);
+  await expect.poll(() => data.progressRows.some(row => row.scenario_id === "atom_dive" && row.answers.notebook?.evidenceNotes?.includes("Retain my comparison"))).toBe(true);
   const before = structuredClone(data.progressRows);
   const labels = await page.locator(".px-atom-comparison-models svg").evaluateAll(items => items.map(el => el.getAttribute("aria-label")));
   await page.getByRole("button", { name: "Previous scene", exact: true }).click();
@@ -139,14 +155,13 @@ test("previous visited scene review preserves comparison choices, notes, randomi
   await expect(dialog).toBeVisible();
   await expect(dialog.locator("h2")).toContainText("S08");
   await expect(dialog.getByRole("textbox")).toHaveCount(0);
-  await dialog.screenshot({ path: "docs/atom-dive/screenshots/corrections/atom-previous-scene.png" });
   await dialog.getByRole("button", { name: "Return to current scene", exact: true }).click();
   await expect(root(page)).toHaveAttribute("data-step", "comparisonTask");
-  await expect(page.getByRole("button", { name: "Choose Model A", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await expect(page.getByLabel("Attractive interaction supporting your location", { exact: true })).toHaveValue("opposite-ions");
   expect(await page.locator(".px-atom-comparison-models svg").evaluateAll(items => items.map(el => el.getAttribute("aria-label")))).toEqual(labels);
   const current = await page.evaluate(() => JSON.parse(localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive')));
   expect(current.atomDive.evidence).toEqual(state.evidence);
+  expect(current.atomDive.comparison.world).toBe("2");
+  expect(current.atomDive.comparison.particles).toBe("colour");
   expect(data.progressRows).toEqual(before);
 });
 
@@ -210,18 +225,17 @@ test("previous-scene review suspends a real recording and restores its exact liv
   await expect(root(page)).toHaveAttribute("data-step","metalEntry");
 });
 
-for (const width of [820,390]) test(`comparison feedback and fullscreen remain readable and preserve models at ${width}px`, async ({ page }) => {
+for (const width of [820,390]) test(`narrated comparison and fullscreen remain readable at ${width}px`, async ({ page }) => {
   await page.setViewportSize({width,height:width === 390 ? 844 : 1000});
   await at(page,"comparison");
   await page.getByRole("button",{name:"Full screen",exact:true}).click();
   await noOverflow(page);
-  await page.getByRole("button",{name:"Verify location and both formation matches",exact:true}).click();
-  await expect(root(page)).toHaveAttribute("data-feedback","true");
   await expect(page.locator(".px-atom-comparison-models svg")).toHaveCount(2);
   await expect(page.locator(".px-atom-speaker")).toContainText("Hamad Al Zaabi");
-  await shot(page,`s09-feedback-fullscreen-${width}`);
+  await expect(page.getByRole("button", { name: /^Choose Model/ })).toHaveCount(0);
+  await shot(page,`s09-review-fullscreen-${width}`);
   await beat(page);
-  await expect(root(page)).toHaveAttribute("data-feedback","false");
+  await expect(page.locator(".px-atom-comparison-models svg")).toHaveCount(2);
   await page.getByRole("button",{name:"Exit full screen",exact:true}).click();
 });
 
@@ -277,12 +291,8 @@ for (const first of ["metallic","ionic"]) test(`automatic ${first}-first complet
   }
   if(first === "metallic") { await metal(); await ionic(); } else { await ionic(); await metal(); }
   await reach(page,"comparisonTask");
-  const metalFirst = await page.locator(".px-atom-comparison-models .px-atom-crystal").first().getAttribute("data-world") === "metallic";
-  await page.getByRole("button",{name:`Choose Model ${metalFirst ? "A" : "B"}`,exact:true}).click();
-  for(const label of ["Particle evidence for your location","Attractive interaction supporting your location"]) await page.getByLabel(label,{exact:true}).selectOption("cores-electrons");
-  await page.getByLabel("Match: valence electrons become delocalized among positive cores",{exact:true}).selectOption(metalFirst ? "1" : "2");
-  await page.getByLabel("Match: electron transfer forms opposite ions in a repeating lattice",{exact:true}).selectOption(metalFirst ? "2" : "1");
-  await page.getByRole("button",{name:"Verify location and both formation matches",exact:true}).click();
+  await expect(page.locator(".px-atom-comparison-models svg")).toHaveCount(2);
+  await expect(page.getByRole("button", { name: "Verify location and both formation matches", exact: true })).toHaveCount(0);
   await reach(page,"reflection");
   await page.getByLabel("One difference in how the bonds form",{exact:true}).fill("Metal electrons delocalize; forming these ions transfers an electron.");
   await page.getByLabel("One difference in what holds the structures together",{exact:true}).fill("Positive cores attract delocalized electrons; opposite ions attract in the ionic lattice.");

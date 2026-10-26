@@ -82,7 +82,12 @@ for (const first of ["metallic", "ionic"]) test(`${first}-first route requires b
   const restored = restoreAtomState(JSON.parse(JSON.stringify(s)));
   assert.deepEqual(restored.comparison.sides, ["ionic", "metallic"]);
   assert.deepEqual(restored.evidence, s.evidence);
-  assert.equal(act(s, "continue"), s, "Continue cannot bypass scientific comparison");
+  const afterReview = reach(s, "reflection");
+  assert.equal(afterReview.comparison.reviewed, true);
+  assert.equal(afterReview.comparison.supported, false);
+  assert.equal(afterReview.evidence.length, 2);
+  assert.equal(afterReview.attempts.length, s.attempts.length);
+  assert.equal(afterReview.corrections.length, s.corrections.length);
 });
 
 test("each metallic misconception selects only its authored feedback and keeps inspected evidence", () => {
@@ -114,28 +119,31 @@ test("ionic errors preserve nuclei and the verified metallic evidence; successfu
   assert.equal(activeAtomLine(wrong).condition, "ionic-molecule-error"); assert.equal(wrong.ionic.verified, false);
 });
 
-test("every final misconception retains both investigations and cannot unlock recovery", () => {
-  const base = models();
-  for (const [patch, condition] of [
-    [{ world: "2" }, "final-wrong-world"], [{ world: "1", particles: "colour" }, "final-colour-only"],
-    [{ world: "1", attraction: "identical" }, "final-same-bond-error"], [{ world: "1" }, "final-no-evidence"],
-  ]) {
-    const s = act(act(base, "comparisonPatch", { patch }), "comparisonVerify");
-    assert.equal(activeAtomLine(s).condition, condition); assert.equal(recoverySupported(s), false);
-    assert.equal(bothModelsVerified(s), true); assert.equal(s.evidence.length, 2);
-    assert.deepEqual(reach(s, "comparison").comparison.sides, base.comparison.sides);
-  }
-  const forged = { ...createAtomState(), step: "comparisonTask" };
-  assert.equal(act(forged, "comparisonVerify"), forged);
+test("removed comparison form resumes as narrative review without creating a correct response", () => {
+  const original = models();
+  const old = { ...original, cursor: 0, feedback: { ids: ["AD_S09_HAM_93_FINAL_NO_EVIDENCE"], cursor: 0 },
+    comparison: { ...original.comparison, world: "2", particles: "colour" } };
+  const restored = restoreAtomState(JSON.parse(JSON.stringify(old)));
+  assert.equal(restored.feedback, null);
+  assert.equal(restored.step, "comparisonTask");
+  assert.equal(restored.comparison.world, "2", "historical inputs are retained");
+  assert.deepEqual(restored.evidence, old.evidence);
+  assert.equal(act(restored, "comparisonVerify"), restored);
+  const next = reach(restored, "reflection");
+  assert.equal(next.comparison.reviewed, true);
+  assert.equal(next.comparison.supported, false);
+  assert.equal(next.evidence.length, 2);
+  assert.equal(atomNotebook(next).scene2.selectedOption, null);
+  const forged = { ...createAtomState(), step: "comparisonTask", cursor: 1 };
+  assert.equal(act(forged, "continue").step, "comparisonTask", "both reconstructions remain required");
 });
 
 test("recovery, reflection and exact five-MCQ assessment are gated; 80% passes and 60% cannot earn a badge", () => {
   const source = JSON.parse(fs.readFileSync("docs/atom-dive/07_learning_and_handoff/exit_ticket.json"));
   assert.deepEqual(ATOM_MEDIA.assessment, source);
   let s = models();
-  s = act(act(s, "comparisonPatch", { patch: comparisonPatch(s) }), "comparisonVerify");
-  assert.equal(recoverySupported(s), true);
   s = reach(s, "reflection");
+  assert.equal(recoverySupported(s), true);
   assert.equal(act(s, "reflectionSave"), s);
   s = act(s, "reflectionPatch", { patch: { formation: "Metal valence electrons delocalize; this ionic example transfers an electron.", attraction: "Metal cores attract delocalized electrons; cations and anions attract in the ionic lattice." } });
   s = reach(act(s, "reflectionSave"), "assessment");
@@ -148,7 +156,7 @@ test("recovery, reflection and exact five-MCQ assessment are gated; 80% passes a
     assert.equal(activeAtomLine(graded).condition, wrong === 1 ? "assessment-pass" : "assessment-review");
     assert.equal(act(graded, "answer", { id: "AD_Q1", answer: "B" }), graded);
     const notebook = atomNotebook(graded);
-    assert.equal(notebook.investigation.evidence.length, 3);
+    assert.equal(notebook.investigation.evidence.length, 2);
     assert.equal(notebook.scene2.consequence, "route-restored");
     assert.match(notebook.reflection, /delocalize/);
   }

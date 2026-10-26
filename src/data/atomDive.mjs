@@ -85,8 +85,8 @@ export const ATOM_STEPS = {
   attractionFeedback: { scene: "S08", label: "Distinguish formation from bonding", lines: conditionLines("ionic-attraction-complete"), next: "ionicLattice" },
   ionicLattice: { scene: "S08", label: "Beyond one ion pair", task: "lattice" },
   ionicSuccess: { scene: "S08", label: "Ionic evidence verified", lines: conditionLines("ionic-lattice-complete"), next: "afterIonic" },
-  comparisonBrief: { scene: "S09", label: "The final recorded clue", lines: [...conditionLines("both-investigations-complete"), ...lines("S09")], next: "comparisonTask", action: "Compare the grayscale models" },
-  comparisonTask: { scene: "S09", label: "Restore the return map", task: "comparison" },
+  comparisonBrief: { scene: "S09", label: "Compare the bonding models", lines: [...conditionLines("both-investigations-complete"), ...lines("S09").filter(id => !["AD_S09_HAM_03", "AD_S09_ALY_04"].includes(id))], next: "comparisonTask" },
+  comparisonTask: { scene: "S09", label: "Two structures, two bonding models", task: "comparison", lines: ["AD_S05_HAM_03_METAL_COMPLETE", "AD_S08_HAM_03_IONIC_ATTRACTION_COMPLETE"], next: "recovery" },
   comparisonSuccess: { scene: "S09", label: "Your evidence supports the route", lines: lines("S09", "final-supported"), next: "recovery" },
   recovery: { scene: "S10", label: "ORBIT recovered", lines: [...lines("S10", "final-supported"), ...lines("S10")], next: "homecoming" },
   homecoming: { scene: "S11", label: "Back to the ordinary world", lines: lines("S11"), next: "reflection", action: "Record your reflection" },
@@ -101,7 +101,7 @@ export function createAtomState(random = Math.random) {
     order: [], visited: [], videos: {}, attempts: [], corrections: [], evidence: [],
     metal: { inspected: [], electrons: "", attraction: "", neutrality: "", verified: false },
     ionic: { transferred: false, sodium: "", chloride: "", nuclei: "", chargesVerified: false, attraction: "", attractionVerified: false, extended: false, verified: false },
-    comparison: { sides: random() < .5 ? ["metallic", "ionic"] : ["ionic", "metallic"], world: "", particles: "", attraction: "", metalSequence: "", ionicSequence: "", supported: false },
+    comparison: { sides: random() < .5 ? ["metallic", "ionic"] : ["ionic", "metallic"], world: "", particles: "", attraction: "", metalSequence: "", ionicSequence: "", supported: false, reviewed: false },
     reflection: { formation: "", attraction: "" }, answers: {}, result: null };
 }
 export function restoreAtomState(saved) {
@@ -110,6 +110,9 @@ export function restoreAtomState(saved) {
   const merged = { ...initial, ...saved, metal: { ...initial.metal, ...saved.metal }, ionic: { ...initial.ionic, ...saved.ionic },
     comparison: { ...initial.comparison, ...saved.comparison }, reflection: { ...initial.reflection, ...saved.reflection } };
   if (!Array.isArray(merged.comparison.sides) || merged.comparison.sides.length !== 2 || new Set(merged.comparison.sides).size !== 2 || !merged.comparison.sides.includes("metallic") || !merged.comparison.sides.includes("ionic")) merged.comparison.sides = initial.comparison.sides;
+  // Old drafts at the removed response form resume its non-scored explanation.
+  if (merged.step === "comparisonTask") { merged.cursor = 0; merged.feedback = null; }
+  if (merged.step === "comparisonBrief") merged.cursor = Math.min(merged.cursor, ATOM_STEPS.comparisonBrief.lines.length - 1);
   return merged;
 }
 export function activeAtomLine(state) {
@@ -143,7 +146,7 @@ export function comparisonError(s) {
   return null;
 }
 export const bothModelsVerified = s => s.metal.verified && s.ionic.verified && metalSupported(s.metal) && ionicSupported(s.ionic);
-export const recoverySupported = s => bothModelsVerified(s) && s.comparison.supported && !comparisonError(s);
+export const recoverySupported = s => bothModelsVerified(s) && (s.comparison.reviewed || s.comparison.supported && !comparisonError(s));
 export function gradeAtom(answers) {
   if (!media.assessment.questions.every(q => Object.hasOwn(q.options, answers[q.id]))) return null;
   const mcq_answers = media.assessment.questions.map((q, i) => ({ questionId: i, questionKey: q.id, question: q.prompt,
@@ -193,7 +196,8 @@ export function atomAction(s, event) {
     if (s.cursor < step.lines.length - 1) return { ...s, cursor: s.cursor + 1 };
     const next = step.next === "afterMetal" ? bothModelsVerified(s) ? "comparisonBrief" : "bridge"
       : step.next === "afterIonic" ? bothModelsVerified(s) ? "comparisonBrief" : "metalEntry" : step.next;
-    return enter(s, next);
+    // Narrative comparison completion is not a scored answer or new evidence.
+    return enter(s.step === "comparisonTask" ? { ...s, comparison: { ...s.comparison, reviewed: true } } : s, next);
   }
   if (s.feedback) return s;
   if (event.type === "chooseOrder" && task === "order" && ["metallic", "ionic"].includes(event.first)) {
@@ -227,13 +231,6 @@ export function atomAction(s, event) {
     return enter(corrected({ ...s, ionic: { ...ionic, verified: true }, evidence: evidence(s, "ionic", "Ionic reconstruction",
       "One electron transferred from Na to Cl. Sodium has 11 protons and 10 electrons (1+); chloride has 17 protons and 18 electrons (1−). Nuclei are unchanged. Opposite ions attract in an extended repeating lattice; transfer forms ions, while electrostatic attraction is ionic bonding.") }, "ionic-lattice-complete", ionic), "ionicSuccess");
   }
-  if (event.type === "comparisonPatch" && task === "comparison") return { ...s, comparison: { ...s.comparison, ...event.patch, sides: s.comparison.sides, supported: false } };
-  if (event.type === "comparisonVerify" && task === "comparison" && bothModelsVerified(s)) {
-    const error = comparisonError(s);
-    if (error) return hint(s, error, { ...s.comparison });
-    return enter(corrected({ ...s, comparison: { ...s.comparison, supported: true }, evidence: evidence(s, "comparison", "Grayscale evidence comparison",
-      `Model ${s.comparison.world === "1" ? "A" : "B"} matches ORBIT’s log: positive metal ion cores and delocalized electrons, attracted electrostatically. Both formation sequences were matched to their resulting structures.`) }, "final-supported", s.comparison), "comparisonSuccess");
-  }
   if (event.type === "reflectionPatch" && task === "reflection") return { ...s, reflection: { ...s.reflection, ...event.patch } };
   if (event.type === "reflectionSave" && task === "reflection" && Object.values(s.reflection).every(v => v.trim().length >= 12)) return enter(s, "assessmentBrief");
   if (event.type === "answer" && task === "assessment" && !s.result) {
@@ -253,7 +250,9 @@ export function atomNotebook(state) {
     atomDive: state,
     investigation: { evidence: state.evidence, metallic: state.metal, ionic: state.ionic, attempts: state.attempts, corrections: state.corrections, investigationOrder: state.order },
     ...(bothModelsVerified(state) ? { scene1: { selectedOption: "both-models", justification: state.evidence.filter(e => e.id !== "comparison").map(e => e.observation).join("\n") } } : {}),
-    ...(recoverySupported(state) ? { scene2: { selectedOption: "metallic", consequence: "route-restored", justification: state.evidence.find(e => e.id === "comparison")?.observation } } : {}),
+    ...(recoverySupported(state) ? { scene2: state.comparison.reviewed
+      ? { selectedOption: null, consequence: "route-restored", reviewOnly: true, justification: "The metallic and ionic models were compared during the narrated review. No scored comparison response was required." }
+      : { selectedOption: "metallic", consequence: "route-restored", justification: state.evidence.find(e => e.id === "comparison")?.observation } } : {}),
     reflection: Object.entries(state.reflection).map(([k, v]) => v && `${k}: ${v}`).filter(Boolean).join("\n"),
   };
 }

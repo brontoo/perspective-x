@@ -29,9 +29,7 @@ export function checkpoint(target, reverse = false) {
   if (target === "lattice") return s;
   s = reachTask(action(s, "latticeVerify", { extended: true }), "comparison");
   if (target === "comparison") return s;
-  const metallic = String(s.comparison.sides.indexOf("metallic") + 1), ionic = metallic === "1" ? "2" : "1";
-  s = action(s, "comparisonPatch", { patch: { world: metallic, particles: "cores-electrons", attraction: "cores-electrons", metalSequence: metallic, ionicSequence: ionic } });
-  s = reachTask(action(s, "comparisonVerify"), "reflection");
+  s = reachTask(s, "reflection");
   if (target === "reflection") return s;
   s = action(s, "reflectionPatch", { patch: { formation: "Metal valence electrons delocalize; this ionic example transfers an electron.", attraction: "Metal cores attract electrons, while cations and anions attract in the ionic lattice." } });
   return reachTask(action(s, "reflectionSave"), "assessment");

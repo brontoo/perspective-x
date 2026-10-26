@@ -3,6 +3,7 @@ import { ATOM_MEDIA, ATOM_STEPS, ATOM_SPEAKERS, atomLine, activeAtomLine, nextAt
 import { atomArt, atomMovie, atomVisual, atomSceneDescriptor, atomReviewLine, atomTrailFromVisited } from "@/data/atomPresentation.mjs";
 import { useAtomVoice, AtomFilm, useAtomFullscreen } from "./AtomMedia";
 import { useAutomaticBeat } from "../playback/useRecordedPlayback";
+import usePausableTimers from "../playback/usePausableTimers";
 import { PreviousSceneButton, useSceneReview, usePlaybackSuspended } from "../playback/ScenarioReview";
 import { MetallicActivity, IonicActivity, ComparisonActivity, StructureModel } from "./AtomModels";
 import CrystalView from "./CrystalView";
@@ -14,9 +15,18 @@ export default function AtomDiveMission({ value, onDraft, onComplete, onNotebook
   const callbacks = useRef({ onDraft, onComplete }); callbacks.current = { onDraft, onComplete };
   const root = useRef(null), fullscreen = useAtomFullscreen(root), review = useSceneReview(), suspended = usePlaybackSuspended();
   const [reviewModel, setReviewModel] = useState(null), [automatic, setAutomatic] = useState(true);
+  const [metalIntroduced, setMetalIntroduced] = useState(false);
   const step = ATOM_STEPS[state.step], task = step.task, narrative = !!state.feedback || !!step.lines;
   const caption = activeAtomLine(state), beat = `${step.scene}:${state.step}:${state.cursor}:${state.feedback?.cursor ?? "story"}:${state.attempts.length}`;
-  const voice = useAtomVoice(narrative ? caption : null, nextAtomLine(state), { scope: beat, held: suspended });
+  const metalIntroPending = !metalIntroduced && ["metalEntry", "metalBrief"].includes(state.step);
+  const voice = useAtomVoice(narrative && !metalIntroPending ? caption : null, metalIntroPending ? null : nextAtomLine(state), { scope: beat, held: suspended });
+  const showingMetalIntro = voice.started && metalIntroPending;
+  const introTimers = usePausableTimers(suspended || voice.paused);
+  useEffect(() => {
+    if (!showingMetalIntro) return;
+    const timer = introTimers.setTimeout(() => setMetalIntroduced(true), 4000);
+    return () => introTimers.clearTimeout(timer);
+  }, [showingMetalIntro, introTimers]);
   const [filmState, setFilmState] = useState({ key: null, done: false });
   const filmMount = useRef({ key: null, held: false });
   const filmLine = (step.lines || []).slice(0, state.cursor + 1).map(atomLine).reverse().find(line => line?.video);
@@ -25,7 +35,7 @@ export default function AtomDiveMission({ value, onDraft, onComplete, onNotebook
   const filmDone = !movie || movie.withheld || filmMount.current.held || filmState.key === filmKey && filmState.done;
   const [failedArt, setFailedArt] = useState(new Set());
   const art = atomArt(step.scene), visual = atomVisual(step.scene, state, caption);
-  const hasTask = voice.started && (!!task || step.scene === "S09");
+  const hasTask = voice.started && !showingMetalIntro && (!!task || step.scene === "S09");
   const canContinue = voice.started && voice.finished && !voice.paused && filmDone;
   const saved = useRef(false);
   function send(event) {
@@ -34,13 +44,13 @@ export default function AtomDiveMission({ value, onDraft, onComplete, onNotebook
     if (next === previous) return;
     current.current = next; setState(next); callbacks.current.onDraft(next);
   }
-  useEffect(() => { if (voice.started && narrative && !suspended) send({ type: "visit" }); }, [voice.started, caption?.id, beat, suspended]);
+  useEffect(() => { if (voice.started && narrative && !suspended && !metalIntroPending) send({ type: "visit" }); }, [voice.started, caption?.id, beat, suspended, metalIntroPending]);
   useEffect(() => {
-    if (!voice.started || suspended) return;
+    if (!voice.started || suspended || metalIntroPending) return;
     review.seedTrail(atomTrailFromVisited(state));
     review.recordScene(atomSceneDescriptor(state, step.scene, caption), narrative ? atomReviewLine(caption) : null);
-  }, [state, voice.started, suspended, review.recordScene]);
-  useAutomaticBeat({ enabled: automatic && narrative && !suspended, voice, filmDone, onAdvance: () => send({ type: "continue" }) });
+  }, [state, voice.started, suspended, metalIntroPending, review.recordScene]);
+  useAutomaticBeat({ enabled: automatic && narrative && !suspended && !metalIntroPending, voice, filmDone, onAdvance: () => send({ type: "continue" }) });
   useEffect(() => {
     if (automatic && state.step === "result" && state.result && !state.feedback && !saved.current && !suspended) {
       saved.current = true; callbacks.current.onComplete(state.result);
@@ -67,10 +77,15 @@ export default function AtomDiveMission({ value, onDraft, onComplete, onNotebook
     </header>
     <div className={`px-atom-stage ${hasTask ? "is-task" : ""}`} data-world={visual?.kind || (visual?.sides ? "comparison" : "laboratory")} data-video-id={movie?.id} data-media-status={movie?.withheld ? "withheld" : "active"}>
       {art && !failedArt.has(art) && <img className="px-atom-environment" src={art} alt={`${step.scene} story environment`} onError={() => setFailedArt(previous => new Set([...previous, art]))} />}
-      {movie && !movie.withheld && voice.started && <AtomFilm key={filmKey} film={{ id: movie.id, definition: movie, held: filmMount.current.held }} paused={voice.paused}
+      {movie && !movie.withheld && voice.started && !showingMetalIntro && <AtomFilm key={filmKey} film={{ id: movie.id, definition: movie, held: filmMount.current.held }} paused={voice.paused}
         onBusy={busy => setFilmState({ key: filmKey, done: !busy })} onStatus={status => { if (current.current.step === state.step) send({ type: "video", id: movie.id, status }); }} />}
       <p className="px-atom-fiction">Fictional educational simulation · Masdar City</p>
-      {voice.started && visual?.kind && !hasTask && <section className="px-atom-world-view" aria-label="ORBIT first-person scientific view">
+      {showingMetalIntro && <section className="px-atom-model-intro" role="status" aria-live="polite">
+        <p className="px-atom-eyebrow">ORBIT view · Atomic lens</p>
+        <h2>Metallic structure model</h2>
+        <p>ORBIT’s atomic lens will now reveal a simplified model of the metallic structure.</p>
+      </section>}
+      {voice.started && !showingMetalIntro && visual?.kind && !hasTask && <section className="px-atom-world-view" aria-label="ORBIT first-person scientific view">
         <p className="px-atom-eyebrow">{visual.recovered ? "External discovery view · ORBIT recovered" : "ORBIT view · Atomic lens"}</p>
         <CrystalView kind={visual.kind} electrons={visual.electrons} coreLabel={visual.kind === "metallic"} />
         {visual.recovered && <svg className="px-atom-recovered-orbit" viewBox="0 0 240 150" role="img" aria-label="Recovered virtual ORBIT, pearl-white robot with cyan eyes and fins"><path d="M51 85 5 117 70 107M189 85l46 32-65-10" fill="#dce1e2" stroke="#8b9da5"/><ellipse cx="120" cy="72" rx="78" ry="58" fill="#edf0ee" stroke="#8299a5" strokeWidth="3"/><rect x="62" y="39" width="116" height="66" rx="30" fill="#203747"/><ellipse cx="96" cy="69" rx="8" ry="15" fill="#8cf1ed"/><ellipse cx="144" cy="69" rx="8" ry="15" fill="#8cf1ed"/></svg>}
@@ -91,7 +106,7 @@ export default function AtomDiveMission({ value, onDraft, onComplete, onNotebook
         </section>}
         {task === "metal" && <MetallicActivity value={state.metal} send={send} />}
         {["transfer", "charges", "attraction", "lattice"].includes(task) && <IonicActivity task={task} value={state.ionic} send={send} />}
-        {step.scene === "S09" && <ComparisonActivity value={state.comparison} send={send} showInputs={task === "comparison"} expanded={!narrative} />}
+        {step.scene === "S09" && <ComparisonActivity value={state.comparison} />}
         {task === "reflection" && <section className="px-atom-lab" aria-label="Mission reflection">
           <p className="px-atom-eyebrow">Back at the research studio</p><h2>Two worlds. What can you explain?</h2>
           <label className="px-atom-field">One difference in how the bonds form<textarea rows={3} value={state.reflection.formation} maxLength={3000} onChange={e => send({ type: "reflectionPatch", patch: { formation: e.target.value } })} /></label>
@@ -120,7 +135,7 @@ export default function AtomDiveMission({ value, onDraft, onComplete, onNotebook
           <button className="px-atom-primary" disabled={voice.paused} onClick={() => callbacks.current.onComplete(state.result)}>Save result and finish mission</button>
         </section>}
       </fieldset></div>}
-      {voice.started && <section className={`px-atom-dialogue ${caption?.speaker === "NAR" ? "is-narrator" : ""}`} data-dialogue-id={caption?.id} aria-live="polite" aria-atomic="true">
+      {voice.started && !showingMetalIntro && <section className={`px-atom-dialogue ${caption?.speaker === "NAR" ? "is-narrator" : ""}`} data-dialogue-id={caption?.id} aria-live="polite" aria-atomic="true">
         <p className="px-atom-speaker">{ATOM_SPEAKERS[caption?.speaker] || "Your investigation"}<span>{state.feedback ? "Reconsider using the evidence" : "ATOM DIVE"}</span></p>
         <p className="px-atom-caption">{caption?.text || "Use the model and record your evidence."}</p>
       </section>}
@@ -135,7 +150,7 @@ export default function AtomDiveMission({ value, onDraft, onComplete, onNotebook
       <label className="px-atom-playback-option">Story playback <select aria-label="Story playback" value={automatic ? "automatic" : "manual"} onChange={event => setAutomatic(event.target.value === "automatic")}><option value="automatic">Automatic</option><option value="manual">Manual reading</option></select></label>
       {voice.captionsOnly && <label className="px-atom-playback-option">Reading pace <select aria-label="Reading pace" value={voice.readingRate} onChange={event => voice.setReadingRate(Number(event.target.value))}><option value="0.75">Slower</option><option value="1">Standard</option><option value="1.5">Faster</option></select></label>}
       {!automatic && narrative && <button className="px-atom-primary" disabled={!canContinue} onClick={() => send({ type: "continue" })}>Continue</button>}
-      <p role="status" className="px-atom-audio-status">{voice.status}</p>
+      <p role="status" className="px-atom-audio-status">{showingMetalIntro && !voice.paused ? "Opening the metallic structure model…" : voice.status}</p>
     </div>}
     <div className="px-atom-records">
       <details><summary>Conversation history · {state.visited.length} lines</summary>

@@ -4,6 +4,18 @@ Working branch: `feature/atom-dive-experience-corrections`, created from the lat
 
 The two latest pasted correction requests are identical. The supplied ZIP contains seven issue screenshots and seven visual references, including stock-watermarked references. It contains no revised runtime artwork or MP4s. Those reference files are inspection material only and are not embedded in the application or stripped of watermarks.
 
+## Latest follow-up — 27 October 2026
+
+The user requested an introductory title before the metallic model and then explicitly cancelled the pictured scored Model A/B comparison activity. These instructions supersede the earlier S09 response-form requirements below.
+
+- Before the metallic entry model appears, a four-second title uses the existing navy/gold palette and scenario typography: **Metallic structure model**. Its supporting line introduces ORBIT’s atomic lens. The model and its recording start afterward; no extra click is required. Explicit pause, hidden-tab pause, notebook and Previous scene suspend the title’s remaining time.
+- S09 retains the side-by-side metallic and ionic models with explanatory labels. Model-selection buttons, evidence/matching dropdowns and the verification submission are removed. The default automatic story proceeds directly from the narrated comparison to recovery.
+- The comparison reuses two existing explanatory recordings (metallic-bonding and ionic-attraction explanations). The two old instructions asking students to choose and justify a model are omitted from the active sequence. Original source files and transcripts are preserved; no replacement voice is synthesized.
+- Both reconstruction investigations are still required. Narrative review records `comparison.reviewed`, not a scored `supported` answer, comparison evidence, correction or achievement. New runs retain two genuinely verified evidence records. The notebook explicitly identifies this as a narrative review without a submitted response.
+- Old drafts on the cancelled form return to the comparison explanation, preserving their prior choices, evidence, notes and attempts. Old genuinely supported comparison records and completed results remain readable. The reflection, five exit-ticket questions, 80% threshold and teacher controls are unchanged.
+
+Current captures: [Metallic introduction](screenshots/corrections/metallic-model-introduction.png), [narrated comparison](screenshots/corrections/s09-narrated-comparison.png), [mobile fullscreen](screenshots/corrections/s09-review-fullscreen-390.png), [tablet fullscreen](screenshots/corrections/s09-review-fullscreen-820.png). Earlier screenshots of the cancelled form are historical.
+
 ## Corrected experience
 
 - One Start authorizes the recorded narrative. Audio completion advances lines and scenes automatically; scientific tasks, route choices, reflection and assessment remain explicit student actions. Correct and incorrect feedback return to the appropriate checkpoint automatically. An optional Manual reading mode remains available; Automatic is the default.

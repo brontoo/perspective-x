@@ -35,7 +35,7 @@ for (const first of ["metallic", "ionic"]) {
     await expect(page.getByRole("heading", { name: "80% · Understanding demonstrated", exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Save result and finish mission", exact: true }).click();
     await expect(page.locator(".xp-completion")).toBeVisible();
-    expect(data.progressRows.some(row => row.scenario_id === "atom_dive" && row.score === 80 && row.answers.atomDive.evidence.length === 3)).toBe(true);
+    expect(data.progressRows.some(row => row.scenario_id === "atom_dive" && row.score === 80 && row.answers.atomDive.evidence.length === 2)).toBe(true);
     await page.getByRole("button", { name: "Open completed notebook", exact: true }).click();
     await expect(page.getByRole("dialog")).toContainText("Metallic reconstruction");
     await expect(page.getByRole("dialog")).toContainText("Ionic reconstruction");
@@ -52,7 +52,6 @@ async function atCheckpoint(page, task, options = {}, reverse = false) {
 const feedbackCases = [
   ["metal-transfer-error", "metal"], ["metal-electrons-escape", "metal"], ["metal-fixed-pair-error", "metal"], ["metal-attraction-error", "metal"],
   ["ionic-proton-error", "transfer"], ["ionic-charge-error", "charges"], ["ionic-electron-sea-error", "attraction"], ["ionic-molecule-error", "lattice"],
-  ["final-wrong-world", "comparison"], ["final-same-bond-error", "comparison"], ["final-colour-only", "comparison"], ["final-no-evidence", "comparison"],
 ];
 for (const [condition, task] of feedbackCases) test(`recorded ${condition} feedback is conditional, preserves evidence and allows revision`, async ({ page }) => {
   const { initial } = await atCheckpoint(page, task);
@@ -76,13 +75,6 @@ for (const [condition, task] of feedbackCases) test(`recorded ${condition} feedb
     await page.getByLabel("What holds this ionic structure together?", { exact: true }).selectOption("electron-sea");
     await page.getByRole("button", { name: "Verify ionic attraction", exact: true }).click();
   } else if (task === "lattice") await page.getByRole("button", { name: "Keep isolated NaCl molecules", exact: true }).click();
-  else {
-    const metallic = initial.comparison.sides.indexOf("metallic");
-    await page.getByRole("button", { name: `Choose Model ${condition === "final-wrong-world" ? metallic ? "A" : "B" : metallic ? "B" : "A"}`, exact: true }).click();
-    if (condition === "final-same-bond-error") await page.getByLabel("Attractive interaction supporting your location", { exact: true }).selectOption("identical");
-    if (condition === "final-colour-only") await page.getByLabel("Particle evidence for your location", { exact: true }).selectOption("colour");
-    await page.getByRole("button", { name: "Verify location and both formation matches", exact: true }).click();
-  }
   await expect(page.locator(".px-atom-caption")).toHaveText(feedback.text);
   await expect(page.locator(".px-atom-voice-audio")).toHaveAttribute("src", feedback.audio);
   const step = { metal: "metalTask", transfer: "ionicTransfer", charges: "ionicCharges", attraction: "ionicAttraction", lattice: "ionicLattice", comparison: "comparisonTask" }[task];
@@ -251,14 +243,13 @@ test("V03 and V05 remain gated by science and obsolete compositions are withheld
   await atomIonic(page);
   await atomReach(page, "comparisonTask");
   expect(await page.evaluate(() => window.__atomPlays.some(item => item.src?.includes("AD_V05")))).toBe(false);
-  await expect(page.getByRole("button", { name: "Verify location and both formation matches", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Verify location and both formation matches", exact: true })).toHaveCount(0);
   await atomCompare(page);
-  await atomContinue(page);
   await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-video-id", "AD_V05_find_orbit.mp4");
   await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-media-status", "withheld");
   await expect(page.locator(".px-atom-film video")).toHaveCount(0);
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive')));
-  expect(saved.atomDive.evidence).toHaveLength(3);
+  expect(saved.atomDive.evidence).toHaveLength(2);
   expect(saved.exitTicket).toBeUndefined();
 });
 

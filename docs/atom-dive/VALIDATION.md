@@ -2,6 +2,16 @@
 
 Current correction work: `feature/atom-dive-experience-corrections`, based on implementation commit `831fe7bacbfeec3510f6475f8ad4e68b1a1709e2`. It updates the existing implementation PR #22 for Preview review. Main/production are not promoted. See [EXPERIENCE_CORRECTIONS.md](EXPERIENCE_CORRECTIONS.md) for the final behavior, changed-file map, media policy and exact pending replacement paths.
 
+## Latest title and comparison follow-up — 27 October 2026
+
+The user added a themed metallic-model introduction and cancelled only the scored S09 comparison activity. The two-model comparison remains as narration and advances directly to recovery. This supersedes earlier tests/screenshots of the removed form.
+
+- Build, lint and type checks passed.
+- All **41 unit tests passed**, including migration from the old comparison form, both required reconstruction routes and unchanged 80%/60% assessment behavior.
+- **44 production-bundle browser tests passed** (18 correction cases, 24 current Atom cases and 2 native-media cases). Four cases for the cancelled comparison submissions were replaced by coverage of the narrated review and legacy-draft migration. Browser validation checks the paused four-second title before any metallic model/audio appears, automatic narrated comparison with no choice/verification controls, safe resume of old drafts, retained two-model geometry, Previous scene, mobile/fullscreen, both complete routes and unchanged five-question results.
+- Current screenshots were visually inspected: [title](screenshots/corrections/metallic-model-introduction.png), [comparison](screenshots/corrections/s09-narrated-comparison.png), [mobile](screenshots/corrections/s09-review-fullscreen-390.png), [tablet](screenshots/corrections/s09-review-fullscreen-820.png).
+- Existing media replacement dependencies and synthetic/live-QA limits below still apply. No main merge or production promotion is included.
+
 ## Final correction checks
 
 | Check | Result |

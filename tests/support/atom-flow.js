@@ -27,10 +27,12 @@ export async function atomStart(page) {
   await expect(page.locator(".px-atom-adventure")).toBeVisible();
   const start = page.getByRole("button", { name: /^(Start ATOM DIVE|Resume mission)$/ });
   if (await start.count()) await start.click();
+  await expect(page.locator(".px-atom-model-intro")).toBeHidden({ timeout: 10000 });
   const mode = page.getByLabel("Story playback", { exact: true });
   if (await mode.count()) await mode.selectOption("manual");
 }
 export async function atomContinue(page) {
+  await expect(page.locator(".px-atom-model-intro")).toBeHidden({ timeout: 10000 });
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   const button = page.locator(".px-atom-controls > .px-atom-primary");
   const skip = page.getByRole("button", { name: "Skip clip", exact: true });
@@ -81,13 +83,8 @@ export async function atomIonic(page) {
 }
 export async function atomCompare(page) {
   await atomReach(page, "comparisonTask");
-  const models = page.locator(".px-atom-comparison-models > div");
-  const label = await models.first().getByRole("img").getAttribute("aria-label");
-  const m = label.includes("delocalized valence electrons remain") ? "1" : "2", i = m === "1" ? "2" : "1";
-  await page.getByRole("button", { name: `Choose Model ${m === "1" ? "A" : "B"}`, exact: true }).click();
-  await page.getByLabel("Particle evidence for your location", { exact: true }).selectOption("cores-electrons");
-  await page.getByLabel("Attractive interaction supporting your location", { exact: true }).selectOption("cores-electrons");
-  await page.getByLabel("Match: valence electrons become delocalized among positive cores", { exact: true }).selectOption(m);
-  await page.getByLabel("Match: electron transfer forms opposite ions in a repeating lattice", { exact: true }).selectOption(i);
-  await page.getByRole("button", { name: "Verify location and both formation matches", exact: true }).click();
+  await expect(page.locator(".px-atom-comparison-models svg")).toHaveCount(2);
+  await expect(page.getByRole("button", { name: /^Choose Model/ })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Verify location and both formation matches", exact: true })).toHaveCount(0);
+  await atomReach(page, "recovery");
 }

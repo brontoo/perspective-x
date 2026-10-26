@@ -2,6 +2,10 @@
 
 Scenario: `atom_dive` — **ATOM DIVE: Lost in the Invisible**.
 
+## Latest user follow-up
+
+The metallic model now has a brief themed introduction. The user cancelled the scored Model A/B activity: S09 keeps both models as a narrated comparison, then advances directly to recovery. Both reconstructions and the five-question exit ticket remain required. Old comparison drafts resume safely, without creating a scored answer or extra evidence. See the latest section of [EXPERIENCE_CORRECTIONS.md](EXPERIENCE_CORRECTIONS.md); earlier descriptions of a required comparison submission below are historical.
+
 ## Current experience corrections
 
 The latest behavior and media policy are documented in [EXPERIENCE_CORRECTIONS.md](EXPERIENCE_CORRECTIONS.md), with actual checks in [VALIDATION.md](VALIDATION.md). These corrections supersede the earlier playback/presentation descriptions below: narrative is automatic after Start, Previous scene is shared across players, scientific views use accurate 3D geometry, S09 models persist during feedback, and V01–V05 are withheld pending corrected compositions. Two localized still edits are candidates for review. V06, the source recordings, assessment rules and existing progress ownership are preserved. Main/production are not promoted.

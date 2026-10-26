@@ -160,6 +160,9 @@
 .px-atom-response { border: 0; padding: 0; margin: 0; min-width: 0; }
 .px-atom-stage { gap: 14px; }
 .px-atom-world-view { position: relative; width: min(900px,calc(100% - 40px)); align-self: center; margin: 0 20px 12px; padding: 15px; background: #0b2538f5; border: 1px solid #7294a5; border-radius: 16px; }
+.px-atom-model-intro { width: min(760px,calc(100% - 40px)); margin: auto; padding: clamp(28px,5vw,56px); border-top: 1px solid var(--ad-gold); text-align: center; }
+.px-atom-adventure .px-atom-model-intro h2 { color: #fff3dd; font: 600 clamp(26px,3.5vw,44px)/1.2 Arial, Helvetica, sans-serif; letter-spacing: -.02em; margin: 18px 0; }
+.px-atom-adventure .px-atom-model-intro > p:last-child { max-width: 46ch; margin: 0 auto; color: var(--ad-muted); font-size: clamp(14px,1.5vw,18px); line-height: 1.7; }
 .px-atom-world-view > .px-atom-crystal > svg { max-height: min(420px,44dvh); }
 .px-atom-crystal { min-width: 0; }
 .px-atom-crystal svg { display: block; width: 100%; height: auto; max-height: 340px; touch-action: pan-y; border-radius: 12px; }

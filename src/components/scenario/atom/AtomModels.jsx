@@ -96,24 +96,14 @@ export function IonicActivity({ task, value, send }) {
   </section>;
 }
 
-export function ComparisonActivity({ value, send, showInputs = true, expanded = true }) {
-  const patch = next => send({ type: "comparisonPatch", patch: next });
+export function ComparisonActivity({ value }) {
   return <section aria-label="Grayscale final comparison" className="px-atom-lab">
-    <header><p className="px-atom-eyebrow">Evidence gate / Both investigations verified</p><h2>Which model matches ORBIT’s recording?</h2>
-      <blockquote>“I am beside positive metal ion cores, with electrons delocalized throughout the surrounding structure.”</blockquote></header>
+    <header><p className="px-atom-eyebrow">Atomic lens / Both investigations verified</p><h2>Two structures. Two bonding models.</h2>
+      <p>Compare the particles and the attraction that holds each structure together.</p></header>
     <div className="px-atom-comparison-models">{value.sides.map((kind, i) => <div key={i}>
-      <h3>Model {i === 0 ? "A" : "B"}</h3><StructureModel kind={kind} grayscale label={`Model ${i === 0 ? "A" : "B"}`} />
-      <button aria-pressed={value.world === String(i + 1)} onClick={() => patch({ world: String(i + 1) })}>Choose Model {i === 0 ? "A" : "B"}</button>
+      <h3>{kind === "metallic" ? "Metallic structure" : "Ionic structure"}</h3><StructureModel kind={kind} grayscale label={`Model ${i === 0 ? "A" : "B"}`} />
+      <p>{kind === "metallic" ? "Positive metal ion cores attract delocalized electrons within the material." : "Cations and anions attract in an extended, repeating ionic lattice."}</p>
     </div>)}</div>
-    <p className="px-atom-model-note">Unfamiliar monochrome models. Use charge signs and particle descriptions, not illustration colours. Model A/B positions stay fixed for this attempt.</p>
-    {showInputs && <details className="px-atom-comparison-response" open={expanded}><summary>Your comparison response</summary><div className="px-atom-lab-grid">
-      <AtomSelect label="Particle evidence for your location" value={value.particles} onChange={particles => patch({ particles })}
-        options={[["opposite-ions", "A repeating arrangement of cations and anions"], ["cores-electrons", "Positive ion cores with delocalized electrons"], ["colour", "The illustration’s colour identifies the location"]]} />
-      <AtomSelect label="Attractive interaction supporting your location" value={value.attraction} onChange={attraction => patch({ attraction })}
-        options={[["cores-electrons", "Positive ion cores attract delocalized electrons"], ["opposite-ions", "Cations attract anions"], ["identical", "The charged components are identical in both bonding types"]]} />
-      <AtomSelect label="Match: valence electrons become delocalized among positive cores" value={value.metalSequence} onChange={metalSequence => patch({ metalSequence })} options={[["1", "Model A"], ["2", "Model B"]]} />
-      <AtomSelect label="Match: electron transfer forms opposite ions in a repeating lattice" value={value.ionicSequence} onChange={ionicSequence => patch({ ionicSequence })} options={[["1", "Model A"], ["2", "Model B"]]} />
-    </div>
-    <button className="px-atom-primary" onClick={() => send({ type: "comparisonVerify" })}>Verify location and both formation matches</button></details>}
+    <p className="px-atom-model-note">Charge signs describe the particles; the shading is a diagram convention. The story continues after the comparison.</p>
   </section>;
 }
