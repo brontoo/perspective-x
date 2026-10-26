@@ -59,5 +59,8 @@ export function Progress({ done, total, label = "Mission progress" }) {
   );
 }
 export function RoleArtwork({ roleId, ...props }) {
-  return <img src={`/images/roles/${roleId}.webp`} {...props} />;
+  const src = roleId === "atomic_bonding_investigator"
+    ? "/images/scenarios/atom_dive/characters/01_character_references/C_HAMAD.jpg"
+    : `/images/roles/${roleId}.webp`;
+  return <img src={src} {...props} />;
 }

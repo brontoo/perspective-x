@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { SCENARIOS } from "@/components/scenarios/scenarioData";
 import { UAE_SCENARIOS } from "@/components/scenarios/uaeScenarioData";
 import { ionicHypothesisText } from "@/lib/expedition/ionicRecord.mjs";
+import { ATOM_ATTEMPT_LABELS } from "@/data/atomDive.mjs";
 import {
   answersOf,
   formatDate,
@@ -64,7 +65,7 @@ export default function StudentAnswersModal({
                 : "Unassessed draft"}
               <small>{formatDate(row.completed_at || a.meta?.updatedAt)}</small>
             </summary>
-            {s.interactiveIonic && a.investigation?.evidence?.length > 0 && (
+            {(s.interactiveIonic || s.interactiveAtom) && a.investigation?.evidence?.length > 0 && (
               <section className="xp-captured">
                 <h3>Interactive investigation evidence</h3>
                 {a.investigation.evidence.map((e) => (
@@ -87,6 +88,14 @@ export default function StudentAnswersModal({
                     )}
                   </p>
                 )}
+              </section>
+            )}
+            {s.interactiveAtom && (a.investigation?.attempts?.length > 0 || a.investigation?.corrections?.length > 0) && (
+              <section className="xp-captured">
+                <h3>Investigation attempts and corrections</h3>
+                {[...(a.investigation.attempts || []), ...(a.investigation.corrections || [])]
+                  .sort((first, second) => Date.parse(first.at) - Date.parse(second.at))
+                  .map((entry, index) => <p key={index}>{ATOM_ATTEMPT_LABELS[entry.condition] || "Investigation response"} · {formatDate(entry.at)}</p>)}
               </section>
             )}
             {["scene1", "scene2", "scene3"].map(

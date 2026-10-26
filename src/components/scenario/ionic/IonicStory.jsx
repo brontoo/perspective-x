@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { IONIC_STORIES, outcomeFilm, storyImage } from "@/data/ionicStories.mjs";
 import { HAMAD } from "@/data/ionicMissions.mjs";
 import "./ionic-story.css";
+import { useSceneReview } from "../playback/ScenarioReview";
 
 /**
  * Accessible visual-novel presentation for both ionic missions.
@@ -31,6 +32,12 @@ export default function IonicStory({ scenario, stage = "briefing", responses = {
   const extras = script.firstChoices;
   const showPrompt = stage === "investigation" && index === 0;
   const film = stage === "outcome" ? outcomeFilm(scenario.id, consequence) : "";
+  const sceneReview = useSceneReview();
+  useEffect(() => {
+    if (sceneReview.reviewing) return;
+    sceneReview.recordScene({ key: `${scenario.id}:${stage}:${active.art}`, title: active.title || stage, art: imagePath },
+      { id: active.id, text: active.line, audio: null, speaker: active.speaker, video: film ? { url: film } : null });
+  }, [active.id, stage, sceneReview.reviewing, sceneReview.recordScene]);
 
   const stopVoice = useCallback(() => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();

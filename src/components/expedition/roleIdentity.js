@@ -1,4 +1,5 @@
 export const ROLE_IDENTITIES = {
+  atomic_bonding_investigator: { name: "Hamad Al Zaabi", age: 27, nationality: "Emirati", profession: "Applied Chemistry Field Investigator", impact: "Restore a virtual explorer’s route by explaining the bonds inside materials." },
   ionic_materials_specialist: { name: "Hamad Al Zaabi", age: 27, nationality: "Emirati", profession: "Applied Chemistry Field Investigator", impact: "Use ionic chemistry to investigate ingredients, marine minerals and decisions that matter." },
   environmental_scientist: {
     name: "Layan Mansour",

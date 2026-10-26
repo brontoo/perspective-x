@@ -1,0 +1,346 @@
+[
+  {
+    "original": "public/images/scenarios/atom_dive/characters/01_character_references/C_ALYA.txt",
+    "archive": "docs/atom-dive/production-archive/images/characters/01_character_references/C_ALYA.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/characters/01_character_references/C_HAMAD.txt",
+    "archive": "docs/atom-dive/production-archive/images/characters/01_character_references/C_HAMAD.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/characters/01_character_references/C_ORBIT.txt",
+    "archive": "docs/atom-dive/production-archive/images/characters/01_character_references/C_ORBIT.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/characters/01_character_references/C_RASHID.txt",
+    "archive": "docs/atom-dive/production-archive/images/characters/01_character_references/C_RASHID.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/story/02_story_images/AD_I01_lab.txt",
+    "archive": "docs/atom-dive/production-archive/images/story/02_story_images/AD_I01_lab.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/story/02_story_images/AD_I02_lost_signal.txt",
+    "archive": "docs/atom-dive/production-archive/images/story/02_story_images/AD_I02_lost_signal.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/story/02_story_images/AD_I03_launch.txt",
+    "archive": "docs/atom-dive/production-archive/images/story/02_story_images/AD_I03_launch.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/story/02_story_images/AD_I04_metallic_world.txt",
+    "archive": "docs/atom-dive/production-archive/images/story/02_story_images/AD_I04_metallic_world.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/story/02_story_images/AD_I05_ionic_world.txt",
+    "archive": "docs/atom-dive/production-archive/images/story/02_story_images/AD_I05_ionic_world.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/story/02_story_images/AD_I06_evidence_gate.txt",
+    "archive": "docs/atom-dive/production-archive/images/story/02_story_images/AD_I06_evidence_gate.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/story/02_story_images/AD_I07_orbit_found.txt",
+    "archive": "docs/atom-dive/production-archive/images/story/02_story_images/AD_I07_orbit_found.txt"
+  },
+  {
+    "original": "public/images/scenarios/atom_dive/story/02_story_images/AD_I08_homecoming.txt",
+    "archive": "docs/atom-dive/production-archive/images/story/02_story_images/AD_I08_homecoming.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/COMPLETE_VOICEOVER_SCRIPT.md",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/COMPLETE_VOICEOVER_SCRIPT.md"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/audio_manifest.json",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/audio_manifest.json"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S01/AD_S01_HAM_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S01/AD_S01_HAM_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S01/AD_S01_NAR_01.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S01/AD_S01_NAR_01.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S01/AD_S01_RAS_03.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S01/AD_S01_RAS_03.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S02/AD_S02_ALY_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S02/AD_S02_ALY_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S02/AD_S02_HAM_03.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S02/AD_S02_HAM_03.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S02/AD_S02_HAM_04.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S02/AD_S02_HAM_04.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S02/AD_S02_ORB_01.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S02/AD_S02_ORB_01.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S03/AD_S03_ALY_03.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S03/AD_S03_ALY_03.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S03/AD_S03_HAM_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S03/AD_S03_HAM_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S03/AD_S03_NAR_01_ENTER_METALLIC.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S03/AD_S03_NAR_01_ENTER_METALLIC.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S04/AD_S04_ALY_03.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S04/AD_S04_ALY_03.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S04/AD_S04_HAM_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S04/AD_S04_HAM_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S04/AD_S04_ORB_01.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S04/AD_S04_ORB_01.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S05/AD_S05_ALY_93_METAL_ATTRACTION_ERROR.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S05/AD_S05_ALY_93_METAL_ATTRACTION_ERROR.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S05/AD_S05_HAM_01.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S05/AD_S05_HAM_01.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S05/AD_S05_HAM_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S05/AD_S05_HAM_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S05/AD_S05_HAM_03_METAL_COMPLETE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S05/AD_S05_HAM_03_METAL_COMPLETE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S05/AD_S05_HAM_04_METAL_COMPLETE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S05/AD_S05_HAM_04_METAL_COMPLETE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S05/AD_S05_HAM_05_METAL_COMPLETE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S05/AD_S05_HAM_05_METAL_COMPLETE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S05/AD_S05_HAM_90_METAL_TRANSFER_ERROR.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S05/AD_S05_HAM_90_METAL_TRANSFER_ERROR.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S05/AD_S05_HAM_91_METAL_ELECTRONS_ESCAPE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S05/AD_S05_HAM_91_METAL_ELECTRONS_ESCAPE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S05/AD_S05_HAM_92_METAL_FIXED_PAIR_ERROR.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S05/AD_S05_HAM_92_METAL_FIXED_PAIR_ERROR.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S06/AD_S06_HAM_01.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S06/AD_S06_HAM_01.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S06/AD_S06_RAS_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S06/AD_S06_RAS_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S07/AD_S07_HAM_03.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S07/AD_S07_HAM_03.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S07/AD_S07_HAM_04.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S07/AD_S07_HAM_04.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S07/AD_S07_NAR_01_ENTER_IONIC.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S07/AD_S07_NAR_01_ENTER_IONIC.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S07/AD_S07_ORB_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S07/AD_S07_ORB_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S08/AD_S08_ALY_05_BOTH_INVESTIGATIONS_COMPLETE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S08/AD_S08_ALY_05_BOTH_INVESTIGATIONS_COMPLETE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S08/AD_S08_HAM_01_IONIC_TRANSFER_COMPLETE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S08/AD_S08_HAM_01_IONIC_TRANSFER_COMPLETE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S08/AD_S08_HAM_02_IONIC_CHARGE_COMPLETE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S08/AD_S08_HAM_02_IONIC_CHARGE_COMPLETE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S08/AD_S08_HAM_03_IONIC_ATTRACTION_COMPLETE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S08/AD_S08_HAM_03_IONIC_ATTRACTION_COMPLETE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S08/AD_S08_HAM_04_IONIC_LATTICE_COMPLETE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S08/AD_S08_HAM_04_IONIC_LATTICE_COMPLETE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S08/AD_S08_HAM_90_IONIC_PROTON_ERROR.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S08/AD_S08_HAM_90_IONIC_PROTON_ERROR.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S08/AD_S08_HAM_91_IONIC_CHARGE_ERROR.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S08/AD_S08_HAM_91_IONIC_CHARGE_ERROR.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S08/AD_S08_HAM_92_IONIC_ELECTRON_SEA_ERROR.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S08/AD_S08_HAM_92_IONIC_ELECTRON_SEA_ERROR.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S08/AD_S08_HAM_93_IONIC_MOLECULE_ERROR.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S08/AD_S08_HAM_93_IONIC_MOLECULE_ERROR.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S09/AD_S09_ALY_04.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S09/AD_S09_ALY_04.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S09/AD_S09_ALY_92_FINAL_COLOUR_ONLY.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S09/AD_S09_ALY_92_FINAL_COLOUR_ONLY.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S09/AD_S09_HAM_03.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S09/AD_S09_HAM_03.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S09/AD_S09_HAM_05_FINAL_SUPPORTED.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S09/AD_S09_HAM_05_FINAL_SUPPORTED.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S09/AD_S09_HAM_90_FINAL_WRONG_WORLD.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S09/AD_S09_HAM_90_FINAL_WRONG_WORLD.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S09/AD_S09_HAM_91_FINAL_SAME_BOND_ERROR.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S09/AD_S09_HAM_91_FINAL_SAME_BOND_ERROR.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S09/AD_S09_HAM_93_FINAL_NO_EVIDENCE.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S09/AD_S09_HAM_93_FINAL_NO_EVIDENCE.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S09/AD_S09_NAR_01.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S09/AD_S09_NAR_01.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S09/AD_S09_ORB_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S09/AD_S09_ORB_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S10/AD_S10_ALY_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S10/AD_S10_ALY_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S10/AD_S10_HAM_03.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S10/AD_S10_HAM_03.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S10/AD_S10_ORB_01_FINAL_SUPPORTED.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S10/AD_S10_ORB_01_FINAL_SUPPORTED.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S11/AD_S11_HAM_01.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S11/AD_S11_HAM_01.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S11/AD_S11_HAM_04.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S11/AD_S11_HAM_04.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S11/AD_S11_NAR_03.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S11/AD_S11_NAR_03.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S11/AD_S11_RAS_02.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S11/AD_S11_RAS_02.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S12/AD_S12_HAM_02_QUESTION_1_READ.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S12/AD_S12_HAM_02_QUESTION_1_READ.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S12/AD_S12_HAM_03_QUESTION_2_READ.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S12/AD_S12_HAM_03_QUESTION_2_READ.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S12/AD_S12_HAM_04_QUESTION_3_READ.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S12/AD_S12_HAM_04_QUESTION_3_READ.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S12/AD_S12_HAM_05_QUESTION_4_READ.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S12/AD_S12_HAM_05_QUESTION_4_READ.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S12/AD_S12_HAM_06_QUESTION_5_READ.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S12/AD_S12_HAM_06_QUESTION_5_READ.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S12/AD_S12_HAM_07_ASSESSMENT_PASS.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S12/AD_S12_HAM_07_ASSESSMENT_PASS.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S12/AD_S12_HAM_08_ASSESSMENT_REVIEW.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S12/AD_S12_HAM_08_ASSESSMENT_REVIEW.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/dialogue_lines/S12/AD_S12_NAR_01.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/dialogue_lines/S12/AD_S12_NAR_01.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/voice_profiles/ALY.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/voice_profiles/ALY.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/voice_profiles/HAM.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/voice_profiles/HAM.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/voice_profiles/NAR.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/voice_profiles/NAR.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/voice_profiles/ORB.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/voice_profiles/ORB.txt"
+  },
+  {
+    "original": "public/audio/scenarios/atom_dive/05_voiceover/voice_profiles/RAS.txt",
+    "archive": "docs/atom-dive/production-archive/audio/05_voiceover/voice_profiles/RAS.txt"
+  },
+  {
+    "original": "public/videos/scenarios/atom_dive/04_five_second_videos/AD_V01_last_signal.txt",
+    "archive": "docs/atom-dive/production-archive/videos/04_five_second_videos/AD_V01_last_signal.txt"
+  },
+  {
+    "original": "public/videos/scenarios/atom_dive/04_five_second_videos/AD_V02_enter_metallic.txt",
+    "archive": "docs/atom-dive/production-archive/videos/04_five_second_videos/AD_V02_enter_metallic.txt"
+  },
+  {
+    "original": "public/videos/scenarios/atom_dive/04_five_second_videos/AD_V03_metallic_route.txt",
+    "archive": "docs/atom-dive/production-archive/videos/04_five_second_videos/AD_V03_metallic_route.txt"
+  },
+  {
+    "original": "public/videos/scenarios/atom_dive/04_five_second_videos/AD_V04_enter_ionic.txt",
+    "archive": "docs/atom-dive/production-archive/videos/04_five_second_videos/AD_V04_enter_ionic.txt"
+  },
+  {
+    "original": "public/videos/scenarios/atom_dive/04_five_second_videos/AD_V05_find_orbit.txt",
+    "archive": "docs/atom-dive/production-archive/videos/04_five_second_videos/AD_V05_find_orbit.txt"
+  },
+  {
+    "original": "public/videos/scenarios/atom_dive/04_five_second_videos/AD_V06_homecoming.txt",
+    "archive": "docs/atom-dive/production-archive/videos/04_five_second_videos/AD_V06_homecoming.txt"
+  }
+]

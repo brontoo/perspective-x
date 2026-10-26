@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { OceanSessionContext } from "./OceanSession";
+import { usePlaybackSuspended } from "../playback/ScenarioReview";
 
 export function useOceanVoice(line, nextLine) {
   const session = useContext(OceanSessionContext);
@@ -7,11 +8,12 @@ export function useOceanVoice(line, nextLine) {
     player,
     started,
     setStarted,
-    paused,
+    paused: sessionPaused,
     setPaused,
     enabled,
     setEnabled,
   } = session;
+  const suspended = usePlaybackSuspended(), paused = sessionPaused || suspended;
   const saved = (key) => {
     try {
       return sessionStorage.getItem(key);
@@ -144,6 +146,7 @@ export function useOceanVoice(line, nextLine) {
     started && state.id === line?.id && ["ended", "read"].includes(status);
   return {
     ...session,
+    paused,
     player,
     muted,
     rate,
@@ -215,6 +218,7 @@ export function useOceanVoice(line, nextLine) {
 
 export function OceanFilm({ src, poster, label }) {
   const session = useContext(OceanSessionContext);
+  const suspended = usePlaybackSuspended();
   const player = useRef(null);
   const [status, setStatus] = useState("loading");
   useEffect(() => {
@@ -235,13 +239,13 @@ export function OceanFilm({ src, poster, label }) {
   useEffect(() => {
     const video = player.current;
     if (!video) return;
-    if (session.paused || !session.started) video.pause();
+    if (session.paused || suspended || !session.started) video.pause();
     else if (
       status === "ready" &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     )
       video.play().catch(() => {});
-  }, [session.paused, session.started, status]);
+  }, [session.paused, session.started, status, suspended]);
   function stop(status) {
     const video = player.current;
     if (video) {
