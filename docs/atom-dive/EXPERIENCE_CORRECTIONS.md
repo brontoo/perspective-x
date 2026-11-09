@@ -4,6 +4,10 @@ Working branch: `feature/atom-dive-experience-corrections`, created from the lat
 
 The two latest pasted correction requests are identical. The supplied ZIP contains seven issue screenshots and seven visual references, including stock-watermarked references. It contains no revised runtime artwork or MP4s. Those reference files are inspection material only and are not embedded in the application or stripped of watermarks.
 
+## S06 and ionic-color follow-up — 9 November 2026
+
+The latest request restores both S06 model displays and uses distinct ionic species colors in every Atom lattice view, including comparisons and replay. This supersedes earlier monochrome requirements for ionic models. See [EVIDENCE_MODELS.md](EVIDENCE_MODELS.md) for the focused change, screenshots and validation. The cancelled S09 response activity remains cancelled.
+
 ## Latest follow-up — 27 October 2026
 
 The user requested an introductory title before the metallic model and then explicitly cancelled the pictured scored Model A/B comparison activity. These instructions supersede the earlier S09 response-form requirements below.

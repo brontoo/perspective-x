@@ -36,6 +36,50 @@ async function shot(page, name) {
   await root(page).screenshot({ path: `docs/atom-dive/screenshots/corrections/${name}.png` });
 }
 
+async function ionColors(scope) {
+  const ionic = scope.locator('.px-atom-crystal[data-world="ionic"]').first();
+  await expect(ionic).toBeVisible();
+  await expect(ionic).not.toHaveClass(/is-grayscale/);
+  expect(await ionic.evaluate(el => getComputedStyle(el).filter)).toBe("none");
+  const colors = await ionic.locator("radialGradient").evaluateAll(items => Object.fromEntries(items.filter(el => /-(cation|anion)$/.test(el.id)).map(el => [el.id.endsWith("-cation") ? "positive" : "negative", el.querySelectorAll("stop")[1].getAttribute("stop-color")])));
+  expect(colors.positive).not.toBe(colors.negative);
+  await expect(ionic.getByLabel("Ion color key")).toContainText("Na⁺ · Sodium · 1+");
+  await expect(ionic.getByLabel("Ion color key")).toContainText("Cl⁻ · Chloride · 1−");
+}
+
+for (const width of [1440,390]) test(`S06 displays both models through its narration and review without granting ionic credit at ${width}px`, async ({ page }) => {
+  await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+  const { state } = await at(page, "transfer", value => {
+    value.step = "bridge"; value.cursor = 0;
+    value.visited = value.visited.filter(item => !["S06", "S07"].includes(item.scene));
+  });
+  const evidence = page.getByRole("region", { name: "Formation model evidence" });
+  await expect(evidence.getByRole("img")).toHaveCount(2);
+  await expect(evidence.getByRole("heading", { name: "Metallic structure", exact: true })).toBeVisible();
+  await expect(evidence.getByRole("heading", { name: "Ionic structure", exact: true })).toBeVisible();
+  await expect(evidence).toContainText("Verified evidence");
+  await expect(evidence).toContainText("Preview · Investigation still required");
+  await ionColors(evidence);
+  await beat(page);
+  await expect(page.locator(".px-atom-dialogue")).toHaveAttribute("data-dialogue-id", "AD_S06_RAS_02");
+  await expect(evidence.getByRole("img")).toHaveCount(2);
+  await noOverflow(page);
+  await shot(page, `s06-model-evidence-${width}`);
+  await page.reload(); await start(page);
+  await expect(evidence.getByRole("img")).toHaveCount(2);
+  await ionColors(evidence);
+  await reach(page, "ionicEntry");
+  await page.getByRole("button", { name: "Previous scene", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Previous scene review", exact: true });
+  await expect(dialog.locator("h2")).toContainText("S06");
+  await expect(dialog.locator(".px-atom-crystal")).toHaveCount(2);
+  await ionColors(dialog);
+  await dialog.getByRole("button", { name: "Return to current scene", exact: true }).click();
+  const draft = await page.evaluate(() => JSON.parse(localStorage.getItem('px-mission-draft:00000000-0000-4000-8000-000000000001:atom_dive')));
+  expect(draft.atomDive.evidence).toEqual(state.evidence);
+  expect(draft.atomDive.ionic.verified).toBe(false);
+});
+
 test("one Start automatically plays the authored briefing, revised hovering ORBIT and neutral mirror; route waits", async ({ page }) => {
   await atomSetup(page);
   await page.goto(target);
@@ -78,6 +122,7 @@ for (const world of ["metallic","ionic"]) test(`fresh ${world}-first route contr
   await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-world", world);
   await expect(page.locator(".px-atom-stage")).toHaveAttribute("data-video-id", world === "metallic" ? "AD_V02_enter_metallic.mp4" : "AD_V04_enter_ionic.mp4");
   await expect(page.locator(".px-atom-world-view .px-atom-crystal")).toHaveAttribute("data-world", world);
+  if (world === "ionic") await ionColors(page.locator(".px-atom-world-view"));
   if (world === "metallic") {
     await beat(page);
     await expect(page.locator(".px-atom-caption")).toHaveText("I recorded positive centres everywhere. Where was the negative charge?");
@@ -99,6 +144,7 @@ test("comparison stays visible as a narrated review and advances without selecti
   const { state } = await at(page, "comparison", value => { value.step = "comparisonBrief"; value.cursor = 0; });
   const models = page.locator(".px-atom-comparison-models svg");
   await expect(models).toHaveCount(2);
+  await ionColors(page.locator(".px-atom-comparison-models"));
   await models.first().evaluate(el => window.__retainedComparison = el);
   await reach(page, "comparisonTask");
   await expect(page.getByRole("heading", { name: "Metallic structure", exact: true })).toBeVisible();
@@ -305,6 +351,8 @@ for (const first of ["metallic","ionic"]) test(`automatic ${first}-first complet
   await expect(page.locator(".xp-completion")).toContainText("100%");
   expect(data.progressRows.filter(row=>row.scenario_id === "atom_dive" && row.score === 100)).toHaveLength(1);
   expect(data.progressRows.find(row=>row.score === 100).answers.exitTicket.mcq_answers).toHaveLength(5);
+  await page.getByText("Review the ionic lattice", { exact: true }).click();
+  await ionColors(page.locator(".px-atom-completed-review"));
 });
 
 test("previous-scene playback returns automatically at its end without adding learning events", async ({ page }) => {
