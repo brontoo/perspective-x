@@ -1,4 +1,5 @@
 import CrystalView from "./CrystalView";
+import { ATOM_ION_COLORS } from "@/data/atomCrystal.mjs";
 export function AtomSelect({ label, value, onChange, options, disabled = false }) {
   return <label className="px-atom-field"><span>{label}</span><select aria-label={label} value={value} disabled={disabled} onChange={e => onChange(e.target.value)}>
     <option value="">Choose your explanation</option>
@@ -40,12 +41,14 @@ export function MetallicActivity({ value, send }) {
 export function TransferModel({ transferred, verified, attracting = false }) {
   function atom(x, name, protons, electrons) {
     const shells = electrons > 10 ? [2, 8, electrons - 10] : [2, 8];
+    const color = ATOM_ION_COLORS[name === "Na" ? "cation" : "anion"][1];
     return <g key={name}>
-      {shells.map((number, shell) => <g key={shell}><circle cx={x} cy="95" r={24 + shell * 21} fill="none" stroke="#7da4b2" />
+      <circle cx={x} cy="95" r="71" fill={color} fillOpacity=".09" />
+      {shells.map((number, shell) => <g key={shell}><circle cx={x} cy="95" r={24 + shell * 21} fill="none" stroke={color} strokeWidth="1.5" />
         {Array.from({ length: number }, (_, i) => { const angle = i * Math.PI * 2 / number;
           return <circle key={i} cx={x + Math.cos(angle) * (24 + shell * 21)} cy={95 + Math.sin(angle) * (24 + shell * 21)} r="4" fill="#9adbe9" />; })}</g>)}
       <circle cx={x} cy="95" r="16" fill="#ddba7e" /><text x={x} y="99" textAnchor="middle" fill="#102837" fontSize="9">{protons} p⁺</text>
-      <text x={x} y="186" textAnchor="middle" fill="#f4f8fa" fontSize="15">{name}{verified ? protons > electrons ? "⁺" : "⁻" : ""}</text>
+      <text x={x} y="186" textAnchor="middle" fill={color} fontSize="15">{name}{verified ? protons > electrons ? "⁺" : "⁻" : ""}</text>
       <text x={x} y="208" textAnchor="middle" fill="#c7e3ec" fontSize="12">{protons} protons · {electrons} electrons</text>
     </g>;
   }
@@ -96,14 +99,28 @@ export function IonicActivity({ task, value, send }) {
   </section>;
 }
 
+function BondingModels({ sides, verified }) {
+  return <div className="px-atom-comparison-models">{sides.map((kind, i) => <div key={kind}>
+      <h3>{kind === "metallic" ? "Metallic structure" : "Ionic structure"}</h3><StructureModel kind={kind} grayscale label={`Model ${i === 0 ? "A" : "B"}`} />
+      {verified && <p className="px-atom-model-status">{verified[kind] ? "Verified evidence" : "Preview · Investigation still required"}</p>}
+      <p>{kind === "metallic" ? "Positive metal ion cores attract delocalized electrons within the material." : "Cations and anions attract in an extended, repeating ionic lattice."}</p>
+    </div>)}</div>;
+}
+
+export function EvidenceModels({ metalVerified, ionicVerified }) {
+  return <section aria-label="Formation model evidence" className="px-atom-lab">
+    <header><p className="px-atom-eyebrow">Evidence record / Keep the explanation</p><h2>Your formation models</h2>
+      <p>Keep the model you verified alongside the structure you will investigate next.</p></header>
+    <BondingModels sides={["metallic", "ionic"]} verified={{ metallic: metalVerified, ionic: ionicVerified }} />
+    <p className="px-atom-model-note">The preview is a viewing aid. Each investigation still needs your own scientific explanation.</p>
+  </section>;
+}
+
 export function ComparisonActivity({ value }) {
-  return <section aria-label="Grayscale final comparison" className="px-atom-lab">
+  return <section aria-label="Final bonding model comparison" className="px-atom-lab">
     <header><p className="px-atom-eyebrow">Atomic lens / Both investigations verified</p><h2>Two structures. Two bonding models.</h2>
       <p>Compare the particles and the attraction that holds each structure together.</p></header>
-    <div className="px-atom-comparison-models">{value.sides.map((kind, i) => <div key={i}>
-      <h3>{kind === "metallic" ? "Metallic structure" : "Ionic structure"}</h3><StructureModel kind={kind} grayscale label={`Model ${i === 0 ? "A" : "B"}`} />
-      <p>{kind === "metallic" ? "Positive metal ion cores attract delocalized electrons within the material." : "Cations and anions attract in an extended, repeating ionic lattice."}</p>
-    </div>)}</div>
+    <BondingModels sides={value.sides} />
     <p className="px-atom-model-note">Charge signs describe the particles; the shading is a diagram convention. The story continues after the comparison.</p>
   </section>;
 }

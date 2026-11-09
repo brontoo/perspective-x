@@ -10,6 +10,7 @@ export function atomMovie(id) {
 export function atomVisual(scene, state, line) {
   if (["S04","S05","S10"].includes(scene)) return { kind: "metallic", electrons: state.metal.inspected.includes("electrons") || state.metal.verified || /delocalized throughout/.test(line?.text || ""), recovered: scene === "S10" };
   if (["S07","S08"].includes(scene)) return { kind: "ionic", electrons: false };
+  if (scene === "S06") return { sides: ["metallic", "ionic"] };
   if (scene === "S09") return { sides: state.comparison.sides };
   return null;
 }

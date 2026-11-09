@@ -59,6 +59,7 @@ function SceneReviewDialog({ visit, held, onReturn }) {
   const dialog = useRef(null), [index, setIndex] = useState(0), [filmDone, setFilmDone] = useState(false);
   const rows = visit.lines?.length ? visit.lines : [{ id: `${visit.key}-caption`, text: visit.text || visit.title, audio: null }];
   const row = rows[index], movie = row.video || (index === 0 ? visit.video : null);
+  const modelSides = visit.visual?.sides || (visit.key === "atom_dive:S06" ? ["metallic", "ionic"] : null);
   const voice = useRecordedPlayback(row, rows[index + 1], { scope: `scene-review:${visit.key}:${index}`, autoStart: true, held, initialMuted: visit.muted });
   useEffect(() => { dialog.current.showModal(); }, []);
   useEffect(() => { setFilmDone(!movie || !!movie.withheld); }, [index, movie?.url]);
@@ -71,7 +72,7 @@ function SceneReviewDialog({ visit, held, onReturn }) {
     <div className="px-scene-review-stage">
       {visit.art && <img src={visit.art} alt="Previously visited scene artwork" />}
       {visit.visual?.kind && <CrystalView kind={visit.visual.kind} coreLabel electrons={visit.visual.electrons} />}
-      {visit.visual?.sides && <div className="px-scene-review-models">{visit.visual.sides.map((kind,i) => <div key={i}><h3>Model {i ? "B" : "A"}</h3><CrystalView kind={kind} grayscale electrons coreLabel={false} /></div>)}</div>}
+      {modelSides && <div className="px-scene-review-models">{modelSides.map((kind,i) => <div key={i}><h3>Model {i ? "B" : "A"}</h3><CrystalView kind={kind} grayscale electrons coreLabel={false} /></div>)}</div>}
       {movie && !movie.withheld && <AtomFilm key={`${visit.key}:${index}`} film={{ definition: movie }} paused={voice.paused} muted={voice.muted} onBusy={busy => setFilmDone(!busy)} onStatus={() => {}} />}
       <section aria-live="polite"><strong>{row.speaker || "Your mission"}</strong><p>{row.text}</p></section>
     </div>

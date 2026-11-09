@@ -2,6 +2,21 @@
 
 Current correction work: `feature/atom-dive-experience-corrections`, based on implementation commit `831fe7bacbfeec3510f6475f8ad4e68b1a1709e2`. It updates the existing implementation PR #22 for Preview review. Main/production are not promoted. See [EXPERIENCE_CORRECTIONS.md](EXPERIENCE_CORRECTIONS.md) for the final behavior, changed-file map, media policy and exact pending replacement paths.
 
+## S06 models and ionic colors — 9 November 2026
+
+See [EVIDENCE_MODELS.md](EVIDENCE_MODELS.md) for the focused presentation change and actual desktop/mobile screenshots. Earlier grayscale ionic captures below are historical; the latest user request explicitly asks for different ion colors throughout ATOM DIVE.
+
+- Build, lint, typecheck and **41 unit tests passed**.
+- **46 affected production-bundle browser tests passed**: 20 correction cases, 24 Atom cases and 2 native-media/ad-filter cases.
+- New S06 cases cover both recordings, both model displays, clear verified/preview status, distinct ionic colors, reload and Previous scene at 1440px and 390px, with unchanged evidence and ionic verification.
+- Color assertions also exercise ionic entry, the narrated comparison, scene review and completed-assessment review. Both full investigation orders, unchanged assessment thresholds, teacher controls, native media and existing replay behavior pass.
+- S06 desktop/mobile screenshots were visually inspected. The comparison remains narrated, without the previously cancelled response form. No audio, source artwork, video, score rule, teacher setting, main merge or production promotion is included.
+
+```sh
+npx playwright test --config playwright.built.config.js \
+  tests/atom-corrections.spec.js tests/atom-dive.spec.js tests/atom-start.spec.js
+```
+
 ## Latest title and comparison follow-up — 27 October 2026
 
 The user added a themed metallic-model introduction and cancelled only the scored S09 comparison activity. The two-model comparison remains as narration and advances directly to recovery. This supersedes earlier tests/screenshots of the removed form.

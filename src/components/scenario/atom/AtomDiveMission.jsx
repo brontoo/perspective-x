@@ -5,7 +5,7 @@ import { useAtomVoice, AtomFilm, useAtomFullscreen } from "./AtomMedia";
 import { useAutomaticBeat } from "../playback/useRecordedPlayback";
 import usePausableTimers from "../playback/usePausableTimers";
 import { PreviousSceneButton, useSceneReview, usePlaybackSuspended } from "../playback/ScenarioReview";
-import { MetallicActivity, IonicActivity, ComparisonActivity, StructureModel } from "./AtomModels";
+import { MetallicActivity, IonicActivity, ComparisonActivity, EvidenceModels, StructureModel } from "./AtomModels";
 import CrystalView from "./CrystalView";
 import "./atom-dive.css";
 
@@ -35,7 +35,7 @@ export default function AtomDiveMission({ value, onDraft, onComplete, onNotebook
   const filmDone = !movie || movie.withheld || filmMount.current.held || filmState.key === filmKey && filmState.done;
   const [failedArt, setFailedArt] = useState(new Set());
   const art = atomArt(step.scene), visual = atomVisual(step.scene, state, caption);
-  const hasTask = voice.started && !showingMetalIntro && (!!task || step.scene === "S09");
+  const hasTask = voice.started && !showingMetalIntro && (!!task || !!visual?.sides);
   const canContinue = voice.started && voice.finished && !voice.paused && filmDone;
   const saved = useRef(false);
   function send(event) {
@@ -106,6 +106,7 @@ export default function AtomDiveMission({ value, onDraft, onComplete, onNotebook
         </section>}
         {task === "metal" && <MetallicActivity value={state.metal} send={send} />}
         {["transfer", "charges", "attraction", "lattice"].includes(task) && <IonicActivity task={task} value={state.ionic} send={send} />}
+        {step.scene === "S06" && <EvidenceModels metalVerified={state.metal.verified} ionicVerified={state.ionic.verified} />}
         {step.scene === "S09" && <ComparisonActivity value={state.comparison} />}
         {task === "reflection" && <section className="px-atom-lab" aria-label="Mission reflection">
           <p className="px-atom-eyebrow">Back at the research studio</p><h2>Two worlds. What can you explain?</h2>
