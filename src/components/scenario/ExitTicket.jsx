@@ -4,8 +4,11 @@ import {
   CheckCircle2, BookOpen, Lightbulb, ShieldCheck
 } from 'lucide-react';
 import { normalizeExitTicketQuestions } from './scenarioHelpers';
+import { usePlaybackSuspended } from './playback/ScenarioReview';
+import usePausableTimers from './playback/usePausableTimers';
 
 export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, theme = {}, isTeacher = false, missionResult = null, scenarioId = null }) {
+    const timers = usePausableTimers(usePlaybackSuspended());
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState([]);
     const [selectedOptionId, setSelectedOptionId] = useState(null);
@@ -28,7 +31,7 @@ export default function ExitTicket({ exitTicket, scenarioTitle, onComplete, them
         });
 
         // Show immediate feedback for 1500ms, then advance
-        setTimeout(() => {
+        timers.setTimeout(() => {
             setSelectedOptionId(null);
             if (currentQuestion < questions.length - 1) {
                 setCurrentQuestion((p) => p + 1);

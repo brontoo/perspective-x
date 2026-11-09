@@ -72,7 +72,7 @@ test("draft notebook does not award completion and saved history opens accessibl
 }) => {
   await setup(page);
   await page.goto("/Dashboard");
-  await expect(page.getByText("1 of 18 missions passed")).toBeVisible();
+  await expect(page.getByText("1 of 19 missions passed")).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Acid Rain Alert", exact: true }),
   ).toBeVisible();
@@ -162,7 +162,7 @@ test("empty and backend-failure states do not invent statistics", async ({
 }) => {
   await setup(page, { empty: true });
   await page.goto("/Dashboard");
-  await expect(page.getByText("0 of 18 missions passed")).toBeVisible();
+  await expect(page.getByText("0 of 19 missions passed")).toBeVisible();
   await expect(
     page.getByText("No teacher messages yet.", { exact: false }),
   ).toBeVisible();

@@ -12,6 +12,7 @@ import PortalShell, {
 } from "@/components/expedition/PortalShell";
 const ART = {
   chemistry: "industrial_chemist",
+  materials_bonding: "ionic_materials_specialist",
   biology: "biomedical_researcher",
   physics: "energy_engineer",
   earth_science: "geologist",
@@ -56,7 +57,7 @@ export default function LearningPath() {
           <p className="px-eyebrow">Connect the science</p>
           <h1>Your learning pathways</h1>
           <p>
-            Explore six interconnected academic journeys. Your mission evidence
+            Explore {Object.keys(LEARNING_PATHS).length} interconnected academic journeys. Your mission evidence
             builds a bigger picture.
           </p>
         </section>

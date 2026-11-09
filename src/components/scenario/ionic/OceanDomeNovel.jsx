@@ -18,6 +18,7 @@ import {
 import IonicInvestigation from "./IonicInvestigation";
 import { OceanFilm, useOceanVoice } from "./OceanMedia";
 import "./ocean-dome.css";
+import { PreviousSceneButton, useSceneReview } from "../playback/ScenarioReview";
 
 const blankFlow = {
   step: 0,
@@ -120,6 +121,14 @@ export default function OceanDomeNovel({
           ? nextStepData?.lines[0]
           : null;
   const voice = useOceanVoice(caption, nextLine);
+  const sceneReview = useSceneReview();
+  useEffect(() => {
+    if (!voice.started || sceneReview.reviewing || sceneReview.notebookOpen || !step || !active || review) return;
+    sceneReview.recordScene({ key: `ionic_aquarium_mystery:${step.id}`, title: `${active.sceneId} · ${chapterTitle[stage]}`, art,
+      response: record.current.evidence?.map(item => item.observation).join(" ") },
+      { id: active.id, text: active.line, audio: active.audio, speaker: active.speaker, scene: active.sceneId,
+        video: step.video && active.id === step.lines[0]?.id ? { url: OCEAN_VIDEOS[step.video] } : null });
+  }, [voice.started, active?.id, step?.id, sceneReview.reviewing, sceneReview.notebookOpen, sceneReview.recordScene, review]);
   const canAct =
     voice.started &&
     !voice.paused &&
@@ -326,6 +335,7 @@ export default function OceanDomeNovel({
           {chapterTitle[stage]}
         </span>
         <div className="od-view-controls">
+          <PreviousSceneButton />
           <span>
             {active?.sceneId || "Teacher preview"} · Al Qana, Abu Dhabi
           </span>

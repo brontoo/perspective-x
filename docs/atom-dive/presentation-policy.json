@@ -1,0 +1,22 @@
+{
+  "stills": {
+    "S02": "/images/scenarios/atom_dive/revisions/AD_I02_lost_signal.png",
+    "S03": "/images/scenarios/atom_dive/revisions/AD_I03_launch.png"
+  },
+  "withheldVideos": {
+    "AD_V01_last_signal.mp4": "Tablet-contained ORBIT conflicts with hovering projected presence.",
+    "AD_V02_enter_metallic.mp4": "Fantasy landscape conflicts with the ORBIT-view FCC metal model.",
+    "AD_V03_metallic_route.mp4": "Must match the revised metallic camera and verified reconstruction.",
+    "AD_V04_enter_ionic.mp4": "Must show the distinct rock-salt ionic view from ORBIT camera.",
+    "AD_V05_find_orbit.mp4": "Recovery environment must match the revised metallic fragment."
+  },
+  "scientificViews": {
+    "S04": "FCC metallic fragment from ORBIT camera",
+    "S05": "FCC motif and delocalization reconstruction",
+    "S07": "Rock-salt NaCl fragment from ORBIT camera",
+    "S08": "Na/Cl formation and repeating rock-salt lattice",
+    "S09": "Persistent grayscale comparison",
+    "S10": "Same FCC fragment with code-rendered virtual ORBIT recovery"
+  },
+  "provenance": "S02 and S03 are targeted image edits prepared for review from the approved originals. No MP4 pixels were changed. Five conflicting clips are withheld. Original illustrations, all six clips and all 61 recordings are preserved."
+}

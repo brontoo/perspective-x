@@ -38,6 +38,9 @@ import MissionNotebook from "@/components/scenario/MissionNotebook";
 import ScenarioComplete from "@/components/scenario/ScenarioComplete";
 import { useScenarioAudio } from "@/hooks/useScenarioAudio";
 import OceanSession from "@/components/scenario/ionic/OceanSession";
+import { atomNotebook } from "@/data/atomDive.mjs";
+import { SceneReviewProvider, PreviousSceneButton } from "@/components/scenario/playback/ScenarioReview";
+import LegacySceneVisit from "@/components/scenario/playback/LegacySceneVisit";
 const MissionContent = ({ children }) => children;
 const CinematicVideoIntro = lazy(
   () => import("@/components/scenario/CinematicVideoIntro"),
@@ -45,6 +48,8 @@ const CinematicVideoIntro = lazy(
 const IonicMission = lazy(
   () => import("@/components/scenario/ionic/IonicMission"),
 );
+const AtomDiveMission = lazy(() => import("@/components/scenario/atom/AtomDiveMission"));
+const AtomResultReview = lazy(() => import("@/components/scenario/atom/AtomResultReview"));
 const SceneOne = lazy(() => import("@/components/scenario/SceneOne"));
 const SceneTwo = lazy(() => import("@/components/scenario/SceneTwo"));
 const ConsequenceViewer = lazy(
@@ -129,6 +134,7 @@ export default function ScenarioPlayer() {
   const finalizing = useRef(false);
   const savedResult = useRef(false);
   const audio = useScenarioAudio();
+  const reviewing = useRef(false);
   const mode =
     data.feedback.find(
       (f) =>
@@ -209,7 +215,9 @@ export default function ScenarioPlayer() {
     setPhase(
       draft.exitTicket
         ? "complete"
-        : Object.keys(draft).length
+        : scenario.interactiveAtom
+          ? "intro"
+          : Object.keys(draft).length
           ? resumePhase(draft, scenario.interactiveIonic)
           : "video",
     );
@@ -314,10 +322,11 @@ export default function ScenarioPlayer() {
     if (phase === "complete") audio.playChamberUnlock();
     else if (!["video", "intro"].includes(phase)) audio.playPhaseTransition();
   }, [phase]);
-  function capture(field, value, nextPhase) {
+  function capturePatch(patch, nextPhase) {
+    if (reviewing.current) return;
     const next = {
       ...responseRef.current,
-      ...(field ? { [field]: value } : {}),
+      ...patch,
       meta: {
         ...responseRef.current.meta,
         recordType: "mission_attempt",
@@ -329,10 +338,14 @@ export default function ScenarioPlayer() {
     setRecord(next);
     setPhase(nextPhase);
   }
+  function capture(field, value, nextPhase) {
+    capturePatch(field ? { [field]: value } : {}, nextPhase);
+  }
   function changeNotes(notes) {
     capture("notebook", notes, phase);
   }
   async function finish(assessment) {
+    if (reviewing.current) return;
     if (finalizing.current) return;
     finalizing.current = true;
     const result = {
@@ -441,6 +454,12 @@ export default function ScenarioPlayer() {
       ),
   );
   return (
+    <SceneReviewProvider key={`${id}:${attemptCount}`} initialTrail={responses.meta?.sceneTrail || []}
+      ready={initialized.current === `${data.user?.id}:${id}:${reviewId || ""}` && !accessError} notebookOpen={notebook} onReviewChange={value => { reviewing.current = value; }}
+      onTrail={trail => {
+        const next = { ...responseRef.current, meta: { ...responseRef.current.meta, sceneTrail: trail, updatedAt: new Date().toISOString(), recordType: "mission_attempt" } };
+        setRecord(next); setTouched(true);
+      }}>
     <PortalShell
       data={data}
       back={preview ? "/TeacherDashboard" : `/RoleHub?role=${role.id}`}
@@ -463,10 +482,11 @@ export default function ScenarioPlayer() {
                 : "Standard Mode"}
           </span>
           <small>
-            {scenario.interactiveIonic ? "Your investigator" : "Role mentor"}:{" "}
+            {scenario.interactiveIonic || scenario.interactiveAtom ? "Your investigator" : "Role mentor"}:{" "}
             {ROLE_IDENTITIES[role.id].name} · Fictional character
           </small>
         </div>
+        {(phase === "complete" || !scenario.interactiveAtom && id !== "ionic_aquarium_mystery") && <PreviousSceneButton />}
         <button className="px-outline-button" onClick={() => setNotebook(true)}>
           Mission Notebook
         </button>
@@ -474,7 +494,7 @@ export default function ScenarioPlayer() {
       {preview && (
         <div className="xp-preview-banner">
           <strong>Teacher preview — no student progress is saved</strong>
-          <div className="xp-actions">
+          {!scenario.interactiveAtom && <div className="xp-actions">
             <button
               className="px-outline-button"
               onClick={() =>
@@ -497,7 +517,8 @@ export default function ScenarioPlayer() {
             >
               Next stage
             </button>
-          </div>
+          </div>}
+          {scenario.interactiveAtom && <button className="px-outline-button" onClick={replay}>Restart preview</button>}
         </div>
       )}
       {reviewId && (
@@ -505,7 +526,7 @@ export default function ScenarioPlayer() {
           Reviewing a preserved attempt. Responses are read-only.
         </p>
       )}
-      <ol className="xp-chapters" aria-label="Five-chapter mission progress">
+      {!scenario.interactiveAtom && <ol className="xp-chapters" aria-label="Five-chapter mission progress">
         {MISSION_CHAPTERS.map((chapter, i) => (
           <li
             key={chapter.id}
@@ -519,8 +540,9 @@ export default function ScenarioPlayer() {
             </strong>
           </li>
         ))}
-      </ol>
+      </ol>}
       <div className="xp-mission-workspace" data-phase={phase}>
+        {!scenario.interactiveAtom && !scenario.interactiveIonic && phase !== "video" && <LegacySceneVisit scenario={scenario} phase={phase} responses={responses} />}
         <WorkspaceSession
           key={id}
           onNotebook={() => setNotebook(true)}
@@ -548,7 +570,15 @@ export default function ScenarioPlayer() {
               </section>
             ) : (
               <>
-                {scenario.interactiveIonic ? (
+                {scenario.interactiveAtom ? (
+                  phase !== "complete" && <AtomDiveMission
+                    key={`${id}:${attemptCount}`}
+                    value={responses.atomDive}
+                    onDraft={value => capturePatch(atomNotebook(value), "intro")}
+                    onComplete={finish}
+                    onNotebook={() => setNotebook(true)}
+                  />
+                ) : scenario.interactiveIonic ? (
                   phase !== "complete" && (
                     <IonicMission
                       key={`${id}:${phase}`}
@@ -707,6 +737,7 @@ export default function ScenarioPlayer() {
                     onRetrySave={() => save(responses, responses.exitTicket)}
                   />
                 )}
+                {phase === "complete" && scenario.interactiveAtom && <AtomResultReview state={responses.atomDive} />}
               </>
             )}
           </Suspense>
@@ -761,5 +792,6 @@ export default function ScenarioPlayer() {
         </Suspense>
       )}
     </PortalShell>
+    </SceneReviewProvider>
   );
 }

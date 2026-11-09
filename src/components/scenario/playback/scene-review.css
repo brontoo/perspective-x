@@ -1,0 +1,22 @@
+.px-previous-scene { border: 1px solid #7196a6; background: #163c50; color: #e8f3f7; border-radius: 9px; padding: 9px 13px; font: inherit; font-size: 12px; min-height: 44px; cursor: pointer; }
+.px-previous-scene:disabled { opacity: .45; cursor: default; }
+.px-scene-review { width: min(1100px,96vw); max-height: 95dvh; padding: 0; border: 1px solid #92b6c7; border-radius: 20px; color: #e8f4fa; background: #0b2538; overflow: auto; }
+.px-scene-review::backdrop { background: #031625db; backdrop-filter: blur(5px); }
+.px-scene-review header { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 18px 22px; }
+.px-scene-review h2 { margin: 4px 0; color: #ecf6fa; font-size: 22px; }
+.px-scene-review small { color: #cbdde5; }
+.px-scene-review button { color: #f2f7fb; background: #173f54; border: 1px solid #7396aa; border-radius: 8px; padding: 10px 14px; min-height: 44px; cursor: pointer; }
+.px-scene-review button:focus-visible { outline: 3px solid #f3d49c; outline-offset: 2px; }
+.px-scene-review-stage { position: relative; isolation: isolate; min-height: 480px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; background: #0b2234; }
+.px-scene-review-stage > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: -1; opacity: .8; }
+.px-scene-review-stage > section { margin-top: auto; padding: 18px; border: 1px solid #8aadb9; border-radius: 12px; background: #0b2b41ef; font-size: 18px; }
+.px-scene-review-stage > section p { margin: 8px 0 0; }
+.px-scene-review footer { padding: 15px 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+.px-scene-review footer p { flex-basis: 100%; margin: 4px 0; }
+.px-scene-review details { padding: 15px 22px; }
+.px-scene-review-models { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width:600px) { .px-scene-review header { flex-wrap: wrap; } .px-scene-review-models { grid-template-columns: 1fr; } .px-scene-review-stage { min-height: 400px; padding: 12px; } }
+.px-scene-review-stage > .px-atom-film { position: absolute; inset: 0; z-index: -1; }
+.px-scene-review-stage .px-atom-film > :is(video,img) { width: 100%; height: 100%; object-fit: contain; }
+.px-scene-review-stage .px-atom-film-tools { position: absolute; top: 12px; right: 12px; }
+.px-scene-review .px-atom-crystal svg { width: 100%; height: auto; max-height: 340px; }

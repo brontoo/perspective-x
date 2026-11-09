@@ -1,3 +1,5 @@
+import { PreviousSceneButton, useSceneReview, usePlaybackSuspended } from "./playback/ScenarioReview";
+import usePausableTimers from "./playback/usePausableTimers";
 /**
  * KenBurnsSlideshow.jsx
  *
@@ -161,6 +163,8 @@ export default function KenBurnsSlideshow({
     isTeacher = false,
     videoState = 'idle',
 }) {
+    const sceneReview = useSceneReview(), suspended = usePlaybackSuspended();
+    const timers = usePausableTimers(suspended), heldRef = useRef(suspended); heldRef.current = suspended;
     /* ── Audio element ref ───────────────────────────────────────────────── */
     const audioRef = useRef(null);
     const isMountedRef = useRef(true);
@@ -186,6 +190,12 @@ export default function KenBurnsSlideshow({
 
     const subtitleSegments = useMemo(() => buildSubtitleSegments(content), [content]);
     const fullTranscript = subtitleSegments.map((s) => s.text).join(' ');
+    useEffect(() => {
+        const segment = subtitleSegments[currentSubtitleIdx];
+        if (suspended || (!isPlaying && currentTime === 0) || !segment || !duration) return;
+        sceneReview.recordScene({ key: `${scenarioId}:intro-image:${currentImageIdx}`, title: `Cinematic briefing · ${currentImageIdx + 1}`, art: images[currentImageIdx] },
+            { id: `${scenarioId}:subtitle:${currentSubtitleIdx}`, text: segment.text, audio: audioSrc, speaker: 'Narrator', startTime: segment.startPct * duration, endTime: segment.endPct * duration });
+    }, [suspended, isPlaying, currentSubtitleIdx, currentImageIdx, duration, sceneReview.recordScene]);
     const character = content?.character;
 
     /* ── Safe complete callback ──────────────────────────────────────────── */
@@ -276,9 +286,9 @@ export default function KenBurnsSlideshow({
     /* ── Controls ────────────────────────────────────────────────────────── */
     const handlePlay = useCallback(() => {
         const audio = audioRef.current;
-        if (!audio) return;
+        if (!audio || heldRef.current) return;
         audio.play()
-            .then(() => { if (isMountedRef.current) setIsPlaying(true); })
+            .then(() => { if (heldRef.current) audio.pause(); else if (isMountedRef.current) setIsPlaying(true); })
             .catch(() => { if (isMountedRef.current) setIsPlaying(false); });
     }, []);
 
@@ -325,10 +335,10 @@ export default function KenBurnsSlideshow({
     /* ── Auto-play on mount (500 ms delay for smooth entry animation) ────── */
     useEffect(() => {
         if (videoState === 'completed') return;
-        const timer = setTimeout(() => {
+        const timer = timers.setTimeout(() => {
             if (isMountedRef.current) handlePlay();
         }, 600);
-        return () => clearTimeout(timer);
+        return () => timers.clearTimeout(timer);
     }, [handlePlay, videoState]);
 
     /* ── Keyboard shortcuts ──────────────────────────────────────────────── */
@@ -613,7 +623,8 @@ export default function KenBurnsSlideshow({
                 </div>
 
                 {/* Control row */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap gap-2 items-center justify-between">
+                    <PreviousSceneButton />
                     {/* Left: character avatar + playback controls */}
                     <div className="flex items-center gap-1">
                         {/* Avatar */}
