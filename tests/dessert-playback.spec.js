@@ -20,7 +20,7 @@ test("native MP3 and original muted MP4 play together; the actual final frame ho
   test.setTimeout(60000);
   await page.emulateMedia({ reducedMotion: "no-preference" });
   const state = createDessertState();
-  state.cursor = 1;
+  state.cursor = 0;
   await setup(page, { seedRows: [dessertDraft(state, ID)] });
   await page.goto(DESSERT_TARGET);
   await dessertStart(page);
@@ -44,7 +44,7 @@ test("native MP3 and original muted MP4 play together; the actual final frame ho
   await expect(audio).toHaveJSProperty("paused", false);
   await expect(audio).toHaveAttribute(
     "data-dialogue-id",
-    "CH01_SC01_001_NARRATOR",
+    "CH01_SC01_002_NARRATOR",
   );
   await root(page).screenshot({
     path: "docs/dessert/screenshots/native-opening-playback.png",
@@ -56,7 +56,7 @@ test("native pause, notebook and Previous scene preserve the same recording posi
 }) => {
   test.setTimeout(60000);
   const state = dessertCheckpoint("decision");
-  state.node = "n21";
+  state.node = "n20";
   state.cursor = 0;
   state.ready = false;
   await setup(page, { seedRows: [dessertDraft(state, ID)] });
@@ -136,7 +136,7 @@ test("a short completed line cannot cut off a required video and stale callbacks
     .evaluate((v) => v.dispatchEvent(new Event("ended")));
   await expect(root(page).locator("audio")).toHaveAttribute(
     "data-dialogue-id",
-    "CH04_END_A_002_FATIMA",
+    "CH04_END_A_004_MARIAM",
   );
   await expect(
     root(page).getByAltText("Final cinematic frame", { exact: true }),
@@ -181,6 +181,8 @@ test("captions-only reading is adjustable and pauses during explicit pause, note
   await dessertSetup(page);
   await page.goto(DESSERT_TARGET);
   await dessertStart(page);
+  const skip = root(page).getByRole("button", {name:"Skip clip",exact:true});
+  if (await skip.count()) await skip.click();
   await root(page)
     .getByRole("button", { name: "Captions only", exact: true })
     .click();
@@ -233,7 +235,7 @@ test("missing artwork and audio retain a usable readable fallback with no unrela
   await expect(root(page).locator(".px-dessert-art-unavailable")).toBeVisible();
   await expect(root(page).locator(".px-dessert-scene-image")).toHaveCount(0);
   await expect(root(page).locator(".px-dessert-dialogue")).toContainText(
-    "educational simulation",
+    "Only twelve minutes remain",
   );
 });
 
@@ -251,9 +253,7 @@ test("label masking follows the supplied falling-label checkpoint and is also re
     path: "docs/dessert/screenshots/three-powders-label-treatment.png",
   });
   await dessertBeat(page);
-  await dessertBeat(page);
   await expect(root(page)).toHaveAttribute("data-node", "n04");
-  await dessertBeat(page);
   await expect(root(page).locator(".px-dessert-stage")).toHaveAttribute(
     "data-video-id",
     "V02",
@@ -357,7 +357,7 @@ test("slow recording loading never advances the story or awards evidence and can
     release = resolve;
   });
   await page.route(
-    "**/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/SYSTEM_SAFETY_DISCLAIMER_NARRATOR.mp3",
+    "**/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC01_002_NARRATOR.mp3",
     async (route) => {
       await gate;
       await route.continue();
@@ -368,7 +368,7 @@ test("slow recording loading never advances the story or awards evidence and can
   const audio = root(page).locator("audio");
   await expect(audio).toHaveAttribute(
     "data-dialogue-id",
-    "SYSTEM_SAFETY_DISCLAIMER_NARRATOR",
+    "CH01_SC01_002_NARRATOR",
   );
   await page.waitForTimeout(800);
   await expect(root(page)).toHaveAttribute("data-node", "n01");
@@ -386,6 +386,6 @@ test("slow recording loading never advances the story or awards evidence and can
     .toBeGreaterThan(0.1);
   await expect(audio).toHaveAttribute(
     "data-dialogue-id",
-    "SYSTEM_SAFETY_DISCLAIMER_NARRATOR",
+    "CH01_SC01_002_NARRATOR",
   );
 });

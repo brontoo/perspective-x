@@ -559,7 +559,9 @@ export default function DessertMission({
               </button>
             )}
           </div>
-          <p role="status">{voice.status}</p>
+          <p role="status">
+            {state.ready && state.notice && !voice.paused ? state.notice : voice.status}
+          </p>
         </div>
       )}
       <div className="px-dessert-records">

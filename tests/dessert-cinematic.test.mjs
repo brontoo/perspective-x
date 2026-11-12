@@ -28,13 +28,13 @@ test("Dessert keeps its existing ID and exact five scientific questions and 80% 
     ["d1", "d2", "d3", "d4", "d5"],
   );
 });
-test("28 real stills, six original videos and 217 unique decoded recordings map to all 217 supplied scripts and reachable events", () => {
+test("28 real stills, six original videos and 217 original recordings retain all scripts; only 100 editorially approved recordings have active routes", () => {
   assert.equal(Object.keys(DESSERT_MEDIA.images).length, 28);
   assert.equal(Object.keys(DESSERT_MEDIA.videos).length, 6);
   const routes = dessertAudioRoutes();
-  assert.equal(Object.keys(routes).length, 217);
+  assert.equal(Object.keys(routes).length, 100);
   for (const [id, r] of Object.entries(DESSERT_MEDIA.recordings)) {
-    assert.ok(routes[id].length);
+    if (routes[id]) assert.ok(routes[id].length);
     assert.ok(r.duration > 0);
     assert.equal(fs.readFileSync(r.sourceScript, "utf8").trim(), r.text);
     assert.equal(
@@ -105,10 +105,7 @@ test("all nine controlled observations and the NaCl transfer are required for id
   const wrong = act(s, "identify");
   assert.equal(wrong.investigation.identified, false);
   assert.equal(wrong.investigation.attempts.length, 1);
-  assert.equal(
-    dessertActiveLine(wrong).id,
-    "SYSTEM_IDENTIFICATION_MISMATCH_SYSTEM",
-  );
+  assert.equal(dessertActiveLine(wrong).id, "CH02_SC19_WRONG_HAMAD");
   const missing = {
     ...s,
     investigation: {
@@ -154,8 +151,8 @@ test("decision rejects missing justification and citations; no unsupported resul
     patch: { selectedOption: "A", justification: "short" },
   });
   assert.equal(
-    dessertActiveLine(act(s, "decide")).id,
-    "SYSTEM_JUSTIFICATION_MINIMUM_SYSTEM",
+    act(s, "decide").notice,
+    "Provide a justification of at least sixty characters.",
   );
   assert.equal(s.decision, null);
   s = act(s, "decisionDraft", {
@@ -165,8 +162,8 @@ test("decision rejects missing justification and citations; no unsupported resul
     },
   });
   assert.equal(
-    dessertActiveLine(act(s, "decide")).id,
-    "SYSTEM_SELECT_EVIDENCE_SYSTEM",
+    act(s, "decide").notice,
+    "Select at least two pieces of evidence.",
   );
 });
 for (const wrong of [0, 1, 2])
@@ -181,7 +178,7 @@ for (const wrong of [0, 1, 2])
     assert.equal(s.result.score, 100 - 20 * wrong);
     assert.equal(s.result.passed, wrong < 2);
     assert.equal(act(s, "assess"), s);
-    assert.equal(s.feedback.ids.length, 6);
+    assert.equal(s.feedback.ids.length, 5);
     while (s.feedback) s = act(s, "continue");
     assert.equal(s.node, wrong < 2 ? "pass" : "retry");
     assert.equal(

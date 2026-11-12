@@ -12,6 +12,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { SCENARIOS, ROLES } from "@/components/scenarios/scenarioData";
 import { UAE_SCENARIOS } from "@/components/scenarios/uaeScenarioData";
 import { normalizeScenario } from "@/data/scenarioSchema";
+import { sanitizeDessertTrail } from '@/data/dessertEditorial.mjs';
 import {
   getMissionBlueprint,
   MISSION_CHAPTERS,
@@ -456,7 +457,7 @@ export default function ScenarioPlayer() {
       ),
   );
   return (
-    <SceneReviewProvider key={`${id}:${attemptCount}`} initialTrail={responses.meta?.sceneTrail || []}
+    <SceneReviewProvider key={`${id}:${attemptCount}`} initialTrail={id === 'ionic_dessert_mystery' ? sanitizeDessertTrail(responses.meta?.sceneTrail || []) : responses.meta?.sceneTrail || []}
       ready={initialized.current === `${data.user?.id}:${id}:${reviewId || ""}` && !accessError} notebookOpen={notebook} onReviewChange={value => { reviewing.current = value; }}
       onTrail={trail => {
         const next = { ...responseRef.current, meta: { ...responseRef.current.meta, sceneTrail: trail, updatedAt: new Date().toISOString(), recordType: "mission_attempt" } };

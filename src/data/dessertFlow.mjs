@@ -1,5 +1,10 @@
 import media from "./dessertMedia.json" with { type: "json" };
 import { POWDER_READINGS, electronPair, gradeIonic } from "./ionicScience.mjs";
+import legacyBeats from "./dessertLegacyBeats.json" with { type: "json" };
+import {
+  activeDessertLines,
+  isDessertLineActive,
+} from "./dessertEditorial.mjs";
 
 export const DESSERT_MEDIA = media;
 export const DESSERT_ID = "ionic_dessert_mystery";
@@ -23,14 +28,18 @@ const story = (chapter, scene) =>
       (a, b) =>
         Number(a.match(/_(\d{3})_/)[1]) - Number(b.match(/_(\d{3})_/)[1]),
     );
-const take = (c, s, from, to) => story(c, s).slice(from - 1, to);
+const take = (c, s, from, to) =>
+  story(c, s).filter((id) => {
+    const ordinal = Number(id.match(/_(\d{3})_/)[1]);
+    return ordinal >= from && ordinal <= to;
+  });
 const sys = (name) => `SYSTEM_${name}_SYSTEM`;
 const node = (scene, chapter, title, lines, next, task = null, extra = {}) => ({
   scene,
   chapter,
   title,
   art: `IMAGE_${String(scene).padStart(2, "0")}`,
-  lines,
+  lines: activeDessertLines(lines),
   next,
   task,
   ...extra,
@@ -43,7 +52,7 @@ export const DESSERT_NODES = {
     ["SYSTEM_SAFETY_DISCLAIMER_NARRATOR", ...story("01", "01")],
     "n02",
     null,
-    { video: "V01", videoAt: "CH01_SC01_001_NARRATOR" },
+    { video: "V01", videoAt: "CH01_SC01_002_NARRATOR" },
   ),
   n02: node(2, 1, "Meet Mariam and Saeed", story("01", "02"), "n03"),
   n03: node(3, 1, "Three sealed containers", story("01", "03"), "n04"),
@@ -98,7 +107,7 @@ export const DESSERT_NODES = {
     12,
     2,
     "Begin with a water-only control",
-    take("02", "12", 1, 4),
+    take("02", "12", 1, 1),
     "n13",
     "calibrate",
   ),
@@ -144,14 +153,7 @@ export const DESSERT_NODES = {
     "n20",
     "identity",
   ),
-  n20: node(20, 3, "The team needs a recommendation", story("03", "20"), "n21"),
-  n21: node(
-    21,
-    3,
-    "Identity is not food-safety verification",
-    story("03", "21"),
-    "n22",
-  ),
+  n20: node(20, 3, "The team needs a recommendation", story("03", "20"), "n22"),
   n22: node(
     22,
     3,
@@ -250,7 +252,10 @@ export const DESSERT_NODES = {
   done: node(28, 5, "Your scientific record", [], null, "done"),
 };
 // DEC01 is not a physical numbered scene; author names are retained exactly.
-DESSERT_NODES.first.lines = ["CH02_DEC01_001_HAMAD", "CH02_DEC01_002_NARRATOR"];
+DESSERT_NODES.first.lines = activeDessertLines([
+  "CH02_DEC01_001_HAMAD",
+  "CH02_DEC01_002_NARRATOR",
+]);
 export const DESSERT_OUTCOMES = {
   A: "verify-replace",
   B: "conductivity-only",
@@ -260,13 +265,12 @@ export const DESSERT_OUTCOMES = {
 export const dessertLine = (id) => media.recordings[id];
 export const dessertStep = (s) => DESSERT_NODES[s.node];
 export function dessertActiveLine(s) {
-  return dessertLine(
-    s.feedback
-      ? s.feedback.ids[s.feedback.cursor]
-      : !s.ready
-        ? dessertStep(s).lines[s.cursor]
-        : null,
-  );
+  const id = s.feedback
+    ? s.feedback.ids[s.feedback.cursor]
+    : !s.ready
+      ? dessertStep(s)?.lines[s.cursor]
+      : null;
+  return isDessertLineActive(id) ? dessertLine(id) : undefined;
 }
 export function dessertNextLine(s) {
   const seq = s.feedback?.ids || dessertStep(s).lines;
@@ -275,7 +279,7 @@ export function dessertNextLine(s) {
 const clone = (value) => JSON.parse(JSON.stringify(value));
 export function createDessertState() {
   return {
-    version: 2,
+    version: 3,
     node: "n01",
     cursor: 0,
     ready: false,
@@ -306,13 +310,17 @@ export function createDessertState() {
     result: null,
     answerIndex: 0,
     completed: false,
+    notice: "",
   };
 }
 export function restoreDessertState(responses = {}) {
   const initial = createDessertState(),
     saved = responses.dessertStory;
-  if (saved?.version === 2 && DESSERT_NODES[saved.node])
-    return {
+  if (
+    [2, 3].includes(saved?.version) &&
+    (DESSERT_NODES[saved.node] || saved.node === "n21")
+  ) {
+    const restored = {
       ...initial,
       ...clone(saved),
       investigation: {
@@ -324,6 +332,8 @@ export function restoreDessertState(responses = {}) {
         ...clone(saved.decisionDraft || {}),
       },
     };
+    return normalizeEditorialState(restored, saved.version);
+  }
   // Preserve genuine old observations, selections and assessed records. Never invent readings.
   const inv = clone(responses.investigation || {});
   initial.investigation = {
@@ -384,6 +394,7 @@ export const identitiesCorrect = (s) =>
     ([a, r]) => s.investigation.identities[a] === r.identity,
   );
 function enter(s, name) {
+  if (name === "n21") name = "n22";
   const n = DESSERT_NODES[name];
   if (!n) return s;
   return {
@@ -396,7 +407,62 @@ function enter(s, name) {
   };
 }
 function queue(s, lines, after = "ready") {
-  return { ...s, feedback: { ids: lines, cursor: 0, after }, ready: false };
+  const ids = activeDessertLines(lines);
+  const messages = lines
+    .filter((id) => id.startsWith("SYSTEM_") && !isDessertLineActive(id))
+    .map((id) => media.recordings[id]?.text)
+    .filter(Boolean);
+  const next = { ...s, notice: messages.join(" ") || s.notice };
+  // Silent UI notifications are actual state transitions, never timed empty beats.
+  if (!ids.length)
+    return after === "ready"
+      ? { ...next, feedback: null, ready: true }
+      : enter(next, after);
+  return { ...next, feedback: { ids, cursor: 0, after }, ready: false };
+}
+
+function normalizeEditorialState(s, previousVersion) {
+  const archived = (s.visited || []).filter(
+    (row) => !isDessertLineActive(row.id) || !DESSERT_NODES[row.node],
+  );
+  let next = {
+    ...s,
+    version: 3,
+    archivedDialogue: [...(s.archivedDialogue || []), ...archived],
+    visited: (s.visited || []).filter(
+      (row) => isDessertLineActive(row.id) && DESSERT_NODES[row.node],
+    ),
+    lastLine: isDessertLineActive(s.lastLine) ? s.lastLine : null,
+  };
+  if (next.playback && !isDessertLineActive(next.playback.line))
+    next.playback = null;
+  if (s.node === "n21") return enter({ ...next, playback: null }, "n22");
+  const step = dessertStep(next);
+  if (
+    previousVersion === 3 &&
+    !s.ready &&
+    !s.feedback &&
+    step.lines.includes(s.beatId)
+  )
+    next.cursor = step.lines.indexOf(s.beatId);
+  if (previousVersion === 2 && !s.ready && !s.feedback) {
+    const remaining = (legacyBeats[s.node]?.lines || []).slice(s.cursor || 0);
+    const id = remaining.find(isDessertLineActive);
+    if (id && step.lines.includes(id)) next.cursor = step.lines.indexOf(id);
+    else if (step.task) next = { ...next, cursor: 0, ready: true };
+    else {
+      next = enter({ ...next, playback: null }, step.next);
+      if (step.next === "done") next.completed = !!next.result;
+    }
+  }
+  if (s.feedback) {
+    const remaining = s.feedback.ids.slice(s.feedback.cursor || 0);
+    const after = s.feedback.after === "n21" ? "n22" : s.feedback.after;
+    next = queue(next, remaining, after);
+  }
+  // Resume native audio only when the exact retained checkpoint still matches.
+  if (next.playback?.line !== dessertActiveLine(next)?.id) next.playback = null;
+  return next;
 }
 function addEvidence(s, id, label, observation, patch = {}) {
   return {
@@ -504,7 +570,8 @@ export function dessertAction(s, event, scenario) {
       next,
       [
         sys("CALIBRATION_COMPLETE"),
-        ...take("02", "12", 5, 6),
+        ...take("02", "12", 5, 5),
+        ...take("02", "12", 3, 3),
         sys("EVIDENCE_ADDED"),
       ],
       "n13",
@@ -665,12 +732,6 @@ export function dessertAction(s, event, scenario) {
   }
   if (event.type === "decisionDraft" && task === "decision" && !s.decision)
     return { ...s, decisionDraft: { ...s.decisionDraft, ...event.patch } };
-  if (
-    event.type === "readOption" &&
-    task === "decision" &&
-    DESSERT_OUTCOMES[event.choice]
-  )
-    return queue(s, [`CH03_SC22_OPTION_${event.choice}_NARRATOR`]);
   if (event.type === "reviewEvidence" && task === "decision")
     return queue(s, [sys("REVIEW_EVIDENCE")]);
   if (event.type === "decide" && task === "decision" && !s.decision) {
@@ -750,7 +811,7 @@ export function dessertAction(s, event, scenario) {
 }
 export function dessertNotebook(s) {
   return {
-    dessertStory: s,
+    dessertStory: { ...s, beatId: dessertActiveLine(s)?.id || null },
     investigation: {
       ...s.investigation,
       firstChoice: s.firstChoice,
@@ -773,11 +834,12 @@ export function dessertNotebook(s) {
     ...(s.reflection ? { reflection: s.reflection } : {}),
   };
 }
-// Every MP3 has a reachable narrative node or an explicit conditional action route.
+// Every approved KEEP clip has an active node or conditional action; CUT originals stay archived.
 export function dessertAudioRoutes() {
   const map = {};
   const add = (id, route) => {
     if (!media.recordings[id]) throw new Error(`Missing recording ${id}`);
+    if (!isDessertLineActive(id)) return;
     (map[id] ??= []).push(route);
   };
   for (const [key, n] of Object.entries(DESSERT_NODES))
@@ -785,7 +847,10 @@ export function dessertAudioRoutes() {
   const conditions = {
     CH02_DEC01_CORRECT_HAMAD: "first:controlled",
     ...Object.fromEntries(
-      [...take("02", "12", 5, 6)].map((id) => [id, "calibrated"]),
+      [...take("02", "12", 5, 6), ...take("02", "12", 3, 3)].map((id) => [
+        id,
+        "calibrated",
+      ]),
     ),
     ...Object.fromEntries(
       [...take("02", "13", 3, 6)].map((id) => [id, "measured:A-conductivity"]),

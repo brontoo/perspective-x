@@ -372,12 +372,6 @@ export default function DessertTasks({ state, node, scenario, send }) {
                 <b>{o.id}</b>
                 <span>{o.text}</span>
               </label>
-              <button
-                onClick={() => send({ type: "readOption", choice: o.id })}
-                aria-label={`Read option ${o.id}`}
-              >
-                Read option {o.id}
-              </button>
             </div>
           ))}
         </div>

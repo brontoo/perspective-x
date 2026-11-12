@@ -6,14 +6,12 @@
     "title": "Twelve minutes to the final",
     "art": "IMAGE_01",
     "lines": [
-      "SYSTEM_SAFETY_DISCLAIMER_NARRATOR",
-      "CH01_SC01_001_NARRATOR",
       "CH01_SC01_002_NARRATOR"
     ],
     "next": "n02",
     "task": null,
     "video": "V01",
-    "videoAt": "CH01_SC01_001_NARRATOR"
+    "videoAt": "CH01_SC01_002_NARRATOR"
   },
   {
     "id": "n02",
@@ -23,8 +21,7 @@
     "art": "IMAGE_02",
     "lines": [
       "CH01_SC02_001_MARIAM",
-      "CH01_SC02_002_SAEED",
-      "CH01_SC02_003_NARRATOR"
+      "CH01_SC02_002_SAEED"
     ],
     "next": "n03",
     "task": null
@@ -36,8 +33,7 @@
     "title": "Three sealed containers",
     "art": "IMAGE_03",
     "lines": [
-      "CH01_SC03_001_NARRATOR",
-      "CH01_SC03_002_NARRATOR"
+      "CH01_SC03_001_NARRATOR"
     ],
     "next": "n04",
     "task": null
@@ -49,10 +45,8 @@
     "title": "The labels fall",
     "art": "IMAGE_04",
     "lines": [
-      "CH01_SC04_001_NARRATOR",
       "CH01_SC04_002_NARRATOR",
       "CH01_SC04_003_SAEED",
-      "CH01_SC04_004_NARRATOR",
       "CH01_SC04_005_SAEED"
     ],
     "next": "n05",
@@ -68,9 +62,7 @@
     "art": "IMAGE_05",
     "lines": [
       "CH01_SC05_001_SAEED",
-      "CH01_SC05_002_MARIAM",
-      "CH01_SC05_003_NARRATOR",
-      "CH01_SC05_004_NARRATOR"
+      "CH01_SC05_002_MARIAM"
     ],
     "next": "n06",
     "task": null
@@ -84,9 +76,7 @@
     "lines": [
       "CH01_SC06_001_FATIMA",
       "CH01_SC06_002_SAEED",
-      "CH01_SC06_003_FATIMA",
-      "CH01_SC06_004_MARIAM",
-      "CH01_SC06_005_NARRATOR"
+      "CH01_SC06_003_FATIMA"
     ],
     "next": "n07",
     "task": null
@@ -99,12 +89,8 @@
     "art": "IMAGE_07",
     "lines": [
       "CH01_SC07_001_NARRATOR",
-      "CH01_SC07_002_HAMAD",
-      "CH01_SC07_003_FATIMA",
-      "CH01_SC07_004_HAMAD",
       "CH01_SC07_005_HAMAD",
-      "CH01_SC07_006_HAMAD",
-      "CH01_SC07_007_NARRATOR"
+      "CH01_SC07_006_HAMAD"
     ],
     "next": "first",
     "task": null
@@ -116,8 +102,7 @@
     "title": "How should the investigation begin?",
     "art": "IMAGE_07",
     "lines": [
-      "CH02_DEC01_001_HAMAD",
-      "CH02_DEC01_002_NARRATOR"
+      "CH02_DEC01_001_HAMAD"
     ],
     "next": "n11",
     "task": "first"
@@ -130,12 +115,7 @@
     "art": "IMAGE_08",
     "lines": [
       "CH02_DEC01_APPEARANCE_1_MARIAM",
-      "CH02_DEC01_APPEARANCE_2_HAMAD",
-      "CH02_SC08_001_NARRATOR",
-      "CH02_SC08_002_MARIAM",
-      "CH02_SC08_003_HAMAD",
-      "CH02_SC08_004_NARRATOR",
-      "SYSTEM_TRY_AGAIN_SYSTEM"
+      "CH02_DEC01_APPEARANCE_2_HAMAD"
     ],
     "next": "first",
     "task": null
@@ -147,15 +127,7 @@
     "title": "Tasting is prevented",
     "art": "IMAGE_09",
     "lines": [
-      "SYSTEM_ACTION_NOT_PERMITTED_SYSTEM",
-      "CH02_DEC01_TASTE_1_HAMAD",
-      "CH02_DEC01_TASTE_2_FATIMA",
-      "CH02_SC09_001_NARRATOR",
-      "CH02_SC09_002_HAMAD",
-      "CH02_SC09_003_SAEED",
-      "CH02_SC09_004_HAMAD",
-      "CH02_SC09_005_FATIMA",
-      "SYSTEM_TRY_AGAIN_SYSTEM"
+      "CH02_DEC01_TASTE_1_HAMAD"
     ],
     "next": "first",
     "task": null
@@ -167,14 +139,7 @@
     "title": "Keep the samples separate",
     "art": "IMAGE_10",
     "lines": [
-      "SYSTEM_KEEP_SEPARATE_SYSTEM",
-      "CH02_DEC01_MIX_1_HAMAD",
-      "CH02_DEC01_MIX_2_HAMAD",
-      "CH02_SC10_001_NARRATOR",
-      "CH02_SC10_002_HAMAD",
-      "CH02_SC10_003_MARIAM",
-      "CH02_SC10_004_HAMAD",
-      "SYSTEM_TRY_AGAIN_SYSTEM"
+      "CH02_DEC01_MIX_1_HAMAD"
     ],
     "next": "first",
     "task": null
@@ -187,9 +152,7 @@
     "art": "IMAGE_11",
     "lines": [
       "CH02_SC11_001_NARRATOR",
-      "CH02_SC11_002_HAMAD",
-      "CH02_SC11_003_HAMAD",
-      "CH02_SC11_004_NARRATOR"
+      "CH02_SC11_002_HAMAD"
     ],
     "next": "n12",
     "task": null
@@ -201,10 +164,7 @@
     "title": "Begin with a water-only control",
     "art": "IMAGE_12",
     "lines": [
-      "CH02_SC12_001_HAMAD",
-      "CH02_SC12_002_MARIAM",
-      "CH02_SC12_003_HAMAD",
-      "CH02_SC12_004_NARRATOR"
+      "CH02_SC12_001_HAMAD"
     ],
     "next": "n13",
     "task": "calibrate"
@@ -216,8 +176,7 @@
     "title": "Test Sample A",
     "art": "IMAGE_13",
     "lines": [
-      "CH02_SC13_001_HAMAD",
-      "CH02_SC13_002_NARRATOR"
+      "CH02_SC13_001_HAMAD"
     ],
     "next": "n14",
     "task": "sample-a"
@@ -228,9 +187,7 @@
     "chapter": 2,
     "title": "Compare the conductivity",
     "art": "IMAGE_14",
-    "lines": [
-      "CH02_SC14_001_NARRATOR"
-    ],
+    "lines": [],
     "next": "n15",
     "task": "conductivity"
   },
@@ -242,7 +199,6 @@
     "art": "IMAGE_15",
     "lines": [
       "CH02_SC15_001_HAMAD",
-      "CH02_SC15_002_NARRATOR",
       "CH02_SC15_003_HAMAD"
     ],
     "next": "n16",
@@ -256,9 +212,7 @@
     "art": "IMAGE_16",
     "lines": [
       "CH02_SC16_001_MARIAM",
-      "CH02_SC16_002_HAMAD",
-      "CH02_SC16_003_SAEED",
-      "CH02_SC16_004_HAMAD"
+      "CH02_SC16_003_SAEED"
     ],
     "next": "n17",
     "task": null
@@ -270,7 +224,6 @@
     "title": "A second independent clue",
     "art": "IMAGE_17",
     "lines": [
-      "CH02_SC17_001_HAMAD",
       "CH02_SC17_002_NARRATOR"
     ],
     "next": "n18",
@@ -283,9 +236,7 @@
     "title": "A controlled virtual reaction",
     "art": "IMAGE_18",
     "lines": [
-      "CH02_SC18_001_HAMAD",
-      "CH02_SC18_002_FATIMA",
-      "CH02_SC18_003_HAMAD"
+      "CH02_SC18_001_HAMAD"
     ],
     "next": "n19",
     "task": "acid"
@@ -297,8 +248,6 @@
     "title": "Identify the three samples",
     "art": "IMAGE_19",
     "lines": [
-      "CH02_SC19_001_HAMAD",
-      "CH02_SC19_002_NARRATOR",
       "CH02_SC19_003_HAMAD"
     ],
     "next": "n20",
@@ -312,27 +261,7 @@
     "art": "IMAGE_20",
     "lines": [
       "CH03_SC20_001_MARIAM",
-      "CH03_SC20_002_SAEED",
-      "CH03_SC20_003_FATIMA",
-      "CH03_SC20_004_NARRATOR"
-    ],
-    "next": "n21",
-    "task": null
-  },
-  {
-    "id": "n21",
-    "scene": 21,
-    "chapter": 3,
-    "title": "Identity is not food-safety verification",
-    "art": "IMAGE_21",
-    "lines": [
-      "CH03_SC21_001_HAMAD",
-      "CH03_SC21_002_HAMAD",
-      "CH03_SC21_003_HAMAD",
-      "CH03_SC21_004_MARIAM",
-      "CH03_SC21_005_HAMAD",
-      "CH03_SC21_006_FATIMA",
-      "CH03_SC21_007_HAMAD"
+      "CH03_SC20_003_FATIMA"
     ],
     "next": "n22",
     "task": null
@@ -345,10 +274,7 @@
     "art": "IMAGE_22",
     "lines": [
       "CH03_SC22_001_NARRATOR",
-      "CH03_SC22_002_HAMAD",
-      "CH03_SC22_003_HAMAD",
-      "CH03_SC22_004_NARRATOR",
-      "CH03_SC22_005_HAMAD"
+      "CH03_SC22_002_HAMAD"
     ],
     "next": "ending",
     "task": "decision"
@@ -361,13 +287,9 @@
     "art": "IMAGE_23",
     "lines": [
       "CH04_END_A_001_NARRATOR",
-      "CH04_END_A_002_FATIMA",
-      "CH04_END_A_003_HAMAD",
       "CH04_END_A_004_MARIAM",
       "CH04_END_A_005_SAEED",
-      "CH04_END_A_006_NARRATOR",
-      "CH04_END_A_007_HAMAD",
-      "CH04_END_A_008_NARRATOR"
+      "CH04_END_A_007_HAMAD"
     ],
     "next": "n27",
     "task": null,
@@ -382,14 +304,9 @@
     "art": "IMAGE_24",
     "lines": [
       "CH04_END_B_001_NARRATOR",
-      "CH04_END_B_002_MARIAM",
-      "CH04_END_B_003_FATIMA",
       "CH04_END_B_004_HAMAD",
       "CH04_END_B_005_FATIMA",
-      "CH04_END_B_006_SAEED",
-      "CH04_END_B_007_NARRATOR",
-      "CH04_END_B_008_HAMAD",
-      "CH04_END_B_009_NARRATOR"
+      "CH04_END_B_007_NARRATOR"
     ],
     "next": "n27",
     "task": null,
@@ -405,13 +322,8 @@
     "lines": [
       "CH04_END_C_001_NARRATOR",
       "CH04_END_C_002_HAMAD",
-      "CH04_END_C_003_SAEED",
       "CH04_END_C_004_HAMAD",
-      "CH04_END_C_005_FATIMA",
-      "CH04_END_C_006_MARIAM",
-      "CH04_END_C_007_NARRATOR",
-      "CH04_END_C_008_HAMAD",
-      "CH04_END_C_009_NARRATOR"
+      "CH04_END_C_007_NARRATOR"
     ],
     "next": "n27",
     "task": null,
@@ -427,12 +339,8 @@
     "lines": [
       "CH04_END_D_001_NARRATOR",
       "CH04_END_D_002_MARIAM",
-      "CH04_END_D_003_SAEED",
       "CH04_END_D_004_HAMAD",
-      "CH04_END_D_005_FATIMA",
-      "CH04_END_D_006_NARRATOR",
-      "CH04_END_D_007_HAMAD",
-      "CH04_END_D_008_NARRATOR"
+      "CH04_END_D_006_NARRATOR"
     ],
     "next": "n27",
     "task": null,
@@ -448,13 +356,9 @@
     "lines": [
       "CH05_SC27_001_HAMAD",
       "CH05_SC27_002_HAMAD",
-      "CH05_SC27_003_HAMAD",
-      "CH05_SC27_004_HAMAD",
-      "CH05_SC27_005_HAMAD",
       "CH05_SC27_006_NARRATOR",
       "CH05_REFLECTION_001_NARRATOR",
-      "CH05_REFLECTION_002_HAMAD",
-      "CH05_REFLECTION_003_NARRATOR"
+      "CH05_REFLECTION_002_HAMAD"
     ],
     "next": "quiz-intro",
     "task": "reflection"
@@ -554,10 +458,7 @@
     "art": "IMAGE_28",
     "lines": [
       "CH05_SC28_PASS_1_NARRATOR",
-      "CH05_SC28_PASS_2_HAMAD",
-      "CH05_SC28_PASS_3_HAMAD",
-      "CH05_SC28_PASS_4_NARRATOR",
-      "SYSTEM_ACHIEVEMENT_EARNED_SYSTEM"
+      "CH05_SC28_PASS_2_HAMAD"
     ],
     "next": "done",
     "task": null
@@ -570,8 +471,7 @@
     "art": "IMAGE_28",
     "lines": [
       "CH05_SC28_RETRY_1_NARRATOR",
-      "CH05_SC28_RETRY_2_HAMAD",
-      "CH05_SC28_RETRY_3_HAMAD"
+      "CH05_SC28_RETRY_2_HAMAD"
     ],
     "next": "done",
     "task": null

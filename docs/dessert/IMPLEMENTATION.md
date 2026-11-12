@@ -2,19 +2,21 @@
 
 Review delivery, 12 November 2026. Existing scenario: `ionic_dessert_mystery`.
 
+The current editorial edition retains exactly 100 approved recordings and excludes 117 from playback. See [the editorial report](editorial/EDITORIAL_REPORT.md) for the approved cuts, migration, runtime comparison and validation. All 217 source recordings remain intact.
+
 The existing Dessert entry now launches a five-chapter recorded cinematic investigation. Its role, Materials & Bonding pathway, catalogue registration, route, assessment questions and scoring are retained. No second scenario, database table, authentication flow or production deployment is introduced.
 
 ## Media intake
 
 The supplied production RAR contains 28 JPEGs, six MP4s and 217 MP3s, plus its inventory and README. The separately supplied ElevenLabs script ZIP contains all 217 original TXT scripts and a matching text manifest. Every recording identifier, speaker and script was cross-checked. Captions use those supplied scripts, not older mission dialogue or generated speech.
 
-`asset-audit.json` records original SHA-256 hashes, codec/duration inspection, complete media decoding, inventory counts and findings. There are no missing script references or duplicate recording hashes. `audio-routes.json` accounts for all 217 recordings and their narrative/conditional routes. `scene-map.json` maps the 38 state-machine nodes to physical scenes, media and task gates. Source photographs, inventories and scripts are retained under `production-archive/dessert`; original MP3 and MP4 bytes are served unchanged from `public`.
+`asset-audit.json` records original SHA-256 hashes, codec/duration inspection, complete media decoding, inventory counts and findings. There are no missing script references or duplicate recording hashes. `editorial/editorial-audit.json` accounts for all 217 recordings, with 100 KEEP and 117 CUT. `audio-routes.json` maps the 100 active narrative/conditional recordings. `scene-map.json` maps the 37 current state-machine nodes to physical scenes, media and task gates. Source photographs, inventories and scripts are retained under `production-archive/dessert`; original MP3 and MP4 bytes are served unchanged from `public`.
 
 Images have 1376px and 768px WebP derivatives. No new video, voice or replacement artwork was generated. Each original video has embedded AAC audio; the player mutes it so supplied character recordings remain authoritative. A decoded final-frame WebP holds after each clip, independently of ongoing speech.
 
 | Video | Actual duration | Trigger |
 |---|---:|---|
-| V01 | 3.500 s | Scene 01 opening narration, after safety disclaimer |
+| V01 | 3.500 s | Scene 01 retained opening narration; safety remains visible |
 | V02 | 4.958 s | Scene 04 falling-label line |
 | V03 | 6.976 s | Submitted A / `verify-replace`, image 23 |
 | V04 | 5.970 s | Submitted B / `conductivity-only`, image 24 |
@@ -27,7 +29,7 @@ The pure reducer in `src/data/dessertFlow.mjs` separates physical scene, dialogu
 
 Scenes 01–07 establish the fictional competition. The first investigation decision sends appearance, tasting and mixing misconceptions to their own recorded reaction and safe retry. Controlled investigation requires actual water calibration, three conductivity readings, active Na/Cl electron transfer, three pH readings and three isolated virtual acid tests. Wrong identifications retain evidence and proposed answers and play conditional corrective feedback. Only the nine observations and completed formation model support accepted identification.
 
-Scenes 20–22 distinguish chemical identity from food-grade origin and traceability. The final decision requires a 60-character justification and two collected evidence citations. The committed decision selects one ending permanently for that attempt; unselected ending video and recordings are never queued. No unknown powder is tasted or mixed. A successful professional outcome requires isolating unknowns and using traceable replacements.
+Scene 19 identification leads to the short scene 20 exchange and then directly to scene 22. The former scene 21 contamination/provenance lecture is absent from active playback and review. The decision wording retains the minimum distinction between supported identity and returning unlabelled original containers to food preparation. The final decision requires a 60-character justification and two collected evidence citations. The committed decision selects one ending permanently for that attempt; unselected ending video and recordings are never queued. No unknown powder is tasted or mixed. A successful professional outcome requires isolating unknowns and using traceable replacements.
 
 Scene 27 requires a 40-character reflection. Chapter 5 retains the original five questions/options and `gradeIonic` 80% threshold. Feedback is released after final assessment submission. A failed scientific assessment receives retry recordings without pass announcements or badge. A passing assessment can follow a poor professional decision, but the separately displayed professional outcome remains the actual consequence.
 

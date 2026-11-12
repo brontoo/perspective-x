@@ -291,7 +291,7 @@ test("dessert adapter replays only the actually visited preceding scene and rest
   const caption = await dessertRoot(page).locator(".px-dessert-dialogue p").textContent();
   await dessertRoot(page).getByRole("button", { name: "Previous scene",exact:true }).click();
   const dialog = page.getByRole("dialog",{name:"Previous scene review",exact:true});
-  await expect(dialog.locator("h2")).toContainText("Scene 21");
+  await expect(dialog.locator("h2")).toContainText("Scene 20");
   await dialog.getByRole("button",{name:"Return to current scene",exact:true}).click();
   await expect(dessertRoot(page).locator(".px-dessert-dialogue p")).toHaveText(caption);
 });

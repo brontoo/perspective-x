@@ -46,7 +46,7 @@ test("one Start uses the new opening and exact recordings, then waits at the inv
   await dessertStart(page);
   await expect(root(page).locator(".px-dessert-dialogue")).toHaveAttribute(
     "data-dialogue-id",
-    "SYSTEM_SAFETY_DISCLAIMER_NARRATOR",
+    "CH01_SC01_002_NARRATOR",
   );
   await expect(
     root(page).getByRole("button", { name: "Next", exact: true }),
@@ -122,7 +122,7 @@ test("incorrect identification plays the supplied mismatch cue and preserves edi
     .click();
   await expect(root(page).locator(".px-dessert-dialogue")).toHaveAttribute(
     "data-dialogue-id",
-    "SYSTEM_IDENTIFICATION_MISMATCH_SYSTEM",
+    "CH02_SC19_WRONG_HAMAD",
   );
   await dessertReach(page, "identity");
   await expect(
@@ -156,7 +156,7 @@ for (const choice of ["A", "B", "C", "D"])
         .map((x) => x.id)
         .filter((id) => id?.startsWith("CH04_END_")),
     );
-    expect(played.length).toBeGreaterThan(5);
+    expect(played).toHaveLength(4);
     expect(played.every((id) => id.startsWith(`CH04_END_${choice}_`))).toBe(
       true,
     );
@@ -244,7 +244,7 @@ test("previous scene and notebook suspend current recording, inputs and committe
     exact: true,
   });
   await expect(dialog).toBeVisible();
-  await expect(dialog.locator("h2")).toContainText("Scene 21");
+  await expect(dialog.locator("h2")).toContainText("Scene 20");
   await dialog
     .getByRole("button", { name: "Return to current scene", exact: true })
     .click();
@@ -273,7 +273,7 @@ test("manual reading, mute, hidden-tab pause and caption fallback preserve the c
   await root(page).getByRole("button", { name: "Next", exact: true }).click();
   await expect(root(page).locator("audio")).toHaveAttribute(
     "data-dialogue-id",
-    "CH01_SC01_001_NARRATOR",
+    "CH01_SC02_001_MARIAM",
   );
   await root(page).getByRole("button", { name: "Mute", exact: true }).click();
   await expect(root(page).locator("audio")).toHaveJSProperty("muted", true);
@@ -290,7 +290,7 @@ test("manual reading, mute, hidden-tab pause and caption fallback preserve the c
   await dessertBeat(page);
   await expect(root(page).locator("audio")).toHaveAttribute(
     "data-dialogue-id",
-    "CH01_SC01_001_NARRATOR",
+    "CH01_SC02_001_MARIAM",
   );
 });
 for (const width of [1440, 820, 390])
@@ -385,7 +385,7 @@ test("initial loading requests only the current and next recordings, not all 217
   await dessertStart(page);
   await expect(root(page).locator("audio")).toHaveAttribute(
     "data-dialogue-id",
-    "SYSTEM_SAFETY_DISCLAIMER_NARRATOR",
+    "CH01_SC01_002_NARRATOR",
   );
   expect(
     new Set(urls.filter((u) => u.includes(".mp3"))).size,
