@@ -1,0 +1,589 @@
+[
+  {
+    "id": "n01",
+    "scene": 1,
+    "chapter": 1,
+    "title": "Twelve minutes to the final",
+    "art": "IMAGE_01",
+    "lines": [
+      "SYSTEM_SAFETY_DISCLAIMER_NARRATOR",
+      "CH01_SC01_001_NARRATOR",
+      "CH01_SC01_002_NARRATOR"
+    ],
+    "next": "n02",
+    "task": null,
+    "video": "V01",
+    "videoAt": "CH01_SC01_001_NARRATOR"
+  },
+  {
+    "id": "n02",
+    "scene": 2,
+    "chapter": 1,
+    "title": "Meet Mariam and Saeed",
+    "art": "IMAGE_02",
+    "lines": [
+      "CH01_SC02_001_MARIAM",
+      "CH01_SC02_002_SAEED",
+      "CH01_SC02_003_NARRATOR"
+    ],
+    "next": "n03",
+    "task": null
+  },
+  {
+    "id": "n03",
+    "scene": 3,
+    "chapter": 1,
+    "title": "Three sealed containers",
+    "art": "IMAGE_03",
+    "lines": [
+      "CH01_SC03_001_NARRATOR",
+      "CH01_SC03_002_NARRATOR"
+    ],
+    "next": "n04",
+    "task": null
+  },
+  {
+    "id": "n04",
+    "scene": 4,
+    "chapter": 1,
+    "title": "The labels fall",
+    "art": "IMAGE_04",
+    "lines": [
+      "CH01_SC04_001_NARRATOR",
+      "CH01_SC04_002_NARRATOR",
+      "CH01_SC04_003_SAEED",
+      "CH01_SC04_004_NARRATOR",
+      "CH01_SC04_005_SAEED"
+    ],
+    "next": "n05",
+    "task": null,
+    "video": "V02",
+    "videoAt": "CH01_SC04_002_NARRATOR"
+  },
+  {
+    "id": "n05",
+    "scene": 5,
+    "chapter": 1,
+    "title": "The identity chain is broken",
+    "art": "IMAGE_05",
+    "lines": [
+      "CH01_SC05_001_SAEED",
+      "CH01_SC05_002_MARIAM",
+      "CH01_SC05_003_NARRATOR",
+      "CH01_SC05_004_NARRATOR"
+    ],
+    "next": "n06",
+    "task": null
+  },
+  {
+    "id": "n06",
+    "scene": 6,
+    "chapter": 1,
+    "title": "Preparation stops",
+    "art": "IMAGE_06",
+    "lines": [
+      "CH01_SC06_001_FATIMA",
+      "CH01_SC06_002_SAEED",
+      "CH01_SC06_003_FATIMA",
+      "CH01_SC06_004_MARIAM",
+      "CH01_SC06_005_NARRATOR"
+    ],
+    "next": "n07",
+    "task": null
+  },
+  {
+    "id": "n07",
+    "scene": 7,
+    "chapter": 1,
+    "title": "Hamad takes the assignment",
+    "art": "IMAGE_07",
+    "lines": [
+      "CH01_SC07_001_NARRATOR",
+      "CH01_SC07_002_HAMAD",
+      "CH01_SC07_003_FATIMA",
+      "CH01_SC07_004_HAMAD",
+      "CH01_SC07_005_HAMAD",
+      "CH01_SC07_006_HAMAD",
+      "CH01_SC07_007_NARRATOR"
+    ],
+    "next": "first",
+    "task": null
+  },
+  {
+    "id": "first",
+    "scene": 7,
+    "chapter": 2,
+    "title": "How should the investigation begin?",
+    "art": "IMAGE_07",
+    "lines": [
+      "CH02_DEC01_001_HAMAD",
+      "CH02_DEC01_002_NARRATOR"
+    ],
+    "next": "n11",
+    "task": "first"
+  },
+  {
+    "id": "n08",
+    "scene": 8,
+    "chapter": 2,
+    "title": "Appearance is insufficient",
+    "art": "IMAGE_08",
+    "lines": [
+      "CH02_DEC01_APPEARANCE_1_MARIAM",
+      "CH02_DEC01_APPEARANCE_2_HAMAD",
+      "CH02_SC08_001_NARRATOR",
+      "CH02_SC08_002_MARIAM",
+      "CH02_SC08_003_HAMAD",
+      "CH02_SC08_004_NARRATOR",
+      "SYSTEM_TRY_AGAIN_SYSTEM"
+    ],
+    "next": "first",
+    "task": null
+  },
+  {
+    "id": "n09",
+    "scene": 9,
+    "chapter": 2,
+    "title": "Tasting is prevented",
+    "art": "IMAGE_09",
+    "lines": [
+      "SYSTEM_ACTION_NOT_PERMITTED_SYSTEM",
+      "CH02_DEC01_TASTE_1_HAMAD",
+      "CH02_DEC01_TASTE_2_FATIMA",
+      "CH02_SC09_001_NARRATOR",
+      "CH02_SC09_002_HAMAD",
+      "CH02_SC09_003_SAEED",
+      "CH02_SC09_004_HAMAD",
+      "CH02_SC09_005_FATIMA",
+      "SYSTEM_TRY_AGAIN_SYSTEM"
+    ],
+    "next": "first",
+    "task": null
+  },
+  {
+    "id": "n10",
+    "scene": 10,
+    "chapter": 2,
+    "title": "Keep the samples separate",
+    "art": "IMAGE_10",
+    "lines": [
+      "SYSTEM_KEEP_SEPARATE_SYSTEM",
+      "CH02_DEC01_MIX_1_HAMAD",
+      "CH02_DEC01_MIX_2_HAMAD",
+      "CH02_SC10_001_NARRATOR",
+      "CH02_SC10_002_HAMAD",
+      "CH02_SC10_003_MARIAM",
+      "CH02_SC10_004_HAMAD",
+      "SYSTEM_TRY_AGAIN_SYSTEM"
+    ],
+    "next": "first",
+    "task": null
+  },
+  {
+    "id": "n11",
+    "scene": 11,
+    "chapter": 2,
+    "title": "The investigation laboratory",
+    "art": "IMAGE_11",
+    "lines": [
+      "CH02_SC11_001_NARRATOR",
+      "CH02_SC11_002_HAMAD",
+      "CH02_SC11_003_HAMAD",
+      "CH02_SC11_004_NARRATOR"
+    ],
+    "next": "n12",
+    "task": null
+  },
+  {
+    "id": "n12",
+    "scene": 12,
+    "chapter": 2,
+    "title": "Begin with a water-only control",
+    "art": "IMAGE_12",
+    "lines": [
+      "CH02_SC12_001_HAMAD",
+      "CH02_SC12_002_MARIAM",
+      "CH02_SC12_003_HAMAD",
+      "CH02_SC12_004_NARRATOR"
+    ],
+    "next": "n13",
+    "task": "calibrate"
+  },
+  {
+    "id": "n13",
+    "scene": 13,
+    "chapter": 2,
+    "title": "Test Sample A",
+    "art": "IMAGE_13",
+    "lines": [
+      "CH02_SC13_001_HAMAD",
+      "CH02_SC13_002_NARRATOR"
+    ],
+    "next": "n14",
+    "task": "sample-a"
+  },
+  {
+    "id": "n14",
+    "scene": 14,
+    "chapter": 2,
+    "title": "Compare the conductivity",
+    "art": "IMAGE_14",
+    "lines": [
+      "CH02_SC14_001_NARRATOR"
+    ],
+    "next": "n15",
+    "task": "conductivity"
+  },
+  {
+    "id": "n15",
+    "scene": 15,
+    "chapter": 2,
+    "title": "Follow one valence electron",
+    "art": "IMAGE_15",
+    "lines": [
+      "CH02_SC15_001_HAMAD",
+      "CH02_SC15_002_NARRATOR",
+      "CH02_SC15_003_HAMAD"
+    ],
+    "next": "n16",
+    "task": "electron"
+  },
+  {
+    "id": "n16",
+    "scene": 16,
+    "chapter": 2,
+    "title": "One test is not enough",
+    "art": "IMAGE_16",
+    "lines": [
+      "CH02_SC16_001_MARIAM",
+      "CH02_SC16_002_HAMAD",
+      "CH02_SC16_003_SAEED",
+      "CH02_SC16_004_HAMAD"
+    ],
+    "next": "n17",
+    "task": null
+  },
+  {
+    "id": "n17",
+    "scene": 17,
+    "chapter": 2,
+    "title": "A second independent clue",
+    "art": "IMAGE_17",
+    "lines": [
+      "CH02_SC17_001_HAMAD",
+      "CH02_SC17_002_NARRATOR"
+    ],
+    "next": "n18",
+    "task": "ph"
+  },
+  {
+    "id": "n18",
+    "scene": 18,
+    "chapter": 2,
+    "title": "A controlled virtual reaction",
+    "art": "IMAGE_18",
+    "lines": [
+      "CH02_SC18_001_HAMAD",
+      "CH02_SC18_002_FATIMA",
+      "CH02_SC18_003_HAMAD"
+    ],
+    "next": "n19",
+    "task": "acid"
+  },
+  {
+    "id": "n19",
+    "scene": 19,
+    "chapter": 2,
+    "title": "Identify the three samples",
+    "art": "IMAGE_19",
+    "lines": [
+      "CH02_SC19_001_HAMAD",
+      "CH02_SC19_002_NARRATOR",
+      "CH02_SC19_003_HAMAD"
+    ],
+    "next": "n20",
+    "task": "identity"
+  },
+  {
+    "id": "n20",
+    "scene": 20,
+    "chapter": 3,
+    "title": "The team needs a recommendation",
+    "art": "IMAGE_20",
+    "lines": [
+      "CH03_SC20_001_MARIAM",
+      "CH03_SC20_002_SAEED",
+      "CH03_SC20_003_FATIMA",
+      "CH03_SC20_004_NARRATOR"
+    ],
+    "next": "n21",
+    "task": null
+  },
+  {
+    "id": "n21",
+    "scene": 21,
+    "chapter": 3,
+    "title": "Identity is not food-safety verification",
+    "art": "IMAGE_21",
+    "lines": [
+      "CH03_SC21_001_HAMAD",
+      "CH03_SC21_002_HAMAD",
+      "CH03_SC21_003_HAMAD",
+      "CH03_SC21_004_MARIAM",
+      "CH03_SC21_005_HAMAD",
+      "CH03_SC21_006_FATIMA",
+      "CH03_SC21_007_HAMAD"
+    ],
+    "next": "n22",
+    "task": null
+  },
+  {
+    "id": "n22",
+    "scene": 22,
+    "chapter": 3,
+    "title": "Make your professional call",
+    "art": "IMAGE_22",
+    "lines": [
+      "CH03_SC22_001_NARRATOR",
+      "CH03_SC22_002_HAMAD",
+      "CH03_SC22_003_HAMAD",
+      "CH03_SC22_004_NARRATOR",
+      "CH03_SC22_005_HAMAD"
+    ],
+    "next": "ending",
+    "task": "decision"
+  },
+  {
+    "id": "endA",
+    "scene": 23,
+    "chapter": 4,
+    "title": "A safe, traceable resolution",
+    "art": "IMAGE_23",
+    "lines": [
+      "CH04_END_A_001_NARRATOR",
+      "CH04_END_A_002_FATIMA",
+      "CH04_END_A_003_HAMAD",
+      "CH04_END_A_004_MARIAM",
+      "CH04_END_A_005_SAEED",
+      "CH04_END_A_006_NARRATOR",
+      "CH04_END_A_007_HAMAD",
+      "CH04_END_A_008_NARRATOR"
+    ],
+    "next": "n27",
+    "task": null,
+    "video": "V03",
+    "videoAt": "CH04_END_A_001_NARRATOR"
+  },
+  {
+    "id": "endB",
+    "scene": 24,
+    "chapter": 4,
+    "title": "Conductivity cannot verify provenance",
+    "art": "IMAGE_24",
+    "lines": [
+      "CH04_END_B_001_NARRATOR",
+      "CH04_END_B_002_MARIAM",
+      "CH04_END_B_003_FATIMA",
+      "CH04_END_B_004_HAMAD",
+      "CH04_END_B_005_FATIMA",
+      "CH04_END_B_006_SAEED",
+      "CH04_END_B_007_NARRATOR",
+      "CH04_END_B_008_HAMAD",
+      "CH04_END_B_009_NARRATOR"
+    ],
+    "next": "n27",
+    "task": null,
+    "video": "V04",
+    "videoAt": "CH04_END_B_001_NARRATOR"
+  },
+  {
+    "id": "endC",
+    "scene": 25,
+    "chapter": 4,
+    "title": "Unsafe tasting is prevented",
+    "art": "IMAGE_25",
+    "lines": [
+      "CH04_END_C_001_NARRATOR",
+      "CH04_END_C_002_HAMAD",
+      "CH04_END_C_003_SAEED",
+      "CH04_END_C_004_HAMAD",
+      "CH04_END_C_005_FATIMA",
+      "CH04_END_C_006_MARIAM",
+      "CH04_END_C_007_NARRATOR",
+      "CH04_END_C_008_HAMAD",
+      "CH04_END_C_009_NARRATOR"
+    ],
+    "next": "n27",
+    "task": null,
+    "video": "V05",
+    "videoAt": "CH04_END_C_001_NARRATOR"
+  },
+  {
+    "id": "endD",
+    "scene": 26,
+    "chapter": 4,
+    "title": "Appearance fails the investigation",
+    "art": "IMAGE_26",
+    "lines": [
+      "CH04_END_D_001_NARRATOR",
+      "CH04_END_D_002_MARIAM",
+      "CH04_END_D_003_SAEED",
+      "CH04_END_D_004_HAMAD",
+      "CH04_END_D_005_FATIMA",
+      "CH04_END_D_006_NARRATOR",
+      "CH04_END_D_007_HAMAD",
+      "CH04_END_D_008_NARRATOR"
+    ],
+    "next": "n27",
+    "task": null,
+    "video": "V06",
+    "videoAt": "CH04_END_D_001_NARRATOR"
+  },
+  {
+    "id": "n27",
+    "scene": 27,
+    "chapter": 5,
+    "title": "What does the evidence establish?",
+    "art": "IMAGE_27",
+    "lines": [
+      "CH05_SC27_001_HAMAD",
+      "CH05_SC27_002_HAMAD",
+      "CH05_SC27_003_HAMAD",
+      "CH05_SC27_004_HAMAD",
+      "CH05_SC27_005_HAMAD",
+      "CH05_SC27_006_NARRATOR",
+      "CH05_REFLECTION_001_NARRATOR",
+      "CH05_REFLECTION_002_HAMAD",
+      "CH05_REFLECTION_003_NARRATOR"
+    ],
+    "next": "quiz-intro",
+    "task": "reflection"
+  },
+  {
+    "id": "quiz-intro",
+    "scene": 27,
+    "chapter": 5,
+    "title": "Prove your expertise",
+    "art": "IMAGE_27",
+    "lines": [
+      "CH05_QUIZ_INTRO_NARRATOR"
+    ],
+    "next": "question1",
+    "task": null
+  },
+  {
+    "id": "question1",
+    "scene": 27,
+    "chapter": 5,
+    "title": "Question 1 of 5",
+    "art": "IMAGE_27",
+    "lines": [
+      "CH05_Q01_QUESTION_NARRATOR"
+    ],
+    "next": "question2",
+    "task": "question",
+    "question": 0
+  },
+  {
+    "id": "question2",
+    "scene": 27,
+    "chapter": 5,
+    "title": "Question 2 of 5",
+    "art": "IMAGE_27",
+    "lines": [
+      "CH05_Q02_QUESTION_NARRATOR"
+    ],
+    "next": "question3",
+    "task": "question",
+    "question": 1
+  },
+  {
+    "id": "question3",
+    "scene": 27,
+    "chapter": 5,
+    "title": "Question 3 of 5",
+    "art": "IMAGE_27",
+    "lines": [
+      "CH05_Q03_QUESTION_NARRATOR"
+    ],
+    "next": "question4",
+    "task": "question",
+    "question": 2
+  },
+  {
+    "id": "question4",
+    "scene": 27,
+    "chapter": 5,
+    "title": "Question 4 of 5",
+    "art": "IMAGE_27",
+    "lines": [
+      "CH05_Q04_QUESTION_NARRATOR"
+    ],
+    "next": "question5",
+    "task": "question",
+    "question": 3
+  },
+  {
+    "id": "question5",
+    "scene": 27,
+    "chapter": 5,
+    "title": "Question 5 of 5",
+    "art": "IMAGE_27",
+    "lines": [
+      "CH05_Q05_QUESTION_NARRATOR"
+    ],
+    "next": "assessment-submit",
+    "task": "question",
+    "question": 4
+  },
+  {
+    "id": "assessment-submit",
+    "scene": 27,
+    "chapter": 5,
+    "title": "Review your five answers",
+    "art": "IMAGE_27",
+    "lines": [],
+    "next": null,
+    "task": "assessment"
+  },
+  {
+    "id": "pass",
+    "scene": 28,
+    "chapter": 5,
+    "title": "Ionic Evidence Investigator",
+    "art": "IMAGE_28",
+    "lines": [
+      "CH05_SC28_PASS_1_NARRATOR",
+      "CH05_SC28_PASS_2_HAMAD",
+      "CH05_SC28_PASS_3_HAMAD",
+      "CH05_SC28_PASS_4_NARRATOR",
+      "SYSTEM_ACHIEVEMENT_EARNED_SYSTEM"
+    ],
+    "next": "done",
+    "task": null
+  },
+  {
+    "id": "retry",
+    "scene": 28,
+    "chapter": 5,
+    "title": "Review, reflect and try again",
+    "art": "IMAGE_28",
+    "lines": [
+      "CH05_SC28_RETRY_1_NARRATOR",
+      "CH05_SC28_RETRY_2_HAMAD",
+      "CH05_SC28_RETRY_3_HAMAD"
+    ],
+    "next": "done",
+    "task": null
+  },
+  {
+    "id": "done",
+    "scene": 28,
+    "chapter": 5,
+    "title": "Your scientific record",
+    "art": "IMAGE_28",
+    "lines": [],
+    "next": null,
+    "task": "done"
+  }
+]

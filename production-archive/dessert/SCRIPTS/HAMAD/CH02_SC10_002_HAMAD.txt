@@ -1,0 +1,1 @@
+Each sample is a separate source of information. If we combine them, we lose the ability to connect a measurement to a specific container.

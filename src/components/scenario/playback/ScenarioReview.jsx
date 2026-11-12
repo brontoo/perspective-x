@@ -3,6 +3,7 @@ import { recordSceneVisit, previousVisitedScene } from "@/lib/expedition/sceneTr
 import { useAutomaticBeat, useRecordedPlayback } from "./useRecordedPlayback";
 import { AtomFilm } from "../atom/AtomMedia";
 import CrystalView from "../atom/CrystalView";
+import { TransferModel } from "../atom/AtomModels";
 import "./scene-review.css";
 
 const empty = { reviewing: false, notebookOpen: false, recordScene: () => {}, seedTrail: () => {}, openReview: () => {}, previous: null };
@@ -41,7 +42,7 @@ export function SceneReviewProvider({ children, initialTrail = [], onTrail, onRe
         if (!element.isConnected) continue;
         try { element.currentTime = time; } catch { /* unavailable legacy media */ }
         // Recorded-speech adapters own their own resume/hidden-tab policy.
-        const controlled = element.matches(".px-atom-voice-audio,.od-session > audio");
+        const controlled = element.matches(".px-atom-voice-audio,.od-session > audio,audio[data-recorded-playback]");
         if (wasPlaying && !controlled && !document.hidden && !notebookOpen) element.play().catch(() => {});
       }
       if (speaking && !document.hidden && !notebookOpen) speech.resume();
@@ -69,11 +70,13 @@ function SceneReviewDialog({ visit, held, onReturn }) {
   return <dialog ref={dialog} className="px-scene-review" aria-label="Previous scene review" onCancel={event => { event.preventDefault(); onReturn(); }}>
     <audio className="px-atom-review-audio" ref={voice.audio} hidden preload="none" />
     <header><div><small>Previously visited scene · Review only</small><h2>{visit.title}</h2></div><button onClick={onReturn}>Return to current scene</button></header>
-    <div className="px-scene-review-stage">
+    <div className="px-scene-review-stage" data-foreground-mask={visit.maskForeground ? "true" : undefined}>
       {visit.art && <img src={visit.art} alt="Previously visited scene artwork" />}
+      {visit.visual?.ionicFormation && <TransferModel transferred={visit.visual.ionicFormation.transferred} verified={visit.visual.ionicFormation.transferred} attracting={visit.visual.ionicFormation.transferred} />}
       {visit.visual?.kind && <CrystalView kind={visit.visual.kind} coreLabel electrons={visit.visual.electrons} />}
       {modelSides && <div className="px-scene-review-models">{modelSides.map((kind,i) => <div key={i}><h3>Model {i ? "B" : "A"}</h3><CrystalView kind={kind} grayscale electrons coreLabel={false} /></div>)}</div>}
       {movie && !movie.withheld && <AtomFilm key={`${visit.key}:${index}`} film={{ definition: movie }} paused={voice.paused} muted={voice.muted} onBusy={busy => setFilmDone(!busy)} onStatus={() => {}} />}
+      {visit.maskForeground && <div className="px-scene-review-foreground-mask" aria-hidden="true" />}
       <section aria-live="polite"><strong>{row.speaker || "Your mission"}</strong><p>{row.text}</p></section>
     </div>
     {visit.response && <details><summary>Recorded response · Read only</summary><p>{visit.response}</p></details>}

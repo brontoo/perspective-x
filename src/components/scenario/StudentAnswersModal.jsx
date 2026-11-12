@@ -98,6 +98,13 @@ export default function StudentAnswersModal({
                   .map((entry, index) => <p key={index}>{ATOM_ATTEMPT_LABELS[entry.condition] || "Investigation response"} · {formatDate(entry.at)}</p>)}
               </section>
             )}
+            {s.id === "ionic_dessert_mystery" && (a.investigation?.firstAttempts?.length > 0 || a.investigation?.attempts?.length > 0 || a.investigation?.corrections?.length > 0) && (
+              <section className="xp-captured">
+                <h3>Dessert investigation attempts and revisions</h3>
+                {(a.investigation.firstAttempts || []).map((entry, index) => <p key={`approach-${index}`}>Investigation approach: {entry.choice} · {formatDate(entry.at)}</p>)}
+                {[...(a.investigation.attempts || []), ...(a.investigation.corrections || [])].map((entry, index) => <p key={`revision-${index}`}>Sample identification: {Object.entries(entry.detail || {}).map(([sample, identity]) => `${sample}: ${identity}`).join(" · ")} · {formatDate(entry.at)}</p>)}
+              </section>
+            )}
             {["scene1", "scene2", "scene3"].map(
               (key, i) =>
                 a[key] && (

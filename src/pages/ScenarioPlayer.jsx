@@ -45,6 +45,8 @@ const MissionContent = ({ children }) => children;
 const CinematicVideoIntro = lazy(
   () => import("@/components/scenario/CinematicVideoIntro"),
 );
+const DessertMission = lazy(() => import('@/components/scenario/dessert/DessertMission'));
+const DessertResultReview = lazy(() => import('@/components/scenario/dessert/DessertResultReview'));
 const IonicMission = lazy(
   () => import("@/components/scenario/ionic/IonicMission"),
 );
@@ -215,7 +217,7 @@ export default function ScenarioPlayer() {
     setPhase(
       draft.exitTicket
         ? "complete"
-        : scenario.interactiveAtom
+        : scenario.interactiveAtom || id === "ionic_dessert_mystery"
           ? "intro"
           : Object.keys(draft).length
           ? resumePhase(draft, scenario.interactiveIonic)
@@ -486,7 +488,7 @@ export default function ScenarioPlayer() {
             {ROLE_IDENTITIES[role.id].name} · Fictional character
           </small>
         </div>
-        {(phase === "complete" || !scenario.interactiveAtom && id !== "ionic_aquarium_mystery") && <PreviousSceneButton />}
+        {(phase === "complete" || !scenario.interactiveAtom && id !== "ionic_aquarium_mystery" && id !== "ionic_dessert_mystery") && <PreviousSceneButton />}
         <button className="px-outline-button" onClick={() => setNotebook(true)}>
           Mission Notebook
         </button>
@@ -494,7 +496,7 @@ export default function ScenarioPlayer() {
       {preview && (
         <div className="xp-preview-banner">
           <strong>Teacher preview — no student progress is saved</strong>
-          {!scenario.interactiveAtom && <div className="xp-actions">
+          {!scenario.interactiveAtom && id !== "ionic_dessert_mystery" && <div className="xp-actions">
             <button
               className="px-outline-button"
               onClick={() =>
@@ -518,7 +520,7 @@ export default function ScenarioPlayer() {
               Next stage
             </button>
           </div>}
-          {scenario.interactiveAtom && <button className="px-outline-button" onClick={replay}>Restart preview</button>}
+          {(scenario.interactiveAtom || id === "ionic_dessert_mystery") && <button className="px-outline-button" onClick={replay}>Restart preview</button>}
         </div>
       )}
       {reviewId && (
@@ -526,7 +528,7 @@ export default function ScenarioPlayer() {
           Reviewing a preserved attempt. Responses are read-only.
         </p>
       )}
-      {!scenario.interactiveAtom && <ol className="xp-chapters" aria-label="Five-chapter mission progress">
+      {!scenario.interactiveAtom && id !== "ionic_dessert_mystery" && <ol className="xp-chapters" aria-label="Five-chapter mission progress">
         {MISSION_CHAPTERS.map((chapter, i) => (
           <li
             key={chapter.id}
@@ -578,6 +580,10 @@ export default function ScenarioPlayer() {
                     onComplete={finish}
                     onNotebook={() => setNotebook(true)}
                   />
+                ) : id === "ionic_dessert_mystery" ? (
+                  phase !== "complete" && <DessertMission key={`${id}:${attemptCount}`} scenario={scenario} responses={responses}
+                    onDraft={value => capturePatch(value, "intro")} onComplete={finish}
+                    onNotebook={() => setNotebook(true)} mode={mode} isTeacher={preview} />
                 ) : scenario.interactiveIonic ? (
                   phase !== "complete" && (
                     <IonicMission
@@ -738,6 +744,7 @@ export default function ScenarioPlayer() {
                   />
                 )}
                 {phase === "complete" && scenario.interactiveAtom && <AtomResultReview state={responses.atomDive} />}
+                {phase === "complete" && id === "ionic_dessert_mystery" && <DessertResultReview state={responses.dessertStory} scenario={scenario} />}
               </>
             )}
           </Suspense>

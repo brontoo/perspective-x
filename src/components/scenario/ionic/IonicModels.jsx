@@ -19,6 +19,7 @@ const chargeLabel = (charge) =>
 export function ElectronTransfer({
   value = { kind: "NaCl", transferred: 0 },
   onChange,
+  referencePairs = ['NaCl', 'MgO'],
 }) {
   const pair = electronPair(value.kind, value.transferred);
   function atom(index, x) {
@@ -76,8 +77,8 @@ export function ElectronTransfer({
           value={value.kind}
           onChange={(e) => onChange({ kind: e.target.value, transferred: 0 })}
         >
-          <option value="NaCl">Sodium + chlorine</option>
-          <option value="MgO">Magnesium + oxygen</option>
+          {referencePairs.includes('NaCl') && <option value="NaCl">Sodium + chlorine</option>}
+          {referencePairs.includes('MgO') && <option value="MgO">Magnesium + oxygen</option>}
         </select>
       </label>
       <svg

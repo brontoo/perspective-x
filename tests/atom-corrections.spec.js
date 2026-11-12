@@ -5,6 +5,7 @@ import { checkpoint, draftFor } from "./support/atom-checkpoints.mjs";
 import { setup, ID, noOverflow } from "./support/fixtures";
 import { ATOM_REVISED_STILLS } from "../src/data/atomPresentation.mjs";
 import { ATOM_MEDIA } from "../src/data/atomDive.mjs";
+import { dessertAt, dessertRoot } from "./support/dessert-flow";
 import { installOceanPlayback, oceanBriefing } from "./support/ocean-flow";
 const target = "/ScenarioPlayer?scenario=atom_dive";
 const root = page => page.locator(".px-atom-adventure");
@@ -286,16 +287,13 @@ for (const width of [820,390]) test(`narrated comparison and fullscreen remain r
 });
 
 test("dessert adapter replays only the actually visited preceding scene and restores its current dialogue", async ({ page }) => {
-  await setup(page, { empty:true });
-  await page.goto("/ScenarioPlayer?scenario=ionic_dessert_mystery");
-  await page.getByRole("button", { name: "Next dialogue →", exact:true }).click();
-  const caption = await page.locator(".ivn-dialogue p").textContent();
-  await page.locator(".xp-mission-heading").getByRole("button", { name: "Previous scene",exact:true }).click();
+  await dessertAt(page,"decision");
+  const caption = await dessertRoot(page).locator(".px-dessert-dialogue p").textContent();
+  await dessertRoot(page).getByRole("button", { name: "Previous scene",exact:true }).click();
   const dialog = page.getByRole("dialog",{name:"Previous scene review",exact:true});
-  await expect(dialog).toContainText("At Umm Al Emarat Park");
-  await dialog.screenshot({ path: "docs/atom-dive/screenshots/corrections/dessert-previous-scene.png" });
+  await expect(dialog.locator("h2")).toContainText("Scene 21");
   await dialog.getByRole("button",{name:"Return to current scene",exact:true}).click();
-  await expect(page.locator(".ivn-dialogue p")).toHaveText(caption);
+  await expect(dessertRoot(page).locator(".px-dessert-dialogue p")).toHaveText(caption);
 });
 
 test("Ocean Dome adapter follows visited scene order across chapters without changing task state", async ({ page }) => {

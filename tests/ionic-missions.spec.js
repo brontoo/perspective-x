@@ -15,8 +15,10 @@ import {
   oceanBriefing,
   oceanStartInvestigation,
 } from "./support/ocean-flow";
+import { installDessertPlayback,dessertStart,dessertReach,dessertInvestigate,dessertDecide,dessertAnswers,dessertFinish,dessertRoot } from "./support/dessert-flow";
 async function setup(page, options) {
   await installOceanPlayback(page);
+  await installDessertPlayback(page);
   return portalSetup(page, options);
 }
 const D = "ionic_dessert_mystery",
@@ -152,52 +154,17 @@ test("teachers can review new investigation evidence and individual MCQ results"
 });
 async function openMission(page, id) {
   await page.goto(`/ScenarioPlayer?scenario=${id}`);
-  await expect(page.locator(".im-cinema")).toBeVisible();
   if (id === A) {
-    await oceanBriefing(page);
-    await oceanStartInvestigation(page);
-    return;
+    await expect(page.locator(".im-cinema")).toBeVisible();
+    await oceanBriefing(page); await oceanStartInvestigation(page); return;
   }
-  await expect(page.locator(".im-hamad")).toHaveAttribute(
-    "src",
-    "/images/ionic/hamad-al-zaabi.webp",
-  );
-  await expect(page.locator(".xp-chapters li")).toHaveCount(5);
-  await expect(page.locator(".im-mission video")).toHaveCount(0);
-  await page.getByRole("button", { name: "Accept assignment" }).click();
+  await dessertStart(page);
+  await expect(page.locator(".px-dessert-chapters li")).toHaveCount(5);
+  await dessertReach(page,"first");
+  await dessertRoot(page).getByRole("button",{name:/Use controlled scientific/}).click();
+  await dessertReach(page,"calibrate");
 }
-async function dessertInvestigation(page) {
-  await page
-    .getByRole("button", { name: "Calibrate with water-only control" })
-    .click();
-  for (const s of ["A", "B", "C"]) {
-    await page
-      .getByRole("button", { name: `Sample ${s}`, exact: true })
-      .click();
-    for (const label of [
-      "Measure conductivity",
-      "Measure pH",
-      "Run isolated acid test",
-    ])
-      await page.getByRole("button", { name: label, exact: true }).click();
-  }
-  await page.getByRole("button", { name: "Transfer one electron" }).click();
-  for (const [s, v] of [
-    ["A", "sugar"],
-    ["B", "hydrogen-carbonate"],
-    ["C", "sodium-chloride"],
-  ])
-    await page.getByLabel(`Proposed identity for Sample ${s}`).selectOption(v);
-  await expect(
-    page.getByText("Your identification is supported.", { exact: true }),
-  ).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Submit identification", exact: true })
-    .click();
-  await expect(
-    page.getByText("Your identification is supported.", { exact: true }),
-  ).toBeVisible();
-}
+async function dessertInvestigation(page) { await dessertInvestigate(page); }
 async function aquariumInvestigation(page) {
   for (const [name, nextStation] of [
     ["Run calcium screening", "solubility"],
@@ -300,6 +267,11 @@ async function aquariumInvestigation(page) {
   await oceanTask(page, "professional-decision");
 }
 async function decisionAndReflection(page, id, choice, teacher = false) {
+  if (id === D) {
+    await dessertDecide(page,choice); await dessertReach(page,"reflection");
+    await dessertRoot(page).getByLabel("What did the consequence teach you about your evidence and decision?",{exact:true}).fill("Independent evidence is stronger than appearance alone. I would retain the measurements and verify uncertainty before deciding food suitability.");
+    await dessertRoot(page).getByRole("button",{name:"Save reflection",exact:true}).click();return;
+  }
   if (id !== A)
     await page
       .getByRole("button", { name: "Continue to Make the Call" })
@@ -340,6 +312,7 @@ async function decisionAndReflection(page, id, choice, teacher = false) {
     .click();
 }
 async function assess(page, id, wrong = 0) {
+  if (id === D) { await dessertAnswers(page,wrong); await dessertRoot(page).getByRole("button",{name:"Submit final assessment",exact:true}).click();await dessertFinish(page);return; }
   if (id === A) await oceanTask(page, "expertise");
   const questions = IONIC_SCENARIOS[id].exitTicket.mcqs;
   await expect(page.locator(".im-feedback")).toHaveCount(0);
@@ -366,7 +339,7 @@ async function assess(page, id, wrong = 0) {
 test("both complete missions persist notebook, 80%/100% assessments and sequential unlock without altering earlier work", async ({
   page,
 }) => {
-  test.setTimeout(90000);
+  test.setTimeout(120000);
   const state = await setup(page);
   const original = structuredClone(state.progressRows);
   await page.goto(`/RoleHub?role=ionic_materials_specialist`);
@@ -382,7 +355,7 @@ test("both complete missions persist notebook, 80%/100% assessments and sequenti
   await dessertInvestigation(page);
   await page
     .getByRole("button", { name: "Mission Notebook", exact: true })
-    .click();
+    .first().click();
   await expect(page.getByRole("dialog")).toContainText("Sample B · pH: pH 8.3");
   await expect(page.getByRole("dialog")).toContainText(
     "Sample B: hydrogen carbonate",
@@ -443,12 +416,12 @@ test("draft evidence restores mid-investigation, including personal notebook not
   await page
     .getByRole("button", { name: "Calibrate with water-only control" })
     .click();
-  await page
-    .getByRole("button", { name: "Measure conductivity", exact: true })
-    .click();
+  await dessertReach(page,"sample-a");
+  await page.getByRole("button", { name: "Measure conductivity", exact: true }).click();
+  await dessertReach(page,"conductivity");
   await page
     .getByRole("button", { name: "Mission Notebook", exact: true })
-    .click();
+    .first().click();
   await page
     .getByLabel("1. Scientific evidence — personal notes")
     .fill("My control must be compared with each unknown.");
@@ -459,13 +432,12 @@ test("draft evidence restores mid-investigation, including personal notebook not
     "Notebook and responses saved to your account",
   );
   await page.reload();
-  await expect(
-    page.getByRole("button", { name: "Control recorded", exact: true }),
-  ).toBeVisible();
-  await expect(page.locator(".im-evidence-ledger")).toContainText("4 μS/cm");
+  await dessertStart(page);
+  await dessertReach(page,"conductivity");
+  await expect(page.locator(".px-dessert-records")).toContainText("4 μS/cm");
   await page
     .getByRole("button", { name: "Mission Notebook", exact: true })
-    .click();
+    .first().click();
   await expect(
     page.getByLabel("1. Scientific evidence — personal notes"),
   ).toHaveValue("My control must be compared with each unknown.");
@@ -542,9 +514,9 @@ for (const viewport of [
     mkdirSync(snapshotDir, { recursive: true });
     for (const id of [D, A]) {
       await page.goto(`/ScenarioPlayer?scenario=${id}`);
-      await expect(page.locator(".im-cinema")).toBeVisible();
+      await expect(page.locator(id === A ? ".im-cinema" : ".px-dessert")).toBeVisible();
       await noOverflow(page);
-      const portrait = page.locator(id === A ? ".od-art" : ".im-hamad");
+      const portrait = page.locator(id === A ? ".od-art" : ".px-dessert-scene-image");
       expect(
         await portrait.evaluate((img) => img.complete && img.naturalWidth > 0),
       ).toBe(true);
@@ -555,9 +527,12 @@ for (const viewport of [
       if (id === A) {
         await oceanBriefing(page);
         await oceanStartInvestigation(page);
-      } else
-        await page.getByRole("button", { name: "Accept assignment" }).click();
-      await expect(page.locator(".im-investigation")).toBeVisible();
+      } else {
+        await dessertStart(page); await dessertReach(page,"first");
+        await dessertRoot(page).getByRole("button",{name:/Use controlled scientific/}).click();
+        await dessertReach(page,"calibrate");
+      }
+      await expect(page.locator(id === A ? ".im-investigation" : ".px-dessert-task")).toBeVisible();
       await noOverflow(page);
       if (id === A) {
         await page
