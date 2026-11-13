@@ -13,6 +13,7 @@ import { SCENARIOS, ROLES } from "@/components/scenarios/scenarioData";
 import { UAE_SCENARIOS } from "@/components/scenarios/uaeScenarioData";
 import { normalizeScenario } from "@/data/scenarioSchema";
 import { sanitizeDessertTrail } from '@/data/dessertEditorial.mjs';
+import { verifiedDessertTotal } from '@/data/dessertAwards.mjs';
 import {
   getMissionBlueprint,
   MISSION_CHAPTERS,
@@ -47,7 +48,6 @@ const CinematicVideoIntro = lazy(
   () => import("@/components/scenario/CinematicVideoIntro"),
 );
 const DessertMission = lazy(() => import('@/components/scenario/dessert/DessertMission'));
-const DessertResultReview = lazy(() => import('@/components/scenario/dessert/DessertResultReview'));
 const IonicMission = lazy(
   () => import("@/components/scenario/ionic/IonicMission"),
 );
@@ -127,6 +127,12 @@ export default function ScenarioPlayer() {
   const [certificate, setCertificate] = useState(false);
   const [attemptCount, setAttemptCount] = useState(1);
   const [saveStatus, setSaveStatus] = useState("");
+  const [dessertAward, setDessertAward] = useState({
+    confirmed: false,
+    totalPoints: null,
+  });
+  const pointsRequest = useRef(0);
+  useEffect(() => () => { pointsRequest.current++; }, []);
   const [saveError, setSaveError] = useState("");
   const [accessError, setAccessError] = useState("");
   const [touched, setTouched] = useState(false);
@@ -157,6 +163,8 @@ export default function ScenarioPlayer() {
     setAccessError("");
     setSaveError("");
     setSaveStatus("");
+    pointsRequest.current++;
+    setDessertAward({ confirmed: false, totalPoints: null });
     setCertificate(false);
     setNotebook(false);
     setTouched(false);
@@ -268,6 +276,20 @@ export default function ScenarioPlayer() {
         );
         if (assessment) {
           savedResult.current = true;
+          if (id === "ionic_dessert_mystery") {
+            setDessertAward({ confirmed: true, totalPoints: null });
+            const token = ++pointsRequest.current;
+            // Reuse the existing cumulative total; never derive a mission award from score.
+            supabase.from("leaderboard_view").select("total_points")
+              .eq("id", data.user.id).maybeSingle()
+              .then(({ data: total, error }) => {
+                if (!error && pointsRequest.current === token)
+                  setDessertAward(value => ({
+                    ...value,
+                    totalPoints: verifiedDessertTotal(total),
+                  }));
+              }).catch(() => { /* An unavailable total stays hidden. */ });
+          }
           try {
             localStorage.removeItem(draftKey(data.user.id, id));
           } catch {
@@ -322,8 +344,9 @@ export default function ScenarioPlayer() {
   ]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
-    if (phase === "complete") audio.playChamberUnlock();
-    else if (!["video", "intro"].includes(phase)) audio.playPhaseTransition();
+    if (phase === "complete") {
+      if (id !== "ionic_dessert_mystery") audio.playChamberUnlock();
+    } else if (!["video", "intro"].includes(phase)) audio.playPhaseTransition();
   }, [phase]);
   function capturePatch(patch, nextPhase) {
     if (reviewing.current) return;
@@ -373,6 +396,7 @@ export default function ScenarioPlayer() {
         /* keep live responses until save is confirmed */
       }
     }
+    if (id === "ionic_dessert_mystery") setPhase("complete");
     await save(result, assessment);
     setPhase("complete");
   }
@@ -386,6 +410,8 @@ export default function ScenarioPlayer() {
     finalizing.current = false;
     savedResult.current = false;
     setAttemptCount((n) => n + 1);
+    pointsRequest.current++;
+    setDessertAward({ confirmed: false, totalPoints: null });
     setRecord({});
     setTouched(false);
     setSaveError("");
@@ -582,9 +608,32 @@ export default function ScenarioPlayer() {
                     onNotebook={() => setNotebook(true)}
                   />
                 ) : id === "ionic_dessert_mystery" ? (
-                  phase !== "complete" && <DessertMission key={`${id}:${attemptCount}`} scenario={scenario} responses={responses}
-                    onDraft={value => capturePatch(value, "intro")} onComplete={finish}
-                    onNotebook={() => setNotebook(true)} mode={mode} isTeacher={preview} />
+                  <DessertMission
+                    key={`${id}:${attemptCount}`}
+                    scenario={scenario}
+                    responses={responses}
+                    onDraft={value => capturePatch(value, "intro")}
+                    onComplete={finish}
+                    onNotebook={() => setNotebook(true)}
+                    mode={mode}
+                    isTeacher={preview}
+                    completion={{
+                      ...dessertAward,
+                      role,
+                      mode,
+                      isTeacher: preview,
+                      saveStatus,
+                      saveError,
+                      onRetry: replay,
+                      onNotebook: () => setNotebook(true),
+                      onShowCertificate: () => setCertificate(true),
+                      onRetrySave: () => save(responses, responses.exitTicket),
+                      onFinish: () => navigate(preview ? "/TeacherDashboard" : "/Dashboard"),
+                      onNext: savedResult.current && responses.exitTicket?.passed && nextId
+                        ? () => nextMission(nextId)
+                        : null,
+                    }}
+                  />
                 ) : scenario.interactiveIonic ? (
                   phase !== "complete" && (
                     <IonicMission
@@ -721,7 +770,7 @@ export default function ScenarioPlayer() {
                     )}{" "}
                   </>
                 )}
-                {phase === "complete" && (
+                {phase === "complete" && id !== "ionic_dessert_mystery" && (
                   <ScenarioComplete
                     scenario={scenario}
                     responses={responses}
@@ -745,7 +794,6 @@ export default function ScenarioPlayer() {
                   />
                 )}
                 {phase === "complete" && scenario.interactiveAtom && <AtomResultReview state={responses.atomDive} />}
-                {phase === "complete" && id === "ionic_dessert_mystery" && <DessertResultReview state={responses.dessertStory} scenario={scenario} />}
               </>
             )}
           </Suspense>

@@ -8,6 +8,7 @@ import {
   DESSERT_TARGET,
 } from "./support/dessert-flow";
 import { dessertScenario } from "./support/dessert-checkpoints.mjs";
+import { DESSERT_MEDIA, DESSERT_NODES } from "../src/data/dessertFlow.mjs";
 import { isDessertLineActive } from "../src/data/dessertEditorial.mjs";
 
 test("complete shortened successful route plays native recordings at 1x and measures actual elapsed time", async ({
@@ -18,6 +19,7 @@ test("complete shortened successful route plays native recordings at 1x and meas
     "Opt-in release walkthrough: approximately ten minutes of native recorded speech.",
   );
   test.setTimeout(16 * 60 * 1000);
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   const fixture = await setup(page, { empty: true });
   await page.addInitScript(() => {
@@ -41,6 +43,12 @@ test("complete shortened successful route plays native recordings at 1x and meas
             time: performance.now(),
             duration: el.duration,
             rate: el.playbackRate,
+            node: document.querySelector(".px-dessert[data-node]")?.dataset
+              .node,
+            artScene:
+              document.querySelector(".px-dessert-art")?.dataset.artScene,
+            imageComplete: document.querySelector(".px-dessert-scene-image")
+              ?.complete,
           });
         },
         true,
@@ -52,12 +60,16 @@ test("complete shortened successful route plays native recordings at 1x and meas
   ).toContain("[native code]");
   const began = Date.now();
   await dessertStart(page);
+  await root(page)
+    .getByRole("button", { name: "Full screen", exact: true })
+    .click();
   const samples = { n14: [], n17: [], n18: [] };
   let previous = "";
   let observed = false;
   while (Date.now() - began < 14 * 60 * 1000) {
     if (!(await root(page).count())) break;
     const node = await root(page).getAttribute("data-node");
+    if (node === "done") break;
     if (node !== previous) {
       console.log(
         "Native walkthrough:",
@@ -175,7 +187,7 @@ test("complete shortened successful route plays native recordings at 1x and meas
   const events = await page.evaluate(() => window.__dessertNativeEvents);
   const ended = events.filter((e) => e.tag === "AUDIO" && e.type === "ended");
   const records = ended.map((e) => e.id);
-  expect(records).toHaveLength(76);
+  expect(records).toHaveLength(69);
   expect(records.every(isDessertLineActive)).toBe(true);
   expect(ended.every((e) => e.rate === 1)).toBe(true);
   expect(observed).toBe(true);
@@ -192,12 +204,22 @@ test("complete shortened successful route plays native recordings at 1x and meas
       /^[ABC]-/.test(e.id),
     ),
   ).toHaveLength(9);
-  expect(elapsedSeconds).toBeGreaterThan(560);
+  const speechSeconds = records.reduce(
+    (n, id) => n + DESSERT_MEDIA.recordings[id].duration,
+    0,
+  );
+  expect(elapsedSeconds).toBeGreaterThan(speechSeconds - 5);
+  for (const event of events.filter(
+    (x) => x.tag === "AUDIO" && x.type === "playing",
+  )) {
+    expect(event.imageComplete).toBe(true);
+    expect(Number(event.artScene)).toBe(DESSERT_NODES[event.node].scene);
+  }
   const report = {
     environment: "Local production build; Chromium; synthetic student",
     voiceSpeed: 1,
     elapsedSeconds,
-    recordedSpeechSeconds: 571.899,
+    recordedSpeechSeconds: speechSeconds,
     videoMode: "Original muted MP4s, played concurrently at 1x",
     mandatoryFixedTransitionSeconds: 0,
     studentInteraction:
@@ -209,16 +231,14 @@ test("complete shortened successful route plays native recordings at 1x and meas
     assessedRows: result.length,
     events,
   };
-  fs.mkdirSync("docs/dessert/editorial", { recursive: true });
+  fs.mkdirSync("docs/dessert/presentation", { recursive: true });
   fs.writeFileSync(
-    "docs/dessert/editorial/native-walkthrough.json",
+    "docs/dessert/presentation/native-walkthrough.json",
     JSON.stringify(report, null, 2) + "\n",
   );
-  await page
-    .locator(".px-dessert-completed-review")
-    .screenshot({
-      path: "docs/dessert/screenshots/editorial-native-completion.png",
-    });
+  await page.locator(".px-dessert-completed-review").screenshot({
+    path: "docs/dessert/presentation/screenshots/native-completion.png",
+  });
   console.log(
     "Native successful route completed in",
     elapsedSeconds,

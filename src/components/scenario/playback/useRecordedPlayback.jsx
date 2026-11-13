@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from "react";
 
 // A beat is identified by scene/checkpoint/cursor, not merely by its recording.
 // Each launch also owns a generation: events from a cancelled source cannot finish it.
-export function useRecordedPlayback(line, next, { scope, held = false, autoStart = false, initialMuted = false } = {}) {
+export function useRecordedPlayback(line, next, { scope, held = false, autoStart = false, initialMuted = false, ready = true } = {}) {
   const audio = useRef(null), live = useRef({}), generation = useRef(0), cleanup = useRef(() => {}), loaded = useRef(null);
   const issued = useRef(0);
   const [started, setStarted] = useState(autoStart), [manualPause, setManualPause] = useState(false), [tabPause, setTabPause] = useState(false);
   const [muted, setMuted] = useState(initialMuted), [captionsOnly, setCaptionsOnly] = useState(false), [readingRate, setReadingRate] = useState(1);
   const [play, setPlay] = useState({ key: null, instance: 0, status: "ready", finished: false, reading: false });
   const key = `${scope || line?.scene || "scene"}:${line?.id || "none"}`;
-  const paused = manualPause || tabPause || held;
+  const paused = manualPause || tabPause || held || !ready;
   const reading = useRef({ remaining: 0 });
   live.current = { line, key, started, paused, muted, captionsOnly, readingRate };
   function launch() {
@@ -29,7 +29,7 @@ export function useRecordedPlayback(line, next, { scope, held = false, autoStart
     player.dataset.dialogueId = current.line.id;
     player.dataset.playbackInstance = String(instance);
     player.dataset.sceneId = current.line.scene || current.line.sceneId || "scene";
-    const ended = () => update({ status: "complete", finished: true });
+    const ended = () => { if (!live.current.paused) update({ status: "complete", finished: true }); };
     const failed = () => { if (valid()) { player.pause(); read("unavailable"); } };
     const playing = () => update({ status: "playing" });
     const waiting = () => update({ status: "buffering" });
@@ -62,8 +62,8 @@ export function useRecordedPlayback(line, next, { scope, held = false, autoStart
       const instance = generation.current;
       issued.current = instance;
       player.play().catch(error => {
-        if (instance !== generation.current || error.name === "AbortError") return;
-        if (error.name === "NotAllowedError") setManualPause(true);
+        if (instance !== generation.current || live.current.key !== key || error.name === "AbortError") return;
+        if (error.name === "NotAllowedError") { setManualPause(true); setPlay(value => ({...value,status:'blocked'})); }
       });
     }
   }, [started, paused, key, play.reading, play.finished, play.instance]);
@@ -94,13 +94,14 @@ export function useRecordedPlayback(line, next, { scope, held = false, autoStart
   return {
     audio, started, paused, muted, captionsOnly, readingRate, setReadingRate,
     instance: play.instance, completion: `${play.key}:${play.instance}`, finished: play.key === key && play.finished,
-    status: paused ? play.status === "blocked" ? "Select Resume to permit audio, or choose captions only." : "Paused" : started && !line ? "Your investigation · story paused" :
+    awaitingVisual: !ready,
+    status: !ready ? "Preparing scene…" : paused ? play.status === "blocked" ? "Select Resume to permit audio, or choose captions only." : "Paused" : started && !line ? "Your investigation · story paused" :
       ({ ready: "Select Start to enable sound.", loading: "Loading recording…", buffering: "Buffering recording…", captions: "Reading captions", unavailable: "Recording unavailable · reading captions", playing: "Playing", complete: "Ready for your response", blocked: "Select Resume to permit audio." }[play.status] || "Preparing story…"),
-    start: () => { live.current.started = true; live.current.paused = held; setStarted(true); setManualPause(false); setTabPause(false); launch(); },
+    start: () => { live.current.started = true; live.current.paused = held || !ready; setStarted(true); setManualPause(false); setTabPause(false); launch(); },
     pause: () => { audio.current?.pause(); setManualPause(true); }, resume,
-    replay: () => { setManualPause(false); setTabPause(false); live.current.paused = held; launch(); },
+    replay: () => { setManualPause(false); setTabPause(false); live.current.paused = held || !ready; launch(); },
     toggleMute: () => setMuted(value => !value),
-    toggleCaptions: () => { live.current.captionsOnly = !captionsOnly; live.current.paused = held; setManualPause(false); setTabPause(false); setCaptionsOnly(!captionsOnly); launch(); },
+    toggleCaptions: () => { live.current.captionsOnly = !captionsOnly; live.current.paused = held || !ready; setManualPause(false); setTabPause(false); setCaptionsOnly(!captionsOnly); launch(); },
   };
 }
 

@@ -170,7 +170,7 @@ for (const choice of ["A", "B", "C", "D"])
     );
   });
 for (const wrong of [1, 2])
-  test(`assessment ${wrong === 1 ? "80% pass" : "60% retry"} uses conditional recordings and saves exactly one result`, async ({
+  test(`assessment ${wrong === 1 ? "80% pass" : "60% retry"} shows concise results and saves exactly one result`, async ({
     page,
   }) => {
     const { data } = await dessertAt(page, "question");
@@ -181,7 +181,7 @@ for (const wrong of [1, 2])
     await root(page)
       .getByRole("button", { name: "Submit final assessment", exact: true })
       .click();
-    await dessertReach(page, wrong === 1 ? "pass" : "retry", false);
+    await expect(root(page).locator(".px-dessert-results")).toBeVisible();
     await shot(page, wrong === 1 ? "achievement-pass" : "assessment-retry");
     await dessertFinish(page);
     await expect

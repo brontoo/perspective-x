@@ -18,6 +18,8 @@ export function sanitizeDessertTrail(trail = []) {
     const lines = (Array.isArray(visit.lines) ? visit.lines : []).filter(
       (line) => isDessertLineActive(line?.id),
     );
-    return lines.length ? [{ ...visit, lines }] : [];
+    return lines.length
+      ? [{ ...visit, kind: "dessert", waitForArtwork: true, lines }]
+      : [];
   });
 }

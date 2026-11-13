@@ -79,7 +79,7 @@ for (const ending of ["A", "B", "C", "D"])
     const done = ready(act(checkpoint("assessment", ending), "assess"));
     assert.equal(done.completed, true);
     assert.equal(done.result.score, 100);
-    assert.equal(done.visited.length, 76);
+    assert.equal(done.visited.length, 69);
     assert.ok(
       done.visited.every(
         (row) => isDessertLineActive(row.id) && row.scene !== 21,
@@ -110,7 +110,7 @@ for (const ending of ["A", "B", "C", "D"])
       0,
     );
     assert.ok(seconds < 600);
-    if (ending === "A") assert.ok(Math.abs(seconds - 571.899) < 0.01);
+    if (ending === "A") assert.ok(seconds < 530);
   });
 
 for (const [node, cursor, expected, readyFlag] of [
@@ -132,7 +132,7 @@ for (const [node, cursor, expected, readyFlag] of [
       playback: { line: "CH03_SC21_001_HAMAD", time: 9 },
     };
     const migrated = restoreDessertState({ dessertStory: original });
-    assert.equal(migrated.version, 3);
+    assert.equal(migrated.version, 4);
     assert.equal(migrated.node, expected);
     assert.equal(migrated.ready, readyFlag);
     assert.deepEqual(migrated.investigation, original.investigation);

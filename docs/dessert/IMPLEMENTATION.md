@@ -2,6 +2,8 @@
 
 Review delivery, 12 November 2026. Existing scenario: `ionic_dessert_mystery`.
 
+The latest [presentation refinement](presentation/PRESENTATION_REPORT.md) adds viewport-fitted fullscreen, bright artwork, synchronized decoded-frame transitions and immediate concise results. Assessment explanations and completion messages now play only on explicit review. The representative default route is 69 recordings / 8:33.149 of speech; all 100 approved recordings remain available across narrative paths and optional reviews.
+
 The current editorial edition retains exactly 100 approved recordings and excludes 117 from playback. See [the editorial report](editorial/EDITORIAL_REPORT.md) for the approved cuts, migration, runtime comparison and validation. All 217 source recordings remain intact.
 
 The existing Dessert entry now launches a five-chapter recorded cinematic investigation. Its role, Materials & Bonding pathway, catalogue registration, route, assessment questions and scoring are retained. No second scenario, database table, authentication flow or production deployment is introduced.
@@ -31,7 +33,7 @@ Scenes 01–07 establish the fictional competition. The first investigation deci
 
 Scene 19 identification leads to the short scene 20 exchange and then directly to scene 22. The former scene 21 contamination/provenance lecture is absent from active playback and review. The decision wording retains the minimum distinction between supported identity and returning unlabelled original containers to food preparation. The final decision requires a 60-character justification and two collected evidence citations. The committed decision selects one ending permanently for that attempt; unselected ending video and recordings are never queued. No unknown powder is tasted or mixed. A successful professional outcome requires isolating unknowns and using traceable replacements.
 
-Scene 27 requires a 40-character reflection. Chapter 5 retains the original five questions/options and `gradeIonic` 80% threshold. Feedback is released after final assessment submission. A failed scientific assessment receives retry recordings without pass announcements or badge. A passing assessment can follow a poor professional decision, but the separately displayed professional outcome remains the actual consequence.
+Scene 27 requires a 40-character reflection. Chapter 5 retains the original five questions/options and `gradeIonic` 80% threshold. Submission goes directly to the actual percentage and eligible badge, with optional review rather than automatic question-feedback narration. A failed scientific assessment offers retry without a badge. A passing assessment can follow a poor professional decision, but the separately displayed professional outcome remains the actual consequence.
 
 ## Platform and playback
 
@@ -42,7 +44,7 @@ Pause/resume, notebook interruption, hidden-tab suspension, mute, replay, playba
 ## Asset and narration limitations
 
 1. **Supplied IMAGE_03 and V02 contain a FLOUR label**, inconsistent with the required sucrose/bicarbonate/sodium-chloride set. Their label-bearing lower foreground is softly masked in live presentation and scene review. Source pixels remain unchanged. This is a presentation treatment, not a corrected production master; a corrected supplied original would remove the need for masking.
-2. **IMAGE_15 contains misleading decorative shell counts.** Its background is blurred/dimmed and the existing accurate Na/Cl interactive formation model covers the diagram throughout the scene. Previous-scene review renders an accurate read-only model instead of that image.
+2. **IMAGE_15 contains misleading decorative shell counts.** Its background is blurred and the existing accurate Na/Cl interactive formation model covers the diagram throughout the scene. Previous-scene review renders an accurate read-only model instead of that image.
 3. **Some supplied quiz question recordings paraphrase the retained approved question text.** Dialogue captions accurately follow the author scripts; assessment cards retain the original question/options, correct answer and scientific explanation. No assessment content was silently rewritten to match a voiceover.
 4. All 217 caption files match the supplied text inventory. A local ASR cross-check was also performed, including an independent tail check where an initial transcription omitted a closing phrase. This is not a claim of human word-by-word listening or manually timed word-level captions. Captions synchronize at recording level.
 5. Live Supabase account/RLS QA remains unverified. Browser checks use authorized synthetic fixtures and do not write to student accounts.

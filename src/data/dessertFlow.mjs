@@ -274,12 +274,21 @@ export function dessertActiveLine(s) {
 }
 export function dessertNextLine(s) {
   const seq = s.feedback?.ids || dessertStep(s).lines;
-  return dessertLine(seq[(s.feedback?.cursor ?? s.cursor) + 1]);
+  const next = seq[(s.feedback?.cursor ?? s.cursor) + 1];
+  if (next) return dessertLine(next);
+  const target = s.feedback
+    ? s.feedback.after
+    : !dessertStep(s).task
+      ? dessertStep(s).next
+      : null;
+  return target && target !== "ready"
+    ? dessertLine(DESSERT_NODES[target]?.lines[0])
+    : undefined;
 }
 const clone = (value) => JSON.parse(JSON.stringify(value));
 export function createDessertState() {
   return {
-    version: 3,
+    version: 4,
     node: "n01",
     cursor: 0,
     ready: false,
@@ -317,7 +326,7 @@ export function restoreDessertState(responses = {}) {
   const initial = createDessertState(),
     saved = responses.dessertStory;
   if (
-    [2, 3].includes(saved?.version) &&
+    [2, 3, 4].includes(saved?.version) &&
     (DESSERT_NODES[saved.node] || saved.node === "n21")
   ) {
     const restored = {
@@ -427,7 +436,7 @@ function normalizeEditorialState(s, previousVersion) {
   );
   let next = {
     ...s,
-    version: 3,
+    version: 4,
     archivedDialogue: [...(s.archivedDialogue || []), ...archived],
     visited: (s.visited || []).filter(
       (row) => isDessertLineActive(row.id) && DESSERT_NODES[row.node],
@@ -436,10 +445,21 @@ function normalizeEditorialState(s, previousVersion) {
   };
   if (next.playback && !isDessertLineActive(next.playback.line))
     next.playback = null;
+  if (next.result)
+    return {
+      ...next,
+      node: "done",
+      cursor: 0,
+      ready: true,
+      feedback: null,
+      lastLine: null,
+      playback: null,
+      completed: true,
+    };
   if (s.node === "n21") return enter({ ...next, playback: null }, "n22");
   const step = dessertStep(next);
   if (
-    previousVersion === 3 &&
+    previousVersion >= 3 &&
     !s.ready &&
     !s.feedback &&
     step.lines.includes(s.beatId)
@@ -797,15 +817,13 @@ export function dessertAction(s, event, scenario) {
   ) {
     if (!scenario.exitTicket.mcqs.every((q) => s.answers[q.id])) return s;
     const result = gradeIonic(scenario.exitTicket.mcqs, s.answers);
-    const feedback = scenario.exitTicket.mcqs.map(
-      (q, i) =>
-        `CH05_Q0${i + 1}_${q.options.some((o) => o.id === s.answers[q.id] && o.correct) ? "CORRECT" : "INCORRECT"}_HAMAD`,
-    );
-    return queue(
-      { ...s, result },
-      [sys("ASSESSMENT_COMPLETE"), ...feedback],
-      result.passed ? "pass" : "retry",
-    );
+    return {
+      ...enter(s, "done"),
+      result,
+      completed: true,
+      lastLine: null,
+      playback: null,
+    };
   }
   return s;
 }
@@ -843,7 +861,13 @@ export function dessertAudioRoutes() {
     (map[id] ??= []).push(route);
   };
   for (const [key, n] of Object.entries(DESSERT_NODES))
-    for (const id of n.lines) add(id, `node:${key}`);
+    for (const id of n.lines)
+      add(
+        id,
+        ["pass", "retry"].includes(key)
+          ? `optional-completion:${key}`
+          : `node:${key}`,
+      );
   const conditions = {
     CH02_DEC01_CORRECT_HAMAD: "first:controlled",
     ...Object.fromEntries(
@@ -894,7 +918,7 @@ export function dessertAudioRoutes() {
       [1, 2, 3, 4, 5].flatMap((i) =>
         ["CORRECT", "INCORRECT"].map((c) => [
           `CH05_Q0${i}_${c}_HAMAD`,
-          `graded:question${i}:${c}`,
+          `optional-review:question${i}:${c}`,
         ]),
       ),
     ),
@@ -935,6 +959,8 @@ export function dessertTrailFromVisited(s) {
     const descriptor = {
       key,
       title: `Scene ${n.scene} · ${n.title}`,
+      kind: "dessert",
+      waitForArtwork: true,
       art: n.scene === 15 ? null : media.images[n.art].url,
       maskForeground: [3, 4].includes(n.scene),
       visual:

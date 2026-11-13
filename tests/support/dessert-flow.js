@@ -48,13 +48,20 @@ export async function dessertSetup(page, options = {}) {
   await installDessertPlayback(page);
   return setup(page, { empty: true, ...options });
 }
-export async function dessertStart(page) {
+export async function dessertStart(page, { waitForMedia = true } = {}) {
   await expect(dessertRoot(page)).toBeVisible();
   const button = dessertRoot(page).getByRole("button", {
     name: /^(Start Experience|Resume Experience)$/,
   });
   if (await button.count()) await button.click();
   await paint(page);
+  if (
+    waitForMedia &&
+    (await dessertRoot(page).locator(".px-dessert-controls > p").count())
+  )
+    await expect(
+      dessertRoot(page).locator(".px-dessert-controls > p"),
+    ).not.toHaveText("Preparing scene…");
 }
 export async function dessertBeat(page) {
   await paint(page);
@@ -245,8 +252,12 @@ export async function dessertAnswers(page, wrong = 0) {
 }
 export async function dessertFinish(page) {
   for (let i = 0; i < 50; i++) {
-    if (!(await dessertRoot(page).count())) break;
+    if (
+      !(await dessertRoot(page).count()) ||
+      (await dessertRoot(page).getAttribute("data-node")) === "done"
+    )
+      break;
     await dessertBeat(page);
   }
-  await expect(page.locator(".xp-completion")).toBeVisible();
+  await expect(page.locator(".px-dessert-results")).toBeVisible();
 }

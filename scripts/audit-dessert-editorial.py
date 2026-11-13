@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Verify the author-approved editorial partition and time real decoded MP3 routes."""
+import argparse
 import csv
 import hashlib
 import json
@@ -16,6 +17,9 @@ def write(path, data):
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n')
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--presentation', action='store_true', help='Write the concise-results runtime audit separately from the historical editorial audit.')
+    args = parser.parse_args()
     approved = json.loads((ROOT / 'src/data/dessertEditorial.json').read_text())
     media = json.loads((ROOT / 'src/data/dessertMedia.json').read_text())
     keep = read('Dessert_Shortened_Manifest.csv')
@@ -60,7 +64,10 @@ console.log(JSON.stringify({routes,audioRoutes:dessertAudioRoutes(),nodes:Object
         before = next(r for r in baseline['routes'] if r['ending'] == route['ending'])['recordedSpeechSeconds']
         route.update(baselineRecordedSpeechSeconds=before, savedSpeechSeconds=before-route['recordedSpeechSeconds'], savedSpeechPercent=100*(before-route['recordedSpeechSeconds'])/before)
     report = {'edition': approved['edition'], 'keep': 100, 'cut': 117, 'originalRecordings': 217, 'captionMismatches': [], 'extraRetainedClips': [], 'sourceMediaChanged': False, 'scene21Active': False, 'inventory': inventory, 'routes': result['routes'], 'notes': ['Duration sums use existing decoded MP3 metadata at 1x. No optional wrong-choice retries, option narration or answer replay in these representative routes.', 'All five questions answered correctly; professional outcome is independent of scientific assessment.', 'Video runs concurrently with speech. Extra hold is max(video minus its simultaneous narration, 0), not the sum of video and speech.', 'No fixed cinematic transition timer was added; interaction time remains self-paced.', 'The authored 19:05 baseline excludes repeated UI notifications present in the implemented 20:14 successful route.', 'The retained calibration correction is played after the actual control measurement; the 100-clip selection is unchanged.']}
-    write(ROOT / 'docs/dessert/editorial/editorial-audit.json', report)
+    if args.presentation:
+        report['presentation'] = 'Direct results; graded explanations and completion messages are optional explicit review only.'
+    destination = 'docs/dessert/presentation/runtime-audit.json' if args.presentation else 'docs/dessert/editorial/editorial-audit.json'
+    write(ROOT / destination, report)
     write(ROOT / 'docs/dessert/audio-routes.json', {i: {'speaker': media['recordings'][i]['speaker'], 'caption': media['recordings'][i]['text'], 'audio': media['recordings'][i]['audio'], 'routes': r} for i, r in sorted(result['audioRoutes'].items())})
     write(ROOT / 'docs/dessert/scene-map.json', result['nodes'])
     print(json.dumps({'keep': 100, 'cut': 117, 'routes': [{k: v for k, v in r.items() if k not in ['clipIds', 'videos']} for r in result['routes']]}, indent=2))

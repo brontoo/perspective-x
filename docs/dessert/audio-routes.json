@@ -604,7 +604,7 @@
     "caption": "Correct. Sodium loses one electron. It then has eleven protons and ten electrons, producing a net charge of positive one.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q01_CORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question1:CORRECT"
+      "optional-review:question1:CORRECT"
     ]
   },
   "CH05_Q01_INCORRECT_HAMAD": {
@@ -612,7 +612,7 @@
     "caption": "Not quite. A positive ion forms when an atom has fewer electrons than protons. Sodium becomes positive by losing one electron.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q01_INCORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question1:INCORRECT"
+      "optional-review:question1:INCORRECT"
     ]
   },
   "CH05_Q01_QUESTION_NARRATOR": {
@@ -628,7 +628,7 @@
     "caption": "Correct. Chlorine gains one electron. It then has seventeen protons and eighteen electrons, producing a net charge of negative one.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q02_CORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question2:CORRECT"
+      "optional-review:question2:CORRECT"
     ]
   },
   "CH05_Q02_INCORRECT_HAMAD": {
@@ -636,7 +636,7 @@
     "caption": "Review the relationship between protons and electrons. Chlorine becomes negatively charged by gaining one electron.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q02_INCORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question2:INCORRECT"
+      "optional-review:question2:INCORRECT"
     ]
   },
   "CH05_Q02_QUESTION_NARRATOR": {
@@ -652,7 +652,7 @@
     "caption": "Correct. Sodium chloride separates into mobile sodium and chloride ions in water. Those charged particles carry electrical current through the solution.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q03_CORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question3:CORRECT"
+      "optional-review:question3:CORRECT"
     ]
   },
   "CH05_Q03_INCORRECT_HAMAD": {
@@ -660,7 +660,7 @@
     "caption": "Conductivity is not caused simply by the presence of water or by the white color of the solid. It depends on mobile charged particles in the solution.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q03_INCORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question3:INCORRECT"
+      "optional-review:question3:INCORRECT"
     ]
   },
   "CH05_Q03_QUESTION_NARRATOR": {
@@ -676,7 +676,7 @@
     "caption": "Correct. Sucrose dissolves mainly as neutral molecules and does not produce the same concentration of mobile ions as sodium chloride.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q04_CORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question4:CORRECT"
+      "optional-review:question4:CORRECT"
     ]
   },
   "CH05_Q04_INCORRECT_HAMAD": {
@@ -684,7 +684,7 @@
     "caption": "Dissolving and ionizing are not the same process. Sucrose can dissolve while remaining mainly as neutral molecules.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q04_INCORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question4:INCORRECT"
+      "optional-review:question4:INCORRECT"
     ]
   },
   "CH05_Q04_QUESTION_NARRATOR": {
@@ -700,7 +700,7 @@
     "caption": "Correct. A single test may be shared by different substances. Independent evidence increases confidence and helps distinguish between candidates with similar properties.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q05_CORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question5:CORRECT"
+      "optional-review:question5:CORRECT"
     ]
   },
   "CH05_Q05_INCORRECT_HAMAD": {
@@ -708,7 +708,7 @@
     "caption": "Conductivity showed that Samples B and C both produced mobile ions, but it did not uniquely distinguish them. Additional evidence was required.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q05_INCORRECT_HAMAD.mp3",
     "routes": [
-      "graded:question5:INCORRECT"
+      "optional-review:question5:INCORRECT"
     ]
   },
   "CH05_Q05_QUESTION_NARRATOR": {
@@ -772,7 +772,7 @@
     "caption": "Assessment complete. You answered at least four of the five questions correctly.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_SC28_PASS_1_NARRATOR.mp3",
     "routes": [
-      "node:pass"
+      "optional-completion:pass"
     ]
   },
   "CH05_SC28_PASS_2_HAMAD": {
@@ -780,7 +780,7 @@
     "caption": "Well done. You have earned the Ionic Evidence Investigator achievement.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC28_PASS_2_HAMAD.mp3",
     "routes": [
-      "node:pass"
+      "optional-completion:pass"
     ]
   },
   "CH05_SC28_RETRY_1_NARRATOR": {
@@ -788,7 +788,7 @@
     "caption": "Assessment complete. Your result has been recorded, but the achievement requires at least four correct answers out of five.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_SC28_RETRY_1_NARRATOR.mp3",
     "routes": [
-      "node:retry"
+      "optional-completion:retry"
     ]
   },
   "CH05_SC28_RETRY_2_HAMAD": {
@@ -796,7 +796,7 @@
     "caption": "Review the feedback carefully. Focus on electron transfer, mobile ions, the difference between dissolving and ionizing, and the value of combining independent tests.",
     "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC28_RETRY_2_HAMAD.mp3",
     "routes": [
-      "node:retry"
+      "optional-completion:retry"
     ]
   }
 }

@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useLayoutEffect, use
 import { recordSceneVisit, previousVisitedScene } from "@/lib/expedition/sceneTrail.mjs";
 import { useAutomaticBeat, useRecordedPlayback } from "./useRecordedPlayback";
 import { AtomFilm } from "../atom/AtomMedia";
+import DessertFilm from '../dessert/DessertFilm';
 import CrystalView from "../atom/CrystalView";
 import { TransferModel } from "../atom/AtomModels";
 import "./scene-review.css";
@@ -60,8 +61,11 @@ function SceneReviewDialog({ visit, held, onReturn }) {
   const dialog = useRef(null), [index, setIndex] = useState(0), [filmDone, setFilmDone] = useState(false);
   const rows = visit.lines?.length ? visit.lines : [{ id: `${visit.key}-caption`, text: visit.text || visit.title, audio: null }];
   const row = rows[index], movie = row.video || (index === 0 ? visit.video : null);
+  const [readyArt,setReadyArt]=useState(null),[readyFilm,setReadyFilm]=useState(null);
+  const artKey=`${visit.key}:${visit.art}`;
+  const ready=(!visit.waitForArtwork||!visit.art||readyArt===artKey)&&(visit.kind!=='dessert'||!movie||movie.withheld||readyFilm===index);
   const modelSides = visit.visual?.sides || (visit.key === "atom_dive:S06" ? ["metallic", "ionic"] : null);
-  const voice = useRecordedPlayback(row, rows[index + 1], { scope: `scene-review:${visit.key}:${index}`, autoStart: true, held, initialMuted: visit.muted });
+  const voice = useRecordedPlayback(row, rows[index + 1], { scope: `scene-review:${visit.key}:${index}`, autoStart: true, held, initialMuted: visit.muted, ready });
   useEffect(() => { dialog.current.showModal(); }, []);
   useEffect(() => { setFilmDone(!movie || !!movie.withheld); }, [index, movie?.url]);
   useAutomaticBeat({ enabled: true, voice: movie?.hasSpeech && !row.audio ? { ...voice, finished: filmDone } : voice, filmDone: !movie || !!movie.withheld || filmDone, onAdvance: () => {
@@ -70,12 +74,12 @@ function SceneReviewDialog({ visit, held, onReturn }) {
   return <dialog ref={dialog} className="px-scene-review" aria-label="Previous scene review" onCancel={event => { event.preventDefault(); onReturn(); }}>
     <audio className="px-atom-review-audio" ref={voice.audio} hidden preload="none" />
     <header><div><small>Previously visited scene · Review only</small><h2>{visit.title}</h2></div><button onClick={onReturn}>Return to current scene</button></header>
-    <div className="px-scene-review-stage" data-foreground-mask={visit.maskForeground ? "true" : undefined}>
-      {visit.art && <img src={visit.art} alt="Previously visited scene artwork" />}
+    <div className="px-scene-review-stage" data-scenario-kind={visit.kind} data-foreground-mask={visit.maskForeground ? "true" : undefined}>
+      {visit.art && <img src={visit.art} alt="Previously visited scene artwork" onLoad={async event=>{const element=event.currentTarget;try{await element.decode();}catch{/* frame loaded */}if(element.isConnected)setReadyArt(artKey);}} onError={()=>setReadyArt(artKey)} />}
       {visit.visual?.ionicFormation && <TransferModel transferred={visit.visual.ionicFormation.transferred} verified={visit.visual.ionicFormation.transferred} attracting={visit.visual.ionicFormation.transferred} />}
       {visit.visual?.kind && <CrystalView kind={visit.visual.kind} coreLabel electrons={visit.visual.electrons} />}
       {modelSides && <div className="px-scene-review-models">{modelSides.map((kind,i) => <div key={i}><h3>Model {i ? "B" : "A"}</h3><CrystalView kind={kind} grayscale electrons coreLabel={false} /></div>)}</div>}
-      {movie && !movie.withheld && <AtomFilm key={`${visit.key}:${index}`} film={{ definition: movie }} paused={voice.paused} muted={voice.muted} onBusy={busy => setFilmDone(!busy)} onStatus={() => {}} />}
+      {movie && !movie.withheld && (visit.kind==='dessert'?<DessertFilm key={`${visit.key}:${index}`} poster={visit.art} film={{definition:movie}} paused={voice.paused} playAllowed={voice.status === "Playing" || voice.captionsOnly || voice.finished || voice.status.includes("unavailable")} onReady={value=>{if(value)setReadyFilm(index);}} onBusy={busy=>setFilmDone(!busy)} onStatus={()=>{}}/>:<AtomFilm key={`${visit.key}:${index}`} film={{ definition: movie }} paused={voice.paused} muted={voice.muted} onBusy={busy => setFilmDone(!busy)} onStatus={() => {}} />)}
       {visit.maskForeground && <div className="px-scene-review-foreground-mask" aria-hidden="true" />}
       <section aria-live="polite"><strong>{row.speaker || "Your mission"}</strong><p>{row.text}</p></section>
     </div>

@@ -365,10 +365,10 @@ test("both complete missions persist notebook, 80%/100% assessments and sequenti
   await assess(page, D, 1);
   await expect(
     page
-      .locator(".xp-completion")
+      .locator(".px-dessert-results")
       .getByText("Assessment result saved to your account", { exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".xp-earned-badge")).toContainText(
+  await expect(page.locator('.px-dessert-badge[data-earned="true"]')).toContainText(
     "Ionic Evidence Investigator",
   );
   await page.screenshot({
@@ -451,7 +451,7 @@ test("60% earns no badge or next mission; unsupported decision shows its own con
   await dessertInvestigation(page);
   await decisionAndReflection(page, D, "C");
   await assess(page, D, 2);
-  await expect(page.locator(".xp-completion")).toContainText("60%");
+  await expect(page.locator(".px-dessert-results")).toContainText("60%");
   await expect(page.locator(".xp-earned-badge")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Next available mission" }),

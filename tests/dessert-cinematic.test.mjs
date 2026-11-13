@@ -178,13 +178,9 @@ for (const wrong of [0, 1, 2])
     assert.equal(s.result.score, 100 - 20 * wrong);
     assert.equal(s.result.passed, wrong < 2);
     assert.equal(act(s, "assess"), s);
-    assert.equal(s.feedback.ids.length, 5);
-    while (s.feedback) s = act(s, "continue");
-    assert.equal(s.node, wrong < 2 ? "pass" : "retry");
-    assert.equal(
-      dessertStep(s).lines.some((id) => id.includes("PASS")),
-      wrong < 2,
-    );
+    assert.equal(s.feedback, null);
+    assert.equal(s.node, "done");
+    assert.equal(s.completed, true);
     const done = ready(s);
     assert.equal(done.completed, true);
     assert.equal(done.result.mcq_answers.length, 5);

@@ -1,5 +1,7 @@
 # The Final Dessert — approved editorial optimization
 
+Historical editorial delivery. The subsequent [presentation refinement](../presentation/PRESENTATION_REPORT.md) preserves the 100 KEEP / 117 CUT inventory but makes graded feedback and completion announcements optional explicit review. Its default successful route is 69 recordings / 8:33.149 of speech. The timings below describe the earlier 76-recording delivery.
+
 12 November 2026. Scenario `ionic_dessert_mystery`; review branch `feature/dessert-cinematic-rebuild`. The existing cinematic interface, artwork, original MP3/MP4 bytes, scientific activities, routes, role, pathway and persistence infrastructure are preserved. No production promotion is authorized by this change.
 
 ## Editorial compliance
