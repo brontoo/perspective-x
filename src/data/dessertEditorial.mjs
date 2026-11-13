@@ -19,7 +19,7 @@ export function sanitizeDessertTrail(trail = []) {
       (line) => isDessertLineActive(line?.id),
     );
     return lines.length
-      ? [{ ...visit, kind: "dessert", waitForArtwork: true, lines }]
+      ? [{ ...visit, kind: "dessert", waitForArtwork: true, maskForeground: false, lines }]
       : [];
   });
 }

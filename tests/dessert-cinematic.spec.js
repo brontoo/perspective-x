@@ -355,7 +355,10 @@ test("a legacy MgO draft presents the required NaCl formation model without gran
   await page.goto(DESSERT_TARGET);
   await dessertStart(page);
   await dessertReach(page, "electron");
-  await expect(root(page).getByRole("combobox").first()).toHaveValue("NaCl");
+  await expect(root(page).locator(".im-instrument > svg")).toHaveAttribute(
+    "aria-label",
+    /Na has 11 protons and 11 electrons; Cl has 17 protons and 17 electrons/,
+  );
   await expect(root(page).getByRole("status").first()).toContainText(
     "0 of 1 valence electrons transferred",
   );

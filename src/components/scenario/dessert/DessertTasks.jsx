@@ -5,9 +5,11 @@ import {
   hasDessertReading,
   measurementsComplete,
 } from "@/data/dessertFlow.mjs";
-import { ElectronTransfer } from "../ionic/IonicModels";
+import DessertWorkbench from "./DessertWorkbench";
+import DessertElectronTransfer from "./DessertElectronTransfer";
+import { DESSERT_ENRICHMENT } from "@/data/dessertAssessment.mjs";
 
-function SampleInstrument({ task, state, send }) {
+function SampleInstrument({ task, state, send, disabled }) {
   const inv = state.investigation,
     method = task === "ph" ? "pH" : task === "acid" ? "fizz" : "conductivity";
   const available =
@@ -59,70 +61,15 @@ function SampleInstrument({ task, state, send }) {
         ))}
       </div>
       <div className="px-dessert-instrument-grid">
-        <div
-          className={`px-dessert-beaker ${measured ? "is-measured" : ""}`}
-          aria-label={`Virtual Sample ${sample}`}
-        >
-          <svg
-            viewBox="0 0 320 205"
-            role="img"
-            aria-label={
-              measured
-                ? `Recorded Sample ${sample}: ${method === "fizz" ? reading.fizz : method === "pH" ? `pH ${reading.pH.toFixed(1)}` : `${reading.conductivity} microsiemens per centimetre`}`
-                : `Sample ${sample} awaits a measurement`
-            }
-          >
-            <defs>
-              <linearGradient id={`dessert-water-${method}`} x2="1" y2="1">
-                <stop stopColor="#63c4d2" />
-                <stop offset="1" stopColor="#1b708c" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M94 24v138q0 20 20 20h92q20 0 20-20V24M82 24h156"
-              stroke="#d1eced"
-              fill="none"
-              strokeWidth="4"
-            />
-            <path
-              d="M97 100h126v61q0 17-18 17h-90q-18 0-18-17Z"
-              fill={`url(#dessert-water-${method})`}
-              opacity=".78"
-            />
-            {[0, 1, 2, 3, 4].map((i) => (
-              <path
-                key={i}
-                d={`M97 ${56 + i * 22}h${i % 2 ? 12 : 20}`}
-                stroke="#a0c4ce"
-              />
-            ))}
-            <path d="M180 3v115" stroke="#dcbd87" strokeWidth="8" />
-            <circle cx="180" cy="120" r="6" fill="#f6d59f" />
-            {measured &&
-              method === "fizz" &&
-              sample === "B" &&
-              [0, 1, 2, 3, 4].map((i) => (
-                <circle
-                  className="px-dessert-bubble"
-                  key={i}
-                  cx={125 + i * 17}
-                  cy={153 - (i % 3) * 13}
-                  r={3 + (i % 2) * 2}
-                  fill="none"
-                  stroke="#f3e7c9"
-                />
-              ))}
-            <text
-              x="160"
-              y="198"
-              textAnchor="middle"
-              fill="#e9f2f6"
-              fontSize="12"
-            >
-              Fresh virtual aliquot · Sample {sample}
-            </text>
-          </svg>
-        </div>
+        <DessertWorkbench
+          key={`${method}:${sample}`}
+          method={method}
+          sample={sample}
+          measured={measured}
+          disabled={disabled || (method === "conductivity" && !inv.calibrated)}
+          actionLabel={label}
+          onOperate={() => send({ type: "measure", sample })}
+        />
         <div className="px-dessert-meter" aria-live="polite">
           <span>
             {method === "conductivity"
@@ -149,15 +96,6 @@ function SampleInstrument({ task, state, send }) {
                 ? reading.fizz
                 : "Observation recorded in your Mission Notebook."}
           </p>
-          <button
-            className="px-dessert-primary"
-            disabled={
-              measured || (method === "conductivity" && !inv.calibrated)
-            }
-            onClick={() => send({ type: "measure", sample })}
-          >
-            {measured ? "Measurement recorded" : label}
-          </button>
         </div>
       </div>
       <div
@@ -209,12 +147,25 @@ function SampleInstrument({ task, state, send }) {
     </section>
   );
 }
-export default function DessertTasks({ state, node, scenario, send }) {
+export default function DessertTasks({
+  state,
+  node,
+  scenario,
+  send,
+  disabled,
+  mode,
+}) {
   const inv = state.investigation,
     task = node.task;
   if (["sample-a", "conductivity", "ph", "acid"].includes(task))
     return (
-      <SampleInstrument key={task} task={task} state={state} send={send} />
+      <SampleInstrument
+        key={task}
+        task={task}
+        state={state}
+        send={send}
+        disabled={disabled}
+      />
     );
   if (task === "first")
     return (
@@ -252,16 +203,17 @@ export default function DessertTasks({ state, node, scenario, send }) {
         <p>
           Place the virtual probe in the water-only control. No powder is added.
         </p>
+        <DessertWorkbench
+          method="conductivity"
+          measured={inv.calibrated}
+          disabled={disabled}
+          actionLabel="Calibrate with water-only control"
+          onOperate={() => send({ type: "calibrate" })}
+        />
         <div className="px-dessert-meter">
           <span>Control conductivity</span>
           <strong>{inv.calibrated ? "2 µS/cm" : "Awaiting calibration"}</strong>
         </div>
-        <button
-          className="px-dessert-primary"
-          onClick={() => send({ type: "calibrate" })}
-        >
-          Calibrate with water-only control
-        </button>
       </section>
     );
   if (task === "electron")
@@ -270,13 +222,13 @@ export default function DessertTasks({ state, node, scenario, send }) {
         className="px-dessert-lab"
         aria-label="Atomic formation investigation"
       >
-        <ElectronTransfer
+        <DessertElectronTransfer
           value={
             inv.electron.kind === "NaCl"
               ? inv.electron
               : { kind: "NaCl", transferred: 0 }
           }
-          referencePairs={["NaCl"]}
+          disabled={disabled}
           onChange={(value) => send({ type: "electron", value })}
         />
       </div>
@@ -484,25 +436,28 @@ export default function DessertTasks({ state, node, scenario, send }) {
     return (
       <section
         className="px-dessert-lab"
-        aria-label={`Assessment question ${node.question + 1}`}
+        aria-label={`Assessment question ${node.position + 1}`}
+        data-question-id={q.id}
       >
         <small>
-          Question {node.question + 1} / 5 · Feedback follows submission
+          Question {node.position + 1} / 5 · Feedback follows submission
         </small>
         <h2>{q.question}</h2>
         <fieldset className="px-dessert-quiz-options">
           <legend>Choose your answer</legend>
-          {q.options.map((o) => (
-            <label key={o.id}>
-              <input
-                type="radio"
-                name={q.id}
-                checked={state.answers[q.id] === o.id}
-                onChange={() => send({ type: "answer", answer: o.id })}
-              />
-              <span>{o.text}</span>
-            </label>
-          ))}
+          {(state.quizOrder?.options?.[q.id] || q.options.map((_, i) => i))
+            .map((index) => q.options[index])
+            .map((o) => (
+              <label key={o.id}>
+                <input
+                  type="radio"
+                  name={q.id}
+                  checked={state.answers[q.id] === o.id}
+                  onChange={() => send({ type: "answer", answer: o.id })}
+                />
+                <span>{o.text}</span>
+              </label>
+            ))}
         </fieldset>
         <button
           className="px-dessert-primary"
@@ -525,20 +480,57 @@ export default function DessertTasks({ state, node, scenario, send }) {
           At least four correct answers (80%) earn the achievement. Explanations
           appear after submission.
         </p>
-        {scenario.exitTicket.mcqs.map((q, i) => (
-          <div className="px-dessert-answer" key={q.id}>
-            <b>
-              {i + 1}. {q.question}
-            </b>
-            <p>
-              {q.options.find((o) => o.id === state.answers[q.id])?.text ||
-                "No response recorded"}
-            </p>
-            <button onClick={() => send({ type: "editAnswer", index: i })}>
-              Edit answer {i + 1}
-            </button>
-          </div>
-        ))}
+        {(state.quizOrder?.questions || [0, 1, 2, 3, 4])
+          .map((index) => scenario.exitTicket.mcqs[index])
+          .map((q, i) => (
+            <div className="px-dessert-answer" key={q.id}>
+              <b>
+                {i + 1}. {q.question}
+              </b>
+              <p>
+                {q.options.find((o) => o.id === state.answers[q.id])?.text ||
+                  "No response recorded"}
+              </p>
+              <button onClick={() => send({ type: "editAnswer", index: i })}>
+                Edit answer {i + 1}
+              </button>
+            </div>
+          ))}
+        <details
+          className="px-dessert-enrichment"
+          open={mode === "high-achievers"}
+        >
+          <summary>Advanced enrichment · Optional · 10 bonus points</summary>
+          <p>{DESSERT_ENRICHMENT.question}</p>
+          <fieldset className="px-dessert-quiz-options">
+            <legend>Choose an enrichment answer (optional)</legend>
+            {(state.quizOrder?.options?.enrichment || [0, 1, 2, 3])
+              .map((index) => DESSERT_ENRICHMENT.options[index])
+              .map((o) => (
+                <label key={o.id}>
+                  <input
+                    type="radio"
+                    name="dessert-enrichment"
+                    checked={state.enrichment?.answer === o.id}
+                    onChange={() =>
+                      send({ type: "enrichmentAnswer", answer: o.id })
+                    }
+                  />
+                  <span>{o.text}</span>
+                </label>
+              ))}
+          </fieldset>
+          <p>
+            Correct answer: 10 mission bonus points. This is separate from your
+            five-question percentage and cumulative Total Points. Feedback
+            appears after submission.
+          </p>
+          <button
+            onClick={() => send({ type: "enrichmentAnswer", answer: null })}
+          >
+            Skip enrichment
+          </button>
+        </details>
         <button
           className="px-dessert-primary"
           disabled={!scenario.exitTicket.mcqs.every((q) => state.answers[q.id])}

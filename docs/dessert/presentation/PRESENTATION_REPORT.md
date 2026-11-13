@@ -1,5 +1,7 @@
 # The Final Dessert — presentation refinement
 
+Historical presentation delivery. The subsequent [interactive investigation revision](../investigation/INVESTIGATION_REPORT.md) supersedes the bottom-mask treatment, laboratory panels, assessment order and enrichment behavior described here.
+
 Review delivery, 13 November 2026. Existing scenario `ionic_dessert_mystery`, branch `feature/dessert-cinematic-rebuild`, PR #24. This is a preview release; production is unchanged.
 
 ## Visible changes

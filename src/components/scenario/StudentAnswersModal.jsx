@@ -158,6 +158,7 @@ export default function StudentAnswersModal({
               <section className="xp-captured">
                 <h3>Final assessment</h3>
                 <p>Recorded result: {row.score ?? a.exitTicket.score}%</p>
+                {s.id === "ionic_dessert_mystery" && a.exitTicket.enrichment?.attempted && <p>Advanced enrichment: {a.exitTicket.enrichment.correct ? "Correct" : "Needs review"} · {a.exitTicket.enrichment.bonusPoints} / 10 mission bonus points. Separate from the assessment percentage and cumulative Total Points.</p>}
                 {(a.exitTicket.mcq_answers || []).map((answer, i) => (
                   <p key={i}>
                     Question {Number(answer.questionId ?? i) + 1}:{" "}

@@ -6,6 +6,7 @@ import {
   DESSERT_SPEAKERS,
 } from "@/data/dessertFlow.mjs";
 import { useSceneReview } from "../playback/ScenarioReview";
+import { DESSERT_ENRICHMENT } from "@/data/dessertAssessment.mjs";
 import { getBadgeLevel } from "../scenarioHelpers";
 import "./dessert.css";
 
@@ -118,6 +119,29 @@ export default function DessertResultReview({
             </div>
           )}
         </div>
+        {state.result.enrichment?.attempted && (
+          <div
+            className="px-dessert-bonus"
+            data-bonus-points={
+              confirmed ? state.result.enrichment.bonusPoints : undefined
+            }
+          >
+            <b>
+              {completion.isTeacher ? "Enrichment preview" : "Enrichment bonus"}
+              :{" "}
+              {confirmed
+                ? `${state.result.enrichment.bonusPoints} / 10 mission bonus points`
+                : completion.isTeacher
+                  ? `${state.result.enrichment.bonusPoints} / 10 potential points`
+                  : "Pending save"}
+            </b>
+            <p>
+              Recorded separately for this mission; the five-question
+              percentage, badge threshold and cumulative Total Points are
+              unchanged.
+            </p>
+          </div>
+        )}
         <p>
           {passed
             ? "Your scientific assessment is complete."
@@ -204,7 +228,8 @@ export default function DessertResultReview({
           </button>
         </header>
         <p>This review is optional. No recordings play automatically.</p>
-        {scenario.exitTicket.mcqs.map((q, i) => {
+        {(state.quizOrder?.questions || [0, 1, 2, 3, 4]).map((index, i) => {
+          const q = scenario.exitTicket.mcqs[index];
           const correct = q.options.some(
             (o) => o.id === state.answers[q.id] && o.correct,
           );
@@ -223,7 +248,7 @@ export default function DessertResultReview({
                 onClick={() =>
                   playRows(
                     [
-                      `CH05_Q0${i + 1}_${correct ? "CORRECT" : "INCORRECT"}_HAMAD`,
+                      `CH05_Q0${index + 1}_${correct ? "CORRECT" : "INCORRECT"}_HAMAD`,
                     ],
                     `Question ${i + 1} explanation`,
                   )
@@ -234,6 +259,21 @@ export default function DessertResultReview({
             </section>
           );
         })}
+        {state.result.enrichment?.attempted && (
+          <section>
+            <h3>Advanced enrichment</h3>
+            <p>{DESSERT_ENRICHMENT.question}</p>
+            <p>
+              Your response:{" "}
+              {
+                DESSERT_ENRICHMENT.options.find(
+                  (o) => o.id === state.result.enrichment.answer,
+                )?.text
+              }
+            </p>
+            <p>{DESSERT_ENRICHMENT.explanation}</p>
+          </section>
+        )}
       </dialog>
     </section>
   );

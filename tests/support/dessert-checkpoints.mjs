@@ -19,7 +19,7 @@ export function dessertReady(s) {
   throw new Error("Narrative did not reach checkpoint");
 }
 export function dessertCheckpoint(target = "first", choice = "A") {
-  let s = dessertReady(createDessertState());
+  let s = dessertReady(createDessertState({ shuffle: false, seed: 0 }));
   if (target === "first") return s;
   s = dessertReady(dessertAct(s, "firstChoice", { choice: "controlled" }));
   if (target === "calibrate") return s;

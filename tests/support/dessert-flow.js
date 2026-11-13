@@ -238,8 +238,14 @@ export async function dessertReflection(page) {
     .click();
 }
 export async function dessertAnswers(page, wrong = 0) {
-  for (const [i, q] of dessertScenario.exitTicket.mcqs.entries()) {
+  for (let i = 0; i < dessertScenario.exitTicket.mcqs.length; i++) {
     await dessertReach(page, `question${i + 1}`);
+    const id = await dessertRoot(page)
+      .locator("[data-question-id]")
+      .getAttribute("data-question-id");
+    const q = dessertScenario.exitTicket.mcqs.find(
+      (question) => question.id === id,
+    );
     const answer = q.options.find((o) => (i < wrong ? !o.correct : o.correct));
     await dessertRoot(page)
       .getByRole("radio", { name: answer.text, exact: true })
@@ -260,4 +266,19 @@ export async function dessertFinish(page) {
     await dessertBeat(page);
   }
   await expect(page.locator(".px-dessert-results")).toBeVisible();
+}
+
+export async function dessertApplyTool(page) {
+  const tool = dessertRoot(page).locator(".px-dessert-held-tool");
+  await tool.scrollIntoViewIfNeeded();
+  const t = await tool.boundingBox();
+  const c = await dessertRoot(page)
+    .locator(".px-dessert-tool-canvas")
+    .boundingBox();
+  await page.mouse.move(t.x + t.width / 2, t.y + t.height / 3);
+  await page.mouse.down();
+  await page.mouse.move(c.x + c.width * 0.715, c.y + c.height * 0.32, {
+    steps: 12,
+  });
+  await page.mouse.up();
 }

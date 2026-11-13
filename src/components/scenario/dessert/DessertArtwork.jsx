@@ -30,7 +30,7 @@ export default function DessertArtwork({
   const ready = shown?.url === image.url;
   return (
     <div
-      className={`px-dessert-art ${[3, 4].includes(scene) ? "has-label-mask" : ""}`}
+      className="px-dessert-art"
       data-art-ready={ready ? "true" : "false"}
       data-art-scene={scene}
     >
@@ -70,9 +70,6 @@ export default function DessertArtwork({
         </>
       )}
       {children}
-      {[3, 4].includes(scene) && (
-        <div className="px-dessert-label-focus" aria-hidden="true" />
-      )}
     </div>
   );
 }

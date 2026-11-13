@@ -154,7 +154,7 @@ export default function DessertMission({
         kind: "dessert",
         waitForArtwork: true,
         art: node.scene === 15 ? null : image.url,
-        maskForeground: [3, 4].includes(node.scene),
+        maskForeground: false,
         visual:
           node.scene === 15
             ? {
@@ -257,7 +257,7 @@ export default function DessertMission({
         kind: "dessert",
         waitForArtwork: true,
         art: node.scene === 15 ? null : image.url,
-        maskForeground: [3, 4].includes(node.scene),
+        maskForeground: false,
         visual:
           node.scene === 15
             ? {
@@ -307,9 +307,7 @@ export default function DessertMission({
                         : DESSERT_MEDIA.images[
                             DESSERT_NODES[v.node]?.art || node.art
                           ].url,
-                    maskForeground: [3, 4].includes(
-                      DESSERT_NODES[v.node]?.scene,
-                    ),
+                    maskForeground: false,
                     visual:
                       DESSERT_NODES[v.node]?.scene === 15
                         ? {
@@ -455,6 +453,7 @@ export default function DessertMission({
           <div
             className={`px-dessert-stage ${taskVisible ? "has-task" : ""} ${node.scene === 15 ? "has-scientific-overlay" : ""}`}
             data-scene={node.scene}
+            data-task={taskVisible ? node.task : undefined}
             data-video-id={movie?.id || ""}
           >
             <DessertArtwork
@@ -527,10 +526,57 @@ export default function DessertMission({
                   A recipe. Three unidentified powders. One professional
                   decision that science alone cannot make for you.
                 </p>
-                <p>
-                  The competition deadline is fictional. Your investigations are
-                  untimed.
-                </p>
+                <div className="px-dessert-briefing">
+                  <section>
+                    <h4>Main problem</h4>
+                    <p>
+                      Three white powders have lost their labels. Identify
+                      sugar, sodium chloride and sodium hydrogen carbonate using
+                      independent evidence, then decide how the fictional
+                      competition can continue safely.
+                    </p>
+                  </section>
+                  <section>
+                    <h4>Learning objectives</h4>
+                    <ul>
+                      <li>
+                        Explain valence electrons, cations, anions and ionic
+                        bonding.
+                      </li>
+                      <li>
+                        Use conductivity, pH and virtual reaction evidence to
+                        compare substances.
+                      </li>
+                      <li>
+                        Distinguish chemical identity from verified food
+                        suitability.
+                      </li>
+                    </ul>
+                  </section>
+                  <section>
+                    <h4>Success criteria</h4>
+                    <ul>
+                      <li>
+                        Calibrate the probe, record all nine observations and
+                        transfer a valence electron.
+                      </li>
+                      <li>
+                        Identify all three powders and justify a decision with
+                        two evidence citations.
+                      </li>
+                      <li>
+                        Reflect on the outcome and score at least 80% on the
+                        five-question assessment.
+                      </li>
+                    </ul>
+                  </section>
+                  <p className="px-dessert-duration">
+                    <b>Allow approximately 20–30 minutes</b> including
+                    investigations. The story contains about 9 minutes of
+                    recorded narration. The fictional competition has 12 minutes
+                    remaining; your work is untimed.
+                  </p>
+                </div>
                 <button
                   className="px-dessert-primary"
                   onClick={() => voice.start()}
@@ -552,6 +598,8 @@ export default function DessertMission({
                     state={state}
                     node={node}
                     scenario={scenario}
+                    disabled={!canAct}
+                    mode={mode}
                     send={send}
                   />
                 </fieldset>

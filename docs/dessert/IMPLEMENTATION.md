@@ -2,7 +2,9 @@
 
 Review delivery, 12 November 2026. Existing scenario: `ionic_dessert_mystery`.
 
-The latest [presentation refinement](presentation/PRESENTATION_REPORT.md) adds viewport-fitted fullscreen, bright artwork, synchronized decoded-frame transitions and immediate concise results. Assessment explanations and completion messages now play only on explicit review. The representative default route is 69 recordings / 8:33.149 of speech; all 100 approved recordings remain available across narrative paths and optional reviews.
+The latest [interactive investigation revision](investigation/INVESTIGATION_REPORT.md) removes the bottom blur masks, introduces compact hands-on instrument panels, adds an educational briefing, randomizes the five questions/options per attempt and records the optional 10-point enrichment separately.
+
+The previous [presentation refinement](presentation/PRESENTATION_REPORT.md) adds viewport-fitted fullscreen, bright artwork, synchronized decoded-frame transitions and immediate concise results. Assessment explanations and completion messages now play only on explicit review. The representative default route is 69 recordings / 8:33.149 of speech; all 100 approved recordings remain available across narrative paths and optional reviews.
 
 The current editorial edition retains exactly 100 approved recordings and excludes 117 from playback. See [the editorial report](editorial/EDITORIAL_REPORT.md) for the approved cuts, migration, runtime comparison and validation. All 217 source recordings remain intact.
 
@@ -43,8 +45,8 @@ Pause/resume, notebook interruption, hidden-tab suspension, mute, replay, playba
 
 ## Asset and narration limitations
 
-1. **Supplied IMAGE_03 and V02 contain a FLOUR label**, inconsistent with the required sucrose/bicarbonate/sodium-chloride set. Their label-bearing lower foreground is softly masked in live presentation and scene review. Source pixels remain unchanged. This is a presentation treatment, not a corrected production master; a corrected supplied original would remove the need for masking.
-2. **IMAGE_15 contains misleading decorative shell counts.** Its background is blurred and the existing accurate Na/Cl interactive formation model covers the diagram throughout the scene. Previous-scene review renders an accurate read-only model instead of that image.
+1. **Supplied IMAGE_03 and V02 contain a FLOUR label**, inconsistent with the required sucrose/bicarbonate/sodium-chloride set. The owner subsequently requested removal of all lower blur masks, so these labels are now visible as supplied. They are not used as evidence or to grade the coded samples. Source pixels remain unchanged.
+2. **IMAGE_15 contains misleading decorative shell counts.** The latest revision replaces its backdrop with the clean IMAGE_11 laboratory and presents one accurate, draggable Na/Cl model. Previous-scene review renders an accurate read-only model instead of that image.
 3. **Some supplied quiz question recordings paraphrase the retained approved question text.** Dialogue captions accurately follow the author scripts; assessment cards retain the original question/options, correct answer and scientific explanation. No assessment content was silently rewritten to match a voiceover.
 4. All 217 caption files match the supplied text inventory. A local ASR cross-check was also performed, including an independent tail check where an initial transcription omitted a closing phrase. This is not a claim of human word-by-word listening or manually timed word-level captions. Captions synchronize at recording level.
 5. Live Supabase account/RLS QA remains unverified. Browser checks use authorized synthetic fixtures and do not write to student accounts.

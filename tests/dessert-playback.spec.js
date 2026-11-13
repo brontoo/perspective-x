@@ -239,7 +239,7 @@ test("missing artwork and audio retain a usable readable fallback with no unrela
   );
 });
 
-test("label masking follows the supplied falling-label checkpoint and is also retained in read-only review", async ({
+test("story artwork and read-only review remain clear without a bottom blur mask", async ({
   page,
 }) => {
   const state = createDessertState();
@@ -248,7 +248,8 @@ test("label masking follows the supplied falling-label checkpoint and is also re
   await dessertSetup(page, { seedRows: [dessertDraft(state, ID)] });
   await page.goto(DESSERT_TARGET);
   await dessertStart(page);
-  await expect(root(page).locator(".px-dessert-label-focus")).toBeVisible();
+  await expect(root(page).locator(".px-dessert-label-focus")).toHaveCount(0);
+  await expect(root(page).locator(".px-dessert-art")).toHaveCSS("filter", "none");
   await root(page).screenshot({
     path: "docs/dessert/screenshots/three-powders-label-treatment.png",
   });
@@ -267,7 +268,7 @@ test("label masking follows the supplied falling-label checkpoint and is also re
   });
   await expect(
     dialog.locator(".px-scene-review-foreground-mask"),
-  ).toBeVisible();
+  ).toHaveCount(0);
 });
 
 test("student preview query cannot bypass a teacher lock and old assessed attempts remain read-only", async ({

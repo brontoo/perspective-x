@@ -5,6 +5,7 @@ import {
   dessertStart,
   dessertRoot as root,
   dessertDecide,
+  dessertApplyTool,
   DESSERT_TARGET,
 } from "./support/dessert-flow";
 import { dessertScenario } from "./support/dessert-checkpoints.mjs";
@@ -87,17 +88,7 @@ test("complete shortened successful route plays native recordings at 1x and meas
         await root(page)
           .getByRole("button", { name: /Use controlled scientific/ })
           .click();
-      else if (node === "n12")
-        await root(page)
-          .getByRole("button", {
-            name: "Calibrate with water-only control",
-            exact: true,
-          })
-          .click();
-      else if (node === "n13")
-        await root(page)
-          .getByRole("button", { name: "Measure conductivity", exact: true })
-          .click();
+      else if (node === "n12" || node === "n13") await dessertApplyTool(page);
       else if (["n14", "n17", "n18"].includes(node)) {
         const wanted = node === "n14" ? ["B", "C"] : ["A", "B", "C"];
         const sample = wanted.find((x) => !samples[node].includes(x));
@@ -164,7 +155,12 @@ test("complete shortened successful route plays native recordings at 1x and meas
           .getByRole("button", { name: "Save reflection", exact: true })
           .click();
       } else if (node.startsWith("question")) {
-        const q = dessertScenario.exitTicket.mcqs[Number(node.slice(8)) - 1];
+        const id = await root(page)
+          .locator("[data-question-id]")
+          .getAttribute("data-question-id");
+        const q = dessertScenario.exitTicket.mcqs.find(
+          (question) => question.id === id,
+        );
         await root(page)
           .getByRole("radio", {
             name: q.options.find((x) => x.correct).text,
@@ -223,7 +219,7 @@ test("complete shortened successful route plays native recordings at 1x and meas
     videoMode: "Original muted MP4s, played concurrently at 1x",
     mandatoryFixedTransitionSeconds: 0,
     studentInteraction:
-      "Required activities were operated by the browser test, not auto-completed by narration; elapsed time includes that automation and local buffering, not realistic student thinking time.",
+      "Calibration and first sample were operated by pointer drag; remaining activities used the accessible controls, not auto-completion by narration; elapsed time includes that automation and local buffering, not realistic student thinking time.",
     completedAudioCount: ended.length,
     clipIds: records,
     videoEndEvents: movies,
@@ -231,13 +227,13 @@ test("complete shortened successful route plays native recordings at 1x and meas
     assessedRows: result.length,
     events,
   };
-  fs.mkdirSync("docs/dessert/presentation", { recursive: true });
+  fs.mkdirSync("docs/dessert/investigation", { recursive: true });
   fs.writeFileSync(
-    "docs/dessert/presentation/native-walkthrough.json",
+    "docs/dessert/investigation/native-walkthrough.json",
     JSON.stringify(report, null, 2) + "\n",
   );
   await page.locator(".px-dessert-completed-review").screenshot({
-    path: "docs/dessert/presentation/screenshots/native-completion.png",
+    path: "docs/dessert/investigation/screenshots/native-completion.png",
   });
   console.log(
     "Native successful route completed in",

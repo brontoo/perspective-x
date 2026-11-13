@@ -19,6 +19,7 @@ def write(path, data):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--presentation', action='store_true', help='Write the concise-results runtime audit separately from the historical editorial audit.')
+    parser.add_argument('--investigation', action='store_true', help='Write the interactive investigation revision audit separately.')
     args = parser.parse_args()
     approved = json.loads((ROOT / 'src/data/dessertEditorial.json').read_text())
     media = json.loads((ROOT / 'src/data/dessertMedia.json').read_text())
@@ -67,6 +68,9 @@ console.log(JSON.stringify({routes,audioRoutes:dessertAudioRoutes(),nodes:Object
     if args.presentation:
         report['presentation'] = 'Direct results; graded explanations and completion messages are optional explicit review only.'
     destination = 'docs/dessert/presentation/runtime-audit.json' if args.presentation else 'docs/dessert/editorial/editorial-audit.json'
+    if args.investigation:
+        destination = 'docs/dessert/investigation/runtime-audit.json'
+        report['investigation'] = 'Randomized question/option order per attempt; optional separately graded 10-point enrichment; clean lab art for scene 15.'
     write(ROOT / destination, report)
     write(ROOT / 'docs/dessert/audio-routes.json', {i: {'speaker': media['recordings'][i]['speaker'], 'caption': media['recordings'][i]['text'], 'audio': media['recordings'][i]['audio'], 'routes': r} for i, r in sorted(result['audioRoutes'].items())})
     write(ROOT / 'docs/dessert/scene-map.json', result['nodes'])

@@ -1,5 +1,11 @@
 import media from "./dessertMedia.json" with { type: "json" };
 import { POWDER_READINGS, electronPair, gradeIonic } from "./ionicScience.mjs";
+import {
+  createDessertOrder,
+  restoreDessertOrder,
+  gradeDessertEnrichment,
+  DESSERT_ENRICHMENT,
+} from "./dessertAssessment.mjs";
 import legacyBeats from "./dessertLegacyBeats.json" with { type: "json" };
 import {
   activeDessertLines,
@@ -127,6 +133,7 @@ export const DESSERT_NODES = {
     take("02", "15", 1, 3),
     "n16",
     "electron",
+    { art: "IMAGE_11" },
   ),
   n16: node(16, 2, "One test is not enough", story("02", "16"), "n17"),
   n17: node(
@@ -263,7 +270,17 @@ export const DESSERT_OUTCOMES = {
   D: "appearance",
 };
 export const dessertLine = (id) => media.recordings[id];
-export const dessertStep = (s) => DESSERT_NODES[s.node];
+export function dessertStep(s) {
+  const step = DESSERT_NODES[s.node];
+  if (step?.task !== "question") return step;
+  const question = s.quizOrder?.questions?.[step.question] ?? step.question;
+  return {
+    ...step,
+    question,
+    position: step.question,
+    lines: [`CH05_Q0${question + 1}_QUESTION_NARRATOR`],
+  };
+}
 export function dessertActiveLine(s) {
   const id = s.feedback
     ? s.feedback.ids[s.feedback.cursor]
@@ -282,11 +299,11 @@ export function dessertNextLine(s) {
       ? dessertStep(s).next
       : null;
   return target && target !== "ready"
-    ? dessertLine(DESSERT_NODES[target]?.lines[0])
+    ? dessertLine(dessertStep({ ...s, node: target })?.lines[0])
     : undefined;
 }
 const clone = (value) => JSON.parse(JSON.stringify(value));
-export function createDessertState() {
+export function createDessertState(orderOptions) {
   return {
     version: 4,
     node: "n01",
@@ -316,6 +333,8 @@ export function createDessertState() {
     decision: null,
     reflection: "",
     answers: {},
+    quizOrder: createDessertOrder(orderOptions),
+    enrichment: { answer: null },
     result: null,
     answerIndex: 0,
     completed: false,
@@ -332,6 +351,8 @@ export function restoreDessertState(responses = {}) {
     const restored = {
       ...initial,
       ...clone(saved),
+      quizOrder: restoreDessertOrder(saved.quizOrder),
+      enrichment: { answer: null, ...clone(saved.enrichment || {}) },
       investigation: {
         ...initial.investigation,
         ...clone(saved.investigation || {}),
@@ -343,6 +364,8 @@ export function restoreDessertState(responses = {}) {
     };
     return normalizeEditorialState(restored, saved.version);
   }
+  if (Object.keys(responses).length)
+    initial.quizOrder = restoreDessertOrder(null);
   // Preserve genuine old observations, selections and assessed records. Never invent readings.
   const inv = clone(responses.investigation || {});
   initial.investigation = {
@@ -786,6 +809,12 @@ export function dessertAction(s, event, scenario) {
     s.reflection.trim().length >= 40
   )
     return queue(s, [sys("REFLECTION_SAVED")], "quiz-intro");
+  if (event.type === "enrichmentAnswer" && task === "assessment" && !s.result) {
+    return event.answer === null ||
+      DESSERT_ENRICHMENT.options.some((o) => o.id === event.answer)
+      ? { ...s, enrichment: { answer: event.answer } }
+      : s;
+  }
   if (event.type === "answer" && task === "question" && !s.result) {
     const q = scenario.exitTicket.mcqs[step.question];
     return q.options.some((o) => o.id === event.answer)
@@ -816,7 +845,10 @@ export function dessertAction(s, event, scenario) {
     s.reflection.trim().length >= 40
   ) {
     if (!scenario.exitTicket.mcqs.every((q) => s.answers[q.id])) return s;
-    const result = gradeIonic(scenario.exitTicket.mcqs, s.answers);
+    const result = {
+      ...gradeIonic(scenario.exitTicket.mcqs, s.answers),
+      enrichment: gradeDessertEnrichment(s.enrichment?.answer),
+    };
     return {
       ...enter(s, "done"),
       result,
@@ -962,7 +994,7 @@ export function dessertTrailFromVisited(s) {
       kind: "dessert",
       waitForArtwork: true,
       art: n.scene === 15 ? null : media.images[n.art].url,
-      maskForeground: [3, 4].includes(n.scene),
+      maskForeground: false,
       visual:
         n.scene === 15
           ? { ionicFormation: { transferred: /SC15_00[4-9]_/.test(item.id) } }
