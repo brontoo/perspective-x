@@ -1,0 +1,1973 @@
+{
+  "edition": "shortened-2026-11-12",
+  "keep": 100,
+  "cut": 117,
+  "originalRecordings": 217,
+  "captionMismatches": [],
+  "extraRetainedClips": [],
+  "sourceMediaChanged": false,
+  "scene21Active": false,
+  "inventory": [
+    {
+      "id": "CH01_SC01_001_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC01_001_NARRATOR.mp3",
+      "sha256": "cb2b7e0dae936e170f18b23777a420eecaf6336ec6fd26207dd33a7879608ef9",
+      "duration": 18.834286
+    },
+    {
+      "id": "CH01_SC01_002_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC01_002_NARRATOR.mp3",
+      "sha256": "f58f9d78f687fec08452bc23da75f6064458b430b5215df4177bd866071c693b",
+      "duration": 17.632653
+    },
+    {
+      "id": "CH01_SC02_001_MARIAM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH01_SC02_001_MARIAM.mp3",
+      "sha256": "b06da46dc2fad4908f3f351d81fef2307e7ac29b6a4479ea4a2fb03ecad3ecbe",
+      "duration": 5.642449
+    },
+    {
+      "id": "CH01_SC02_002_SAEED",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC02_002_SAEED.mp3",
+      "sha256": "f76e8dcf6ebeb8447245eeccf9d2f59d762c8138eb14d1527a1146cf16123489",
+      "duration": 3.317551
+    },
+    {
+      "id": "CH01_SC02_003_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC02_003_NARRATOR.mp3",
+      "sha256": "560862b9edb56d20e5cc6e560972a0b44347b0db6505aa0291106ef7601166b3",
+      "duration": 16.43102
+    },
+    {
+      "id": "CH01_SC03_001_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC03_001_NARRATOR.mp3",
+      "sha256": "8e1ea043e514b922f76bd80f22e587835f97e41c52577d2ae377568eba592b06",
+      "duration": 11.964082
+    },
+    {
+      "id": "CH01_SC03_002_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC03_002_NARRATOR.mp3",
+      "sha256": "17927d59a12f756b781e8a1f29acbd92f66691add83f7e5bdbab1cbf1aec6fa6",
+      "duration": 17.475918
+    },
+    {
+      "id": "CH01_SC04_001_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC04_001_NARRATOR.mp3",
+      "sha256": "6de0ff99c565abe63e6529dcd46702f1c1d789a73dfa08a048c42da8b77f2a03",
+      "duration": 4.832653
+    },
+    {
+      "id": "CH01_SC04_002_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC04_002_NARRATOR.mp3",
+      "sha256": "b849e0339ebaec6c1a2cb19e37adf188096451e896df3a363781e669ead7d8ff",
+      "duration": 3.709388
+    },
+    {
+      "id": "CH01_SC04_003_SAEED",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC04_003_SAEED.mp3",
+      "sha256": "d3630166009f70a01133e222110aec41500f83784d57385fecd29ad02c5cc0b4",
+      "duration": 1.724082
+    },
+    {
+      "id": "CH01_SC04_004_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC04_004_NARRATOR.mp3",
+      "sha256": "a458df5d2b2712c0db36a6cf1882c3d12b3fbda77ea46f086d2eab0aebc7b859",
+      "duration": 6.922449
+    },
+    {
+      "id": "CH01_SC04_005_SAEED",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC04_005_SAEED.mp3",
+      "sha256": "bab89d54fde95f202fc88122d21ea142976e1e3b4fb8a0ab5258c0b865e3a42f",
+      "duration": 2.429388
+    },
+    {
+      "id": "CH01_SC05_001_SAEED",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC05_001_SAEED.mp3",
+      "sha256": "72ba8c8569bd065e19b514dc789de7dd0cc6d19dee3da3bcc38919b9089a3c54",
+      "duration": 10.109388
+    },
+    {
+      "id": "CH01_SC05_002_MARIAM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH01_SC05_002_MARIAM.mp3",
+      "sha256": "f654ab767b976bec5e594b7e1937655e1f5021b2e1bdf3d923a4c9eed05c189c",
+      "duration": 4.440816
+    },
+    {
+      "id": "CH01_SC05_003_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC05_003_NARRATOR.mp3",
+      "sha256": "b0897704db6ec670a9be25d50bfe651ae1456ca6e37dbc2f435ea29a1eb77bc6",
+      "duration": 15.490612
+    },
+    {
+      "id": "CH01_SC05_004_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC05_004_NARRATOR.mp3",
+      "sha256": "ad495b2073df18b5e6a10d4e829b25ebd419d5f0d7cd19916ffe045416cf1190",
+      "duration": 5.32898
+    },
+    {
+      "id": "CH01_SC06_001_FATIMA",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH01_SC06_001_FATIMA.mp3",
+      "sha256": "b461ee42fd43cba482f39bd183a1d1000a034f0f1de8ba77645e196e24c3bad4",
+      "duration": 5.642449
+    },
+    {
+      "id": "CH01_SC06_002_SAEED",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC06_002_SAEED.mp3",
+      "sha256": "b5423e73a4883330bc0873de8f6cb205ca3c0cd2613d71ed34e937bbaea12adc",
+      "duration": 2.507755
+    },
+    {
+      "id": "CH01_SC06_003_FATIMA",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH01_SC06_003_FATIMA.mp3",
+      "sha256": "1a3416159360598acc5b3a3f998e463dca2b54a8b9c5783e37c5621856aaf4c0",
+      "duration": 10.840816
+    },
+    {
+      "id": "CH01_SC06_004_MARIAM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH01_SC06_004_MARIAM.mp3",
+      "sha256": "3ff3183945e198690c0bcb3e9a825315e3e15469aa7dd6fd5db33c2d20d07bc9",
+      "duration": 2.847347
+    },
+    {
+      "id": "CH01_SC06_005_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC06_005_NARRATOR.mp3",
+      "sha256": "f9d8b08e33b1202da99a73440bf519252c7cac47441cba14a15bea37b32432e5",
+      "duration": 12.355918
+    },
+    {
+      "id": "CH01_SC07_001_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC07_001_NARRATOR.mp3",
+      "sha256": "e13bd9af36f0d92abc878a366b26ea63c44dd12b41f81fea65265dede763553d",
+      "duration": 8.515918
+    },
+    {
+      "id": "CH01_SC07_002_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH01_SC07_002_HAMAD.mp3",
+      "sha256": "9631e5ce1e431e0f5e47b4d63f275e6419d0bbfbee997ffa4eb4dd3013f00a22",
+      "duration": 7.314286
+    },
+    {
+      "id": "CH01_SC07_003_FATIMA",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH01_SC07_003_FATIMA.mp3",
+      "sha256": "7a2d43cf0cd1fd6b5e04275f999a3d4d2c5263c748f59ee5d9f2b67ae24049c8",
+      "duration": 3.239184
+    },
+    {
+      "id": "CH01_SC07_004_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH01_SC07_004_HAMAD.mp3",
+      "sha256": "f59cb8ed12448887f798b0d784bbe1335a7328ab008e72bb087323d7ce941918",
+      "duration": 7.392653
+    },
+    {
+      "id": "CH01_SC07_005_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH01_SC07_005_HAMAD.mp3",
+      "sha256": "ffb6ae460637646e463a10b4850a49a5d7c9ab53b559072bb41ffdd8c18e98bd",
+      "duration": 14.210612
+    },
+    {
+      "id": "CH01_SC07_006_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH01_SC07_006_HAMAD.mp3",
+      "sha256": "64ea17ca279e723348dc9345c144bde421c63948ed4c7183aa10a91685d657c4",
+      "duration": 6.426122
+    },
+    {
+      "id": "CH01_SC07_007_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC07_007_NARRATOR.mp3",
+      "sha256": "d38d76cc7f8884db839c2d6cd5aa519bc1554d851b8a7f3a7b08c691274e0edf",
+      "duration": 2.115918
+    },
+    {
+      "id": "CH02_DEC01_001_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_001_HAMAD.mp3",
+      "sha256": "3bad04b802d70d1d424b70abf80729f8c39a7560b93229bb8b495dba611d49a1",
+      "duration": 10.919184
+    },
+    {
+      "id": "CH02_DEC01_002_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_DEC01_002_NARRATOR.mp3",
+      "sha256": "ae117cbf882bc1f2f3b2706c1ed7d792d40b31f146f9724a50ae7a7aa75e054b",
+      "duration": 7.314286
+    },
+    {
+      "id": "CH02_DEC01_CORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_CORRECT_HAMAD.mp3",
+      "sha256": "fb5f15d1dd9cfba1d2c526fa2e68851228cf51bc5eb8dd1779ac570a08056d15",
+      "duration": 10.997551
+    },
+    {
+      "id": "CH02_DEC01_APPEARANCE_1_MARIAM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_DEC01_APPEARANCE_1_MARIAM.mp3",
+      "sha256": "412b2225b366bd03dd1928aa6e57151e76916cd2ef20635ef37a37a4b8547abf",
+      "duration": 7.079184
+    },
+    {
+      "id": "CH02_DEC01_APPEARANCE_2_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_APPEARANCE_2_HAMAD.mp3",
+      "sha256": "e23062f5140c506bcc50548c0a2068a2d9a633596f66824ba5c5e3fc04c57346",
+      "duration": 7.706122
+    },
+    {
+      "id": "CH02_DEC01_TASTE_1_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_TASTE_1_HAMAD.mp3",
+      "sha256": "9b3cca8a05e505fc060265e617c3ff7adb3244d6575f416f71471ce442aa3aa8",
+      "duration": 10.370612
+    },
+    {
+      "id": "CH02_DEC01_TASTE_2_FATIMA",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH02_DEC01_TASTE_2_FATIMA.mp3",
+      "sha256": "daa2c3ea965d2b4c80e0d5c5153c0796d593c61d954dc7ecc0be63bd2ffec1fe",
+      "duration": 4.597551
+    },
+    {
+      "id": "CH02_DEC01_MIX_1_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_MIX_1_HAMAD.mp3",
+      "sha256": "9620e7863be2dd4260d36f9fa73a44c05eab5002da5e7f375a515c81efd76d16",
+      "duration": 9.795918
+    },
+    {
+      "id": "CH02_DEC01_MIX_2_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_MIX_2_HAMAD.mp3",
+      "sha256": "696badf1d4aeea09278fbb15bdb3eba8c149f34163bd8f14828f19eba2368b93",
+      "duration": 3.160816
+    },
+    {
+      "id": "CH02_SC08_001_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC08_001_NARRATOR.mp3",
+      "sha256": "1a21e841d6884d9c9a9dbc6e4d165cc58a4187ed1cd86e2f78149e38369e7e85",
+      "duration": 3.709388
+    },
+    {
+      "id": "CH02_SC08_002_MARIAM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC08_002_MARIAM.mp3",
+      "sha256": "d3ad898910f9b067c4f874aca6066e4236be7e0aa7225f1774a09ac77887467e",
+      "duration": 9.404082
+    },
+    {
+      "id": "CH02_SC08_003_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC08_003_HAMAD.mp3",
+      "sha256": "592f9f40fcede461eb692beb690c91fd18dc491480b604342b54b77dd65ee5bf",
+      "duration": 10.997551
+    },
+    {
+      "id": "CH02_SC08_004_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC08_004_NARRATOR.mp3",
+      "sha256": "47634bcc93833ef937e31b7125fa390040dbd146a30b1a023939e31b49d5075c",
+      "duration": 4.127347
+    },
+    {
+      "id": "CH02_SC09_001_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC09_001_NARRATOR.mp3",
+      "sha256": "08a32e75f12e811c8c6ed784e32d4cd1d7d1103257a48cb6855965048470f2ba",
+      "duration": 6.844082
+    },
+    {
+      "id": "CH02_SC09_002_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC09_002_HAMAD.mp3",
+      "sha256": "75e8daf1a53f18fdd4a341b173b74adc721b1503bad28b268c641d36bafb459c",
+      "duration": 8.829388
+    },
+    {
+      "id": "CH02_SC09_003_SAEED",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH02_SC09_003_SAEED.mp3",
+      "sha256": "e72d9cb971c7f1f1193b956bf506252d17c352f9638841489ac7ef65d78d86e6",
+      "duration": 3.395918
+    },
+    {
+      "id": "CH02_SC09_004_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC09_004_HAMAD.mp3",
+      "sha256": "8d425f5823d2467aade6019951dfb103c192a8a213c27cc164b8766731eb9155",
+      "duration": 10.762449
+    },
+    {
+      "id": "CH02_SC09_005_FATIMA",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH02_SC09_005_FATIMA.mp3",
+      "sha256": "9be8f02aeba428aa6e32039642e03b8fc2718b849c10d7e54728e6fb7501d84d",
+      "duration": 3.970612
+    },
+    {
+      "id": "CH02_SC10_001_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC10_001_NARRATOR.mp3",
+      "sha256": "eaf6467be8563ac3b60988eb46a324cf4a5c6875e0d2260b58cd663a8fc4986e",
+      "duration": 6.19102
+    },
+    {
+      "id": "CH02_SC10_002_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC10_002_HAMAD.mp3",
+      "sha256": "4b3be6c58a7701fb01a2fe8dde4fff03cc6f899cedbb52c793ac3e062c701ff3",
+      "duration": 8.359184
+    },
+    {
+      "id": "CH02_SC10_003_MARIAM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC10_003_MARIAM.mp3",
+      "sha256": "97754915dd9232fc1102a65ee303caba70946e1587a62aa0a6de2788d93facc2",
+      "duration": 4.04898
+    },
+    {
+      "id": "CH02_SC10_004_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC10_004_HAMAD.mp3",
+      "sha256": "4f61388e4815fa177286ab81a41f7368ba276e631e0b1fa2b34230fa65a9316a",
+      "duration": 7.314286
+    },
+    {
+      "id": "CH02_SC11_001_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC11_001_NARRATOR.mp3",
+      "sha256": "b96ef9d4fd65d8a988f5b885affb9bc5eb4321a7fd15f177d191fbb71dce599f",
+      "duration": 14.28898
+    },
+    {
+      "id": "CH02_SC11_002_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC11_002_HAMAD.mp3",
+      "sha256": "4b9344cdface73b50f01fc7dd5f97c4147c60486e63cd52fb10a499aa95c45de",
+      "duration": 14.915918
+    },
+    {
+      "id": "CH02_SC11_003_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC11_003_HAMAD.mp3",
+      "sha256": "3a367ca04464bce3add8daa528f53f0bd14942729ea8744ee2354af66573e1a7",
+      "duration": 13.087347
+    },
+    {
+      "id": "CH02_SC11_004_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC11_004_NARRATOR.mp3",
+      "sha256": "0c7673b810599dcb822b1003450b6cd753e546ba52daffc2e6c8dd4b805bb0b9",
+      "duration": 9.090612
+    },
+    {
+      "id": "CH02_SC12_001_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC12_001_HAMAD.mp3",
+      "sha256": "66cdbbe8b79158ecb4eaa2335abf1277ce63e48f8fe900439f967c65e2ea9bf9",
+      "duration": 3.474286
+    },
+    {
+      "id": "CH02_SC12_002_MARIAM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC12_002_MARIAM.mp3",
+      "sha256": "3d8fd7fd0534b05d37f57d4a5beeb20d146938ce8262ef590e4ec7086f4881a5",
+      "duration": 2.429388
+    },
+    {
+      "id": "CH02_SC12_003_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC12_003_HAMAD.mp3",
+      "sha256": "98c0ce6f66f4645aea8e74723468baf70d009b93630493e36d2f086e67046c54",
+      "duration": 6.922449
+    },
+    {
+      "id": "CH02_SC12_004_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC12_004_NARRATOR.mp3",
+      "sha256": "460350e4a28506d955e5b60ef414d73983088bd701eb5b357cdb1590a9a4456e",
+      "duration": 3.317551
+    },
+    {
+      "id": "CH02_SC12_005_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC12_005_SYSTEM.mp3",
+      "sha256": "b7a9412d605ef857b98e8b9ad081f356926a238f24c60e72f39059257c6bc300",
+      "duration": 4.362449
+    },
+    {
+      "id": "CH02_SC12_006_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC12_006_HAMAD.mp3",
+      "sha256": "ba1ea27d42897ae32b9cb06e6b5024e075ecd71788905c44ab6ae7d32c258c45",
+      "duration": 7.157551
+    },
+    {
+      "id": "CH02_SC13_001_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC13_001_HAMAD.mp3",
+      "sha256": "5fda557064cc73188623d9daa2757497018ba698f0776bd3027c48a7851b1fcf",
+      "duration": 3.970612
+    },
+    {
+      "id": "CH02_SC13_002_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC13_002_NARRATOR.mp3",
+      "sha256": "d1163ec4d2616d2d98574ee3145e9bb57ef4c8c9dc6d11c8fe4e2737733c7aad",
+      "duration": 5.407347
+    },
+    {
+      "id": "CH02_SC13_003_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC13_003_SYSTEM.mp3",
+      "sha256": "ee59ddef80b07e6a67177897c22c147f7b49e08a34f9df77616191a85e9b10fd",
+      "duration": 5.067755
+    },
+    {
+      "id": "CH02_SC13_004_MARIAM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC13_004_MARIAM.mp3",
+      "sha256": "31ed4e7536f3d3aeaae9ea8b00d9fc18e20dde5ecc176c87769de6603ce8ac5c",
+      "duration": 2.925714
+    },
+    {
+      "id": "CH02_SC13_005_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC13_005_HAMAD.mp3",
+      "sha256": "64fdcc0ea1a55a49163621522b4cdf1484be1fe7b21554f858d8216996c4044f",
+      "duration": 6.687347
+    },
+    {
+      "id": "CH02_SC13_006_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC13_006_HAMAD.mp3",
+      "sha256": "08a51f4ce242583da463bc5ffdde5bb85b3d43282d6469649af083358259cde7",
+      "duration": 8.202449
+    },
+    {
+      "id": "CH02_SC14_001_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC14_001_NARRATOR.mp3",
+      "sha256": "ba2ec62133054315bfa561e6df6f3d64dbc849c27d3701d42428f1c53c3f0d08",
+      "duration": 3.866122
+    },
+    {
+      "id": "CH02_SC14_002_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC14_002_SYSTEM.mp3",
+      "sha256": "b74b6b6d63102c13bf0c937a6b6556cb2fdfe9d9c13cc86f0fd9f312e516f350",
+      "duration": 6.347755
+    },
+    {
+      "id": "CH02_SC14_003_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC14_003_SYSTEM.mp3",
+      "sha256": "15a37f3f8b6aa30cb32899256a6a13bcb54e6976592712658a1b8a28a323bd81",
+      "duration": 6.844082
+    },
+    {
+      "id": "CH02_SC14_004_SAEED",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH02_SC14_004_SAEED.mp3",
+      "sha256": "a79d0d6c50c3b27941c67d7a98b0e60f28848b6878bb5d88bd8a748ec483b6b6",
+      "duration": 2.925714
+    },
+    {
+      "id": "CH02_SC14_005_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC14_005_HAMAD.mp3",
+      "sha256": "905f45238a25c64450b843ecaa8ebe4ad502a779b79a4470fde300b9b5d75d4e",
+      "duration": 7.47102
+    },
+    {
+      "id": "CH02_SC14_006_MARIAM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC14_006_MARIAM.mp3",
+      "sha256": "b82397d0c086cfed641104a4fd5637018d613edf1aaebd5695a2a08024c0cc4f",
+      "duration": 2.586122
+    },
+    {
+      "id": "CH02_SC14_007_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC14_007_HAMAD.mp3",
+      "sha256": "cca7577659c5a308dca6122e703e399f0e6e291492cb0719960574b1761c9d2c",
+      "duration": 7.706122
+    },
+    {
+      "id": "CH02_SC14_008_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC14_008_NARRATOR.mp3",
+      "sha256": "e0966cfefd086983c253206204f9263cb0c761005839891cade348bb395c8719",
+      "duration": 12.747755
+    },
+    {
+      "id": "CH02_SC15_001_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_001_HAMAD.mp3",
+      "sha256": "29692eb39880cf5bf1ce13f0fb0045c2de95ee65c143ed9261bd71297c9345df",
+      "duration": 4.675918
+    },
+    {
+      "id": "CH02_SC15_002_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC15_002_NARRATOR.mp3",
+      "sha256": "536b53880d49ac40f736d6f1fe9d00130a4ab67f17727980cd859fea44b5efd4",
+      "duration": 2.35102
+    },
+    {
+      "id": "CH02_SC15_003_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_003_HAMAD.mp3",
+      "sha256": "248fb5b87f1660c3f9880f4590a27a17d748b9b6f3bf078bc5c11b854217d788",
+      "duration": 13.165714
+    },
+    {
+      "id": "CH02_SC15_004_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC15_004_SYSTEM.mp3",
+      "sha256": "ad4d4fdbef650779212a0be766e10f1168a2ee84c1a550cae73e9ff1146b7954",
+      "duration": 12.355918
+    },
+    {
+      "id": "CH02_SC15_005_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_005_HAMAD.mp3",
+      "sha256": "f72f7ddf44e6641c44787ec0895578db12ef836780014551df9aa7af3e8d87a7",
+      "duration": 15.307755
+    },
+    {
+      "id": "CH02_SC15_006_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC15_006_SYSTEM.mp3",
+      "sha256": "2139867793591e9fc28fadfedd5bdd9b145d4e0969db7eb65f413ee406bbd3a9",
+      "duration": 12.59102
+    },
+    {
+      "id": "CH02_SC15_007_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_007_HAMAD.mp3",
+      "sha256": "24ce98691bb00cffe8889f7868dc7f496bdef480bcbf241a423c883d748bafef",
+      "duration": 6.034286
+    },
+    {
+      "id": "CH02_SC15_008_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC15_008_NARRATOR.mp3",
+      "sha256": "e741e8ffb00a4c7ae7ca911811b5304fc29d0c8a8512f1042659e8a7edb37077",
+      "duration": 11.885714
+    },
+    {
+      "id": "CH02_SC15_009_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_009_HAMAD.mp3",
+      "sha256": "f9192bda5a01e12914bce8ae1f3daf9291d1bba1376394ef80066d9d6b8f5052",
+      "duration": 9.795918
+    },
+    {
+      "id": "CH02_SC16_001_MARIAM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC16_001_MARIAM.mp3",
+      "sha256": "62410bf17d0c59a1d916504ba9f11068bd57e9e01ce9e5f004be8fe2377f110e",
+      "duration": 10.44898
+    },
+    {
+      "id": "CH02_SC16_002_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC16_002_HAMAD.mp3",
+      "sha256": "e5a757b158ea1674cc137a1743bbdb362ff11bf0c87f24c0e71eb7409dc981eb",
+      "duration": 9.404082
+    },
+    {
+      "id": "CH02_SC16_003_SAEED",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH02_SC16_003_SAEED.mp3",
+      "sha256": "9090a7392019f38e006a66f7385d52717ffa0e40cc7b27395b7ae1d92168e374",
+      "duration": 2.586122
+    },
+    {
+      "id": "CH02_SC16_004_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC16_004_HAMAD.mp3",
+      "sha256": "d0de541ee8ffedcb1548439e2cb07f3f18f4b89bb42ba35c148bee1c5247b8fb",
+      "duration": 10.187755
+    },
+    {
+      "id": "CH02_SC17_001_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC17_001_HAMAD.mp3",
+      "sha256": "d305ebbbbe3567b784c1bd1282b9c42271b29f38449fcd3e761a60dc3adc8cd2",
+      "duration": 7.549388
+    },
+    {
+      "id": "CH02_SC17_002_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC17_002_NARRATOR.mp3",
+      "sha256": "c5d6ba400233ad419f47267500bbbfe776a88f7a3b91717af535c38da11c3a7f",
+      "duration": 8.359184
+    },
+    {
+      "id": "CH02_SC17_003_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC17_003_SYSTEM.mp3",
+      "sha256": "d53608d0cfe14eccbd0aae5c333f030c6d3b61e4ad5a45f700e8a7fcda07b36d",
+      "duration": 10.527347
+    },
+    {
+      "id": "CH02_SC17_004_MARIAM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC17_004_MARIAM.mp3",
+      "sha256": "6c0659aebfc0df407deffcd813d1cb2a598b61a7684ace34b472f4f691496688",
+      "duration": 6.19102
+    },
+    {
+      "id": "CH02_SC17_005_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC17_005_HAMAD.mp3",
+      "sha256": "48bde2a89b1debd846a217f8a7386ca0d5753ad27305d6b87a01c055d2e230e5",
+      "duration": 7.392653
+    },
+    {
+      "id": "CH02_SC18_001_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC18_001_HAMAD.mp3",
+      "sha256": "e9ca51a771b25ced63afe05d40ec41c02c3146d42344c721f450988d4f0a3c04",
+      "duration": 7.314286
+    },
+    {
+      "id": "CH02_SC18_002_FATIMA",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH02_SC18_002_FATIMA.mp3",
+      "sha256": "f1f66819a8e2a87494a6d51d3605f305a31916334430583457d10ab0cc563490",
+      "duration": 3.552653
+    },
+    {
+      "id": "CH02_SC18_003_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC18_003_HAMAD.mp3",
+      "sha256": "d007b54da7a172cec5f2d4b58663db567562635d08d728898d72197e40ae1b92",
+      "duration": 8.124082
+    },
+    {
+      "id": "CH02_SC18_004_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC18_004_SYSTEM.mp3",
+      "sha256": "9d9306863f2798b2b4763237660d2a9184facdb568c70659949e2d2810076658",
+      "duration": 3.474286
+    },
+    {
+      "id": "CH02_SC18_005_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC18_005_SYSTEM.mp3",
+      "sha256": "0705cdab9d7eee2285bf4e6b87cbea0ecd49ab04cf788a4a9004ed1a0af302a8",
+      "duration": 3.970612
+    },
+    {
+      "id": "CH02_SC18_006_SAEED",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH02_SC18_006_SAEED.mp3",
+      "sha256": "48869aca4c1c43e6773bd33e6872b00be092cfb3e3e325a35ad9653b44f7fed1",
+      "duration": 2.586122
+    },
+    {
+      "id": "CH02_SC18_007_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC18_007_HAMAD.mp3",
+      "sha256": "f341e3ef51967c168234dd65a06217f222dec12d93b4e13bed966310ad4098b2",
+      "duration": 4.440816
+    },
+    {
+      "id": "CH02_SC18_008_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC18_008_SYSTEM.mp3",
+      "sha256": "6f0063337fe2f7c106ef2748234e90ba0c49090ddfada4dcf04f9c3347c2e66b",
+      "duration": 3.552653
+    },
+    {
+      "id": "CH02_SC18_009_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC18_009_HAMAD.mp3",
+      "sha256": "99698ed2aac11c8b16d464dc92211d805fbb59fd907aae7749935bef8fcc85ac",
+      "duration": 6.60898
+    },
+    {
+      "id": "CH02_SC19_001_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC19_001_HAMAD.mp3",
+      "sha256": "ea28b8a866622e4a764a71620a51ff6e6dd91d147caec0b90d435fd998636949",
+      "duration": 4.675918
+    },
+    {
+      "id": "CH02_SC19_002_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC19_002_NARRATOR.mp3",
+      "sha256": "ac1abe24fb0c2ced3c3ce060d080ddc6c980d7f72138f7a3a03d87f9b77cde72",
+      "duration": 24.607347
+    },
+    {
+      "id": "CH02_SC19_003_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC19_003_HAMAD.mp3",
+      "sha256": "ca35c572408ac541ef1ed29007729bf25d8064d5c23496e559a2cfaae51f746e",
+      "duration": 6.426122
+    },
+    {
+      "id": "CH02_SC19_A_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC19_A_SYSTEM.mp3",
+      "sha256": "3f049e3e5c2e30a33df53fa96c7d597de367ffc4a91797eb4ffce3c544a554e5",
+      "duration": 4.04898
+    },
+    {
+      "id": "CH02_SC19_A_OK_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC19_A_OK_HAMAD.mp3",
+      "sha256": "b9104b857b31b8a683c301b52c58a2996495d65d9b68680d4645fe413afdc461",
+      "duration": 11.72898
+    },
+    {
+      "id": "CH02_SC19_B_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC19_B_SYSTEM.mp3",
+      "sha256": "ea11c0c2b2896bc1bfd2b37a68c38e4a63123fde981bde56475184b103238246",
+      "duration": 4.91102
+    },
+    {
+      "id": "CH02_SC19_B_OK_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC19_B_OK_HAMAD.mp3",
+      "sha256": "9542804bcd146ea655787beee1429554e0a87b6448dcc7ffe4bc4dff98cd5430",
+      "duration": 9.090612
+    },
+    {
+      "id": "CH02_SC19_C_SYSTEM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC19_C_SYSTEM.mp3",
+      "sha256": "1e0b280b3838013cf6521d0d9dc88b2f3cacd151105ca730ea13ddb7c30b9136",
+      "duration": 4.440816
+    },
+    {
+      "id": "CH02_SC19_C_OK_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC19_C_OK_HAMAD.mp3",
+      "sha256": "8de6d9f1e233e9fc06f6d8a33f8c8d9edb889e0ef80090c37d446b57fa6dc945",
+      "duration": 13.00898
+    },
+    {
+      "id": "CH02_SC19_WRONG_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC19_WRONG_HAMAD.mp3",
+      "sha256": "4143aad52534954398da961e620b27a2d3abaea2dcc7c6839436606cf79f10fb",
+      "duration": 14.28898
+    },
+    {
+      "id": "CH02_SC19_COMPLETE_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC19_COMPLETE_NARRATOR.mp3",
+      "sha256": "812b27ee4399c18a1e4b46f2b132fe155a64d828a7e496db35971ce53ec81162",
+      "duration": 19.957551
+    },
+    {
+      "id": "CH03_SC20_001_MARIAM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH03_SC20_001_MARIAM.mp3",
+      "sha256": "fa2eb670216ed6538ba89456b5423cd0e23396473bd7fbd18ccf10d96878da7a",
+      "duration": 7.000816
+    },
+    {
+      "id": "CH03_SC20_002_SAEED",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH03_SC20_002_SAEED.mp3",
+      "sha256": "e9ad586f655489a5cfb6fd29c49e13686171531ff3cdc70ad6c4bceafa65308a",
+      "duration": 4.284082
+    },
+    {
+      "id": "CH03_SC20_003_FATIMA",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH03_SC20_003_FATIMA.mp3",
+      "sha256": "88f515b3eada6c1e8d128528d86e5778abb3b531fb2c809a1afb7cdfe08b7062",
+      "duration": 4.519184
+    },
+    {
+      "id": "CH03_SC20_004_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH03_SC20_004_NARRATOR.mp3",
+      "sha256": "ad09bc58294fff865489402a893ae497590d97abc6681879f76ad68866ca218d",
+      "duration": 16.195918
+    },
+    {
+      "id": "CH03_SC21_001_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH03_SC21_001_HAMAD.mp3",
+      "sha256": "49ca4a55465a9775fd6027ee85f2943d4db5ee3bbf1c2dd09165751f46fb7d70",
+      "duration": 9.404082
+    },
+    {
+      "id": "CH03_SC21_002_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH03_SC21_002_HAMAD.mp3",
+      "sha256": "29c9ee68c7a323aef017fc840c90f503a6e535b85082bb915bcfcd43f7aeacc1",
+      "duration": 3.082449
+    },
+    {
+      "id": "CH03_SC21_003_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH03_SC21_003_HAMAD.mp3",
+      "sha256": "89f4cb4f38b25d5cff3fb360ad5ea31b9c631250ed36da335e169bb9d55e2f90",
+      "duration": 14.915918
+    },
+    {
+      "id": "CH03_SC21_004_MARIAM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH03_SC21_004_MARIAM.mp3",
+      "sha256": "8c11c10baeaeb456fc82a0b4a3b9e598a35d1377724928f96130fa4bda45770d",
+      "duration": 3.474286
+    },
+    {
+      "id": "CH03_SC21_005_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH03_SC21_005_HAMAD.mp3",
+      "sha256": "e4d6bb80ea5296342ee247b4259730f2499cd1e8b5faec8b8a8697a6c605ff8d",
+      "duration": 16.274286
+    },
+    {
+      "id": "CH03_SC21_006_FATIMA",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH03_SC21_006_FATIMA.mp3",
+      "sha256": "f9c002cee25fc3e356b5ed847a7505e90e20b4a2130ede13de0da46f16cd0126",
+      "duration": 7.706122
+    },
+    {
+      "id": "CH03_SC21_007_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH03_SC21_007_HAMAD.mp3",
+      "sha256": "e37d8e9d8362b7d2c3eff289fac1e652a2d0327b805bb27b143c62f1b522c57b",
+      "duration": 1.149388
+    },
+    {
+      "id": "CH03_SC22_001_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH03_SC22_001_NARRATOR.mp3",
+      "sha256": "13c20422fa2d12c9782233e535c80bcec8bbb01b18c09ebb425afa9775c6f84a",
+      "duration": 5.32898
+    },
+    {
+      "id": "CH03_SC22_002_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH03_SC22_002_HAMAD.mp3",
+      "sha256": "a4e9bdf6c41d31ff03668920da574bab3f0c5adcc063d8ae67cca97517481286",
+      "duration": 9.482449
+    },
+    {
+      "id": "CH03_SC22_003_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH03_SC22_003_HAMAD.mp3",
+      "sha256": "b3fe145e32f039aa525908b360ef45dc88b036225d933c38ec41ac06002ec286",
+      "duration": 9.560816
+    },
+    {
+      "id": "CH03_SC22_004_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH03_SC22_004_NARRATOR.mp3",
+      "sha256": "78f2d0c949893e0e106179537859d0aa6d74bc5cf88eea03a5fddb27b416446a",
+      "duration": 8.045714
+    },
+    {
+      "id": "CH03_SC22_OPTION_A_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH03_SC22_OPTION_A_NARRATOR.mp3",
+      "sha256": "a92e7be25db23df1442f89d6e057232b9bd96444900b09acd0e46c680c64626c",
+      "duration": 10.03102
+    },
+    {
+      "id": "CH03_SC22_OPTION_B_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH03_SC22_OPTION_B_NARRATOR.mp3",
+      "sha256": "d8822a69e44ff32bc7cb3a82a7db672e80890d114321dc9639b394b31dbac071",
+      "duration": 6.112653
+    },
+    {
+      "id": "CH03_SC22_OPTION_C_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH03_SC22_OPTION_C_NARRATOR.mp3",
+      "sha256": "9c67c53740e88491bab0709a5d14065738416dd767312138a0e0ccd1295959ee",
+      "duration": 5.485714
+    },
+    {
+      "id": "CH03_SC22_OPTION_D_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH03_SC22_OPTION_D_NARRATOR.mp3",
+      "sha256": "a9f7073048a7396d67e1065c70e23926a68f3e931ce8696a4e2caf06583987b6",
+      "duration": 5.799184
+    },
+    {
+      "id": "CH03_SC22_005_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH03_SC22_005_HAMAD.mp3",
+      "sha256": "8c03947ba161cb59b823254fcd40cf2afa73da7623de690088a56ebb05cdef76",
+      "duration": 2.76898
+    },
+    {
+      "id": "CH04_END_A_001_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_A_001_NARRATOR.mp3",
+      "sha256": "a937163dbec273ea0bcf06e0b13c79043bcd87d392da72aaa13ff4d85eccfec2",
+      "duration": 10.370612
+    },
+    {
+      "id": "CH04_END_A_002_FATIMA",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH04_END_A_002_FATIMA.mp3",
+      "sha256": "385cfdaef23c57595af71f60cc0cfecacc42bb42ab2857a2a3cefdb8d519ec71",
+      "duration": 5.642449
+    },
+    {
+      "id": "CH04_END_A_003_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_A_003_HAMAD.mp3",
+      "sha256": "3c0779d4f3025a87b300c5f3af2bab18c54f23317c9976b363972dc78e576e64",
+      "duration": 11.546122
+    },
+    {
+      "id": "CH04_END_A_004_MARIAM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH04_END_A_004_MARIAM.mp3",
+      "sha256": "3b8be0984ac0d779c5ff99c34b51e38c30ceae3e980505dd2b98f544449fa057",
+      "duration": 6.687347
+    },
+    {
+      "id": "CH04_END_A_005_SAEED",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH04_END_A_005_SAEED.mp3",
+      "sha256": "30b9df2d88ca04dbc022fbb461d7f3605b54c97eee5e443ecc238780f6c17c4b",
+      "duration": 4.91102
+    },
+    {
+      "id": "CH04_END_A_006_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_A_006_NARRATOR.mp3",
+      "sha256": "e0d57ffb0c24def2aa6f748970ba992e24fb116b2f098b5789cae342ca00be8b",
+      "duration": 11.546122
+    },
+    {
+      "id": "CH04_END_A_007_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_A_007_HAMAD.mp3",
+      "sha256": "b8cab24a17fd4f7acc67201487e1e984fc58d7a0b4fc5a33ff01ab9e435a4ef7",
+      "duration": 9.952653
+    },
+    {
+      "id": "CH04_END_A_008_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_A_008_NARRATOR.mp3",
+      "sha256": "270a3663725f92a22099578b25eae935b93209fca7fe973dfc9a6b1158757fb4",
+      "duration": 9.874286
+    },
+    {
+      "id": "CH04_END_B_001_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_B_001_NARRATOR.mp3",
+      "sha256": "70774dfd7658485fd1d647ef3bd1c20e4c84e18699ac784193af55aa56c094d9",
+      "duration": 6.269388
+    },
+    {
+      "id": "CH04_END_B_002_MARIAM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH04_END_B_002_MARIAM.mp3",
+      "sha256": "dcb0b2d8c5ac12b5b34a1802fa88e56732b94908ac30eedaa99a7552172fda4d",
+      "duration": 6.269388
+    },
+    {
+      "id": "CH04_END_B_003_FATIMA",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH04_END_B_003_FATIMA.mp3",
+      "sha256": "a0ddd3d14d400e8d168a14e82ef0af7e6fa1a5d35ccf14e7c3bc66561243d90a",
+      "duration": 7.549388
+    },
+    {
+      "id": "CH04_END_B_004_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_B_004_HAMAD.mp3",
+      "sha256": "8e70183177303da1b88ff6b8b8c5a6ad95fa5d76aef550a33a2dd1d77714fe8f",
+      "duration": 9.639184
+    },
+    {
+      "id": "CH04_END_B_005_FATIMA",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH04_END_B_005_FATIMA.mp3",
+      "sha256": "189ec9caa97e1e830ede65fd60339aed6d7e46d691dcdc357587f37b9c09356e",
+      "duration": 6.687347
+    },
+    {
+      "id": "CH04_END_B_006_SAEED",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH04_END_B_006_SAEED.mp3",
+      "sha256": "1b805fdeb576e50381493ac8d45912e60a5ab8e0581e02b5b737cffd9f63bf46",
+      "duration": 4.754286
+    },
+    {
+      "id": "CH04_END_B_007_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_B_007_NARRATOR.mp3",
+      "sha256": "c70a3b491bc1fe4a9cffbd4769373a623aa58a8e3ee41b9385e24d2eb2fcd5cb",
+      "duration": 6.687347
+    },
+    {
+      "id": "CH04_END_B_008_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_B_008_HAMAD.mp3",
+      "sha256": "7866d75dc293df08b7ce2e377f9fc51f5f33c65e3de430814504b10c91e13acb",
+      "duration": 11.31102
+    },
+    {
+      "id": "CH04_END_B_009_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_B_009_NARRATOR.mp3",
+      "sha256": "52554fd99774a996e63c4a360aabc9aa4a5ad7c7b5fab0670e7a500a1e546f6a",
+      "duration": 8.359184
+    },
+    {
+      "id": "CH04_END_C_001_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_C_001_NARRATOR.mp3",
+      "sha256": "8385a00ca79809455960397ad74b14d3c82d81c579225a2b0cc037fdfa05642f",
+      "duration": 4.597551
+    },
+    {
+      "id": "CH04_END_C_002_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_C_002_HAMAD.mp3",
+      "sha256": "8e0e38fbfba764fe6ba682e34937e6bfe31c5b28247a653938eb091427117189",
+      "duration": 2.847347
+    },
+    {
+      "id": "CH04_END_C_003_SAEED",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH04_END_C_003_SAEED.mp3",
+      "sha256": "0446e709dcc4fe48db19403a30dffae633fbaa6f5b333fd67919efd445e709d2",
+      "duration": 2.115918
+    },
+    {
+      "id": "CH04_END_C_004_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_C_004_HAMAD.mp3",
+      "sha256": "e116f1990ff007062ddeac72a4a2a63f51ce2050aa81c06e0b87188990cab1c2",
+      "duration": 8.986122
+    },
+    {
+      "id": "CH04_END_C_005_FATIMA",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH04_END_C_005_FATIMA.mp3",
+      "sha256": "cb9855fb730d8c1ea32bb56865e2d56719457c9a225e3a43778634a68ce4fc8d",
+      "duration": 7.810612
+    },
+    {
+      "id": "CH04_END_C_006_MARIAM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH04_END_C_006_MARIAM.mp3",
+      "sha256": "2ae18af1c0127c0c0abae560db9a9421d120f721ad08018d728a383d1c115953",
+      "duration": 2.925714
+    },
+    {
+      "id": "CH04_END_C_007_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_C_007_NARRATOR.mp3",
+      "sha256": "71171d6062fd45e8e339d73d8df4db58323986eea2db24cc05ed03700c2924a1",
+      "duration": 11.389388
+    },
+    {
+      "id": "CH04_END_C_008_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_C_008_HAMAD.mp3",
+      "sha256": "b878eda9964b77e7cac6c8d015165d556538c935eeb63a5ef95b1251cf3fbc3b",
+      "duration": 9.482449
+    },
+    {
+      "id": "CH04_END_C_009_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_C_009_NARRATOR.mp3",
+      "sha256": "5442724eabb93e17e5c641bf0f92d768cd8bca3ce7ac7382d0847acf2ce75e72",
+      "duration": 7.627755
+    },
+    {
+      "id": "CH04_END_D_001_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_D_001_NARRATOR.mp3",
+      "sha256": "da3b749f6800043bc9747050537306f05943dd9396d0992b40b3d05756fa10a5",
+      "duration": 4.675918
+    },
+    {
+      "id": "CH04_END_D_002_MARIAM",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH04_END_D_002_MARIAM.mp3",
+      "sha256": "575e1420d46c58d7362c2b1acd05211fed07001ea8eb50d128be00293b472959",
+      "duration": 3.787755
+    },
+    {
+      "id": "CH04_END_D_003_SAEED",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH04_END_D_003_SAEED.mp3",
+      "sha256": "ed3ff71913c773766f090cf0cfada3f8d3089a1ec541d625a14893fb77fea870",
+      "duration": 3.082449
+    },
+    {
+      "id": "CH04_END_D_004_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_D_004_HAMAD.mp3",
+      "sha256": "04e507ba0a70edf3d52390df6d4b118c2d3cd18c9b13583c7bc1f54237ada348",
+      "duration": 9.717551
+    },
+    {
+      "id": "CH04_END_D_005_FATIMA",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH04_END_D_005_FATIMA.mp3",
+      "sha256": "3904c5a82f15eaf2848f67e2ba71f5ff9cf26434aee35a0c716d513ca8734748",
+      "duration": 6.844082
+    },
+    {
+      "id": "CH04_END_D_006_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_D_006_NARRATOR.mp3",
+      "sha256": "62b4e22057e207a6cc5c15ffa07e97c37f546d7551b3952791bc32e0b46ce766",
+      "duration": 9.482449
+    },
+    {
+      "id": "CH04_END_D_007_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_D_007_HAMAD.mp3",
+      "sha256": "0f50c596cd22a796dc29ab299b5640ae85f1db2c7a1935b1bdd769db6e8f2df2",
+      "duration": 8.986122
+    },
+    {
+      "id": "CH04_END_D_008_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_D_008_NARRATOR.mp3",
+      "sha256": "2d65c7c05359665726ceff97434c156a6687634420d91b73315496e6e14aac7d",
+      "duration": 8.280816
+    },
+    {
+      "id": "CH05_REFLECTION_001_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_REFLECTION_001_NARRATOR.mp3",
+      "sha256": "8b5a12c1d117b01cfa255dc2a9791efccfdc7355bae24803e94e0e2d0b54e982",
+      "duration": 5.955918
+    },
+    {
+      "id": "CH05_REFLECTION_002_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_REFLECTION_002_HAMAD.mp3",
+      "sha256": "48067ea8646360275c85e3a1e8713af9c00f6bd77521eeb298fb715d33716079",
+      "duration": 11.546122
+    },
+    {
+      "id": "CH05_REFLECTION_003_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_REFLECTION_003_NARRATOR.mp3",
+      "sha256": "e97037b2abd6752b1257895de5e22e1fb08549dca3554558d32887d2c2bd6019",
+      "duration": 12.512653
+    },
+    {
+      "id": "CH05_SC27_001_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC27_001_HAMAD.mp3",
+      "sha256": "ec37254adde5eba32e21d997b95d22aff88c721b706d9e18aa8a75b610d9ccad",
+      "duration": 5.799184
+    },
+    {
+      "id": "CH05_SC27_002_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC27_002_HAMAD.mp3",
+      "sha256": "64e5553b765bf703fd1946e8163d7d91f60406368f216261d2da205f21194581",
+      "duration": 20.114286
+    },
+    {
+      "id": "CH05_SC27_003_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC27_003_HAMAD.mp3",
+      "sha256": "4f09ef1bc32ee456cb3368a0c4082c0849defc5c3d440daf145892e81ba4c668",
+      "duration": 4.440816
+    },
+    {
+      "id": "CH05_SC27_004_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC27_004_HAMAD.mp3",
+      "sha256": "07cf5b3ef612aac97f2af6fe327988a0177306bd945f52b5514211b3a76ee0a4",
+      "duration": 8.515918
+    },
+    {
+      "id": "CH05_SC27_005_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC27_005_HAMAD.mp3",
+      "sha256": "e0dab2aa6a2adbd90a6528fec60b63291262427c8a4f1d7176789d0dd73ccaf5",
+      "duration": 13.635918
+    },
+    {
+      "id": "CH05_SC27_006_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_SC27_006_NARRATOR.mp3",
+      "sha256": "d2905e25b0b1c99f33ff130cf097cda9842e4b593d247c775e81803358609ceb",
+      "duration": 4.754286
+    },
+    {
+      "id": "CH05_QUIZ_INTRO_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_QUIZ_INTRO_NARRATOR.mp3",
+      "sha256": "a12b4187f5a6c4dce3d6b349ece0260a51b3317e4720014fbe4f41c1e6f0175a",
+      "duration": 13.87102
+    },
+    {
+      "id": "CH05_Q01_QUESTION_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q01_QUESTION_NARRATOR.mp3",
+      "sha256": "54949dfff33ae9094e2709a6196c4b94611cf16f48f0b5c7af10c4dab610533e",
+      "duration": 4.989388
+    },
+    {
+      "id": "CH05_Q01_CORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q01_CORRECT_HAMAD.mp3",
+      "sha256": "ff32ea75a7761c6d7c9b83987dd7e1ad6281a80db7fe528c47a8e6a98a0a2716",
+      "duration": 9.404082
+    },
+    {
+      "id": "CH05_Q01_INCORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q01_INCORRECT_HAMAD.mp3",
+      "sha256": "3bd05cd080008a0a9f8f2cf6e914335cd7d1f5252915ea82e54c05f0a3e44e72",
+      "duration": 9.560816
+    },
+    {
+      "id": "CH05_Q02_QUESTION_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q02_QUESTION_NARRATOR.mp3",
+      "sha256": "5bbab724269e4e0f16e30f555e89bf28e2385596691b6ad656c6c1e8c8437813",
+      "duration": 4.989388
+    },
+    {
+      "id": "CH05_Q02_CORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q02_CORRECT_HAMAD.mp3",
+      "sha256": "8d0660f6abc202831298aa2e3dd0ff617bcec53cdf52b6adccb52a744e72421d",
+      "duration": 9.482449
+    },
+    {
+      "id": "CH05_Q02_INCORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q02_INCORRECT_HAMAD.mp3",
+      "sha256": "dd59c70fa7987e387c5bc512a7d320d65c6b9a836b7e3055a5cec578a495710c",
+      "duration": 7.549388
+    },
+    {
+      "id": "CH05_Q03_QUESTION_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q03_QUESTION_NARRATOR.mp3",
+      "sha256": "174fe504f205d2b047c9e1903cc2f8ba6461f74266efcaf9de3cd3cdf6d35fc9",
+      "duration": 4.362449
+    },
+    {
+      "id": "CH05_Q03_CORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q03_CORRECT_HAMAD.mp3",
+      "sha256": "ff9965c79f8087cc679a14fdc7b397ebb702cb27f234b2ec083180f8e4be7a76",
+      "duration": 10.266122
+    },
+    {
+      "id": "CH05_Q03_INCORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q03_INCORRECT_HAMAD.mp3",
+      "sha256": "49d64a31ad6080b521f6dc2f449164273b45f4b8d0776322e8f366eb59f704f8",
+      "duration": 9.639184
+    },
+    {
+      "id": "CH05_Q04_QUESTION_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q04_QUESTION_NARRATOR.mp3",
+      "sha256": "9ecd5319eb9deb42150eb30b2e5fa19ca11f06ff7af69f2136a2795e5651948c",
+      "duration": 8.359184
+    },
+    {
+      "id": "CH05_Q04_CORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q04_CORRECT_HAMAD.mp3",
+      "sha256": "0bd404d38815ba3016e4b77de6c7ad98b15d97ad355dd94ddf71dbb56b61b005",
+      "duration": 8.907755
+    },
+    {
+      "id": "CH05_Q04_INCORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q04_INCORRECT_HAMAD.mp3",
+      "sha256": "515e313dcbf5ab34b6c6a2ce0c3b5307dce86a3087a77979bacb2a0501b8be12",
+      "duration": 7.810612
+    },
+    {
+      "id": "CH05_Q05_QUESTION_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q05_QUESTION_NARRATOR.mp3",
+      "sha256": "ae557257b2d9d86ea50e4022cfaa1093f5f41ef6ff4099ec38a48644dbaebd7e",
+      "duration": 6.19102
+    },
+    {
+      "id": "CH05_Q05_CORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q05_CORRECT_HAMAD.mp3",
+      "sha256": "46756f6921acd972f90f132db684a71c1474767ac1767025e3c5465464fe2d89",
+      "duration": 10.762449
+    },
+    {
+      "id": "CH05_Q05_INCORRECT_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q05_INCORRECT_HAMAD.mp3",
+      "sha256": "aaaeb1a6f0b33aaf6240c9758ff966da01cb2e8bf11e698f9645a53a67d1ff37",
+      "duration": 9.874286
+    },
+    {
+      "id": "CH05_SC28_PASS_1_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_SC28_PASS_1_NARRATOR.mp3",
+      "sha256": "3206e6748ee32d1547afe7ceeb01c474115955fd01e1d1dd5a8cb9bd14cb1a2c",
+      "duration": 5.250612
+    },
+    {
+      "id": "CH05_SC28_PASS_2_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC28_PASS_2_HAMAD.mp3",
+      "sha256": "d970be68d8cdcf82d0fddd38a095dd3f15df99f209d8319ead31e3b78cf93130",
+      "duration": 4.675918
+    },
+    {
+      "id": "CH05_SC28_PASS_3_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC28_PASS_3_HAMAD.mp3",
+      "sha256": "e523fa4ff3089a43d48d3b488e6242ac666917e7765cafc9a50a570cb97adf2b",
+      "duration": 9.717551
+    },
+    {
+      "id": "CH05_SC28_PASS_4_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_SC28_PASS_4_NARRATOR.mp3",
+      "sha256": "9ab8877edc11a80d4912030b7aab544f0b2f07f386b3ad869d5f46f92e2e39aa",
+      "duration": 4.127347
+    },
+    {
+      "id": "CH05_SC28_RETRY_1_NARRATOR",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_SC28_RETRY_1_NARRATOR.mp3",
+      "sha256": "baa50c243bce68042298ad5ae1023c7c83d74b227bcf045f22ac0c1229d68c70",
+      "duration": 7.47102
+    },
+    {
+      "id": "CH05_SC28_RETRY_2_HAMAD",
+      "status": "KEEP",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC28_RETRY_2_HAMAD.mp3",
+      "sha256": "3da8eb7a4646e9250caada30722f7757cf22efd8efcfd2006e1bcd7d49bdd5b4",
+      "duration": 11.467755
+    },
+    {
+      "id": "CH05_SC28_RETRY_3_HAMAD",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC28_RETRY_3_HAMAD.mp3",
+      "sha256": "3dac40505ce6d6f34c7de1418d74ae92be7ff01157f8a727a7a82c05b8b4d796",
+      "duration": 5.067755
+    },
+    {
+      "id": "SYSTEM_SELECT_OPTION_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_SELECT_OPTION_SYSTEM.mp3",
+      "sha256": "f055892e9acfea6e301bbcd3a59b6ab74fdc958c73d7abbf828acb1330bec7e7",
+      "duration": 2.194286
+    },
+    {
+      "id": "SYSTEM_REVIEW_EVIDENCE_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_REVIEW_EVIDENCE_SYSTEM.mp3",
+      "sha256": "0f6bab9b508ca18b178cec38aea24c81fdfc3acd9ec33dde78a3e49c45ffd615",
+      "duration": 3.082449
+    },
+    {
+      "id": "SYSTEM_RESPONSE_RECORDED_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_RESPONSE_RECORDED_SYSTEM.mp3",
+      "sha256": "f0e59e48705f51e7bec47a12d243ed41a00d3d6b8492fff268030783092e95d3",
+      "duration": 2.037551
+    },
+    {
+      "id": "SYSTEM_EVIDENCE_ADDED_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_EVIDENCE_ADDED_SYSTEM.mp3",
+      "sha256": "3e20d5ee2a13fa4c7e829e24e9edc904a6e73d129a43b4ee96e3a634aa9782e3",
+      "duration": 2.690612
+    },
+    {
+      "id": "SYSTEM_COMPLETE_MEASUREMENTS_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_COMPLETE_MEASUREMENTS_SYSTEM.mp3",
+      "sha256": "845627760c656571b208615c312ac0815611718ab79852eb0fd1498cf6f00704",
+      "duration": 3.239184
+    },
+    {
+      "id": "SYSTEM_ACTION_NOT_PERMITTED_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_ACTION_NOT_PERMITTED_SYSTEM.mp3",
+      "sha256": "a70dcec5279a2c83aae4259b2eb67fa23a1fd1e18b56aa7cc69bd87853455b1a",
+      "duration": 4.205714
+    },
+    {
+      "id": "SYSTEM_KEEP_SEPARATE_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_KEEP_SEPARATE_SYSTEM.mp3",
+      "sha256": "87721ce10e979d37b1a2f6120f1a1252734a8844da659cb1f746f1f2490282a8",
+      "duration": 2.194286
+    },
+    {
+      "id": "SYSTEM_CALIBRATION_COMPLETE_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_CALIBRATION_COMPLETE_SYSTEM.mp3",
+      "sha256": "4f3d8e1ac244efe4f9cf65e2dfcf0a76722a3e0eea43d025604b261d3109b526",
+      "duration": 1.645714
+    },
+    {
+      "id": "SYSTEM_MEASUREMENT_COMPLETE_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_MEASUREMENT_COMPLETE_SYSTEM.mp3",
+      "sha256": "0add30188e4c1d06c99c5b4d16d561a1420f124847a8757b6f0ef7b66e6e5c0f",
+      "duration": 1.645714
+    },
+    {
+      "id": "SYSTEM_IDENTIFICATION_SUPPORTED_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_IDENTIFICATION_SUPPORTED_SYSTEM.mp3",
+      "sha256": "d60be3239be2cc6ce910531a9ed9b48c5b68ef5163560cc179907d194ddaf196",
+      "duration": 3.63102
+    },
+    {
+      "id": "SYSTEM_IDENTIFICATION_MISMATCH_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_IDENTIFICATION_MISMATCH_SYSTEM.mp3",
+      "sha256": "1825905aa0c01fa1c857beacc0b1f623c4f27bb943c3437649b6c0da1a069ba1",
+      "duration": 4.362449
+    },
+    {
+      "id": "SYSTEM_JUSTIFICATION_MINIMUM_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_JUSTIFICATION_MINIMUM_SYSTEM.mp3",
+      "sha256": "813b396656d0f6c62c671041758ef15284eb876ca45d42304afae7d6e522a0a5",
+      "duration": 3.709388
+    },
+    {
+      "id": "SYSTEM_SELECT_EVIDENCE_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_SELECT_EVIDENCE_SYSTEM.mp3",
+      "sha256": "d9b3946a36b932055045bb11b05e666754577e3f42a729ce46b8dd2ca8790dff",
+      "duration": 2.925714
+    },
+    {
+      "id": "SYSTEM_RECOMMENDATION_SUBMITTED_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_RECOMMENDATION_SUBMITTED_SYSTEM.mp3",
+      "sha256": "06cafb64d94ba2b9c61e515bdaeb89ea66dc94c6ed81dd2e7d9fa1063a9fd327",
+      "duration": 2.76898
+    },
+    {
+      "id": "SYSTEM_REFLECTION_SAVED_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_REFLECTION_SAVED_SYSTEM.mp3",
+      "sha256": "680645b7612476e4009808edbc4fa67cfabb1f0e65b19c37551f5754b908a3c8",
+      "duration": 1.567347
+    },
+    {
+      "id": "SYSTEM_ASSESSMENT_COMPLETE_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_ASSESSMENT_COMPLETE_SYSTEM.mp3",
+      "sha256": "3a198906a7c008f5da1ae976d9c71cd8c7d2000ec9e5284cdbc64bfb325253e7",
+      "duration": 1.724082
+    },
+    {
+      "id": "SYSTEM_ACHIEVEMENT_EARNED_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_ACHIEVEMENT_EARNED_SYSTEM.mp3",
+      "sha256": "3d21c7f64490528700bc5b6623fbfe74eccc5d116c4e205ef8df7751802a83a1",
+      "duration": 1.645714
+    },
+    {
+      "id": "SYSTEM_TRY_AGAIN_SYSTEM",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/SYSTEM_TRY_AGAIN_SYSTEM.mp3",
+      "sha256": "fee72c28a28e01c614474408603c100e33ab56549e098dc10c99aa056453d5c9",
+      "duration": 2.507755
+    },
+    {
+      "id": "SYSTEM_SAFETY_DISCLAIMER_NARRATOR",
+      "status": "CUT",
+      "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/SYSTEM_SAFETY_DISCLAIMER_NARRATOR.mp3",
+      "sha256": "0850d8e5e566e66b84dbc1e1e80cda41a32e3d07a1177f352eb592d21ab4f285",
+      "duration": 17.005714
+    }
+  ],
+  "routes": [
+    {
+      "ending": "A",
+      "consequence": "verify-replace",
+      "spokenClipOccurrences": 76,
+      "recordedSpeechSeconds": 571.898772,
+      "clipIds": [
+        "CH01_SC01_002_NARRATOR",
+        "CH01_SC02_001_MARIAM",
+        "CH01_SC02_002_SAEED",
+        "CH01_SC03_001_NARRATOR",
+        "CH01_SC04_002_NARRATOR",
+        "CH01_SC04_003_SAEED",
+        "CH01_SC04_005_SAEED",
+        "CH01_SC05_001_SAEED",
+        "CH01_SC05_002_MARIAM",
+        "CH01_SC06_001_FATIMA",
+        "CH01_SC06_002_SAEED",
+        "CH01_SC06_003_FATIMA",
+        "CH01_SC07_001_NARRATOR",
+        "CH01_SC07_005_HAMAD",
+        "CH01_SC07_006_HAMAD",
+        "CH02_DEC01_001_HAMAD",
+        "CH02_DEC01_CORRECT_HAMAD",
+        "CH02_SC11_001_NARRATOR",
+        "CH02_SC11_002_HAMAD",
+        "CH02_SC12_001_HAMAD",
+        "CH02_SC12_005_SYSTEM",
+        "CH02_SC12_003_HAMAD",
+        "CH02_SC13_001_HAMAD",
+        "CH02_SC13_003_SYSTEM",
+        "CH02_SC13_005_HAMAD",
+        "CH02_SC13_006_HAMAD",
+        "CH02_SC14_002_SYSTEM",
+        "CH02_SC14_003_SYSTEM",
+        "CH02_SC14_006_MARIAM",
+        "CH02_SC14_007_HAMAD",
+        "CH02_SC15_001_HAMAD",
+        "CH02_SC15_003_HAMAD",
+        "CH02_SC15_005_HAMAD",
+        "CH02_SC15_007_HAMAD",
+        "CH02_SC15_008_NARRATOR",
+        "CH02_SC15_009_HAMAD",
+        "CH02_SC16_001_MARIAM",
+        "CH02_SC16_003_SAEED",
+        "CH02_SC17_002_NARRATOR",
+        "CH02_SC17_003_SYSTEM",
+        "CH02_SC17_004_MARIAM",
+        "CH02_SC18_001_HAMAD",
+        "CH02_SC18_004_SYSTEM",
+        "CH02_SC18_005_SYSTEM",
+        "CH02_SC18_007_HAMAD",
+        "CH02_SC18_008_SYSTEM",
+        "CH02_SC19_003_HAMAD",
+        "CH02_SC19_A_SYSTEM",
+        "CH02_SC19_B_SYSTEM",
+        "CH02_SC19_C_SYSTEM",
+        "CH03_SC20_001_MARIAM",
+        "CH03_SC20_003_FATIMA",
+        "CH03_SC22_001_NARRATOR",
+        "CH03_SC22_002_HAMAD",
+        "CH04_END_A_001_NARRATOR",
+        "CH04_END_A_004_MARIAM",
+        "CH04_END_A_005_SAEED",
+        "CH04_END_A_007_HAMAD",
+        "CH05_SC27_001_HAMAD",
+        "CH05_SC27_002_HAMAD",
+        "CH05_SC27_006_NARRATOR",
+        "CH05_REFLECTION_001_NARRATOR",
+        "CH05_REFLECTION_002_HAMAD",
+        "CH05_QUIZ_INTRO_NARRATOR",
+        "CH05_Q01_QUESTION_NARRATOR",
+        "CH05_Q02_QUESTION_NARRATOR",
+        "CH05_Q03_QUESTION_NARRATOR",
+        "CH05_Q04_QUESTION_NARRATOR",
+        "CH05_Q05_QUESTION_NARRATOR",
+        "CH05_Q01_CORRECT_HAMAD",
+        "CH05_Q02_CORRECT_HAMAD",
+        "CH05_Q03_CORRECT_HAMAD",
+        "CH05_Q04_CORRECT_HAMAD",
+        "CH05_Q05_CORRECT_HAMAD",
+        "CH05_SC28_PASS_1_NARRATOR",
+        "CH05_SC28_PASS_2_HAMAD"
+      ],
+      "videos": [
+        {
+          "id": "V01",
+          "seconds": 3.5,
+          "overlappingSpeechSeconds": 17.632653
+        },
+        {
+          "id": "V02",
+          "seconds": 4.958333,
+          "overlappingSpeechSeconds": 3.709388
+        },
+        {
+          "id": "V03",
+          "seconds": 6.976,
+          "overlappingSpeechSeconds": 10.370612
+        }
+      ],
+      "videoSeconds": 15.434332999999999,
+      "additionalVideoHoldSeconds": 1.2489449999999995,
+      "mandatoryFixedTransitionSeconds": 0,
+      "studentInteractionSeconds": null,
+      "baselineRecordedSpeechSeconds": 1213.727,
+      "savedSpeechSeconds": 641.8282280000001,
+      "savedSpeechPercent": 52.88077368304405
+    },
+    {
+      "ending": "B",
+      "consequence": "conductivity-only",
+      "spokenClipOccurrences": 76,
+      "recordedSpeechSeconds": 569.260406,
+      "clipIds": [
+        "CH01_SC01_002_NARRATOR",
+        "CH01_SC02_001_MARIAM",
+        "CH01_SC02_002_SAEED",
+        "CH01_SC03_001_NARRATOR",
+        "CH01_SC04_002_NARRATOR",
+        "CH01_SC04_003_SAEED",
+        "CH01_SC04_005_SAEED",
+        "CH01_SC05_001_SAEED",
+        "CH01_SC05_002_MARIAM",
+        "CH01_SC06_001_FATIMA",
+        "CH01_SC06_002_SAEED",
+        "CH01_SC06_003_FATIMA",
+        "CH01_SC07_001_NARRATOR",
+        "CH01_SC07_005_HAMAD",
+        "CH01_SC07_006_HAMAD",
+        "CH02_DEC01_001_HAMAD",
+        "CH02_DEC01_CORRECT_HAMAD",
+        "CH02_SC11_001_NARRATOR",
+        "CH02_SC11_002_HAMAD",
+        "CH02_SC12_001_HAMAD",
+        "CH02_SC12_005_SYSTEM",
+        "CH02_SC12_003_HAMAD",
+        "CH02_SC13_001_HAMAD",
+        "CH02_SC13_003_SYSTEM",
+        "CH02_SC13_005_HAMAD",
+        "CH02_SC13_006_HAMAD",
+        "CH02_SC14_002_SYSTEM",
+        "CH02_SC14_003_SYSTEM",
+        "CH02_SC14_006_MARIAM",
+        "CH02_SC14_007_HAMAD",
+        "CH02_SC15_001_HAMAD",
+        "CH02_SC15_003_HAMAD",
+        "CH02_SC15_005_HAMAD",
+        "CH02_SC15_007_HAMAD",
+        "CH02_SC15_008_NARRATOR",
+        "CH02_SC15_009_HAMAD",
+        "CH02_SC16_001_MARIAM",
+        "CH02_SC16_003_SAEED",
+        "CH02_SC17_002_NARRATOR",
+        "CH02_SC17_003_SYSTEM",
+        "CH02_SC17_004_MARIAM",
+        "CH02_SC18_001_HAMAD",
+        "CH02_SC18_004_SYSTEM",
+        "CH02_SC18_005_SYSTEM",
+        "CH02_SC18_007_HAMAD",
+        "CH02_SC18_008_SYSTEM",
+        "CH02_SC19_003_HAMAD",
+        "CH02_SC19_A_SYSTEM",
+        "CH02_SC19_B_SYSTEM",
+        "CH02_SC19_C_SYSTEM",
+        "CH03_SC20_001_MARIAM",
+        "CH03_SC20_003_FATIMA",
+        "CH03_SC22_001_NARRATOR",
+        "CH03_SC22_002_HAMAD",
+        "CH04_END_B_001_NARRATOR",
+        "CH04_END_B_004_HAMAD",
+        "CH04_END_B_005_FATIMA",
+        "CH04_END_B_007_NARRATOR",
+        "CH05_SC27_001_HAMAD",
+        "CH05_SC27_002_HAMAD",
+        "CH05_SC27_006_NARRATOR",
+        "CH05_REFLECTION_001_NARRATOR",
+        "CH05_REFLECTION_002_HAMAD",
+        "CH05_QUIZ_INTRO_NARRATOR",
+        "CH05_Q01_QUESTION_NARRATOR",
+        "CH05_Q02_QUESTION_NARRATOR",
+        "CH05_Q03_QUESTION_NARRATOR",
+        "CH05_Q04_QUESTION_NARRATOR",
+        "CH05_Q05_QUESTION_NARRATOR",
+        "CH05_Q01_CORRECT_HAMAD",
+        "CH05_Q02_CORRECT_HAMAD",
+        "CH05_Q03_CORRECT_HAMAD",
+        "CH05_Q04_CORRECT_HAMAD",
+        "CH05_Q05_CORRECT_HAMAD",
+        "CH05_SC28_PASS_1_NARRATOR",
+        "CH05_SC28_PASS_2_HAMAD"
+      ],
+      "videos": [
+        {
+          "id": "V01",
+          "seconds": 3.5,
+          "overlappingSpeechSeconds": 17.632653
+        },
+        {
+          "id": "V02",
+          "seconds": 4.958333,
+          "overlappingSpeechSeconds": 3.709388
+        },
+        {
+          "id": "V04",
+          "seconds": 5.97,
+          "overlappingSpeechSeconds": 6.269388
+        }
+      ],
+      "videoSeconds": 14.428332999999999,
+      "additionalVideoHoldSeconds": 1.2489449999999995,
+      "mandatoryFixedTransitionSeconds": 0,
+      "studentInteractionSeconds": null,
+      "baselineRecordedSpeechSeconds": 1210.723,
+      "savedSpeechSeconds": 641.462594,
+      "savedSpeechPercent": 52.98177981255828
+    },
+    {
+      "ending": "C",
+      "consequence": "taste",
+      "spokenClipOccurrences": 76,
+      "recordedSpeechSeconds": 567.797548,
+      "clipIds": [
+        "CH01_SC01_002_NARRATOR",
+        "CH01_SC02_001_MARIAM",
+        "CH01_SC02_002_SAEED",
+        "CH01_SC03_001_NARRATOR",
+        "CH01_SC04_002_NARRATOR",
+        "CH01_SC04_003_SAEED",
+        "CH01_SC04_005_SAEED",
+        "CH01_SC05_001_SAEED",
+        "CH01_SC05_002_MARIAM",
+        "CH01_SC06_001_FATIMA",
+        "CH01_SC06_002_SAEED",
+        "CH01_SC06_003_FATIMA",
+        "CH01_SC07_001_NARRATOR",
+        "CH01_SC07_005_HAMAD",
+        "CH01_SC07_006_HAMAD",
+        "CH02_DEC01_001_HAMAD",
+        "CH02_DEC01_CORRECT_HAMAD",
+        "CH02_SC11_001_NARRATOR",
+        "CH02_SC11_002_HAMAD",
+        "CH02_SC12_001_HAMAD",
+        "CH02_SC12_005_SYSTEM",
+        "CH02_SC12_003_HAMAD",
+        "CH02_SC13_001_HAMAD",
+        "CH02_SC13_003_SYSTEM",
+        "CH02_SC13_005_HAMAD",
+        "CH02_SC13_006_HAMAD",
+        "CH02_SC14_002_SYSTEM",
+        "CH02_SC14_003_SYSTEM",
+        "CH02_SC14_006_MARIAM",
+        "CH02_SC14_007_HAMAD",
+        "CH02_SC15_001_HAMAD",
+        "CH02_SC15_003_HAMAD",
+        "CH02_SC15_005_HAMAD",
+        "CH02_SC15_007_HAMAD",
+        "CH02_SC15_008_NARRATOR",
+        "CH02_SC15_009_HAMAD",
+        "CH02_SC16_001_MARIAM",
+        "CH02_SC16_003_SAEED",
+        "CH02_SC17_002_NARRATOR",
+        "CH02_SC17_003_SYSTEM",
+        "CH02_SC17_004_MARIAM",
+        "CH02_SC18_001_HAMAD",
+        "CH02_SC18_004_SYSTEM",
+        "CH02_SC18_005_SYSTEM",
+        "CH02_SC18_007_HAMAD",
+        "CH02_SC18_008_SYSTEM",
+        "CH02_SC19_003_HAMAD",
+        "CH02_SC19_A_SYSTEM",
+        "CH02_SC19_B_SYSTEM",
+        "CH02_SC19_C_SYSTEM",
+        "CH03_SC20_001_MARIAM",
+        "CH03_SC20_003_FATIMA",
+        "CH03_SC22_001_NARRATOR",
+        "CH03_SC22_002_HAMAD",
+        "CH04_END_C_001_NARRATOR",
+        "CH04_END_C_002_HAMAD",
+        "CH04_END_C_004_HAMAD",
+        "CH04_END_C_007_NARRATOR",
+        "CH05_SC27_001_HAMAD",
+        "CH05_SC27_002_HAMAD",
+        "CH05_SC27_006_NARRATOR",
+        "CH05_REFLECTION_001_NARRATOR",
+        "CH05_REFLECTION_002_HAMAD",
+        "CH05_QUIZ_INTRO_NARRATOR",
+        "CH05_Q01_QUESTION_NARRATOR",
+        "CH05_Q02_QUESTION_NARRATOR",
+        "CH05_Q03_QUESTION_NARRATOR",
+        "CH05_Q04_QUESTION_NARRATOR",
+        "CH05_Q05_QUESTION_NARRATOR",
+        "CH05_Q01_CORRECT_HAMAD",
+        "CH05_Q02_CORRECT_HAMAD",
+        "CH05_Q03_CORRECT_HAMAD",
+        "CH05_Q04_CORRECT_HAMAD",
+        "CH05_Q05_CORRECT_HAMAD",
+        "CH05_SC28_PASS_1_NARRATOR",
+        "CH05_SC28_PASS_2_HAMAD"
+      ],
+      "videos": [
+        {
+          "id": "V01",
+          "seconds": 3.5,
+          "overlappingSpeechSeconds": 17.632653
+        },
+        {
+          "id": "V02",
+          "seconds": 4.958333,
+          "overlappingSpeechSeconds": 3.709388
+        },
+        {
+          "id": "V05",
+          "seconds": 4.958333,
+          "overlappingSpeechSeconds": 4.597551
+        }
+      ],
+      "videoSeconds": 13.416666,
+      "additionalVideoHoldSeconds": 1.609726999999999,
+      "mandatoryFixedTransitionSeconds": 0,
+      "studentInteractionSeconds": null,
+      "baselineRecordedSpeechSeconds": 1200.98,
+      "savedSpeechSeconds": 633.182452,
+      "savedSpeechPercent": 52.7221479125381
+    },
+    {
+      "ending": "D",
+      "consequence": "appearance",
+      "spokenClipOccurrences": 76,
+      "recordedSpeechSeconds": 567.640813,
+      "clipIds": [
+        "CH01_SC01_002_NARRATOR",
+        "CH01_SC02_001_MARIAM",
+        "CH01_SC02_002_SAEED",
+        "CH01_SC03_001_NARRATOR",
+        "CH01_SC04_002_NARRATOR",
+        "CH01_SC04_003_SAEED",
+        "CH01_SC04_005_SAEED",
+        "CH01_SC05_001_SAEED",
+        "CH01_SC05_002_MARIAM",
+        "CH01_SC06_001_FATIMA",
+        "CH01_SC06_002_SAEED",
+        "CH01_SC06_003_FATIMA",
+        "CH01_SC07_001_NARRATOR",
+        "CH01_SC07_005_HAMAD",
+        "CH01_SC07_006_HAMAD",
+        "CH02_DEC01_001_HAMAD",
+        "CH02_DEC01_CORRECT_HAMAD",
+        "CH02_SC11_001_NARRATOR",
+        "CH02_SC11_002_HAMAD",
+        "CH02_SC12_001_HAMAD",
+        "CH02_SC12_005_SYSTEM",
+        "CH02_SC12_003_HAMAD",
+        "CH02_SC13_001_HAMAD",
+        "CH02_SC13_003_SYSTEM",
+        "CH02_SC13_005_HAMAD",
+        "CH02_SC13_006_HAMAD",
+        "CH02_SC14_002_SYSTEM",
+        "CH02_SC14_003_SYSTEM",
+        "CH02_SC14_006_MARIAM",
+        "CH02_SC14_007_HAMAD",
+        "CH02_SC15_001_HAMAD",
+        "CH02_SC15_003_HAMAD",
+        "CH02_SC15_005_HAMAD",
+        "CH02_SC15_007_HAMAD",
+        "CH02_SC15_008_NARRATOR",
+        "CH02_SC15_009_HAMAD",
+        "CH02_SC16_001_MARIAM",
+        "CH02_SC16_003_SAEED",
+        "CH02_SC17_002_NARRATOR",
+        "CH02_SC17_003_SYSTEM",
+        "CH02_SC17_004_MARIAM",
+        "CH02_SC18_001_HAMAD",
+        "CH02_SC18_004_SYSTEM",
+        "CH02_SC18_005_SYSTEM",
+        "CH02_SC18_007_HAMAD",
+        "CH02_SC18_008_SYSTEM",
+        "CH02_SC19_003_HAMAD",
+        "CH02_SC19_A_SYSTEM",
+        "CH02_SC19_B_SYSTEM",
+        "CH02_SC19_C_SYSTEM",
+        "CH03_SC20_001_MARIAM",
+        "CH03_SC20_003_FATIMA",
+        "CH03_SC22_001_NARRATOR",
+        "CH03_SC22_002_HAMAD",
+        "CH04_END_D_001_NARRATOR",
+        "CH04_END_D_002_MARIAM",
+        "CH04_END_D_004_HAMAD",
+        "CH04_END_D_006_NARRATOR",
+        "CH05_SC27_001_HAMAD",
+        "CH05_SC27_002_HAMAD",
+        "CH05_SC27_006_NARRATOR",
+        "CH05_REFLECTION_001_NARRATOR",
+        "CH05_REFLECTION_002_HAMAD",
+        "CH05_QUIZ_INTRO_NARRATOR",
+        "CH05_Q01_QUESTION_NARRATOR",
+        "CH05_Q02_QUESTION_NARRATOR",
+        "CH05_Q03_QUESTION_NARRATOR",
+        "CH05_Q04_QUESTION_NARRATOR",
+        "CH05_Q05_QUESTION_NARRATOR",
+        "CH05_Q01_CORRECT_HAMAD",
+        "CH05_Q02_CORRECT_HAMAD",
+        "CH05_Q03_CORRECT_HAMAD",
+        "CH05_Q04_CORRECT_HAMAD",
+        "CH05_Q05_CORRECT_HAMAD",
+        "CH05_SC28_PASS_1_NARRATOR",
+        "CH05_SC28_PASS_2_HAMAD"
+      ],
+      "videos": [
+        {
+          "id": "V01",
+          "seconds": 3.5,
+          "overlappingSpeechSeconds": 17.632653
+        },
+        {
+          "id": "V02",
+          "seconds": 4.958333,
+          "overlappingSpeechSeconds": 3.709388
+        },
+        {
+          "id": "V06",
+          "seconds": 5.97,
+          "overlappingSpeechSeconds": 4.675918
+        }
+      ],
+      "videoSeconds": 14.428332999999999,
+      "additionalVideoHoldSeconds": 2.543026999999999,
+      "mandatoryFixedTransitionSeconds": 0,
+      "studentInteractionSeconds": null,
+      "baselineRecordedSpeechSeconds": 1198.054,
+      "savedSpeechSeconds": 630.4131870000001,
+      "savedSpeechPercent": 52.61976396723354
+    }
+  ],
+  "notes": [
+    "Duration sums use existing decoded MP3 metadata at 1x. No optional wrong-choice retries, option narration or answer replay in these representative routes.",
+    "All five questions answered correctly; professional outcome is independent of scientific assessment.",
+    "Video runs concurrently with speech. Extra hold is max(video minus its simultaneous narration, 0), not the sum of video and speech.",
+    "No fixed cinematic transition timer was added; interaction time remains self-paced.",
+    "The authored 19:05 baseline excludes repeated UI notifications present in the implemented 20:14 successful route.",
+    "The retained calibration correction is played after the actual control measurement; the 100-clip selection is unchanged."
+  ]
+}

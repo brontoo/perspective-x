@@ -1,0 +1,802 @@
+{
+  "CH01_SC01_002_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "At one preparation station, two finalists are approaching the most important moment of their competition. Mariam Al Mansoori and Saeed Al Nuaimi are close to completing their dessert. But time is running out. Only twelve minutes remain before the final judging round.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC01_002_NARRATOR.mp3",
+    "routes": [
+      "node:n01"
+    ]
+  },
+  "CH01_SC02_001_MARIAM": {
+    "speaker": "MARIAM",
+    "caption": "Saeed, we are almost finished. I need the sugar and the baking soda for the final stage.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH01_SC02_001_MARIAM.mp3",
+    "routes": [
+      "node:n02"
+    ]
+  },
+  "CH01_SC02_002_SAEED": {
+    "speaker": "SAEED",
+    "caption": "I’ll get them now. The judges could arrive at any moment.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC02_002_SAEED.mp3",
+    "routes": [
+      "node:n02"
+    ]
+  },
+  "CH01_SC03_001_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "On the preparation counter are three sealed containers. Each container holds a fine white powder. Their identification labels are attached, and the ingredients appear to be ready for use.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC03_001_NARRATOR.mp3",
+    "routes": [
+      "node:n03"
+    ]
+  },
+  "CH01_SC04_002_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "One falls. Then another. Then the third.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC04_002_NARRATOR.mp3",
+    "routes": [
+      "node:n04"
+    ]
+  },
+  "CH01_SC04_003_SAEED": {
+    "speaker": "SAEED",
+    "caption": "Wait. The labels!",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC04_003_SAEED.mp3",
+    "routes": [
+      "node:n04"
+    ]
+  },
+  "CH01_SC04_005_SAEED": {
+    "speaker": "SAEED",
+    "caption": "I can’t tell which container is which.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC04_005_SAEED.mp3",
+    "routes": [
+      "node:n04"
+    ]
+  },
+  "CH01_SC05_001_SAEED": {
+    "speaker": "SAEED",
+    "caption": "They all look almost exactly the same. One should be sugar, one should be baking soda, and one should be salt, but the labels are no longer connected to the containers.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC05_001_SAEED.mp3",
+    "routes": [
+      "node:n05"
+    ]
+  },
+  "CH01_SC05_002_MARIAM": {
+    "speaker": "MARIAM",
+    "caption": "We cannot guess. Using the wrong ingredient could ruin the recipe.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH01_SC05_002_MARIAM.mp3",
+    "routes": [
+      "node:n05"
+    ]
+  },
+  "CH01_SC06_001_FATIMA": {
+    "speaker": "FATIMA",
+    "caption": "Stop preparation immediately. Do not open or use any of those containers.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH01_SC06_001_FATIMA.mp3",
+    "routes": [
+      "node:n06"
+    ]
+  },
+  "CH01_SC06_002_SAEED": {
+    "speaker": "SAEED",
+    "caption": "Even if we think we know which one is the sugar?",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH01_SC06_002_SAEED.mp3",
+    "routes": [
+      "node:n06"
+    ]
+  },
+  "CH01_SC06_003_FATIMA": {
+    "speaker": "FATIMA",
+    "caption": "Thinking is not enough. The ingredients are no longer reliably identified. Until we have defensible evidence and a safe course of action, they must remain isolated.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH01_SC06_003_FATIMA.mp3",
+    "routes": [
+      "node:n06"
+    ]
+  },
+  "CH01_SC07_001_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "Hamad Al Zaabi, a field investigator in applied chemistry, arrives at the station carrying a tablet and a compact evidence kit.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH01_SC07_001_NARRATOR.mp3",
+    "routes": [
+      "node:n07"
+    ]
+  },
+  "CH01_SC07_005_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "I need your help. From this point forward, you are our junior food chemistry investigator. Your task is to examine the evidence, identify what the tests can and cannot prove, and recommend the safest final action.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH01_SC07_005_HAMAD.mp3",
+    "routes": [
+      "node:n07"
+    ]
+  },
+  "CH01_SC07_006_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Do not rely on appearance. Do not rely on assumptions. Follow the evidence.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH01_SC07_006_HAMAD.mp3",
+    "routes": [
+      "node:n07"
+    ]
+  },
+  "CH02_DEC01_001_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Three powders may look identical while behaving very differently at the molecular level. We need a test that produces measurable and comparable evidence. What should we do first?",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_001_HAMAD.mp3",
+    "routes": [
+      "node:first"
+    ]
+  },
+  "CH02_DEC01_APPEARANCE_1_MARIAM": {
+    "speaker": "MARIAM",
+    "caption": "They are all white. Any slight visual difference could come from lighting, particle size, or the container itself.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_DEC01_APPEARANCE_1_MARIAM.mp3",
+    "routes": [
+      "node:n08"
+    ]
+  },
+  "CH02_DEC01_APPEARANCE_2_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Correct. Color alone cannot establish chemical identity. Choose a method that produces measurable evidence.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_APPEARANCE_2_HAMAD.mp3",
+    "routes": [
+      "node:n08"
+    ]
+  },
+  "CH02_DEC01_CORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Good choice. Conductivity can help us determine whether dissolved particles are able to carry electrical charge. We will test each sample separately under identical conditions.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_CORRECT_HAMAD.mp3",
+    "routes": [
+      "first:controlled"
+    ]
+  },
+  "CH02_DEC01_MIX_1_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Mixing them would destroy the separation between the samples and reduce the value of the evidence. It could also create an unnecessary reaction or contamination risk.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_MIX_1_HAMAD.mp3",
+    "routes": [
+      "node:n10"
+    ]
+  },
+  "CH02_DEC01_TASTE_1_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Stop. We never taste an unidentified substance. A familiar appearance does not prove that a substance is safe, food-grade, or uncontaminated.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_DEC01_TASTE_1_HAMAD.mp3",
+    "routes": [
+      "node:n09"
+    ]
+  },
+  "CH02_SC11_001_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "The competition station becomes a temporary scientific investigation workspace. The three samples stay separated. Clean beakers, water, measuring tools, a conductivity probe, and a pH probe are prepared.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC11_001_NARRATOR.mp3",
+    "routes": [
+      "node:n11"
+    ]
+  },
+  "CH02_SC11_002_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "To compare the samples fairly, every preparation condition must be the same. In this simulation, each solution is prepared using zero point one zero grams of material per one hundred millilitres of water, at twenty-five degrees Celsius.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC11_002_HAMAD.mp3",
+    "routes": [
+      "node:n11"
+    ]
+  },
+  "CH02_SC12_001_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Before testing the samples, we need a control measurement.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC12_001_HAMAD.mp3",
+    "routes": [
+      "node:n12"
+    ]
+  },
+  "CH02_SC12_003_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Correct. The water-only control tells us the background conductivity of the system before any sample is added.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC12_003_HAMAD.mp3",
+    "routes": [
+      "calibrated"
+    ]
+  },
+  "CH02_SC12_005_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Water-only control: two microsiemens per centimetre.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC12_005_SYSTEM.mp3",
+    "routes": [
+      "calibrated"
+    ]
+  },
+  "CH02_SC13_001_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Select Sample A and begin the first conductivity measurement.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC13_001_HAMAD.mp3",
+    "routes": [
+      "node:n13"
+    ]
+  },
+  "CH02_SC13_003_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample A conductivity: four microsiemens per centimetre.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC13_003_SYSTEM.mp3",
+    "routes": [
+      "measured:A-conductivity"
+    ]
+  },
+  "CH02_SC13_005_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Correct. Sample A produces very few mobile charged particles under these simulation conditions.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC13_005_HAMAD.mp3",
+    "routes": [
+      "measured:A-conductivity"
+    ]
+  },
+  "CH02_SC13_006_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Record the observation, but do not identify the sample yet. One measurement is evidence, not a complete conclusion.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC13_006_HAMAD.mp3",
+    "routes": [
+      "measured:A-conductivity"
+    ]
+  },
+  "CH02_SC14_002_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample B conductivity: one thousand one hundred microsiemens per centimetre.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC14_002_SYSTEM.mp3",
+    "routes": [
+      "measured:B-conductivity"
+    ]
+  },
+  "CH02_SC14_003_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample C conductivity: one thousand nine hundred and thirty microsiemens per centimetre.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC14_003_SYSTEM.mp3",
+    "routes": [
+      "measured:C-conductivity"
+    ]
+  },
+  "CH02_SC14_006_MARIAM": {
+    "speaker": "MARIAM",
+    "caption": "Does that prove Sample A is sugar?",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC14_006_MARIAM.mp3",
+    "routes": [
+      "conductivity:confirmed"
+    ]
+  },
+  "CH02_SC14_007_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "It supports that possibility within our candidate set. But conductivity alone does not provide a unique chemical identity.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC14_007_HAMAD.mp3",
+    "routes": [
+      "conductivity:confirmed"
+    ]
+  },
+  "CH02_SC15_001_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "To understand the readings, we need to examine what happens at the atomic level.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_001_HAMAD.mp3",
+    "routes": [
+      "node:n15"
+    ]
+  },
+  "CH02_SC15_003_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "A neutral sodium atom has eleven protons and eleven electrons. When sodium loses one electron, it has one more proton than electrons. It becomes a positively charged sodium ion.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_003_HAMAD.mp3",
+    "routes": [
+      "node:n15"
+    ]
+  },
+  "CH02_SC15_005_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Chlorine behaves differently. A neutral chlorine atom has seventeen protons and seventeen electrons. When chlorine gains an electron, it has one more electron than protons. It becomes a negatively charged chloride ion.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_005_HAMAD.mp3",
+    "routes": [
+      "electron:NaCl-complete"
+    ]
+  },
+  "CH02_SC15_007_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Opposite charges attract. This electrostatic attraction forms an ionic bond.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_007_HAMAD.mp3",
+    "routes": [
+      "electron:NaCl-complete"
+    ]
+  },
+  "CH02_SC15_008_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "When sodium chloride dissolves in water, sodium and chloride ions separate and move through the solution. Because the ions can carry charge, the solution conducts electricity.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC15_008_NARRATOR.mp3",
+    "routes": [
+      "electron:NaCl-complete"
+    ]
+  },
+  "CH02_SC15_009_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Sucrose also dissolves in water, but it remains mainly as electrically neutral molecules. Dissolving does not automatically mean forming ions.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC15_009_HAMAD.mp3",
+    "routes": [
+      "electron:NaCl-complete"
+    ]
+  },
+  "CH02_SC16_001_MARIAM": {
+    "speaker": "MARIAM",
+    "caption": "Sample A has very low conductivity, but Samples B and C both conduct strongly. We still cannot tell which one is baking soda and which one is salt.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC16_001_MARIAM.mp3",
+    "routes": [
+      "node:n16"
+    ]
+  },
+  "CH02_SC16_003_SAEED": {
+    "speaker": "SAEED",
+    "caption": "So we need another independent property.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH02_SC16_003_SAEED.mp3",
+    "routes": [
+      "node:n16"
+    ]
+  },
+  "CH02_SC17_002_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "A P H value near seven is neutral under these simulation conditions. A value above seven indicates basic behavior.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH02_SC17_002_NARRATOR.mp3",
+    "routes": [
+      "node:n17"
+    ]
+  },
+  "CH02_SC17_003_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample A P H: seven point zero. Sample B P H: eight point three. Sample C P H: seven point zero.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC17_003_SYSTEM.mp3",
+    "routes": [
+      "measured:all-pH"
+    ]
+  },
+  "CH02_SC17_004_MARIAM": {
+    "speaker": "MARIAM",
+    "caption": "Sample B is mildly basic. Samples A and C are neutral in this simulation.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH02_SC17_004_MARIAM.mp3",
+    "routes": [
+      "measured:all-pH"
+    ]
+  },
+  "CH02_SC18_001_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "We will now perform a controlled virtual reaction using a dilute acid and separate portions of each prepared sample.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC18_001_HAMAD.mp3",
+    "routes": [
+      "node:n18"
+    ]
+  },
+  "CH02_SC18_004_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample A: no visible gas formation.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC18_004_SYSTEM.mp3",
+    "routes": [
+      "measured:acid-conditional"
+    ]
+  },
+  "CH02_SC18_005_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample B: carbon dioxide gas detected.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC18_005_SYSTEM.mp3",
+    "routes": [
+      "measured:acid-conditional"
+    ]
+  },
+  "CH02_SC18_007_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "That reaction is consistent with the presence of hydrogen carbonate ions.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC18_007_HAMAD.mp3",
+    "routes": [
+      "measured:acid-conditional"
+    ]
+  },
+  "CH02_SC18_008_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample C: no visible gas formation.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC18_008_SYSTEM.mp3",
+    "routes": [
+      "measured:acid-conditional"
+    ]
+  },
+  "CH02_SC19_003_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Use the combined evidence to identify sucrose, sodium hydrogen carbonate, and sodium chloride.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC19_003_HAMAD.mp3",
+    "routes": [
+      "node:n19"
+    ]
+  },
+  "CH02_SC19_A_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample A: sucrose, or table sugar.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC19_A_SYSTEM.mp3",
+    "routes": [
+      "identified:correct"
+    ]
+  },
+  "CH02_SC19_B_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample B: sodium hydrogen carbonate, or baking soda.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC19_B_SYSTEM.mp3",
+    "routes": [
+      "identified:correct"
+    ]
+  },
+  "CH02_SC19_C_SYSTEM": {
+    "speaker": "SYSTEM",
+    "caption": "Sample C: sodium chloride, or table salt.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SYSTEM/CH02_SC19_C_SYSTEM.mp3",
+    "routes": [
+      "identified:correct"
+    ]
+  },
+  "CH02_SC19_WRONG_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "That assignment does not match all three observations. Review the conductivity, P H, and virtual acid-test results together. A defensible identification must explain every relevant observation, not only one of them.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH02_SC19_WRONG_HAMAD.mp3",
+    "routes": [
+      "identified:incorrect"
+    ]
+  },
+  "CH03_SC20_001_MARIAM": {
+    "speaker": "MARIAM",
+    "caption": "We know which sample is sugar, and we know which sample is baking soda. Can we return them to the preparation station?",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH03_SC20_001_MARIAM.mp3",
+    "routes": [
+      "node:n20"
+    ]
+  },
+  "CH03_SC20_003_FATIMA": {
+    "speaker": "FATIMA",
+    "caption": "Before I authorize anything, I need a clear safety recommendation.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH03_SC20_003_FATIMA.mp3",
+    "routes": [
+      "node:n20"
+    ]
+  },
+  "CH03_SC22_001_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "The evidence is complete. The responsibility now belongs to the investigator.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH03_SC22_001_NARRATOR.mp3",
+    "routes": [
+      "node:n22"
+    ]
+  },
+  "CH03_SC22_002_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Choose the action you can defend scientifically and professionally. Your decision must account for both the laboratory evidence and the limits of that evidence.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH03_SC22_002_HAMAD.mp3",
+    "routes": [
+      "node:n22"
+    ]
+  },
+  "CH04_END_A_001_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "You choose to document the scientific findings, isolate all three unidentified containers, and replace them with new, sealed ingredients from a traceable food source.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_A_001_NARRATOR.mp3",
+    "routes": [
+      "node:endA"
+    ]
+  },
+  "CH04_END_A_004_MARIAM": {
+    "speaker": "MARIAM",
+    "caption": "The replacement sugar and baking soda are sealed, identified, and verified. We can continue safely.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH04_END_A_004_MARIAM.mp3",
+    "routes": [
+      "node:endA"
+    ]
+  },
+  "CH04_END_A_005_SAEED": {
+    "speaker": "SAEED",
+    "caption": "We lost a little time, but we did not risk serving an unverified ingredient.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/SAEED/CH04_END_A_005_SAEED.mp3",
+    "routes": [
+      "node:endA"
+    ]
+  },
+  "CH04_END_A_007_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Strong decision. You used the evidence correctly and respected its limits. Scientific confidence does not mean claiming more than the investigation can prove.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_A_007_HAMAD.mp3",
+    "routes": [
+      "node:endA"
+    ]
+  },
+  "CH04_END_B_001_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "You choose to use the powder with the lowest conductivity because the data suggest that it is sucrose.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_B_001_NARRATOR.mp3",
+    "routes": [
+      "node:endB"
+    ]
+  },
+  "CH04_END_B_004_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Low conductivity helps distinguish sucrose from the two ionic candidates in this investigation. It does not verify that the material is suitable for consumption.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_B_004_HAMAD.mp3",
+    "routes": [
+      "node:endB"
+    ]
+  },
+  "CH04_END_B_005_FATIMA": {
+    "speaker": "FATIMA",
+    "caption": "Preparation must stop. Any batch connected to an unverified ingredient must be discarded.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/FATIMA/CH04_END_B_005_FATIMA.mp3",
+    "routes": [
+      "node:endB"
+    ]
+  },
+  "CH04_END_B_007_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "The affected preparation is discarded, and the final round is delayed while verified ingredients are obtained.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_B_007_NARRATOR.mp3",
+    "routes": [
+      "node:endB"
+    ]
+  },
+  "CH04_END_C_001_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "You suggest tasting the powders as a quick way to confirm their identities.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_C_001_NARRATOR.mp3",
+    "routes": [
+      "node:endC"
+    ]
+  },
+  "CH04_END_C_002_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Stop. Do not open the container.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_C_002_HAMAD.mp3",
+    "routes": [
+      "node:endC"
+    ]
+  },
+  "CH04_END_C_004_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Tasting is not an acceptable test for an unidentified material. It creates direct exposure while providing weak and subjective evidence.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_C_004_HAMAD.mp3",
+    "routes": [
+      "node:endC"
+    ]
+  },
+  "CH04_END_C_007_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "The unsafe action is prevented before any container is opened. No one is exposed, but additional preparation time is lost while the team returns to the correct safety procedure.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_C_007_NARRATOR.mp3",
+    "routes": [
+      "node:endC"
+    ]
+  },
+  "CH04_END_D_001_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "You choose to identify the powders according to which one appears whitest.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_D_001_NARRATOR.mp3",
+    "routes": [
+      "node:endD"
+    ]
+  },
+  "CH04_END_D_002_MARIAM": {
+    "speaker": "MARIAM",
+    "caption": "Under the inspection light, they still look almost identical.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/MARIAM/CH04_END_D_002_MARIAM.mp3",
+    "routes": [
+      "node:endD"
+    ]
+  },
+  "CH04_END_D_004_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Whiteness is not a unique chemical property. Lighting, particle size, surface reflection, and the container itself can all affect visual appearance.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH04_END_D_004_HAMAD.mp3",
+    "routes": [
+      "node:endD"
+    ]
+  },
+  "CH04_END_D_006_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "The team must restart using ingredients with clear labels and traceable sources. The attempt to save time through appearance creates further delay.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH04_END_D_006_NARRATOR.mp3",
+    "routes": [
+      "node:endD"
+    ]
+  },
+  "CH05_Q01_CORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Correct. Sodium loses one electron. It then has eleven protons and ten electrons, producing a net charge of positive one.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q01_CORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question1:CORRECT"
+    ]
+  },
+  "CH05_Q01_INCORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Not quite. A positive ion forms when an atom has fewer electrons than protons. Sodium becomes positive by losing one electron.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q01_INCORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question1:INCORRECT"
+    ]
+  },
+  "CH05_Q01_QUESTION_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "How does a neutral sodium atom become a positively charged sodium ion?",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q01_QUESTION_NARRATOR.mp3",
+    "routes": [
+      "node:question1"
+    ]
+  },
+  "CH05_Q02_CORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Correct. Chlorine gains one electron. It then has seventeen protons and eighteen electrons, producing a net charge of negative one.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q02_CORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question2:CORRECT"
+    ]
+  },
+  "CH05_Q02_INCORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Review the relationship between protons and electrons. Chlorine becomes negatively charged by gaining one electron.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q02_INCORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question2:INCORRECT"
+    ]
+  },
+  "CH05_Q02_QUESTION_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "How does a neutral chlorine atom become a negatively charged chloride ion?",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q02_QUESTION_NARRATOR.mp3",
+    "routes": [
+      "node:question2"
+    ]
+  },
+  "CH05_Q03_CORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Correct. Sodium chloride separates into mobile sodium and chloride ions in water. Those charged particles carry electrical current through the solution.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q03_CORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question3:CORRECT"
+    ]
+  },
+  "CH05_Q03_INCORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Conductivity is not caused simply by the presence of water or by the white color of the solid. It depends on mobile charged particles in the solution.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q03_INCORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question3:INCORRECT"
+    ]
+  },
+  "CH05_Q03_QUESTION_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "Why does an aqueous sodium chloride solution conduct electricity?",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q03_QUESTION_NARRATOR.mp3",
+    "routes": [
+      "node:question3"
+    ]
+  },
+  "CH05_Q04_CORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Correct. Sucrose dissolves mainly as neutral molecules and does not produce the same concentration of mobile ions as sodium chloride.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q04_CORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question4:CORRECT"
+    ]
+  },
+  "CH05_Q04_INCORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Dissolving and ionizing are not the same process. Sucrose can dissolve while remaining mainly as neutral molecules.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q04_INCORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question4:INCORRECT"
+    ]
+  },
+  "CH05_Q04_QUESTION_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "Why does a sucrose solution conduct electricity much less effectively than a sodium chloride solution under the simulation conditions?",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q04_QUESTION_NARRATOR.mp3",
+    "routes": [
+      "node:question4"
+    ]
+  },
+  "CH05_Q05_CORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Correct. A single test may be shared by different substances. Independent evidence increases confidence and helps distinguish between candidates with similar properties.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q05_CORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question5:CORRECT"
+    ]
+  },
+  "CH05_Q05_INCORRECT_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Conductivity showed that Samples B and C both produced mobile ions, but it did not uniquely distinguish them. Additional evidence was required.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_Q05_INCORRECT_HAMAD.mp3",
+    "routes": [
+      "optional-review:question5:INCORRECT"
+    ]
+  },
+  "CH05_Q05_QUESTION_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "Why was it necessary to combine conductivity, P H, and controlled reaction evidence?",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_Q05_QUESTION_NARRATOR.mp3",
+    "routes": [
+      "node:question5"
+    ]
+  },
+  "CH05_QUIZ_INTRO_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "Answer five questions about ions, conductivity, molecular substances, and evidence-based identification. You need at least four correct answers out of five to earn the Ionic Evidence Investigator achievement.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_QUIZ_INTRO_NARRATOR.mp3",
+    "routes": [
+      "node:quiz-intro"
+    ]
+  },
+  "CH05_REFLECTION_001_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "You have seen the consequences of your decision. Now reflect on the reasoning that produced it.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_REFLECTION_001_NARRATOR.mp3",
+    "routes": [
+      "node:n27"
+    ]
+  },
+  "CH05_REFLECTION_002_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Explain what you learned from the outcome. Refer to at least one piece of scientific evidence from the investigation. State what you would keep or change if you faced a similar decision again.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_REFLECTION_002_HAMAD.mp3",
+    "routes": [
+      "node:n27"
+    ]
+  },
+  "CH05_SC27_001_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Today, you investigated the invisible chemistry behind familiar everyday materials.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC27_001_HAMAD.mp3",
+    "routes": [
+      "node:n27"
+    ]
+  },
+  "CH05_SC27_002_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "You observed that substances can look alike and still behave differently. You used conductivity to investigate the presence of mobile charged particles. You used P H and controlled reaction behavior to distinguish between two ionic substances. And you combined independent observations instead of relying on one result.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC27_002_HAMAD.mp3",
+    "routes": [
+      "node:n27"
+    ]
+  },
+  "CH05_SC27_006_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "The investigation is complete. One final assessment remains.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_SC27_006_NARRATOR.mp3",
+    "routes": [
+      "node:n27"
+    ]
+  },
+  "CH05_SC28_PASS_1_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "Assessment complete. You answered at least four of the five questions correctly.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_SC28_PASS_1_NARRATOR.mp3",
+    "routes": [
+      "optional-completion:pass"
+    ]
+  },
+  "CH05_SC28_PASS_2_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Well done. You have earned the Ionic Evidence Investigator achievement.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC28_PASS_2_HAMAD.mp3",
+    "routes": [
+      "optional-completion:pass"
+    ]
+  },
+  "CH05_SC28_RETRY_1_NARRATOR": {
+    "speaker": "NARRATOR",
+    "caption": "Assessment complete. Your result has been recorded, but the achievement requires at least four correct answers out of five.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/NARRATOR/CH05_SC28_RETRY_1_NARRATOR.mp3",
+    "routes": [
+      "optional-completion:retry"
+    ]
+  },
+  "CH05_SC28_RETRY_2_HAMAD": {
+    "speaker": "HAMAD",
+    "caption": "Review the feedback carefully. Focus on electron transfer, mobile ions, the difference between dissolving and ionizing, and the value of combining independent tests.",
+    "audio": "/audio/scenarios/ionic_dessert_mystery/cinematic/HAMAD/CH05_SC28_RETRY_2_HAMAD.mp3",
+    "routes": [
+      "optional-completion:retry"
+    ]
+  }
+}

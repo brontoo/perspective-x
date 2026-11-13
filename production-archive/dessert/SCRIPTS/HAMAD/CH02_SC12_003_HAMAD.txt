@@ -1,0 +1,1 @@
+Correct. The water-only control tells us the background conductivity of the system before any sample is added.

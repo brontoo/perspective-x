@@ -1,0 +1,1 @@
+The original containers remain sealed and isolated.

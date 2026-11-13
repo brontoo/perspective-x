@@ -1,0 +1,1 @@
+Supported. Sucrose is a molecular substance. In this simulation, it dissolves without producing a large concentration of mobile ions, resulting in very low conductivity.

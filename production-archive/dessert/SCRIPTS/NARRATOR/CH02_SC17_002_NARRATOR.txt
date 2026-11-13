@@ -1,0 +1,1 @@
+A P H value near seven is neutral under these simulation conditions. A value above seven indicates basic behavior.
