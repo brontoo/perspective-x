@@ -32,21 +32,8 @@ export default defineConfig({
                         if (/\/node_modules\/(react|react-dom|scheduler)\//.test(id)) {
                             return 'react-vendor';
                         }
-                        if (id.includes('three') || id.includes('@react-three/fiber')) {
-                            return 'three-vendor';
-                        }
-                        if (id.includes('jspdf') || id.includes('html2canvas')) {
-                            return 'pdf-vendor';
-                        }
-                        if (id.includes('recharts')) {
-                            return 'chart-vendor';
-                        }
-                        if (id.includes('@supabase/supabase-js')) {
-                            return 'supabase-vendor';
-                        }
-                        if (id.includes('@radix-ui') || id.includes('framer-motion') || id.includes('lucide-react')) {
-                            return 'ui-vendor';
-                        }
+                        // Let Rollup split other libraries by actual route usage. Forcing shared
+                        // helpers into PDF/chart/UI vendor chunks made them eager login dependencies.
                     }
                 }
             }

@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { savePhoto, savePreset } from "@/lib/perspective/avatar";
 import AvatarPicker from "@/components/perspective/AvatarPicker";
 import { Brand } from "@/components/perspective/Portal";
 
+function rememberedEmail() {
+  try { return localStorage.getItem("px-remembered-email") || ""; } catch { return ""; }
+}
 export default function SignIn() {
+  const navigate = useNavigate();
+  const active = useRef(true), submitting = useRef(false);
+  const isCurrentPage = () => active.current && /^\/(?:signin|sign-in|login)\/?$/i.test(window.location.pathname);
   const [mode, setMode] = useState("signin");
   const [email, setEmail] = useState(
-    () => localStorage.getItem("px-remembered-email") || "",
+    rememberedEmail,
   );
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -17,11 +23,13 @@ export default function SignIn() {
   const [remember, setRemember] = useState(false);
   const [picture, setPicture] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [stage, setStage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [destination, setDestination] = useState(null);
   const [providers, setProviders] = useState([]);
   useEffect(() => {
+    active.current = true;
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
@@ -38,10 +46,14 @@ export default function SignIn() {
         ),
       )
       .catch(() => {});
-    return () => subscription.unsubscribe();
+    return () => { active.current = false; subscription.unsubscribe(); };
   }, []);
   async function submit(event) {
     event.preventDefault();
+    if (submitting.current || !isCurrentPage()) return;
+    submitting.current = true;
+    setDestination(null);
+    setStage(mode === "reset" ? "Sending reset link…" : mode === "recovery" ? "Updating password…" : mode === "signup" ? "Creating account…" : "Signing in…");
     setLoading(true);
     setError("");
     setSuccess("");
@@ -93,8 +105,13 @@ export default function SignIn() {
         if (e) throw e;
         authenticated = data.user;
       }
-      if (remember) localStorage.setItem("px-remembered-email", email);
-      else localStorage.removeItem("px-remembered-email");
+      // Remembering an email is optional; restricted browser storage must not block a successful login.
+      try {
+        if (remember) localStorage.setItem("px-remembered-email", email);
+        else localStorage.removeItem("px-remembered-email");
+      } catch { /* Authentication is already complete. */ }
+      if (!isCurrentPage()) return;
+      setStage("Loading your profile…");
       let { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("*")
@@ -128,14 +145,17 @@ export default function SignIn() {
       const target =
         profile.role === "teacher" ? "/TeacherDashboard" : "/Dashboard";
       setDestination(target);
+      if (picture) setStage("Saving your picture…");
       if (picture?.file) await savePhoto(authenticated.id, picture.file);
       else if (picture?.preset)
         await savePreset(authenticated.id, picture.preset);
-      window.location.assign(target);
+      // Preserve the loaded app and session instead of downloading/restarting the entire page.
+      if (isCurrentPage()) navigate(target, { replace: true });
     } catch (e) {
-      setError(e.message || "Unable to sign in. Please try again.");
+      if (isCurrentPage()) setError(e.message || "Unable to sign in. Please try again.");
     } finally {
-      setLoading(false);
+      submitting.current = false;
+      if (isCurrentPage()) setLoading(false);
     }
   }
   async function oauth(provider) {
@@ -180,7 +200,7 @@ export default function SignIn() {
                 ? "Your next scientific adventure starts here."
                 : "Continue your journey with a secure account."}
           </p>
-          <form onSubmit={submit}>
+          <form onSubmit={submit} aria-busy={loading}>
             {setup && (
               <label>
                 Full name
@@ -252,6 +272,7 @@ export default function SignIn() {
                 <button
                   type="button"
                   className="px-text-button"
+                  disabled={loading}
                   onClick={() => {
                     setMode("reset");
                     setError("");
@@ -285,7 +306,7 @@ export default function SignIn() {
               disabled={loading}
             >
               {loading
-                ? "Please wait…"
+                ? stage
                 : setup
                   ? "Create account"
                   : mode === "reset"
@@ -306,7 +327,7 @@ export default function SignIn() {
               <p className="px-auth-divider">or sign in with</p>
               <div className="px-oauth">
                 {providers.map((provider) => (
-                  <button key={provider} onClick={() => oauth(provider)}>
+                  <button key={provider} disabled={loading} onClick={() => oauth(provider)}>
                     {provider === "azure" ? "Microsoft" : "Google"}
                   </button>
                 ))}
@@ -317,6 +338,7 @@ export default function SignIn() {
             {setup ? "Already have an account?" : "New to Perspective X?"}{" "}
             <button
               className="px-text-button"
+              disabled={loading}
               onClick={() => {
                 setMode(setup ? "signin" : "signup");
                 setError("");
