@@ -11,8 +11,13 @@ export const AVATARS = [
   "Dark hair and glasses",
   "Purple hair",
 ].map((label, index) => ({ id: `portrait-${index + 1}`, label, index }));
-export function presetFor(user) {
-  return AVATARS.find((a) => a.id === user?.user_metadata?.px_avatar_id);
+export function presetFor(user, profile) {
+  // Own account metadata remains authoritative; other users expose only a validated profile preset ID.
+  const metadata = user?.user_metadata;
+  const id = metadata && Object.hasOwn(metadata, "px_avatar_id")
+    ? metadata.px_avatar_id
+    : profile?.avatar_preset_id;
+  return AVATARS.find((a) => a.id === id);
 }
 export async function ownUser(expectedId) {
   const { data, error } = await supabase.auth.getUser();

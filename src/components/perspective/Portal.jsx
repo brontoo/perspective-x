@@ -16,7 +16,7 @@ export function Brand() {
 export function Avatar({ user, profile, name, size = 40 }) {
   const [url, setUrl] = useState(null);
   const [failed, setFailed] = useState(false);
-  const preset = presetFor(user);
+  const preset = presetFor(user, profile);
   useEffect(() => {
     let active = true;
     setUrl(null);

@@ -17,7 +17,7 @@ export default function TeacherOverview({ students, progress, onReview }) {
           const student = students.find(item => item.id === row.student_id);
           return (
             <div className="teacher-submission" key={row.id}>
-              <Avatar name={student?.full_name || "Student"} />
+              <Avatar profile={student} name={student?.full_name || "Student"} />
               <div>
                 <strong>{student?.full_name || "Student"}</strong>
                 <span>{SCENARIOS[row.scenario_id].title}</span>
