@@ -1,0 +1,11 @@
+{
+  "baselineCommit": "42206494c861a95bbdc073f659d3bf6eb9f5d019",
+  "bytesBefore": 1638354,
+  "bytesAfter": 431696,
+  "reductionPercent": 73.65,
+  "initialFiles": [
+    "/assets/index-DiuBSPEj.js",
+    "/assets/react-vendor-C5REryxd.js"
+  ],
+  "measurement": "Uncompressed JS referenced by the entry document, excluding route-specific lazy chunks; not an end-to-end latency measurement."
+}

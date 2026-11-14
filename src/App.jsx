@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, Link, useLocation } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { queryClientInstance } from '@/lib/query-client';
 import { pagesConfig } from './pages.config';
@@ -22,12 +22,14 @@ const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
 // ── Shared loading fallback ──────────────────────────────────────────
-function LoadingScreen() {
+function LoadingScreen({ error, onRetry }) {
     return (
         <div className="fixed inset-0 flex items-center justify-center lx-bg-ambient">
             <div className="glass-card p-5 flex items-center gap-3">
+                {error ? <div role="alert"><p>{error}</p><button type="button" onClick={onRetry} className="px-button">Try again</button> <Link to="/SignIn">Back to sign in</Link></div> : <>
                 <div className="w-5 h-5 border-2 border-[var(--lx-accent-glow)] border-t-[var(--lx-accent)] rounded-full animate-spin" />
                 <span className="text-[11px] font-mono text-[var(--lx-text-muted)] tracking-widest">LOADING...</span>
+                </>}
             </div>
         </div>
     );
@@ -40,15 +42,24 @@ const LayoutWrapper = ({ children, currentPageName }) =>
 const ProtectedRoute = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [session, setSession] = useState(null);
+    const [error, setError] = useState(null);
+    const [attempt, setAttempt] = useState(0);
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            setLoading(false);
-        });
-    }, []);
+        let active = true;
+        setLoading(true);
+        setError(null);
+        supabase.auth.getSession().then(({ data, error: failure }) => {
+            if (failure) throw failure;
+            if (active) setSession(data.session);
+        }).catch(failure => {
+            if (active) setError(failure.message || "Your session could not be checked. Please try again.");
+        }).finally(() => { if (active) setLoading(false); });
+        return () => { active = false; };
+    }, [attempt]);
 
     if (loading) return <LoadingScreen />;
+    if (error) return <LoadingScreen error={error} onRetry={() => setAttempt(value => value + 1)} />;
     if (!session) return <Navigate to="/SignIn" replace />;
     return children;
 };
