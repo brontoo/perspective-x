@@ -10,6 +10,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
+import { isMissingSession, sessionCheckMessage } from "@/lib/perspective/session.mjs";
 import { ROLES, SCENARIOS, SKILLS } from "@/components/scenarios/scenarioData";
 import { LEARNING_PATHS_LIST, getPathProgress } from "@/data/learningPaths";
 import {
@@ -47,22 +48,30 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [launchError, setLaunchError] = useState(null);
   const [launching, setLaunching] = useState(false);
+  const loadVersion = useRef(0);
   useEffect(() => {
     let active = true;
     load(() => active);
     return () => {
       active = false;
+      loadVersion.current++;
     };
   }, []);
   async function load(isActive = () => true) {
+    const request = ++loadVersion.current;
+    const current = () => isActive() && request === loadVersion.current;
     setState((previous) => ({ ...previous, loading: true, error: null }));
     try {
       const {
         data: { user },
         error: authError,
       } = await supabase.auth.getUser();
-      if (authError || !user)
-        throw new Error("Please sign in to view your learning records.");
+      if (authError && !isMissingSession(authError))
+        throw new Error(sessionCheckMessage(authError));
+      if (authError || !user) {
+        if (current()) navigate("/SignIn", { replace: true });
+        return;
+      }
       const results = await Promise.all([
         supabase
           .from("profiles")
@@ -85,7 +94,7 @@ export default function Dashboard() {
       ]);
       const error = results.find((result) => result.error)?.error;
       if (error) throw error;
-      if (isActive())
+      if (current())
         setState({
           loading: false,
           error: null,
@@ -101,7 +110,7 @@ export default function Dashboard() {
           ),
         });
     } catch (e) {
-      if (isActive())
+      if (current())
         setState((previous) => ({
           ...previous,
           loading: false,

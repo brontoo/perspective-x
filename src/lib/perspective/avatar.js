@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
+import { sessionCheckMessage } from "./session.mjs";
 export const AVATARS = [
   "Wavy brown hair",
   "Navy hijab",
@@ -21,7 +22,8 @@ export function presetFor(user, profile) {
 }
 export async function ownUser(expectedId) {
   const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user || data.user.id !== expectedId)
+  if (error) throw new Error(sessionCheckMessage(error));
+  if (!data.user || data.user.id !== expectedId)
     throw new Error(
       "Your session has expired. Sign in again before changing your picture.",
     );

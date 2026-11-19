@@ -5,6 +5,7 @@ import { isAssessed } from '@/lib/perspective/progress.mjs';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
 import React, { useState, useEffect } from 'react';
+import { isMissingSession, sessionCheckMessage } from '@/lib/perspective/session.mjs';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
@@ -229,8 +230,9 @@ export default function TeacherDashboard() {
         setDenied(false);
         try {
             const {
-                data: { user: currentUser }
+                data: { user: currentUser }, error: authError
             } = await supabase.auth.getUser();
+            if (authError && !isMissingSession(authError)) throw new Error(sessionCheckMessage(authError));
             if (!currentUser) {
                 navigate('/SignIn', { replace: true });
                 return;
