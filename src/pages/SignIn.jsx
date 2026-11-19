@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase, passwordRecovery } from "@/lib/supabaseClient";
 import { savePhoto, savePreset } from "@/lib/perspective/avatar";
 import AvatarPicker from "@/components/perspective/AvatarPicker";
 import { Brand } from "@/components/perspective/Portal";
+import { signInErrorMessage } from "@/lib/perspective/session.mjs";
 
 function rememberedEmail() {
   try { return localStorage.getItem("px-remembered-email") || ""; } catch { return ""; }
@@ -13,7 +14,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const active = useRef(true), submitting = useRef(false);
   const isCurrentPage = () => active.current && /^\/(?:signin|sign-in|login)\/?$/i.test(window.location.pathname);
-  const [mode, setMode] = useState("signin");
+  const [mode, setMode] = useState(() => passwordRecovery.isPending() ? "recovery" : "signin");
   const [email, setEmail] = useState(
     rememberedEmail,
   );
@@ -34,7 +35,10 @@ export default function SignIn() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") setMode("recovery");
+      else if (event === "SIGNED_OUT" || event === "SIGNED_IN")
+        setMode((current) => current === "recovery" ? "signin" : current);
     });
+    if (passwordRecovery.isPending()) setMode("recovery");
     // Only render OAuth choices advertised as enabled by the actual Auth service.
     fetch(`${supabase.supabaseUrl}/auth/v1/settings`, {
       headers: { apikey: supabase.supabaseKey },
@@ -57,9 +61,10 @@ export default function SignIn() {
     setLoading(true);
     setError("");
     setSuccess("");
+    const loginEmail = email.trim().toLowerCase();
     try {
       if (mode === "reset") {
-        const { error: e } = await supabase.auth.resetPasswordForEmail(email, {
+        const { error: e } = await supabase.auth.resetPasswordForEmail(loginEmail, {
           redirectTo: `${window.location.origin}/SignIn`,
         });
         if (e) throw e;
@@ -71,6 +76,7 @@ export default function SignIn() {
       if (mode === "recovery") {
         const { error: e } = await supabase.auth.updateUser({ password });
         if (e) throw e;
+        passwordRecovery.finish();
         setPassword("");
         setMode("signin");
         setSuccess("Your password was updated. You can now sign in.");
@@ -79,7 +85,7 @@ export default function SignIn() {
       let authenticated;
       if (mode === "signup") {
         const { data, error: e } = await supabase.auth.signUp({
-          email,
+          email: loginEmail,
           password,
           options: {
             data: {
@@ -99,7 +105,7 @@ export default function SignIn() {
         authenticated = data.user;
       } else {
         const { data, error: e } = await supabase.auth.signInWithPassword({
-          email,
+          email: loginEmail,
           password,
         });
         if (e) throw e;
@@ -107,7 +113,7 @@ export default function SignIn() {
       }
       // Remembering an email is optional; restricted browser storage must not block a successful login.
       try {
-        if (remember) localStorage.setItem("px-remembered-email", email);
+        if (remember) localStorage.setItem("px-remembered-email", loginEmail);
         else localStorage.removeItem("px-remembered-email");
       } catch { /* Authentication is already complete. */ }
       if (!isCurrentPage()) return;
@@ -135,11 +141,18 @@ export default function SignIn() {
           })
           .select("id,role")
           .single();
-        if (e)
+        // A signup trigger or another tab may have created it after the missing-row check.
+        // Re-read only after a unique conflict; never overwrite roles or retry arbitrary writes.
+        if (e?.code === "23505") {
+          const existing = await supabase.from("profiles").select("id,role").eq("id", authenticated.id).single();
+          if (existing.error || !existing.data)
+            throw new Error("Signed in, but your profile could not be loaded. Please try again.");
+          profile = existing.data;
+        } else if (e || !data)
           throw new Error(
             "Signed in, but profile setup is unavailable. Please contact your school.",
           );
-        profile = data;
+        else profile = data;
       }
       // Privileged routing is never inferred from editable auth metadata.
       const target =
@@ -152,7 +165,7 @@ export default function SignIn() {
       // Preserve the loaded app and session instead of downloading/restarting the entire page.
       if (isCurrentPage()) navigate(target, { replace: true });
     } catch (e) {
-      if (isCurrentPage()) setError(e.message || "Unable to sign in. Please try again.");
+      if (isCurrentPage()) setError(signInErrorMessage(e));
     } finally {
       submitting.current = false;
       if (isCurrentPage()) setLoading(false);

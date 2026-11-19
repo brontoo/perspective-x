@@ -26,7 +26,7 @@ test("sign-in is public, supports password visibility, optional presets, and rea
   ).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText(
-    "Invalid login credentials",
+    /email or password is incorrect/i,
   );
   await expect(page.getByRole("button", { name: "Google" })).toHaveCount(0);
   await page

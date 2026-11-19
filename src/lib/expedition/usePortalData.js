@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { SCENARIOS } from "@/components/scenarios/scenarioData";
 import { passedIds } from "@/lib/perspective/progress.mjs";
+import { isMissingSession, sessionCheckMessage } from "@/lib/perspective/session.mjs";
 
 export default function usePortalData() {
   const navigate = useNavigate();
+  const requestVersion = useRef(0);
   const [state, setState] = useState({
     loading: true,
     error: null,
@@ -17,14 +19,18 @@ export default function usePortalData() {
     passed: [],
   });
   const refresh = useCallback(async () => {
+    const request = ++requestVersion.current;
+    const current = () => request === requestVersion.current;
     setState((s) => ({ ...s, loading: true, error: null }));
     try {
       const {
         data: { user },
         error: authError,
       } = await supabase.auth.getUser();
+      if (authError && !isMissingSession(authError))
+        throw new Error(sessionCheckMessage(authError));
       if (authError || !user) {
-        navigate("/SignIn", { replace: true });
+        if (current()) navigate("/SignIn", { replace: true });
         return;
       }
       const results = await Promise.all([
@@ -46,7 +52,7 @@ export default function usePortalData() {
       const [profile, progress, settings, feedback] = results.map(
         (r) => r.data,
       );
-      setState({
+      if (current()) setState({
         loading: false,
         error: null,
         user,
@@ -59,7 +65,7 @@ export default function usePortalData() {
         passed: passedIds(progress || [], SCENARIOS),
       });
     } catch (e) {
-      setState((s) => ({
+      if (current()) setState((s) => ({
         ...s,
         loading: false,
         error: e.message || "Unable to load your learning space.",
@@ -68,6 +74,7 @@ export default function usePortalData() {
   }, [navigate]);
   useEffect(() => {
     refresh();
+    return () => { requestVersion.current++; };
   }, [refresh]);
   return { ...state, refresh };
 }

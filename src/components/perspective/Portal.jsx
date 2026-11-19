@@ -74,7 +74,7 @@ export function PortalHeader({ user, profile, teacherActions }) {
     { label: "Leaderboard", to: "/leaderboard" },
   ];
   async function signOut() {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut({ scope: "local" });
     if (!error) window.location.assign("/");
   }
   return (

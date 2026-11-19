@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
+import { sessionCheckMessage } from "@/lib/perspective/session.mjs";
 import { ROLES } from "@/components/scenarios/scenarioData";
 import { answersOf, formatDate } from "@/lib/perspective/progress.mjs";
 import usePortalData from "@/lib/expedition/usePortalData";
@@ -58,8 +59,9 @@ export default function RoleReflection() {
     setStatus("Saving…");
     try {
       const {
-        data: { user },
+        data: { user }, error: authError,
       } = await supabase.auth.getUser();
+      if (authError) throw new Error(sessionCheckMessage(authError));
       if (!user || user.id !== data.user.id)
         throw new Error(
           "Sign in again before saving. Your draft remains here.",

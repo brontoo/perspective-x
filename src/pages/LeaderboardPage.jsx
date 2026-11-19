@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Award, BookOpen, Star, Trophy } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
+import { sessionCheckMessage } from "@/lib/perspective/session.mjs";
 import { SCENARIOS } from "@/components/scenarios/scenarioData";
 import { passedIds, rankRows } from "@/lib/perspective/progress.mjs";
 import {
@@ -37,7 +38,8 @@ export default function LeaderboardPage() {
           data: { user },
           error: authError,
         } = await supabase.auth.getUser();
-        if (authError || !user)
+        if (authError) throw new Error(sessionCheckMessage(authError));
+        if (!user)
           throw new Error("Please sign in to see the leaderboard.");
         const { data: profile, error: profileError } = await supabase
           .from("profiles")

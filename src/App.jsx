@@ -6,6 +6,7 @@ import { queryClientInstance } from '@/lib/query-client';
 import { pagesConfig } from './pages.config';
 import { supabase } from '@/lib/supabaseClient';
 import { useReducedMotion } from './hooks/useReducedMotion';
+import { isMissingSession, sessionCheckMessage } from '@/lib/perspective/session.mjs';
 
 // ── Lazy: ScenarioPlayer is heavily componentized, load dynamically ──
 const ScenarioPlayer = lazy(() => import('@/pages/ScenarioPlayer'));
@@ -47,21 +48,36 @@ const ProtectedRoute = ({ children }) => {
 
     useEffect(() => {
         let active = true;
+        let version = 0;
         setLoading(true);
         setError(null);
+        // Keep this callback synchronous: Auth events hold the SDK's session lock.
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
+            if (active && (event === 'SIGNED_OUT' || nextSession)) {
+                version++;
+                setSession(nextSession);
+                setError(null);
+                setLoading(false);
+            }
+        });
+        const request = version;
         supabase.auth.getSession().then(({ data, error: failure }) => {
             if (failure) throw failure;
-            if (active) setSession(data.session);
+            if (active && request === version) setSession(data.session);
         }).catch(failure => {
-            if (active) setError(failure.message || "Your session could not be checked. Please try again.");
-        }).finally(() => { if (active) setLoading(false); });
-        return () => { active = false; };
+            if (active && request === version) {
+                if (isMissingSession(failure)) setSession(null);
+                else setError(sessionCheckMessage(failure));
+            }
+        }).finally(() => { if (active && request === version) setLoading(false); });
+        return () => { active = false; subscription.unsubscribe(); };
     }, [attempt]);
 
     if (loading) return <LoadingScreen />;
     if (error) return <LoadingScreen error={error} onRetry={() => setAttempt(value => value + 1)} />;
     if (!session) return <Navigate to="/SignIn" replace />;
-    return children;
+    // A shared browser may switch accounts in another tab. Never retain the previous learner's view/writer.
+    return <React.Fragment key={session.user.id}>{children}</React.Fragment>;
 };
 
 
@@ -72,9 +88,11 @@ function AppRoutes() {
     // ScenarioPlayer: fullscreen, no Layout — lazy loaded
     if (location.pathname === '/ScenarioPlayer') {
         return (
-            <Suspense fallback={<LoadingScreen />}>
-                <ScenarioPlayer />
-            </Suspense>
+            <ProtectedRoute>
+                <Suspense fallback={<LoadingScreen />}>
+                    <ScenarioPlayer />
+                </Suspense>
+            </ProtectedRoute>
         );
     }
 

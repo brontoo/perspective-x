@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { Avatar } from "@/components/perspective/Portal";
 import AvatarPicker from "@/components/perspective/AvatarPicker";
 import { ownUser, savePreset, savePhoto } from "@/lib/perspective/avatar";
 import PortalShell, { DataState } from "@/components/expedition/PortalShell";
+import { isMissingSession, sessionCheckMessage } from "@/lib/perspective/session.mjs";
 
 export default function ProfileSettings() {
   const navigate = useNavigate();
+  const loadVersion = useRef(0);
   const [data, setData] = useState({
     loading: true,
     user: null,
@@ -26,13 +28,17 @@ export default function ProfileSettings() {
   const [message, setMessage] = useState({});
   const [error, setError] = useState({});
   async function load() {
+    const request = ++loadVersion.current;
+    const current = () => request === loadVersion.current;
+    setData((s) => ({ ...s, loading: true, error: null }));
     try {
       const {
         data: { user },
         error: e,
       } = await supabase.auth.getUser();
+      if (e && !isMissingSession(e)) throw new Error(sessionCheckMessage(e));
       if (e || !user) {
-        navigate("/SignIn", { replace: true });
+        if (current()) navigate("/SignIn", { replace: true });
         return;
       }
       const { data: profile, error: p } = await supabase
@@ -41,14 +47,17 @@ export default function ProfileSettings() {
         .eq("id", user.id)
         .single();
       if (p) throw p;
-      setData({ user, profile, loading: false, error: null });
-      setName(profile.full_name || "");
+      if (current()) {
+        setData({ user, profile, loading: false, error: null });
+        setName(profile.full_name || "");
+      }
     } catch (e) {
-      setData((s) => ({ ...s, loading: false, error: e.message }));
+      if (current()) setData((s) => ({ ...s, loading: false, error: e.message }));
     }
   }
   useEffect(() => {
     load();
+    return () => { loadVersion.current++; };
   }, []);
   async function act(section, work) {
     setBusy(section);

@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-19",
+  "project": "Perspective X",
+  "checks": [
+    {
+      "path": "/auth/v1/health",
+      "status": 200,
+      "elapsedSeconds": 0.774
+    },
+    {
+      "path": "/auth/v1/settings",
+      "status": 200,
+      "elapsedSeconds": 0.768,
+      "settings": {
+        "external": {
+          "anonymous_users": false,
+          "apple": false,
+          "azure": false,
+          "bitbucket": false,
+          "discord": false,
+          "facebook": false,
+          "snapchat": false,
+          "figma": false,
+          "fly": false,
+          "github": false,
+          "gitlab": false,
+          "google": false,
+          "keycloak": false,
+          "kakao": false,
+          "linkedin": false,
+          "linkedin_oidc": false,
+          "notion": false,
+          "spotify": false,
+          "slack": false,
+          "slack_oidc": false,
+          "workos": false,
+          "twitch": false,
+          "twitter": false,
+          "email": true,
+          "phone": false,
+          "zoom": false
+        },
+        "disable_signup": false,
+        "mailer_autoconfirm": true
+      }
+    },
+    {
+      "path": "/rest/v1/",
+      "error": "HTTP Error 401: Unauthorized",
+      "elapsedSeconds": 0.105
+    }
+  ]
+}
